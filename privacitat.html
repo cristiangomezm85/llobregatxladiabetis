@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ca" data-lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Política de privacitat · Llobregat x la Diabetis</title>
+<meta name="description" content="Política de privacitat i protecció de dades del projecte Llobregat x la Diabetis.">
+<meta name="robots" content="index, follow">
+<link rel="icon" type="image/png" href="img/logo-small.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blau-llobregat: #15315F;
+    --blau-diabetis: #1E72D4;
+    --blau-aigua: #5AC0E6;
+    --coral: #FF6B47;
+    --paper: #FAFAF6;
+    --tinta: #0E1B36;
+    --gris: #5A6478;
+    --linia: rgba(21, 49, 95, 0.12);
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --body: "Manrope", system-ui, sans-serif;
+    --container: 820px;
+    --pad-x: clamp(1.25rem, 4vw, 3rem);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--body);
+    color: var(--tinta);
+    background: var(--paper);
+    line-height: 1.65;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--blau-diabetis); text-decoration: underline; text-underline-offset: 3px; }
+  a:hover { color: var(--blau-llobregat); }
+
+  [data-lang="ca"] [lang="es"],
+  [data-lang="ca"] [lang="en"],
+  [data-lang="es"] [lang="ca"],
+  [data-lang="es"] [lang="en"],
+  [data-lang="en"] [lang="ca"],
+  [data-lang="en"] [lang="es"] { display: none !important; }
+
+  .container {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding-left: var(--pad-x);
+    padding-right: var(--pad-x);
+  }
+
+  /* NAV simple */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(250, 250, 246, 0.92);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid var(--linia);
+    padding: 0.85rem 0;
+  }
+  .nav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-left: var(--pad-x);
+    padding-right: var(--pad-x);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 0.7rem;
+    font-family: var(--display); font-weight: 700;
+    font-size: 1.05rem; color: var(--blau-llobregat);
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+  .brand img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+  .brand span em { font-style: italic; font-weight: 400; color: var(--blau-diabetis); }
+  .back-link {
+    font-family: var(--body);
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--tinta);
+    text-decoration: none;
+  }
+  .back-link::before { content: "← "; }
+  .back-link:hover { color: var(--blau-llobregat); }
+
+  .lang-toggle {
+    display: flex; align-items: center;
+    border: 1px solid var(--linia);
+    border-radius: 100px; padding: 2px;
+    font-family: var(--body); font-size: 0.78rem; font-weight: 600;
+    margin-left: 1rem;
+  }
+  .lang-toggle button {
+    border: 0; background: transparent;
+    padding: 0.35rem 0.7rem; cursor: pointer;
+    color: var(--gris); border-radius: 100px;
+    font: inherit; letter-spacing: 0.04em;
+  }
+  .lang-toggle button.active { background: var(--blau-llobregat); color: white; }
+
+  /* CONTENT */
+  .hero {
+    padding: clamp(3rem, 7vw, 5rem) 0 clamp(2rem, 4vw, 3rem);
+    border-bottom: 1px solid var(--linia);
+  }
+  .eyebrow {
+    font-family: var(--body);
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--blau-diabetis);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 32px; height: 1.5px;
+    background: var(--blau-aigua);
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--blau-llobregat);
+    margin: 0 0 1rem;
+  }
+  .updated {
+    color: var(--gris);
+    font-size: 0.92rem;
+  }
+  .updated strong { color: var(--tinta); }
+
+  main { padding: clamp(2.5rem, 5vw, 4rem) 0 clamp(3rem, 6vw, 5rem); }
+  main h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(1.4rem, 2.2vw, 1.75rem);
+    color: var(--blau-llobregat);
+    margin: 2.5rem 0 1rem;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  main h2:first-child { margin-top: 0; }
+  main h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--blau-llobregat);
+    margin: 1.75rem 0 0.6rem;
+  }
+  main p { margin: 0 0 1.1rem; }
+  main ul { padding-left: 1.25rem; margin: 0 0 1.2rem; }
+  main li { margin-bottom: 0.45rem; }
+  main strong { color: var(--tinta); }
+
+  .summary {
+    background: white;
+    border: 1px solid var(--linia);
+    border-left: 3px solid var(--blau-aigua);
+    padding: 1.5rem 1.75rem;
+    border-radius: 4px;
+    margin-bottom: 2.5rem;
+  }
+  .summary h3 {
+    margin-top: 0;
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blau-diabetis);
+    font-weight: 600;
+    font-family: var(--body);
+  }
+  .summary ul { margin-bottom: 0; }
+  .summary li { font-size: 0.96rem; }
+
+  .contact-block {
+    margin-top: 2.5rem;
+    padding: 1.5rem 1.75rem;
+    background: white;
+    border: 1px solid var(--linia);
+    border-radius: 4px;
+  }
+  .contact-block h3 { margin-top: 0; font-size: 1rem; }
+  .contact-block p { margin: 0; font-size: 0.95rem; }
+
+  /* FOOTER */
+  footer {
+    background: var(--blau-llobregat);
+    color: rgba(255,255,255,0.7);
+    padding: 2.5rem 0 1.5rem;
+    font-size: 0.9rem;
+    margin-top: 4rem;
+  }
+  footer .container { max-width: 1280px; }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: white;
+  }
+  .footer-brand img { width: 42px; height: 42px; object-fit: contain; }
+  .footer-brand-text {
+    font-family: var(--display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: white;
+  }
+  .footer-brand-text em { color: var(--blau-aigua); font-style: italic; }
+  .footer-tagline {
+    display: block;
+    margin-top: 0.15rem;
+    color: rgba(255,255,255,0.55);
+    font-size: 0.78rem;
+  }
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer a { color: rgba(255,255,255,0.75); text-decoration: none; }
+  footer a:hover { color: var(--blau-aigua); }
+  .footer-bottom {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+
+
+  /* Cookie consent */
+  .cookie-banner {
+    position: fixed;
+    left: max(1rem, env(safe-area-inset-left));
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 1rem 1.1rem;
+    background: rgba(14, 27, 54, 0.96);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 14px;
+    box-shadow: 0 18px 50px rgba(14,27,54,0.28);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .cookie-banner.is-visible { display: flex; }
+  .cookie-banner p { margin: 0; font: 500 0.9rem/1.45 var(--body); color: rgba(255,255,255,0.82); }
+  .cookie-banner a { color: var(--blau-aigua); text-decoration: underline; text-underline-offset: 2px; }
+  .cookie-banner button {
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 999px;
+    background: var(--coral);
+    color: white;
+    padding: 0.72rem 1.15rem;
+    font: 700 0.9rem var(--body);
+    cursor: pointer;
+  }
+  @media (max-width: 720px) {
+    .cookie-banner { flex-direction: column; align-items: stretch; }
+    .cookie-banner button { width: 100%; }
+  }
+
+
+
+  /* ============================================
+     SUPPORT STRIP
+     ============================================ */
+  .support-strip {
+    background: #fff;
+    border-top: 1px solid rgba(21, 49, 95, 0.08);
+    padding: clamp(1.6rem, 4vw, 2.8rem) 0;
+  }
+  .support-strip + footer { margin-top: 0; }
+  .support-strip__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    flex-wrap: wrap;
+    text-align: center;
+  }
+  .support-strip__label {
+    margin: 0;
+    color: var(--gris, #5A6478);
+    font-size: 0.78rem;
+    line-height: 1.2;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .support-strip__logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.4rem, 4vw, 3rem);
+    flex-wrap: wrap;
+  }
+  .support-strip__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .support-strip__logo img {
+    display: block;
+    width: auto;
+    object-fit: contain;
+  }
+  .support-strip__logo--aredi img {
+    max-height: 96px;
+    max-width: min(34vw, 165px);
+  }
+  .support-strip__logo--esportcat img {
+    max-height: 88px;
+    max-width: min(54vw, 300px);
+  }
+  @media (max-width: 640px) {
+    .support-strip { padding: 1.5rem 0 1.7rem; }
+    .support-strip__inner { gap: 1.1rem; }
+    .support-strip__label { flex-basis: 100%; font-size: 0.72rem; }
+    .support-strip__logos { gap: 1.25rem; }
+    .support-strip__logo--aredi img { max-height: 82px; max-width: 145px; }
+    .support-strip__logo--esportcat img { max-height: 76px; max-width: 250px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <img src="img/logo-small.png" alt="Llobregat x la Diabetis">
+      <span>Llobregat <em>x la</em> Diabetis</span>
+    </a>
+    <div style="display: flex; align-items: center;">
+      <a href="index.html" class="back-link">
+        <span lang="ca">Tornar a l'inici</span>
+        <span lang="es">Volver al inicio</span>
+        <span lang="en">Back to home</span>
+      </a>
+      <div class="lang-toggle" role="group" aria-label="Llengua">
+        <button data-set-lang="ca" class="active" type="button">CA</button>
+        <button data-set-lang="es" type="button">ES</button>
+        <button data-set-lang="en" type="button">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <span class="eyebrow">
+      <span lang="ca">Avís legal i privacitat</span>
+      <span lang="es">Aviso legal y privacidad</span>
+      <span lang="en">Legal notice and privacy</span>
+    </span>
+    <h1>
+      <span lang="ca">Política de privacitat</span>
+      <span lang="es">Política de privacidad</span>
+      <span lang="en">Privacy policy</span>
+    </h1>
+    <p class="updated">
+      <span lang="ca"><strong>Última actualització:</strong> maig de 2026 · v1.0</span>
+      <span lang="es"><strong>Última actualización:</strong> mayo de 2026 · v1.0</span>
+      <span lang="en"><strong>Last updated:</strong> May 2026 · v1.0</span>
+    </p>
+  </div>
+</section>
+
+<main>
+  <div class="container">
+
+    <!-- ============== CATALÀ ============== -->
+    <div lang="ca">
+
+      <div class="summary">
+        <h3>Resum en clar</h3>
+        <ul>
+          <li>Recollim només les dades imprescindibles per organitzar el repte i comunicar-nos amb tu.</li>
+          <li>No venem ni cedim les teves dades a tercers amb finalitats comercials.</li>
+          <li>Les donacions es gestionen a través de <strong>Mi Grano de Arena</strong>: les seves dades de pagament no passen mai pels nostres servidors.</li>
+          <li>Pots demanar accedir, corregir o esborrar les teves dades en qualsevol moment escrivint a <a href="mailto:info@llobregat.org">info@llobregat.org</a>.</li>
+        </ul>
+      </div>
+
+      <h2>1. Qui som</h2>
+      <p>
+        <strong>Llobregat x la Diabetis</strong> és el nom d'un repte solidari de running impulsat per Cristian Gómez, a títol personal, amb el suport d'<strong>AREDI</strong> (Associació Ajuda a la Recerca en Diabetis). Consisteix en córrer 180 km pel riu Llobregat del 16 al 18 d'octubre de 2026 per visibilitzar la diabetis tipus 1 i recaptar fons per a la recerca.
+      </p>
+      <p>
+        <strong>Llobregat x la Diabetis no és una entitat jurídica</strong>: és el nom de la campanya. Totes les donacions econòmiques es fan directament a <strong>AREDI</strong> a través de la plataforma <strong>Mi Grano de Arena</strong>, que és qui rep, gestiona i destina els fons a la recerca. Cristian Gómez i l'equip organitzador només coordinem la part logística, comunicativa i de mobilització del repte.
+      </p>
+      <h2>2. Quines dades recollim i per què</h2>
+
+      <h3>Quan t'apuntes al repte (corredors, caminants, voluntaris)</h3>
+      <p>Recollim el teu nom, cognoms, correu electrònic, telèfon, població i informació sobre com vols participar (etapa, modalitat o disponibilitat, si escau). Aquestes dades les fem servir per:</p>
+      <ul>
+        <li>Organitzar la logística del repte (avituallaments, coordinació i comunicacions sobre l'esdeveniment).</li>
+        <li>Contactar-te per confirmar la teva participació o resoldre dubtes.</li>
+      </ul>
+
+      <h3>Quan ens contactes per patrocini o adhesió municipal</h3>
+      <p>Recollim el teu nom, càrrec, organització/municipi, correu i telèfon. Ho fem servir exclusivament per gestionar la teva proposta de col·laboració.</p>
+
+      <h3>Quan et registres per seguir el repte</h3>
+      <p>Recollim només el teu correu electrònic. L'utilitzem per enviar-te novetats del repte, crides puntuals i resultats de la recaptació. Pots donar-te de baixa en qualsevol moment des de qualsevol correu que t'enviem.</p>
+
+      <h3>Quan ens escrius pel formulari de contacte</h3>
+      <p>Recollim el teu nom, correu i el contingut del missatge, només per respondre't.</p>
+
+      <h3>Cookies tècniques</h3>
+      <p>La nostra web utilitza emmagatzematge local (<em>localStorage</em>) per recordar l'idioma que has triat. No fem servir cookies de seguiment ni d'analítica de tercers.</p>
+
+      <h2>3. Base legal del tractament</h2>
+      <ul>
+        <li><strong>Consentiment exprés</strong> en marcar la casella corresponent en cada formulari (Article 6.1.a del RGPD).</li>
+        <li><strong>Execució de la relació de col·laboració</strong> entre tu i el projecte quan t'apuntes al repte (Article 6.1.b del RGPD).</li>
+      </ul>
+
+      <h2>4. Quant de temps guardem les teves dades</h2>
+      <ul>
+        <li><strong>Inscripcions al repte:</strong> fins a 6 mesos després de l'esdeveniment, per gestionar comunicacions de tancament i agraïments.</li>
+        <li><strong>Patrocinis i adhesions:</strong> fins a la finalització de la col·laboració, més un any per a obligacions comptables si escau.</li>
+        <li><strong>Seguiment del repte:</strong> fins que et donis de baixa.</li>
+        <li><strong>Consultes per email:</strong> fins a 12 mesos després de l'última comunicació.</li>
+      </ul>
+
+      <h2>5. Qui té accés a les teves dades</h2>
+      <p>Les teves dades les tractem únicament l'equip organitzador del projecte. Per gestionar-les fem servir serveis de tercers que també compleixen el RGPD:</p>
+      <ul>
+        <li><strong>Netlify Forms</strong> (Estats Units, certificat amb clàusules contractuals tipus de la UE) — recepció de formularis.</li>
+        <li><strong>Servei de correu electrònic</strong> per enviar i rebre comunicacions a info@llobregat.org.</li>
+        <li><strong>Mi Grano de Arena</strong> — passarel·la de donacions. Les seves dades de pagament (targeta, etc.) van directament a aquesta plataforma, no passen mai pels nostres servidors. Consulta la <a href="https://www.migranodearena.org/politica-de-privacidad" target="_blank" rel="noopener">política de privacitat de Mi Grano de Arena</a>.</li>
+        <li><strong>AREDI</strong> rep els fons recaptats. No els compartim les teves dades personals tret que tu hi consentis expressament.</li>
+      </ul>
+      <p>No venem ni cedim les teves dades a tercers amb finalitats comercials ni publicitàries.</p>
+
+      <h2>6. Els teus drets</h2>
+      <p>Tens dret a:</p>
+      <ul>
+        <li><strong>Accedir</strong> a les dades que tenim sobre tu.</li>
+        <li><strong>Rectificar</strong> dades inexactes o incompletes.</li>
+        <li><strong>Suprimir</strong> les teves dades (dret a l'oblit) quan ja no siguin necessàries.</li>
+        <li><strong>Limitar</strong> el tractament en determinades circumstàncies.</li>
+        <li><strong>Portabilitat</strong>: rebre les teves dades en un format estructurat.</li>
+        <li><strong>Oposar-te</strong> al tractament o retirar el consentiment en qualsevol moment.</li>
+        <li><strong>Presentar una reclamació</strong> davant l'Autoritat Catalana de Protecció de Dades (<a href="https://apdcat.gencat.cat" target="_blank" rel="noopener">apdcat.gencat.cat</a>) o l'Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener">aepd.es</a>).</li>
+      </ul>
+      <p>Per exercir qualsevol d'aquests drets, escriu-nos a <a href="mailto:info@llobregat.org">info@llobregat.org</a> indicant clarament què vols.</p>
+
+      <h2>7. Seguretat</h2>
+      <p>La web es serveix sempre xifrada (HTTPS). Els formularis es transmeten i s'emmagatzemen pels nostres proveïdors amb mesures tècniques i organitzatives adequades. Tot i així, cap sistema és infal·lible al 100%: si en algun moment detectem una incidència que pugui afectar-te, t'ho comunicarem com més aviat millor.</p>
+
+      <h2>8. Menors d'edat</h2>
+      <p>Si tens menys de 14 anys, necessites el consentiment dels teus pares o tutors per inscriure't al repte o registrar-te per seguir el repte.</p>
+
+      <h2>9. Canvis en aquesta política</h2>
+      <p>Podem actualitzar aquesta política per adaptar-la a canvis legals o operatius. Sempre indicarem la data de l'última actualització al capçal. Si els canvis són substancials i t'afecten directament, t'ho notificarem per correu.</p>
+
+      <div class="contact-block">
+        <h3>Contacte</h3>
+        <p>
+          <strong>Llobregat x la Diabetis</strong><br>
+          Correu: <a href="mailto:info@llobregat.org">info@llobregat.org</a><br>
+          Web: <a href="https://llobregat.org">llobregat.org</a>
+        </p>
+      </div>
+    </div>
+
+
+    <!-- ============== ESPAÑOL ============== -->
+    <div lang="es">
+
+      <div class="summary">
+        <h3>Resumen claro</h3>
+        <ul>
+          <li>Recogemos solo los datos imprescindibles para organizar el reto y comunicarnos contigo.</li>
+          <li>No vendemos ni cedemos tus datos a terceros con fines comerciales.</li>
+          <li>Las donaciones se gestionan a través de <strong>Mi Grano de Arena</strong>: tus datos de pago nunca pasan por nuestros servidores.</li>
+          <li>Puedes pedir acceder, corregir o eliminar tus datos en cualquier momento escribiendo a <a href="mailto:info@llobregat.org">info@llobregat.org</a>.</li>
+        </ul>
+      </div>
+
+      <h2>1. Quiénes somos</h2>
+      <p>
+        <strong>Llobregat x la Diabetis</strong> es el nombre de un reto solidario de running impulsado por Cristian Gómez, a título personal, con el apoyo de <strong>AREDI</strong> (Asociación Ayuda a la Investigación en Diabetes). Consiste en correr 180 km por el río Llobregat del 16 al 18 de octubre de 2026 para visibilizar la diabetes tipo 1 y recaudar fondos para la investigación.
+      </p>
+      <p>
+        <strong>Llobregat x la Diabetis no es una entidad jurídica</strong>: es el nombre de la campaña. Todas las donaciones económicas se hacen directamente a <strong>AREDI</strong> a través de la plataforma <strong>Mi Grano de Arena</strong>, que es quien recibe, gestiona y destina los fondos a la investigación. Cristian Gómez y el equipo organizador solo coordinamos la parte logística, comunicativa y de movilización del reto.
+      </p>
+      <h2>2. Qué datos recogemos y para qué</h2>
+
+      <h3>Cuando te apuntas al reto (corredores, caminantes, voluntarios)</h3>
+      <p>Recogemos tu nombre, apellidos, correo electrónico, teléfono, población e información sobre cómo quieres participar (etapa, modalidad o disponibilidad, si procede). Estos datos los usamos para:</p>
+      <ul>
+        <li>Organizar la logística del reto (avituallamientos, coordinación y comunicaciones del evento).</li>
+        <li>Contactarte para confirmar tu participación o resolver dudas.</li>
+      </ul>
+
+      <h3>Cuando nos contactas por patrocinio o adhesión municipal</h3>
+      <p>Recogemos tu nombre, cargo, organización/municipio, correo y teléfono. Lo usamos exclusivamente para gestionar tu propuesta de colaboración.</p>
+
+      <h3>Cuando te registras para seguir el reto</h3>
+      <p>Recogemos solo tu correo electrónico. Lo utilizamos para enviarte novedades del reto, llamamientos puntuales y resultados de la recaudación. Puedes darte de baja en cualquier momento desde cualquier correo que te enviemos.</p>
+
+      <h3>Cuando nos escribes por el formulario de contacto</h3>
+      <p>Recogemos tu nombre, correo y el contenido del mensaje, solo para responderte.</p>
+
+      <h3>Cookies técnicas</h3>
+      <p>Nuestra web utiliza almacenamiento local (<em>localStorage</em>) para recordar el idioma que has elegido. No usamos cookies de seguimiento ni de analítica de terceros.</p>
+
+      <h2>3. Base legal del tratamiento</h2>
+      <ul>
+        <li><strong>Consentimiento expreso</strong> al marcar la casilla correspondiente en cada formulario (Artículo 6.1.a del RGPD).</li>
+        <li><strong>Ejecución de la relación de colaboración</strong> entre tú y el proyecto cuando te apuntas al reto (Artículo 6.1.b del RGPD).</li>
+      </ul>
+
+      <h2>4. Cuánto tiempo guardamos tus datos</h2>
+      <ul>
+        <li><strong>Inscripciones al reto:</strong> hasta 6 meses después del evento, para gestionar comunicaciones de cierre y agradecimientos.</li>
+        <li><strong>Patrocinios y adhesiones:</strong> hasta la finalización de la colaboración, más un año para obligaciones contables si procede.</li>
+        <li><strong>Seguimiento del reto:</strong> hasta que te des de baja.</li>
+        <li><strong>Consultas por email:</strong> hasta 12 meses después de la última comunicación.</li>
+      </ul>
+
+      <h2>5. Quién tiene acceso a tus datos</h2>
+      <p>Tus datos los tratamos únicamente el equipo organizador del proyecto. Para gestionarlos usamos servicios de terceros que también cumplen el RGPD:</p>
+      <ul>
+        <li><strong>Netlify Forms</strong> (Estados Unidos, certificado con cláusulas contractuales tipo de la UE) — recepción de formularios.</li>
+        <li><strong>Servicio de correo electrónico</strong> para enviar y recibir comunicaciones en info@llobregat.org.</li>
+        <li><strong>Mi Grano de Arena</strong> — pasarela de donaciones. Tus datos de pago (tarjeta, etc.) van directamente a esta plataforma, nunca pasan por nuestros servidores. Consulta la <a href="https://www.migranodearena.org/politica-de-privacidad" target="_blank" rel="noopener">política de privacidad de Mi Grano de Arena</a>.</li>
+        <li><strong>AREDI</strong> recibe los fondos recaudados. No compartimos tus datos personales con ellos salvo que des tu consentimiento expreso.</li>
+      </ul>
+      <p>No vendemos ni cedemos tus datos a terceros con fines comerciales o publicitarios.</p>
+
+      <h2>6. Tus derechos</h2>
+      <p>Tienes derecho a:</p>
+      <ul>
+        <li><strong>Acceder</strong> a los datos que tenemos sobre ti.</li>
+        <li><strong>Rectificar</strong> datos inexactos o incompletos.</li>
+        <li><strong>Suprimir</strong> tus datos (derecho al olvido) cuando ya no sean necesarios.</li>
+        <li><strong>Limitar</strong> el tratamiento en determinadas circunstancias.</li>
+        <li><strong>Portabilidad</strong>: recibir tus datos en un formato estructurado.</li>
+        <li><strong>Oponerte</strong> al tratamiento o retirar el consentimiento en cualquier momento.</li>
+        <li><strong>Presentar una reclamación</strong> ante la Autoridad Catalana de Protección de Datos (<a href="https://apdcat.gencat.cat" target="_blank" rel="noopener">apdcat.gencat.cat</a>) o la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener">aepd.es</a>).</li>
+      </ul>
+      <p>Para ejercer cualquiera de estos derechos, escríbenos a <a href="mailto:info@llobregat.org">info@llobregat.org</a> indicando claramente qué quieres.</p>
+
+      <h2>7. Seguridad</h2>
+      <p>La web se sirve siempre cifrada (HTTPS). Los formularios se transmiten y almacenan por nuestros proveedores con medidas técnicas y organizativas adecuadas. Aun así, ningún sistema es infalible al 100%: si en algún momento detectamos una incidencia que pueda afectarte, te lo comunicaremos lo antes posible.</p>
+
+      <h2>8. Menores de edad</h2>
+      <p>Si eres menor de 14 años, necesitas el consentimiento de tus padres o tutores para inscribirte al reto o registrarte para seguir el reto.</p>
+
+      <h2>9. Cambios en esta política</h2>
+      <p>Podemos actualizar esta política para adaptarla a cambios legales u operativos. Siempre indicaremos la fecha de la última actualización en el encabezado. Si los cambios son sustanciales y te afectan directamente, te lo notificaremos por correo.</p>
+
+      <div class="contact-block">
+        <h3>Contacto</h3>
+        <p>
+          <strong>Llobregat x la Diabetis</strong><br>
+          Correo: <a href="mailto:info@llobregat.org">info@llobregat.org</a><br>
+          Web: <a href="https://llobregat.org">llobregat.org</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- ============== ENGLISH ============== -->
+    <div lang="en">
+
+      <div class="summary">
+        <h3>Plain-language summary</h3>
+        <ul>
+          <li>We only collect the data needed to organise the challenge and communicate with you.</li>
+          <li>We do not sell or share your data with third parties for commercial purposes.</li>
+          <li>Donations are processed through <strong>Mi Grano de Arena</strong>: your payment details never pass through our servers.</li>
+          <li>You can request access, correction or deletion of your data at any time by writing to <a href="mailto:info@llobregat.org">info@llobregat.org</a>.</li>
+        </ul>
+      </div>
+
+      <h2>1. Who we are</h2>
+      <p>
+        <strong>Llobregat x la Diabetis</strong> is the name of a charity running challenge promoted personally by Cristian Gómez, with the support of <strong>AREDI</strong> (Association for Research Support in Diabetes). The challenge consists of running 180 km along the Llobregat river from 16 to 18 October 2026 to raise awareness of type 1 diabetes and fund research.
+      </p>
+      <p>
+        <strong>Llobregat x la Diabetis is not a legal entity</strong>: it is the name of the campaign. All financial donations are made directly to <strong>AREDI</strong> through the <strong>Mi Grano de Arena</strong> platform, which receives, manages and allocates the funds to research. Cristian Gómez and the organising team only coordinate the logistics, communication and mobilisation around the challenge.
+      </p>
+
+      <h2>2. What data we collect and why</h2>
+
+      <h3>When you sign up for the challenge (runners, walkers, volunteers)</h3>
+      <p>We collect your name, surname, email address, phone number, town and information about how you want to participate (stage, mode or availability where applicable). We use this data to:</p>
+      <ul>
+        <li>Organise the logistics of the challenge, including aid stations, coordination and event communications.</li>
+        <li>Contact you to confirm your participation or answer questions.</li>
+      </ul>
+
+      <h3>When you contact us about sponsorship or municipal support</h3>
+      <p>We collect your name, role, organisation or municipality, email address and phone number. We use this only to manage your collaboration proposal.</p>
+
+      <h3>When you register to follow the challenge</h3>
+      <p>We collect only your email address. We use it to send challenge updates, occasional calls to action and fundraising results. You can unsubscribe at any time from any email we send you.</p>
+
+      <h3>When you write to us through the contact form</h3>
+      <p>We collect your name, email address and message content only to reply to you.</p>
+
+      <h3>Technical cookies</h3>
+      <p>Our website uses local storage (<em>localStorage</em>) to remember your language choice. We do not use tracking cookies or third-party analytics cookies.</p>
+
+      <h2>3. Legal basis for processing</h2>
+      <ul>
+        <li><strong>Explicit consent</strong> when you tick the relevant checkbox on each form (Article 6.1.a of the GDPR).</li>
+        <li><strong>Performance of a collaboration relationship</strong> between you and the project when you sign up for the challenge (Article 6.1.b of the GDPR).</li>
+      </ul>
+
+      <h2>4. How long we keep your data</h2>
+      <ul>
+        <li><strong>Challenge registrations:</strong> up to 6 months after the event, to manage closing communications and thank-you messages.</li>
+        <li><strong>Sponsorships and municipal support:</strong> until the collaboration ends, plus one year for accounting obligations where applicable.</li>
+        <li><strong>Following the challenge:</strong> until you unsubscribe.</li>
+        <li><strong>Email enquiries:</strong> up to 12 months after the last communication.</li>
+      </ul>
+
+      <h2>5. Who has access to your data</h2>
+      <p>Your data is processed only by the project organising team. To manage it, we use third-party services that also comply with the GDPR:</p>
+      <ul>
+        <li><strong>Netlify Forms</strong> (United States, covered by EU standard contractual clauses) — form reception.</li>
+        <li><strong>Email service</strong> to send and receive communications at info@llobregat.org.</li>
+        <li><strong>Mi Grano de Arena</strong> — donation gateway. Your payment details (card, etc.) go directly to that platform and never pass through our servers. See the <a href="https://www.migranodearena.org/politica-de-privacidad" target="_blank" rel="noopener">Mi Grano de Arena privacy policy</a>.</li>
+        <li><strong>AREDI</strong> receives the funds raised. We do not share your personal data with them unless you give explicit consent.</li>
+      </ul>
+      <p>We do not sell or share your data with third parties for commercial or advertising purposes.</p>
+
+      <h2>6. Your rights</h2>
+      <p>You have the right to:</p>
+      <ul>
+        <li><strong>Access</strong> the data we hold about you.</li>
+        <li><strong>Rectify</strong> inaccurate or incomplete data.</li>
+        <li><strong>Delete</strong> your data (right to be forgotten) when it is no longer necessary.</li>
+        <li><strong>Restrict</strong> processing in certain circumstances.</li>
+        <li><strong>Data portability</strong>: receive your data in a structured format.</li>
+        <li><strong>Object</strong> to processing or withdraw your consent at any time.</li>
+        <li><strong>File a complaint</strong> with the Catalan Data Protection Authority (<a href="https://apdcat.gencat.cat" target="_blank" rel="noopener">apdcat.gencat.cat</a>) or the Spanish Data Protection Agency (<a href="https://www.aepd.es" target="_blank" rel="noopener">aepd.es</a>).</li>
+      </ul>
+      <p>To exercise any of these rights, write to <a href="mailto:info@llobregat.org">info@llobregat.org</a> and clearly state what you need.</p>
+
+      <h2>7. Security</h2>
+      <p>The website is always served over HTTPS. Forms are transmitted and stored by our providers with appropriate technical and organisational measures. Even so, no system is 100% infallible: if we detect an incident that may affect you, we will inform you as soon as possible.</p>
+
+      <h2>8. Minors</h2>
+      <p>If you are under 14, you need permission from your parents or legal guardians to sign up for the challenge or register to follow it.</p>
+
+      <h2>9. Changes to this policy</h2>
+      <p>We may update this policy to reflect legal or operational changes. We will always show the last update date in the header. If the changes are substantial and directly affect you, we will notify you by email.</p>
+
+      <div class="contact-block">
+        <h3>Contact</h3>
+        <p>
+          <strong>Llobregat x la Diabetis</strong><br>
+          Email: <a href="mailto:info@llobregat.org">info@llobregat.org</a><br>
+          Website: <a href="https://llobregat.org">llobregat.org</a>
+        </p>
+      </div>
+    </div>
+
+
+  </div>
+</main>
+
+
+
+<section class="support-strip" aria-label="Amb el suport de / Con el apoyo de / Supported by">
+  <div class="container support-strip__inner">
+    <p class="support-strip__label">
+      <span lang="ca">Amb el suport de</span>
+      <span lang="es">Con el apoyo de</span>
+      <span lang="en">Supported by</span>
+    </p>
+    <div class="support-strip__logos">
+      <div class="support-strip__logo support-strip__logo--aredi">
+        <img src="img/support-aredi.png" alt="AREDI">
+      </div>
+      <div class="support-strip__logo support-strip__logo--esportcat">
+        <img src="img/support-esportcat.png" alt="esportcat · Generalitat de Catalunya">
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">
+          <img src="img/logo-footer-white.png" alt="Llobregat x la Diabetis">
+          <div>
+            <div class="footer-brand-text">Llobregat <em>x la</em> Diabetis</div>
+            <span class="footer-tagline">180 km · 3 <span lang="ca">dies</span><span lang="es">días</span><span lang="en">days</span> · <span lang="ca">un propòsit</span><span lang="es">un propósito</span><span lang="en">one purpose</span></span>
+          </div>
+        </div>
+      </div>
+      <div>
+        © 2026 ·
+        <a href="index.html">
+          <span lang="ca">Inici</span>
+          <span lang="es">Inicio</span>
+          <span lang="en">Home</span>
+        </a> ·
+        <a href="mailto:info@llobregat.org">info@llobregat.org</a> · #LlobregatXLaDiabetis
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Aviso de cookies">
+  <p>
+    <span lang="ca">Fem servir cookies tècniques i emmagatzematge local per recordar l'idioma i millorar l'experiència. No utilitzem cookies de seguiment. Consulta la <a href="privacitat.html">política de privacitat</a>.</span>
+    <span lang="es">Usamos cookies técnicas y almacenamiento local para recordar el idioma y mejorar la experiencia. No utilizamos cookies de seguimiento. Consulta la <a href="privacitat.html">política de privacidad</a>.</span>
+    <span lang="en">We use technical cookies and local storage to remember your language and improve the experience. We do not use tracking cookies. See the <a href="privacitat.html">privacy policy</a>.</span>
+  </p>
+  <button type="button" id="cookieAccept"><span lang="ca">Acceptar</span><span lang="es">Aceptar</span><span lang="en">Accept</span></button>
+</div>
+
+<script>
+  const html = document.documentElement;
+  const langButtons = document.querySelectorAll('[data-set-lang]');
+
+  function setLang(lang) {
+    html.setAttribute('data-lang', lang);
+    html.setAttribute('lang', lang);
+    langButtons.forEach(b => b.classList.toggle('active', b.dataset.setLang === lang));
+    try { localStorage.setItem('llxd-lang', lang); } catch(e) {}
+    document.title = lang === 'es'
+      ? 'Política de privacidad · Llobregat x la Diabetis'
+      : lang === 'en'
+        ? 'Privacy policy · Llobregat x la Diabetis'
+        : 'Política de privacitat · Llobregat x la Diabetis';
+  }
+
+  langButtons.forEach(b => b.addEventListener('click', () => setLang(b.dataset.setLang)));
+
+  // Aplica l'idioma desat (de la web principal o d'aquesta mateixa pàgina)
+  try {
+    const saved = localStorage.getItem('llxd-lang');
+    if (saved === 'ca' || saved === 'es' || saved === 'en') setLang(saved);
+  } catch(e) {}
+</script>
+
+
+<script>
+  (function initCookieConsent() {
+    const banner = document.getElementById('cookieBanner');
+    const accept = document.getElementById('cookieAccept');
+    if (!banner || !accept) return;
+    let ok = false;
+    try { ok = localStorage.getItem('llxd-cookie-ok') === '1'; } catch(e) {}
+    if (!ok) banner.classList.add('is-visible');
+    accept.addEventListener('click', () => {
+      try { localStorage.setItem('llxd-cookie-ok', '1'); } catch(e) {}
+      banner.classList.remove('is-visible');
+    });
+  })();
+</script>
+
+
+
+<script src="assets/lxd-universal-form.js?v=universal-v2" defer></script>
+<script src="assets/lxd-lang-sync.js?v=lang-form-v3" defer></script>
+</body>
+</html>

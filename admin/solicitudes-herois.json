@@ -1,0 +1,5 @@
+{
+  "actualitzat": "2026-06-05",
+  "comentari": "Bandeja local de prueba para el admin. En producción puede sustituirse por Netlify Forms, Netlify Blobs o una función que sincronice submissions.",
+  "solicitudes": []
+}

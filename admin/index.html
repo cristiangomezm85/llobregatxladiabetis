@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>LxD · Admin de contenidos</title>
+  <link rel="stylesheet" href="../assets/lxd-admin.css">
+</head>
+<body>
+  <header class="admin-topbar">
+    <div>
+      <p class="eyebrow">Llobregat x la Diabetis</p>
+      <h1>Admin de contenidos</h1>
+    </div>
+    <div class="top-actions">
+      <a href="../index.html" class="ghost-link">Ver web</a>
+      <button type="button" id="reloadBtn" class="btn btn-ghost">Recargar</button>
+    </div>
+  </header>
+
+  <main class="admin-shell">
+    <aside class="admin-sidebar" aria-label="Secciones de administración">
+      <button class="tab-btn is-active" data-tab="herois" type="button">Héroes</button>
+      <button class="tab-btn" data-tab="solicitudes" type="button">Solicitudes</button>
+      <button class="tab-btn" data-tab="pobles" type="button">Pueblos</button>
+      <button class="tab-btn" data-tab="patrocinadors" type="button">Patrocinadores</button>
+      <button class="tab-btn" data-tab="config" type="button">Configuración</button>
+    </aside>
+
+    <section class="admin-workspace">
+      <div id="adminNotice" class="notice" role="status"></div>
+
+      <section class="panel is-active" data-panel="herois">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Perfiles públicos</p>
+            <h2>Héroes y Heroínas</h2>
+          </div>
+          <button class="btn" data-new="herois" type="button">Nuevo héroe</button>
+        </div>
+        <div class="split">
+          <div class="list-card">
+            <div id="heroisList" class="item-list"></div>
+          </div>
+          <form id="heroisForm" class="editor-form" autocomplete="off">
+            <input type="hidden" name="id">
+            <div class="form-grid two">
+              <label>Nombre público<input name="nom" required></label>
+              <label>Pueblo<input name="poble"></label>
+              <label>Modalidad
+                <select name="modalitat">
+                  <option value="corrent">Corriendo</option>
+                  <option value="caminant">Caminando</option>
+                  <option value="bici">Bici</option>
+                  <option value="mixt">Mixto</option>
+                </select>
+              </label>
+              <label>Estado publicación
+                <select name="estat_publicacio">
+                  <option value="publicat">Publicado</option>
+                  <option value="borrador">Borrador / oculto</option>
+                </select>
+              </label>
+            </div>
+
+            <details open>
+              <summary>Rol</summary>
+              <div class="form-grid three">
+                <label>CA<input name="rol.ca"></label>
+                <label>ES<input name="rol.es"></label>
+                <label>EN<input name="rol.en"></label>
+              </div>
+            </details>
+
+            <details open>
+              <summary>Tramo</summary>
+              <div class="form-grid three">
+                <label>CA<input name="tram.ca"></label>
+                <label>ES<input name="tram.es"></label>
+                <label>EN<input name="tram.en"></label>
+              </div>
+            </details>
+
+            <details open>
+              <summary>Motivación</summary>
+              <div class="form-grid three">
+                <label>CA<textarea name="motiu.ca" rows="4"></textarea></label>
+                <label>ES<textarea name="motiu.es" rows="4"></textarea></label>
+                <label>EN<textarea name="motiu.en" rows="4"></textarea></label>
+              </div>
+            </details>
+
+            <details>
+              <summary>Reto personal</summary>
+              <div class="form-grid three">
+                <label>CA<textarea name="repte.ca" rows="4"></textarea></label>
+                <label>ES<textarea name="repte.es" rows="4"></textarea></label>
+                <label>EN<textarea name="repte.en" rows="4"></textarea></label>
+              </div>
+            </details>
+
+            <div class="form-grid two">
+              <label>Instagram<input name="instagram" placeholder="@usuario"></label>
+              <label>Ruta foto actual<input name="foto" placeholder="img/herois/nombre.webp"></label>
+            </div>
+            <label class="file-box">Foto nueva
+              <input type="file" name="image" accept="image/*">
+              <span>Se convierte en el navegador y se guarda como imagen pública.</span>
+            </label>
+            <label class="checkbox-row"><input type="checkbox" name="destacat"> Destacado en la home</label>
+            <div class="preview-row"><img id="heroisPreview" alt="" hidden></div>
+            <div class="form-actions">
+              <button class="btn" type="submit">Guardar héroe</button>
+              <button class="btn btn-danger" type="button" data-delete="herois">Eliminar</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="panel" data-panel="solicitudes">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Bandeja de aprobación</p>
+            <h2>Solicitudes de héroes</h2>
+          </div>
+          <button class="btn btn-ghost" id="seedRequestBtn" type="button">Crear solicitud demo local</button>
+        </div>
+        <p class="help-text">Esta bandeja usa un JSON local de prueba. Más adelante puede alimentarse desde Netlify Forms o Netlify Blobs sin cambiar el editor de héroes.</p>
+        <div id="requestsList" class="request-list"></div>
+      </section>
+
+      <section class="panel" data-panel="pobles">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Recorrido</p>
+            <h2>Pueblos y puntos del río</h2>
+          </div>
+          <button class="btn" data-new="pobles" type="button">Nuevo pueblo</button>
+        </div>
+        <div class="split">
+          <div class="list-card"><div id="poblesListAdmin" class="item-list"></div></div>
+          <form id="poblesForm" class="editor-form" autocomplete="off">
+            <input type="hidden" name="id">
+            <div class="form-grid three">
+              <label>Nombre<input name="nom" required></label>
+              <label>Día<input name="dia" type="number" min="1" max="3" step="1"></label>
+              <label>Km<input name="km" type="number" step="0.1"></label>
+            </div>
+            <div class="form-grid three">
+              <label>Comarca<input name="comarca"></label>
+              <label>Tipo
+                <select name="tipus">
+                  <option value="municipi">Municipio</option>
+                  <option value="nucli">Núcleo</option>
+                  <option value="punt">Punto especial</option>
+                </select>
+              </label>
+              <label>Estado
+                <select name="estat">
+                  <option value="pendent">Punto de paso</option>
+                  <option value="interessat">En trámite</option>
+                  <option value="adherit">Adherido</option>
+                  <option value="punt-etapa">Inicio/fin etapa</option>
+                  <option value="punt-final">Punto final</option>
+                </select>
+              </label>
+            </div>
+            <label>Municipio principal, si es núcleo<input name="municipi_principal"></label>
+            <div class="form-grid two">
+              <label>Embajador/a<input name="embaixador.nom"></label>
+              <label>Instagram embajador/a<input name="embaixador.instagram"></label>
+            </div>
+            <fieldset class="checkbox-group">
+              <legend>Aporta</legend>
+              <label><input type="checkbox" name="aporta" value="embaixador"> Embajador</label>
+              <label><input type="checkbox" name="aporta" value="punt-trobada"> Punto de encuentro</label>
+              <label><input type="checkbox" name="aporta" value="difusio"> Difusión</label>
+              <label><input type="checkbox" name="aporta" value="logistica"> Logística</label>
+              <label><input type="checkbox" name="aporta" value="aportacio"> Aportación económica</label>
+              <label><input type="checkbox" name="aporta" value="altres"> Otros</label>
+            </fieldset>
+            <details>
+              <summary>Notas públicas</summary>
+              <div class="form-grid three">
+                <label>CA<textarea name="notes.ca" rows="3"></textarea></label>
+                <label>ES<textarea name="notes.es" rows="3"></textarea></label>
+                <label>EN<textarea name="notes.en" rows="3"></textarea></label>
+              </div>
+            </details>
+            <div class="form-actions">
+              <button class="btn" type="submit">Guardar pueblo</button>
+              <button class="btn btn-danger" type="button" data-delete="pobles">Eliminar</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="panel" data-panel="patrocinadors">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Colaboradores</p>
+            <h2>Patrocinadores</h2>
+          </div>
+          <button class="btn" data-new="patrocinadors" type="button">Nuevo patrocinador</button>
+        </div>
+        <div class="split">
+          <div class="list-card"><div id="patroListAdmin" class="item-list"></div></div>
+          <form id="patroForm" class="editor-form" autocomplete="off">
+            <input type="hidden" name="id">
+            <div class="form-grid two">
+              <label>Nombre / organización<input name="nom" required></label>
+              <label>Web<input name="web" placeholder="https://..."></label>
+              <label>Nivel
+                <select name="nivell">
+                  <option value="km">Km · desde 100€</option>
+                  <option value="territorial">Pueblo/lugar · desde 500€</option>
+                  <option value="general">General · desde 3.000€</option>
+                  <option value="amida">A medida</option>
+                </select>
+              </label>
+              <label>Tipo
+                <select name="tipus">
+                  <option value="empresa">Empresa</option>
+                  <option value="ajuntament">Ayuntamiento</option>
+                  <option value="particular">Particular</option>
+                  <option value="associacio">Asociación</option>
+                </select>
+              </label>
+              <label>Km patrocinado<input name="km" type="number" step="1"></label>
+              <label>Estado publicación
+                <select name="estat_publicacio">
+                  <option value="publicat">Publicado</option>
+                  <option value="borrador">Borrador / oculto</option>
+                </select>
+              </label>
+            </div>
+            <details open>
+              <summary>Qué aporta / descripción</summary>
+              <div class="form-grid three">
+                <label>CA<textarea name="aporta.ca" rows="3"></textarea></label>
+                <label>ES<textarea name="aporta.es" rows="3"></textarea></label>
+                <label>EN<textarea name="aporta.en" rows="3"></textarea></label>
+              </div>
+            </details>
+            <details>
+              <summary>Mensaje público</summary>
+              <div class="form-grid three">
+                <label>CA<textarea name="missatge.ca" rows="3"></textarea></label>
+                <label>ES<textarea name="missatge.es" rows="3"></textarea></label>
+                <label>EN<textarea name="missatge.en" rows="3"></textarea></label>
+              </div>
+            </details>
+            <label>Ruta logo actual<input name="logo" placeholder="img/patrocinadors/logo.webp"></label>
+            <label class="file-box">Logo nuevo<input type="file" name="image" accept="image/*"><span>Opcional.</span></label>
+            <div class="preview-row"><img id="patroPreview" alt="" hidden></div>
+            <div class="form-actions">
+              <button class="btn" type="submit">Guardar patrocinador</button>
+              <button class="btn btn-danger" type="button" data-delete="patrocinadors">Eliminar</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="panel" data-panel="config">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Entorno</p>
+            <h2>Configuración local / Netlify / Git</h2>
+          </div>
+        </div>
+        <div class="config-card">
+          <label>Token admin de producción
+            <input id="adminTokenInput" type="password" placeholder="Solo necesario en Netlify si defines ADMIN_TOKEN">
+          </label>
+          <button class="btn" id="saveTokenBtn" type="button">Guardar token para esta sesión</button>
+          <hr>
+          <h3>Local</h3>
+          <pre><code>npm run dev
+# abrir http://localhost:8888/admin/</code></pre>
+          <p>En local, el admin escribe directamente en <code>herois.json</code>, <code>pobles.json</code>, <code>patrocinadors.json</code> y en las carpetas de imágenes.</p>
+          <h3>Producción Netlify + GitHub</h3>
+          <pre><code>CONTENT_BACKEND=github
+GITHUB_REPO=usuario/repositorio
+GITHUB_BRANCH=main
+GITHUB_TOKEN=...
+ADMIN_TOKEN=...</code></pre>
+          <p>En producción, el mismo admin puede crear commits en GitHub y Netlify redeployará la web.</p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="../assets/lxd-admin.js" defer></script>
+</body>
+</html>
