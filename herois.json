@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-05-22",
+  "actualitzat": "2026-06-06",
   "estat": "obert",
   "herois": [
     {
@@ -30,6 +30,31 @@
       },
       "instagram": "",
       "destacat": true
+    },
+    {
+      "id": "p",
+      "nom": "prueba heroe",
+      "poble": "prueba",
+      "modalitat": "corrent",
+      "estat_publicacio": "borrador",
+      "rol": {
+        "ca": "Heroi o Heroïna",
+        "es": "Héroe o Heroína",
+        "en": "Hero or Heroine"
+      },
+      "tram": {
+        "ca": "tot",
+        "es": "todo",
+        "en": "all"
+      },
+      "motiu": {
+        "ca": "tota",
+        "es": "toda",
+        "en": "alla"
+      },
+      "instagram": "@elmeuusuari",
+      "destacat": false,
+      "foto": "img/herois/p.webp"
     }
   ]
 }
