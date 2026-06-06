@@ -36,7 +36,7 @@
       "nom": "prueba heroe",
       "poble": "prueba",
       "modalitat": "corrent",
-      "estat_publicacio": "publicat",
+      "estat_publicacio": "borrador",
       "rol": {
         "ca": "Heroi o Heroïna",
         "es": "Héroe o Heroína",
