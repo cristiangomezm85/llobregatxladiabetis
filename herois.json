@@ -25,7 +25,12 @@
       },
       "instagram": "@carlunpac",
       "destacat": true,
-      "foto": "img/herois/p.webp"
+      "foto": "img/herois/p.webp",
+      "repte": {
+        "ca": "Faré tot el recorregut 180 kms",
+        "es": "Haré todo el recorrido 180 kms",
+        "en": "I will do all the route 180 kms"
+      }
     },
     {
       "id": "cristian-gomez",
