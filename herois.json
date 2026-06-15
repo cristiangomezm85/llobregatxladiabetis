@@ -36,7 +36,7 @@
       "nom": "prueba heroe",
       "poble": "prueba",
       "modalitat": "corrent",
-      "estat_publicacio": "borrador",
+      "estat_publicacio": "publicat",
       "rol": {
         "ca": "Heroi",
         "es": "Héroe",
@@ -53,7 +53,7 @@
         "en": "alla"
       },
       "instagram": "@carlunpac",
-      "destacat": false,
+      "destacat": true,
       "foto": "img/herois/p.webp"
     }
   ]
