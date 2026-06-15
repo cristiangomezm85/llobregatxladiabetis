@@ -3,6 +3,31 @@
   "estat": "obert",
   "herois": [
     {
+      "id": "p",
+      "nom": "Carlos Luna",
+      "poble": "Badalona",
+      "modalitat": "corrent",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Heroi",
+        "es": "Héroe",
+        "en": "Hero"
+      },
+      "tram": {
+        "ca": "Tot el recorregut - 180km",
+        "es": "Todo el recorrido - 180km",
+        "en": "All the route - 180km"
+      },
+      "motiu": {
+        "ca": "El meu fill, Iker, va debutar amb 7 mesos ia partir d'aquí tot ha estat un camí d'alts i baixos on el suport de la família ens ha fet seguir endavant",
+        "es": "Mi hijo, Iker, debutó con 7 meses y a partir de aquí todo ha sido un camino de altibajos donde el apoyo de la familia nos ha hecho seguir adelante",
+        "en": "My son, Iker, made his debut at 7 months old and from then on it has been a journey of ups and downs where the support of the family has helped us to keep going"
+      },
+      "instagram": "@carlunpac",
+      "destacat": true,
+      "foto": "img/herois/p.webp"
+    },
+    {
       "id": "cristian-gomez",
       "nom": "Cristian Gómez",
       "rol": {
@@ -30,31 +55,6 @@
       },
       "instagram": "",
       "destacat": true
-    },
-    {
-      "id": "p",
-      "nom": "prueba heroe",
-      "poble": "prueba",
-      "modalitat": "corrent",
-      "estat_publicacio": "publicat",
-      "rol": {
-        "ca": "Heroi",
-        "es": "Héroe",
-        "en": "Hero"
-      },
-      "tram": {
-        "ca": "Tot el recorregut - 180km",
-        "es": "Todo el recorrido - 180km",
-        "en": "All the route - 180km"
-      },
-      "motiu": {
-        "ca": "El meu fill, Iker, va debutar amb 7 mesos ia partir d'aquí tot ha estat un camí d'alts i baixos on el suport de la família ens ha fet seguir endavant",
-        "es": "Mi hijo, Iker, debutó con 7 meses y a partir de aquí todo ha sido un camino de altibajos donde el apoyo de la familia nos ha hecho seguir adelante",
-        "en": "My son, Iker, made his debut at 7 months old and from then on it has been a journey of ups and downs where the support of the family has helped us to keep going"
-      },
-      "instagram": "@carlunpac",
-      "destacat": true,
-      "foto": "img/herois/p.webp"
     }
   ]
 }
