@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-06-15",
+  "actualitzat": "2026-06-17",
   "estat": "obert",
   "herois": [
     {
@@ -61,6 +61,25 @@
       "instagram": "@kmxladiabetes",
       "destacat": true,
       "estat_publicacio": "publicat"
+    },
+    {
+      "id": "desiree",
+      "nom": "Desiree Cerdán",
+      "poble": "Castellet i la Gornal",
+      "modalitat": "corrent",
+      "estat_publicacio": "borrador",
+      "rol": {
+        "ca": "Corrent",
+        "es": "Corriendo",
+        "en": "Running"
+      },
+      "repte": {
+        "ca": "El meu repte personal és fer 10k corrent i 5k caminant arribant al final amb tot l'equip",
+        "es": "Mi reto personal es Hacer 10k corriendo y 5k caminando llegando al final con todo el equipo",
+        "en": "My personal challenge is to run 10k and walk 5k, finishing with the whole team."
+      },
+      "instagram": "@desi_dobox",
+      "destacat": false
     }
   ]
 }
