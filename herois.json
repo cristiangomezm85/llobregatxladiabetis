@@ -79,7 +79,12 @@
         "en": "My personal challenge is to run 10k and walk 5k, finishing with the whole team."
       },
       "instagram": "@desi_dobox",
-      "destacat": false
+      "destacat": false,
+      "motiu": {
+        "ca": "El meu fill Kilian va debutar amb 8 anys...va ser un cop molt dur, apartir d'aquí, tot va canviar a casa...un camí dur, ple de moments bons, tristos, regulars però aquí seguim forts i units sent un gran equip, pel i per tots els que tenen diabetis tipus 1, perquè només els que ho vivim sabem realment. prop dajudar a la investigació de la cura.",
+        "es": "Mi hijo Kilian debutó con 8 años...fue un golpe muy duro, apartir de ahí, todo cambió en casa...un camino duro, lleno de momentos buenos, tristes, regulares pero aquí seguimos fuertes y unidos siendo un gran equipo, por el y por todos los que tienen diabetes tipo 1, porque solo los que lo vivimos sabemos realmente como se lleva y se sufre..cada kilómetro va a ser un paso mas cerca de ayudar a la investigación de la cura.",
+        "en": "My son Kilian was diagnosed at 8 years old...it was a very hard blow, from then on, everything changed at home...a tough road, full of good, sad, and average moments, but here we are, still strong and united, a great team, for him and for everyone who has type 1 diabetes, because only those of us who live it know how it is and how much we suffer...every kilometer will be a step closer to helping the research for a cure."
+      }
     }
   ]
 }
