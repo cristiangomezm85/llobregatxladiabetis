@@ -67,11 +67,11 @@
       "nom": "Desiree Cerdán",
       "poble": "Castellet i la Gornal",
       "modalitat": "corrent",
-      "estat_publicacio": "borrador",
+      "estat_publicacio": "publicat",
       "rol": {
-        "ca": "Corrent",
-        "es": "Corriendo",
-        "en": "Running"
+        "ca": "Heroïna",
+        "es": "Heroina",
+        "en": "Heroine"
       },
       "repte": {
         "ca": "El meu repte personal és fer 10k corrent i 5k caminant arribant al final amb tot l'equip",
