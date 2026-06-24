@@ -63,6 +63,36 @@
       "estat_publicacio": "publicat"
     },
     {
+      "id": "david",
+      "nom": "David Moseguí",
+      "poble": "Ginestar",
+      "modalitat": "corrent",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Heroi",
+        "es": "Héroe",
+        "en": "Hero"
+      },
+      "tram": {
+        "ca": "Castellar de n'Hug - Gironella (dia 1)",
+        "es": "Castellar de n'Hug - Gironella (día 1)",
+        "en": "Castellar de n'Hug - Gironella (day 1)"
+      },
+      "motiu": {
+        "ca": "Aquest 14 de novembre volia córrer 20 hores per recaptar fons contra la diabetis. Ara canvio el repte en solitari per un de col·lectiu: em sumo a la família de Llobregat per la Diabetis per córrer i lluitar junts!",
+        "es": "Este 14 de noviembre quería correr 20 horas para recaudar fondos contra la diabetes. Ahora cambio el reto en solitario por uno colectivo: ¡me sumo a la familia de Llobregat por la Diabetes para correr y luchar juntos!",
+        "en": "This November 14th, I wanted to run for 20 hours to raise funds for diabetes. Now, I’m changing my solo challenge into a collective one: I’m joining the Llobregat por la Diabetes family to run and fight together!"
+      },
+      "repte": {
+        "ca": "El meu repte personal és córrer per salut, ja que jo també tinc aquesta malaltia: fa 5 anys que comparteixo el camí amb la diabetis. Això m'ha obert les portes al trail, una disciplina amb la qual estic gaudint moltíssim. Crec que donar visibilitat tant al trail com a la diabetis és molt important, ja que és un hàndicap duríssim de gestionar per a nosaltres.",
+        "es": "Mi reto personal es correr por salud, ya que yo también tengo esta enfermedad: hace 5 años que comparto camino con la diabetes. Esto me ha abierto las puertas al trail, una disciplina con la que estoy disfrutando muchísimo. Creo que dar visibilidad tanto al trail como a la diabetes es muy importante, ya que es un hándicap durísimo de gestionar para nosotros.",
+        "en": "My personal challenge is to run for health, as I also live with this condition: I’ve been sharing my journey with diabetes for 5 years now. This opened the doors to trail running, a discipline I am thoroughly enjoying. I believe that raising awareness for both trail running and diabetes is crucial, as it is an incredibly tough handicap for us to manage."
+      },
+      "instagram": "@davidmosegui",
+      "foto": "img/herois/david.webp",
+      "destacat": false
+    },
+    {
       "id": "desiree",
       "nom": "Desiree Cerdán",
       "poble": "Castellet i la Gornal",
