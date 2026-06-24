@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-06-18",
+  "actualitzat": "2026-06-24",
   "estat": "obert",
   "herois": [
     {
@@ -91,6 +91,33 @@
         "en": "10 kms"
       },
       "foto": "img/herois/desiree.webp"
+    },
+    {
+      "id": "e",
+      "nom": "Eleonora Campagnoli",
+      "poble": "Barcelona",
+      "modalitat": "bici",
+      "estat_publicacio": "borrador",
+      "rol": {
+        "ca": "Heroi o Heroïna",
+        "es": "Héroe o Heroína",
+        "en": "Hero or Heroine"
+      },
+      "tram": {
+        "ca": "Manresa -> Mar",
+        "es": "Manresa -> Mar",
+        "en": "Manresa -> Sea"
+      },
+      "motiu": {
+        "ca": "Vull compartir aquesta experiència amb persones preocupades per la diabetis, vull augmentar la conscienciació sobre la diabetis i donar suport a associacions a través dels meus coneixements sobre nutrició i esport.",
+        "es": "Quiero compartir esta experiencia con personas relacionadas por la diabetes, quiero aumentar la concienciación sobre la diabetes y apoyar a asociaciones a través de mis conocimientos sobre nutrición y deporte.",
+        "en": "I want to share this experience with people who care about diabetes , i want to increase diabetes awarness and support associations through my knowledge as nutrition and sport."
+      },
+      "repte": {
+        "en": "I have Diabetes T1 since 1999. \nI am a diabetes advocate, a scientist and a triathlete. \nI am looking and waiting for the final cure!"
+      },
+      "instagram": "Glucofit360",
+      "destacat": false
     }
   ]
 }
