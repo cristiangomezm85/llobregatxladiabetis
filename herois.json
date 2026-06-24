@@ -99,9 +99,9 @@
       "modalitat": "bici",
       "estat_publicacio": "publicat",
       "rol": {
-        "ca": "Heroi o Heroïna",
-        "es": "Héroe o Heroína",
-        "en": "Hero or Heroine"
+        "ca": "Heroïna",
+        "es": "Heroína",
+        "en": "Heroine"
       },
       "tram": {
         "ca": "Manresa -> Mar",
