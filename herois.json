@@ -114,10 +114,13 @@
         "en": "I want to share this experience with people who care about diabetes , i want to increase diabetes awarness and support associations through my knowledge as nutrition and sport."
       },
       "repte": {
+        "ca": "Tinc diabetis T1 des del 1999.\nSóc defensora de la diabetis, científica i triatleta.\nBusco i espero la cura definitiva!",
+        "es": "Tengo diabetes tipo 1 desde 1999. Soy activista por los derechos de las personas con diabetes, científica y triatleta. ¡Estoy buscando y esperando la cura definitiva!",
         "en": "I have Diabetes T1 since 1999. \nI am a diabetes advocate, a scientist and a triathlete. \nI am looking and waiting for the final cure!"
       },
       "instagram": "Glucofit360",
-      "destacat": false
+      "destacat": false,
+      "foto": "img/herois/e.webp"
     }
   ]
 }
