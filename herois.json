@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-06-24",
+  "actualitzat": "2026-06-25",
   "estat": "obert",
   "herois": [
     {
@@ -67,7 +67,7 @@
       "nom": "David Moseguí",
       "poble": "Ginestar",
       "modalitat": "corrent",
-      "estat_publicacio": "borrador",
+      "estat_publicacio": "publicat",
       "rol": {
         "ca": "Heroi",
         "es": "Héroe",
