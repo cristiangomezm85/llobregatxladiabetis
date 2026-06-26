@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-06-25",
+  "actualitzat": "2026-06-26",
   "estat": "obert",
   "herois": [
     {
@@ -151,6 +151,31 @@
       "instagram": "Glucofit360",
       "destacat": false,
       "foto": "img/herois/e.webp"
+    },
+    {
+      "id": "o",
+      "nom": "Olivia Rodriguez",
+      "poble": "Sant Joan Despí",
+      "modalitat": "bici",
+      "estat_publicacio": "borrador",
+      "rol": {
+        "ca": "Heroïna",
+        "es": "Heroína",
+        "en": "Heroine"
+      },
+      "tram": {
+        "ca": "Tot - 180kms",
+        "es": "Todo - 180kms",
+        "en": "All - 180kms"
+      },
+      "motiu": {
+        "ca": "Completar tot el recorregut en bici, del naixement del Llobregat fins al mar. Sóc de trail, de muntanya i de córrer, però aquesta vegada em pujo a la bici per fer els 180 km i, de pas, poder anar al costat dels corredors i donar suport on calgui.",
+        "es": "Completar todo el recorrido en bici, del nacimiento del Llobregat hasta el mar. Soy de trail, de montaña y de correr, pero esta vez me subo a la bici para hacer los 180 km y, de paso, poder ir al lado de los corredores y dar apoyo donde haga falta.",
+        "en": "Completing the entire route by bike, from the source of the Llobregat to the sea. I'm into trail, mountain, and running, but this time I'm getting on the bike to do the 180 km and, along the way, be able to ride alongside the runners and give support wherever needed."
+      },
+      "instagram": "@oliviarod91",
+      "foto": "img/herois/o.webp",
+      "destacat": false
     }
   ]
 }
