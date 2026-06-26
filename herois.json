@@ -175,7 +175,12 @@
       },
       "instagram": "@oliviarod91",
       "foto": "img/herois/o.webp",
-      "destacat": false
+      "destacat": false,
+      "repte": {
+        "ca": "Per una bona causa, i perquè em ve de gust ser-hi per als altres. Vull acompanyar el repte de principi a fi, donar un cop de mà a qui es deixa la pell en el camí i aportar el meu granet de sorra per acostar la cura de la diabetis tipus 1.",
+        "es": "Por una buena causa, y porque me apetece estar ahí para los demás. Quiero acompañar el reto de principio a fin, echar una mano a quien se deja la piel en el camino y aportar mi granito para acercar la cura de la diabetes tipo 1.",
+        "en": "For a good cause, and because I want to be there for others. I want to accompany the challenge from start to finish, lend a hand to those leaving it all out on the trail, and do my part to bring us closer to a cure for type 1 diabetes."
+      }
     }
   ]
 }
