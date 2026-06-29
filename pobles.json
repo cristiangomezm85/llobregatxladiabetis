@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-06-26",
+  "actualitzat": "2026-06-29",
   "ordre": "riu",
   "comentari": "Llistat de pobles i punts del recorregut, ordenats pel pas del riu. Estat: 'pendent' (punt de pas), 'interessat' (tramitant), 'adherit' (oficial), 'punt-etapa' (inici/fi d'etapa).",
   "pobles": [
@@ -277,7 +277,7 @@
       "km": 75,
       "comarca": "Bages",
       "tipus": "municipi",
-      "estat": "punt-etapa",
+      "estat": "interessat",
       "embaixador": null,
       "aporta": [],
       "notes": null,
