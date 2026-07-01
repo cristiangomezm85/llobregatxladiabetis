@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-06-30",
+  "actualitzat": "2026-07-01",
   "ordre": "riu",
   "comentari": "Llistat de pobles i punts del recorregut, ordenats pel pas del riu. Estat: 'pendent' (punt de pas), 'interessat' (tramitant), 'adherit' (oficial), 'punt-etapa' (inici/fi d'etapa).",
   "pobles": [
@@ -36,7 +36,7 @@
       "km": 22,
       "comarca": "Berguedà",
       "tipus": "municipi",
-      "estat": "interessat",
+      "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
