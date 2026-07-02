@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-06-27",
+  "actualitzat": "2026-07-02",
   "estat": "obert",
   "herois": [
     {
@@ -181,6 +181,36 @@
       "instagram": "Glucofit360",
       "destacat": false,
       "foto": "img/herois/e.webp"
+    },
+    {
+      "id": "blanco-navas",
+      "nom": "Manu Blanco",
+      "poble": "Sant Joan Despí",
+      "modalitat": "bici",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Heroi",
+        "es": "Héroe",
+        "en": "Hero"
+      },
+      "tram": {
+        "ca": "Tot - 180 kms",
+        "es": "Todo - 180 kms",
+        "en": "All - 180 kms"
+      },
+      "motiu": {
+        "ca": "Per donar visibilitat a la diabetis tipus 1. Crec que ajudar està a l'abast de tothom, cadascú a la seva manera, i aquesta és la meva: pedalar cada quilòmetre perquè es parli de la causa i per acostar, entre tots, la cura.",
+        "es": "Para dar visibilidad a la diabetes tipo 1. Creo que ayudar está al alcance de todos, cada uno a su manera, y esta es la mía: pedalear cada kilómetro para que se hable de la causa y para acercar, entre todos, la cura.",
+        "en": "To raise awareness about type 1 diabetes. I believe that helping is within everyone's reach—each in their own way—and this is mine: pedaling every kilometer to get people talking about the cause and to bring us all closer to a cure."
+      },
+      "repte": {
+        "ca": "Completar tot el recorregut amb bici, del naixement del Llobregat fins al mar. Sóc de trail i de muntanya, però aquesta vegada pujo a la bici per recórrer els 180 km i ajudar que aquesta causa es vegi i arribi lluny.",
+        "es": "Completar todo el recorrido en bici, del nacimiento del Llobregat hasta el mar. Soy de trail y de montaña, pero esta vez me subo a la bici para recorrer los 180 km y ayudar a que esta causa se vea y llegue lejos.",
+        "en": "To complete the entire route by bike, from the source of the Llobregat River to the sea. I’m into trail running and mountain sports, but this time I’m getting on a bike to cover the 180 km and help raise awareness for this cause so it reaches far and wide."
+      },
+      "instagram": "@manutrailrunning",
+      "foto": "img/herois/blanco-navas.webp",
+      "destacat": false
     },
     {
       "id": "o",
