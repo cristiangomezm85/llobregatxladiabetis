@@ -154,31 +154,31 @@
     },
     {
       "id": "e",
-      "nom": "Eleonora Campagnoli",
-      "poble": "Barcelona",
-      "modalitat": "bici",
+      "nom": "Emi Gómez",
+      "poble": "Corbera de llobregat",
+      "modalitat": "caminant",
       "estat_publicacio": "publicat",
       "rol": {
-        "ca": "Heroïna",
-        "es": "Heroína",
-        "en": "Heroine"
+        "ca": "Heroi",
+        "es": "Héroe",
+        "en": "Hero"
       },
       "tram": {
-        "ca": "Manresa -> Mar",
-        "es": "Manresa -> Mar",
-        "en": "Manresa -> Sea"
+        "ca": "Tot - 180 kms",
+        "es": "Todo - 180 kms",
+        "en": "All - 180 kms"
       },
       "motiu": {
-        "ca": "Vull compartir aquesta experiència amb persones preocupades per la diabetis, vull augmentar la conscienciació sobre la diabetis i donar suport a associacions a través dels meus coneixements sobre nutrició i esport.",
-        "es": "Quiero compartir esta experiencia con personas relacionadas por la diabetes, quiero aumentar la concienciación sobre la diabetes y apoyar a asociaciones a través de mis conocimientos sobre nutrición y deporte.",
-        "en": "I want to share this experience with people who care about diabetes , i want to increase diabetes awarness and support associations through my knowledge as nutrition and sport."
+        "ca": "Vaig conèixer la iniciativa a través del meu grup de runners (Runners Espanyol) i em va semblar molt gratificant, tant pel motiu principal com pel repte esportiu. Volia aportar el meu granet de sorra per a aquesta causa: acostar la cura de la diabetis tipus 1.",
+        "es": "Conocí la iniciativa a través de mi grupo de runners (Runners Espanyol) y me pareció muy gratificante, tanto por el motivo principal como por el reto deportivo. Quería aportar mi granito de arena para esta causa: acercar el cuidado de la diabetes tipo 1.",
+        "en": "I learned about the initiative through my running group (Runners Espanyol) and found it very rewarding, both for the primary cause and the athletic challenge. I wanted to do my bit for this cause: bringing us closer to a cure for type 1 diabetes."
       },
       "repte": {
-        "ca": "Tinc diabetis T1 des del 1999.\nSóc defensora de la diabetis, científica i triatleta.\nBusco i espero la cura definitiva!",
-        "es": "Tengo diabetes tipo 1 desde 1999. Soy activista por los derechos de las personas con diabetes, científica y triatleta. ¡Estoy buscando y esperando la cura definitiva!",
-        "en": "I have Diabetes T1 since 1999. \nI am a diabetes advocate, a scientist and a triathlete. \nI am looking and waiting for the final cure!"
+        "ca": "Completar el recorregut en marxa nòrdica, les tres etapes, pas a pas i bastó a bastó. Sumar-me al repte al meu ritme i demostrar que caminant també arriba lluny.",
+        "es": "Completar el recorrido en marcha nórdica, las tres etapas, paso a paso y bastón a bastón. Sumarme al reto a mi ritmo y demostrar que caminando también se llega lejos.",
+        "en": "Complete the Nordic walking route—all three stages—step by step and pole by pole. Take on the challenge at my own pace and prove that you can go far just by walking."
       },
-      "instagram": "Glucofit360",
+      "instagram": "@emi_gomez_demirantxito",
       "destacat": false,
       "foto": "img/herois/e.webp"
     },
