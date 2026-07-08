@@ -1,37 +1,7 @@
 {
-  "actualitzat": "2026-07-02",
+  "actualitzat": "2026-07-08",
   "estat": "obert",
   "herois": [
-    {
-      "id": "p",
-      "nom": "Carlos Luna",
-      "poble": "Badalona",
-      "modalitat": "corrent",
-      "estat_publicacio": "publicat",
-      "rol": {
-        "ca": "Heroi",
-        "es": "Héroe",
-        "en": "Hero"
-      },
-      "tram": {
-        "ca": "Tot el recorregut - 180km",
-        "es": "Todo el recorrido - 180km",
-        "en": "All the route - 180km"
-      },
-      "motiu": {
-        "ca": "El meu fill, Iker, va debutar amb 7 mesos ia partir d'aquí tot ha estat un camí d'alts i baixos on el suport de la família ens ha fet seguir endavant",
-        "es": "Mi hijo, Iker, debutó con 7 meses y a partir de aquí todo ha sido un camino de altibajos donde el apoyo de la familia nos ha hecho seguir adelante",
-        "en": "My son, Iker, made his debut at 7 months old and from then on it has been a journey of ups and downs where the support of the family has helped us to keep going"
-      },
-      "instagram": "@carlunpac",
-      "destacat": true,
-      "foto": "img/herois/p.webp",
-      "repte": {
-        "ca": "Faré tot el recorregut 180 kms",
-        "es": "Haré todo el recorrido 180 kms",
-        "en": "I will do all the route 180 kms"
-      }
-    },
     {
       "id": "cristian-gomez",
       "nom": "Cristian Gómez",
@@ -152,7 +122,7 @@
       },
       "foto": "img/herois/desiree.webp"
     },
-        {
+    {
       "id": "ele",
       "nom": "Eleonora Campagnoli",
       "poble": "Barcelona",
@@ -270,6 +240,36 @@
         "ca": "Per una bona causa, i perquè em ve de gust ser-hi per als altres. Vull acompanyar el repte de principi a fi, donar un cop de mà a qui es deixa la pell en el camí i aportar el meu granet de sorra per acostar la cura de la diabetis tipus 1.",
         "es": "Por una buena causa, y porque me apetece estar ahí para los demás. Quiero acompañar el reto de principio a fin, echar una mano a quien se deja la piel en el camino y aportar mi granito para acercar la cura de la diabetes tipo 1.",
         "en": "For a good cause, and because I want to be there for others. I want to accompany the challenge from start to finish, lend a hand to those leaving it all out on the trail, and do my part to bring us closer to a cure for type 1 diabetes."
+      }
+    },
+    {
+      "id": "p",
+      "nom": "PR club",
+      "poble": "Sant Joan Despí",
+      "modalitat": "corrent",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Club",
+        "es": "Club",
+        "en": "Club"
+      },
+      "tram": {
+        "ca": "Desde Sant Joan Despí",
+        "es": "Desde Sant Joan Despí",
+        "en": "From Sant Joan Despí"
+      },
+      "motiu": {
+        "ca": "Grup de corredors que promovem el running per a iniciats ens solidaritzem per la causa.",
+        "es": "Grupo de corredores que promovemos el running para iniciados nos solidarizamos por la causa.",
+        "en": "A group of runners promoting running for beginners, we stand in solidarity with the cause."
+      },
+      "instagram": "@running.sjd",
+      "destacat": false,
+      "foto": "img/herois/p.webp",
+      "repte": {
+        "ca": "Sortir de Sant Joan Despí fins on puguin les cames.",
+        "es": "Salir de Sant Joan Despí hasta donde puedan las piernas.",
+        "en": "Set out from Sant Joan Despí and go as far as your legs can take you."
       }
     }
   ]
