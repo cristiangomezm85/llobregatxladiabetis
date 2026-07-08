@@ -271,6 +271,36 @@
         "es": "Salir de Sant Joan Despí hasta donde puedan las piernas.",
         "en": "Set out from Sant Joan Despí and go as far as your legs can take you."
       }
+    },
+    {
+      "id": "uri",
+      "nom": "Uri",
+      "poble": "Torrelles de Llobregat",
+      "modalitat": "corrent",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Heroi",
+        "es": "Héroe",
+        "en": "Hero"
+      },
+      "tram": {
+        "ca": "Tot - 180 kms",
+        "es": "Todo - 180 kms",
+        "en": "All - 180 kms"
+      },
+      "motiu": {
+        "ca": "Sóc diabètic des de fa 14 anys i mai m'ha suposat un limitant a l'hora de practicar esport. M'agradaria que amb el meu exemple i el de tots els diabètics que hi participem poguem enoratgar a més persones amb diabetis a trencar barreres mentals que no existeixen i es proposin a fer tot allò que sempre han volgut però per por a la diabetis no s'hi han atrevit",
+        "es": "Soy diabético desde hace 14 años y nunca me ha supuesto un limitante a la hora de practicar deporte. Me gustaría que con mi ejemplo y el de todos los diabéticos que participamos podamos enojar a más personas con diabetes a romper barreras mentales que no existen y se propongan a hacer todo lo que siempre han querido pero por miedo a la diabetes no se han atrevido a ello",
+        "en": "I have been diabetic for 14 years, and it has never held me back from playing sports. I hope that through my example—and that of all the diabetics participating—we can encourage others with diabetes to break down mental barriers that don't actually exist, and to set out to do everything they have always wanted to do but previously didn't dare to attempt due to fear of the condition."
+      },
+      "repte": {
+        "ca": "Poder acompanyar la causa en tot el recorregut",
+        "es": "Poder acompañar la causa en todo el recorrido",
+        "en": "To be able to support the cause throughout the entire journey"
+      },
+      "instagram": "@trailconcabeza",
+      "foto": "img/herois/uri.webp",
+      "destacat": false
     }
   ]
 }
