@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-07-08",
+  "actualitzat": "2026-07-09",
   "ordre": "riu",
   "comentari": "Llistat de pobles i punts del recorregut, ordenats pel pas del riu. Estat: 'pendent' (punt de pas), 'interessat' (tramitant), 'adherit' (oficial), 'punt-etapa' (inici/fi d'etapa).",
   "pobles": [
@@ -37,20 +37,6 @@
       "comarca": "Berguedà",
       "tipus": "municipi",
       "estat": "adherit",
-      "embaixador": null,
-      "aporta": [],
-      "notes": null,
-      "foto": null
-    },
-    {
-      "id": "sant-corneli",
-      "nom": "Sant Corneli",
-      "dia": 1,
-      "km": 31,
-      "comarca": "Berguedà",
-      "tipus": "nucli",
-      "municipi_principal": "Cercs",
-      "estat": "pendent",
       "embaixador": null,
       "aporta": [],
       "notes": null,
