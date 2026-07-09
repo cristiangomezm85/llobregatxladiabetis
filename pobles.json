@@ -56,20 +56,6 @@
       "foto": null
     },
     {
-      "id": "la-rodonella",
-      "nom": "La Rodonella",
-      "dia": 1,
-      "km": 35,
-      "comarca": "Berguedà",
-      "tipus": "nucli",
-      "municipi_principal": "Cercs",
-      "estat": "pendent",
-      "embaixador": null,
-      "aporta": [],
-      "notes": null,
-      "foto": null
-    },
-    {
       "id": "sant-jordi-de-cercs",
       "nom": "Sant Jordi de Cercs",
       "dia": 1,
