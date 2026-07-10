@@ -43,19 +43,6 @@
       "foto": null
     },
     {
-      "id": "figols",
-      "nom": "Fígols",
-      "dia": 1,
-      "km": 32,
-      "comarca": "Berguedà",
-      "tipus": "municipi",
-      "estat": "pendent",
-      "embaixador": null,
-      "aporta": [],
-      "notes": null,
-      "foto": null
-    },
-    {
       "id": "sant-jordi-de-cercs",
       "nom": "Sant Jordi de Cercs",
       "dia": 1,
