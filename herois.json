@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-07-08",
+  "actualitzat": "2026-07-16",
   "estat": "obert",
   "herois": [
     {
@@ -31,7 +31,7 @@
         "es": "Haré todo el recorrido 180 kms",
         "en": "I will do all the route 180 kms"
       }
-    },    
+    },
     {
       "id": "cristian-gomez",
       "nom": "Cristian Gómez",
@@ -63,36 +63,6 @@
       "estat_publicacio": "publicat"
     },
     {
-      "id": "d",
-      "nom": "Daniel Sánchez",
-      "poble": "Aranjuez, Madrid",
-      "modalitat": "corrent",
-      "estat_publicacio": "publicat",
-      "rol": {
-        "ca": "Heroi",
-        "es": "Héroe",
-        "en": "Hero"
-      },
-      "tram": {
-        "ca": "Tot - 180 kms",
-        "es": "Todo - 180 kms",
-        "en": "All - 180 kms"
-      },
-      "motiu": {
-        "ca": "Vull ajudar a donar visibilitat a tot el que suposa enfrontar-se cada dia durant 24 hores a la diabetis tipus 1.",
-        "es": "Quiero ayudar a dar visibilidad a todo lo que supone enfrentarse cada día durante 24 horas a la diabetes tipo 1.",
-        "en": "I want to help raise awareness about everything that facing type 1 diabetes"
-      },
-      "repte": {
-        "ca": "El meu repte és demostrar-me a mi mateix que puc enfrontar reptes difícils i sobreposar-me a les adversitats. Suposa una teràpia per a mi i un bon entrenament mental per superar els moments difícils de la vida. La llarga distància exemplifica per a mi el que és la vida, amb moments bons i dolents.",
-        "es": "Mi reto es demostrarme a mi mismo que puedo enfrentar retos difíciles y sobreponerme a las adversidades. Supone una terapia para mi y un buen entrenamiento mental para superar los momentos dificiles de la vida. La ultra distancia ejemplifica para mi lo que es la vida, con buenos y malos momentos.",
-        "en": "My challenge is to prove to myself that I can face difficult challenges and overcome adversity. It serves as a therapy for me and good mental train.ing to get through life's hard times. Ultra-distance running exemplifies what life is to me, with its ups and downs"
-      },
-      "instagram": "dannysan_p",
-      "foto": "img/herois/d.webp",
-      "destacat": false
-    },
-    {
       "id": "david",
       "nom": "David Moseguí",
       "poble": "Ginestar",
@@ -120,6 +90,36 @@
       },
       "instagram": "@david_mosegui",
       "foto": "img/herois/david.webp",
+      "destacat": false
+    },
+    {
+      "id": "d",
+      "nom": "David Pestana",
+      "poble": "Cornellà de Llobregat",
+      "modalitat": "corrent",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Heroi",
+        "es": "Héroe",
+        "en": "Hero"
+      },
+      "tram": {
+        "ca": "Etapa 3 - 69 kms",
+        "es": "Etapa 3 - 69 kms",
+        "en": "Stage 3 - 69 kms"
+      },
+      "motiu": {
+        "ca": "No convisc amb la diabetis, però sí que vull córrer al costat dels que ho fan. El meu granet de sorra és en quilòmetres: visibilitat, companyia i suport a la investigació.",
+        "es": "No convivo con la diabetes, pero sí quiero correr al lado de quienes lo hacen. Mi granito de arena es en kilómetros: visibilidad, compañía y apoyo a la investigación.",
+        "en": "I don't live with diabetes, but I do want to run alongside those who do. My contribution comes in the form of kilometers: raising awareness, offering companionship, and supporting research."
+      },
+      "repte": {
+        "ca": "Superar per primera vegada la distància de marató. Porto 5 a la meva esquena, i aquest serà el meu desafiament més llarg fins ara.",
+        "es": "Superar por primera vez la distancia de maratón. Llevo 5 a mis espaldas, y este será mi desafío más largo hasta la fecha.",
+        "en": "Going beyond the marathon distance for the first time. I have five under my belt, and this will be my longest challenge to date."
+      },
+      "instagram": "@davidrunnonstop",
+      "foto": "img/herois/d.webp",
       "destacat": false
     },
     {
