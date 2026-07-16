@@ -93,7 +93,7 @@
       "destacat": false
     },
     {
-      "id": "d",
+      "id": "dp",
       "nom": "David Pestana",
       "poble": "Cornellà de Llobregat",
       "modalitat": "corrent",
@@ -119,9 +119,39 @@
         "en": "Going beyond the marathon distance for the first time. I have five under my belt, and this will be my longest challenge to date."
       },
       "instagram": "@davidrunnonstop",
-      "foto": "img/herois/d.webp",
+      "foto": "img/herois/dp.webp",
       "destacat": false
     },
+    {
+      "id": "d",
+      "nom": "Daniel Sánchez",
+      "poble": "Aranjuez, Madrid",
+      "modalitat": "corrent",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Heroi",
+        "es": "Héroe",
+        "en": "Hero"
+      },
+      "tram": {
+        "ca": "Tot - 180 kms",
+        "es": "Todo - 180 kms",
+        "en": "All - 180 kms"
+      },
+      "motiu": {
+        "ca": "Vull ajudar a donar visibilitat a tot el que suposa enfrontar-se cada dia durant 24 hores a la diabetis tipus 1.",
+        "es": "Quiero ayudar a dar visibilidad a todo lo que supone enfrentarse cada día durante 24 horas a la diabetes tipo 1.",
+        "en": "I want to help raise awareness about everything that facing type 1 diabetes"
+      },
+      "repte": {
+        "ca": "El meu repte és demostrar-me a mi mateix que puc enfrontar reptes difícils i sobreposar-me a les adversitats. Suposa una teràpia per a mi i un bon entrenament mental per superar els moments difícils de la vida. La llarga distància exemplifica per a mi el que és la vida, amb moments bons i dolents.",
+        "es": "Mi reto es demostrarme a mi mismo que puedo enfrentar retos difíciles y sobreponerme a las adversidades. Supone una terapia para mi y un buen entrenamiento mental para superar los momentos dificiles de la vida. La ultra distancia ejemplifica para mi lo que es la vida, con buenos y malos momentos.",
+        "en": "My challenge is to prove to myself that I can face difficult challenges and overcome adversity. It serves as a therapy for me and good mental train.ing to get through life's hard times. Ultra-distance running exemplifies what life is to me, with its ups and downs"
+      },
+      "instagram": "dannysan_p",
+      "foto": "img/herois/d.webp",
+      "destacat": false
+    },    
     {
       "id": "desiree",
       "nom": "Desiree Cerdán",
