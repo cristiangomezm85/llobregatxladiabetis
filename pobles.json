@@ -203,11 +203,11 @@
     },
     {
       "id": "el-borras",
-      "nom": "El Borràs",
+      "nom": "Castellbell i el Vilar",
       "dia": 2,
       "km": 67,
       "comarca": "Bages",
-      "tipus": "nucli",
+      "tipus": "municipi",
       "municipi_principal": "Sant Vicenç de Castellet",
       "estat": "pendent",
       "embaixador": null,
