@@ -299,6 +299,21 @@
     margin-top:18px; padding-top:14px; border-top:1px solid #E4E1D8;
     font-family:'Bricolage Grotesque',sans-serif; font-size:22px; font-weight:800; color:var(--blau-llobregat);
   }
+  .taula-preus-wrap{ margin:20px 0 24px; }
+  .taula-preus{ width:100%; border-collapse:separate; border-spacing:0; background:#fff; border-radius:var(--radi); overflow:hidden; border:1.5px solid #E4E1D8; }
+  .taula-preus th, .taula-preus td{ padding:10px 8px; text-align:center; font-size:12.5px; }
+  .taula-preus thead th{ background:var(--blau-llobregat); color:#fff; font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:12px; line-height:1.4; vertical-align:top; padding-bottom:8px; }
+  .taula-preus thead th:first-child{ text-align:left; padding-left:14px; }
+  .taula-preus tbody th{ text-align:left; padding-left:14px; font-weight:600; color:var(--blau-llobregat); background:#F8F7F3; }
+  .taula-preus tbody td{ font-weight:700; color:var(--tinta); border-top:1px solid #EEECE4; }
+  .taula-preus tbody tr:first-child td{ border-top:none; }
+  .taula-preus .col-activa{ background:#FFF1EC; }
+  .taula-preus thead th.col-activa{ background:var(--coral); }
+  .taula-preus-badge{
+    display:block; width:fit-content; font-size:10px; font-weight:700; color:var(--coral);
+    background:#fff; border-radius:999px; padding:2px 9px; margin:6px auto 0; white-space:nowrap;
+  }
+  .taula-preus-nota{ font-size:11.5px; color:var(--gris); margin-top:6px; text-align:center; }
 </style>
 </head>
 <body>
@@ -424,6 +439,46 @@
     </div>
 
     <!-- ===== BLOC: cap modalitat triada encara ===== -->
+    <div class="taula-preus-wrap">
+      <table class="taula-preus" id="taula-preus">
+        <thead>
+          <tr>
+            <th data-i18n="taula_col_modalitat">Modalitat</th>
+            <th id="col-earlybird" data-i18n-html="taula_col_earlybird">Early bird<br><span style="font-weight:400;">fins 15/8</span></th>
+            <th id="col-standard" data-i18n-html="taula_col_standard">Preu estàndard<br><span style="font-weight:400;">fins 31/8</span></th>
+            <th id="col-lastcall" data-i18n-html="taula_col_lastcall">Last call<br><span style="font-weight:400;">fins 15/9</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th data-i18n="taula_fila_animar">Vine a animar</th>
+            <td id="cel-earlybird-animar">10 €</td>
+            <td id="cel-standard-animar">12 €</td>
+            <td id="cel-lastcall-animar">15 €</td>
+          </tr>
+          <tr>
+            <th data-i18n="taula_fila_1etapa">Participar 1 etapa</th>
+            <td id="cel-earlybird-1">15 €</td>
+            <td id="cel-standard-1">20 €</td>
+            <td id="cel-lastcall-1">25 €</td>
+          </tr>
+          <tr>
+            <th data-i18n="taula_fila_2etapes">Participar 2 etapes</th>
+            <td id="cel-earlybird-2">30 €</td>
+            <td id="cel-standard-2">35 €</td>
+            <td id="cel-lastcall-2">45 €</td>
+          </tr>
+          <tr>
+            <th data-i18n="taula_fila_3etapes">Participar 3 etapes</th>
+            <td id="cel-earlybird-3">45 €</td>
+            <td id="cel-standard-3">50 €</td>
+            <td id="cel-lastcall-3">60 €</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="taula-preus-nota" data-i18n="taula_preus_nota">El preu es calcula automàticament segons la data d'avui i la tarifa vigent.</p>
+    </div>
+
     <div id="bloc-sense-modalitat" class="incloso" style="text-align:center;" data-i18n="tria_modalitat_msg">
       Tria com vols formar part del repte per continuar la inscripció.
     </div>
@@ -619,6 +674,7 @@
           <option>XS</option><option>S</option><option>M</option>
           <option>L</option><option>XL</option><option>XXL</option>
         </select>
+        <p class="nota-talla" data-i18n="nota_talla_multiple" style="font-size:11.5px;color:var(--gris);margin:6px 0 0;">Si fas més d'una etapa, totes les samarretes que rebis seran d'aquesta talla.</p>
       </div>
 
       <div class="legal-caixa">
@@ -695,7 +751,22 @@
 
   const DATA_INICI_REPTE = "2026-10-16";
   const TRAM_TOTALS = { 1: 62, 2: 75, 3: 69 };
-  const PREU_BASE = { dorsal0: 0, animar: 1500, caminant: 1500, corrent: 1500, bici: 1500 };
+  // Tarifes per fases (early bird / estàndard / last call). Els preus de cada
+  // fila (animar, 1/2/3 etapes) són valors fixos per tarifa, no una fórmula
+  // per etapa: es defineixen tal qual per a cada casella.
+  const TARIFES = [
+    { id: "earlybird", cutoff: "2026-08-15", preus: { animar: 1000, 1: 1500, 2: 3000, 3: 4500 } },
+    { id: "standard",  cutoff: "2026-08-31", preus: { animar: 1200, 1: 2000, 2: 3500, 3: 5000 } },
+    { id: "lastcall",  cutoff: "2026-09-15", preus: { animar: 1500, 1: 2500, 2: 4500, 3: 6000 } },
+  ];
+
+  function tarifaActual() {
+    const avui = new Date().toISOString().slice(0, 10);
+    for (const tarifa of TARIFES) {
+      if (avui <= tarifa.cutoff) return tarifa;
+    }
+    return TARIFES[TARIFES.length - 1];
+  }
 
   // Dades del recorregut, incrustades directament (versió de validació:
   // no depèn de cap fetch ni servidor, funciona obrint el fitxer tal qual).
@@ -712,8 +783,6 @@
     { store: "Decathlon Puigcerdà", day: "thu", date: "15/10" },
     { store: "Decathlon Manresa", day: "fri", date: "9/10" },
     { store: "Decathlon Manresa", day: "thu", date: "15/10" },
-    { store: "Decathlon Martorell", day: "fri", date: "9/10" },
-    { store: "Decathlon Martorell", day: "thu", date: "15/10" },
     { store: "Decathlon Sant Boi", day: "fri", date: "9/10" },
     { store: "Decathlon Sant Boi", day: "thu", date: "15/10" },
     { store: "Decathlon L'Illa Diagonal", day: "fri", date: "9/10" },
@@ -749,15 +818,15 @@
 
     an_titol: { ca:"Vine a animar", es:"Ven a animar", en:"Come to cheer" },
     an_incloso: {
-      ca:"Vine a animar <strong>inclou la samarreta oficial</strong>. El transport fins al punt on animaràs no hi és inclòs.",
-      es:"Ven a animar <strong>incluye la camiseta oficial</strong>. El transporte hasta el punto donde animarás no está incluido.",
-      en:"Coming to cheer <strong>includes the official t-shirt</strong>. Transport to the point where you'll cheer is not included."
+      ca:"Vine a animar inclou la <strong>samarreta oficial</strong>. El preu depèn de la tarifa vigent (vegeu la taula de preus més amunt). El transport fins al punt on animaràs no hi és inclòs.",
+      es:"Ven a animar incluye la <strong>camiseta oficial</strong>. El precio depende de la tarifa vigente (ver la tabla de precios más arriba). El transporte hasta el punto donde animarás no está incluido.",
+      en:"Coming to cheer includes the <strong>official t-shirt</strong>. The price depends on the current rate (see the pricing table above). Transport to the point where you'll cheer is not included."
     },
 
     fi_incloso: {
-      ca:"La inscripció inclou <strong>assegurança de responsabilitat civil</strong>, <strong>avituallament</strong> i <strong>samarreta oficial</strong>. L'allotjament no hi és inclòs. El transport fins al punt d'inici tampoc hi és inclòs.",
-      es:"La inscripción incluye <strong>seguro de responsabilidad civil</strong>, <strong>avituallamiento</strong> y <strong>camiseta oficial</strong>. El alojamiento no está incluido. El transporte hasta el punto de inicio tampoco está incluido.",
-      en:"Registration includes <strong>civil liability insurance</strong>, <strong>refreshment stations</strong> and the <strong>official t-shirt</strong>. Accommodation is not included. Transport to the starting point is not included either."
+      ca:"El preu depèn del nombre d'etapes i de la tarifa vigent (vegeu la taula de preus més amunt). Cada etapa inclou <strong>1 samarreta oficial</strong> (si fas 2 etapes, reps 2 samarretes; si fas les 3, reps 3). També inclou <strong>assegurança de responsabilitat civil</strong> i <strong>avituallament</strong>. L'allotjament no hi és inclòs. El transport fins al punt d'inici tampoc hi és inclòs.",
+      es:"El precio depende del número de etapas y de la tarifa vigente (ver la tabla de precios más arriba). Cada etapa incluye <strong>1 camiseta oficial</strong> (si haces 2 etapas, recibes 2 camisetas; si haces las 3, recibes 3). También incluye <strong>seguro de responsabilidad civil</strong> y <strong>avituallamiento</strong>. El alojamiento no está incluido. El transporte hasta el punto de inicio tampoco está incluido.",
+      en:"The price depends on the number of stages and the current rate (see the pricing table above). Each stage includes <strong>1 official t-shirt</strong> (2 stages = 2 t-shirts, 3 stages = 3 t-shirts). It also includes <strong>civil liability insurance</strong> and <strong>refreshment stations</strong>. Accommodation is not included. Transport to the starting point is not included either."
     },
 
     lbl_nom: { ca:"Nom *", es:"Nombre *", en:"First name *" },
@@ -845,6 +914,35 @@
     resum_recollida: { ca:"Recollida de samarreta", es:"Recogida de camiseta", en:"T-shirt pickup" },
     resum_menor: { ca:"Menor d'edat", es:"Menor de edad", en:"Under 18" },
     resum_tutor: { ca:"Mare/pare/tutor legal", es:"Madre/padre/tutor legal", en:"Parent/legal guardian" },
+    resum_etapes: { ca:"Etapes i samarretes", es:"Etapas y camisetas", en:"Stages and t-shirts" },
+    resum_etapa_sing: { ca:"etapa", es:"etapa", en:"stage" },
+    resum_etapes_plur: { ca:"etapes", es:"etapas", en:"stages" },
+    resum_samarreta_sing: { ca:"samarreta", es:"camiseta", en:"t-shirt" },
+    resum_samarretes_plur: { ca:"samarretes", es:"camisetas", en:"t-shirts" },
+    nota_talla_multiple: { ca:"Si fas més d'una etapa, totes les samarretes que rebis seran d'aquesta talla.", es:"Si haces más de una etapa, todas las camisetas que recibas serán de esta talla.", en:"If you do more than one stage, all the t-shirts you receive will be this size." },
+
+    taula_col_modalitat: { ca:"Modalitat", es:"Modalidad", en:"Category" },
+    taula_col_earlybird: {
+      ca:'Early bird<br><span style="font-weight:400;">fins 15/8</span>',
+      es:'Early bird<br><span style="font-weight:400;">hasta 15/8</span>',
+      en:'Early bird<br><span style="font-weight:400;">until 8/15</span>'
+    },
+    taula_col_standard: {
+      ca:'Preu estàndard<br><span style="font-weight:400;">fins 31/8</span>',
+      es:'Precio estándar<br><span style="font-weight:400;">hasta 31/8</span>',
+      en:'Standard price<br><span style="font-weight:400;">until 8/31</span>'
+    },
+    taula_col_lastcall: {
+      ca:'Last call<br><span style="font-weight:400;">fins 15/9</span>',
+      es:'Last call<br><span style="font-weight:400;">hasta 15/9</span>',
+      en:'Last call<br><span style="font-weight:400;">until 9/15</span>'
+    },
+    taula_fila_animar: { ca:"Vine a animar", es:"Ven a animar", en:"Come to cheer" },
+    taula_fila_1etapa: { ca:"Participar 1 etapa", es:"Participar 1 etapa", en:"Participate 1 stage" },
+    taula_fila_2etapes: { ca:"Participar 2 etapes", es:"Participar 2 etapas", en:"Participate 2 stages" },
+    taula_fila_3etapes: { ca:"Participar 3 etapes", es:"Participar 3 etapas", en:"Participate 3 stages" },
+    taula_preus_nota: { ca:"El preu es calcula automàticament segons la data d'avui i la tarifa vigent.", es:"El precio se calcula automáticamente según la fecha de hoy y la tarifa vigente.", en:"The price is calculated automatically based on today's date and the current rate." },
+    taula_tarifa_activa: { ca:"Tarifa activa", es:"Tarifa activa", en:"Current rate" },
     resum_menor_si: { ca:"Sí (amb autorització)", es:"Sí (con autorización)", en:"Yes (with authorization)" },
     resum_menor_no: { ca:"No", es:"No", en:"No" },
     resum_donacio: { ca:"Donació", es:"Donación", en:"Donation" },
@@ -909,9 +1007,9 @@
     },
     faq_q10: { ca:"Com i quan recullo la samarreta?", es:"¿Cómo y cuándo recojo la camiseta?", en:"How and when do I collect my t-shirt?" },
     faq_a10: {
-      ca:"A qualsevol dels punts Decathlon indicats al formulari (Puigcerdà, Manresa, Martorell, Sant Boi o L'Illa Diagonal), els dies 9 o 15 d'octubre.",
-      es:"En cualquiera de los puntos Decathlon indicados en el formulario (Puigcerdà, Manresa, Martorell, Sant Boi o L'Illa Diagonal), los días 9 o 15 de octubre.",
-      en:"At any of the Decathlon points listed in the form (Puigcerdà, Manresa, Martorell, Sant Boi or L'Illa Diagonal), on October 9th or 15th."
+      ca:"A qualsevol dels punts Decathlon indicats al formulari (Puigcerdà, Manresa, Sant Boi o L'Illa Diagonal), els dies 9 o 15 d'octubre.",
+      es:"En cualquiera de los puntos Decathlon indicados en el formulario (Puigcerdà, Manresa, Sant Boi o L'Illa Diagonal), los días 9 o 15 de octubre.",
+      en:"At any of the Decathlon points listed in the form (Puigcerdà, Manresa, Sant Boi or L'Illa Diagonal), on October 9th or 15th."
     },
     faq_q11: { ca:"Estic federat/da, això canvia alguna cosa?", es:"Estoy federado/a, ¿esto cambia algo?", en:"I'm federated — does that change anything?" },
     faq_a11: {
@@ -988,7 +1086,32 @@
     // Reomplim selects que depenen de l'idioma (etiquetes de municipi/recollida)
     refreshMunicipiSelects();
     refreshPickupSelects();
+    marcarTarifaActiva();
     actualitzarTotal();
+  }
+
+  function marcarTarifaActiva() {
+    const tarifa = tarifaActual();
+    ["earlybird", "standard", "lastcall"].forEach((id) => {
+      const th = document.getElementById("col-" + id);
+      if (th) th.classList.remove("col-activa");
+      ["animar", "1", "2", "3"].forEach((fila) => {
+        const td = document.getElementById(`cel-${id}-${fila}`);
+        if (td) td.classList.remove("col-activa");
+      });
+    });
+    const th = document.getElementById("col-" + tarifa.id);
+    if (th) {
+      th.classList.add("col-activa");
+      const badge = document.createElement("div");
+      badge.className = "taula-preus-badge";
+      badge.textContent = t("taula_tarifa_activa");
+      th.appendChild(badge);
+    }
+    ["animar", "1", "2", "3"].forEach((fila) => {
+      const td = document.getElementById(`cel-${tarifa.id}-${fila}`);
+      if (td) td.classList.add("col-activa");
+    });
   }
 
   document.querySelectorAll(".lang-btn").forEach((btn) => {
@@ -1194,11 +1317,25 @@
       for (let d = dIni + 1; d < dFi; d++) km += TRAM_TOTALS[d];
       km += kFi;
     }
-    return { error: false, km };
+    return { error: false, km, dies: (dFi - dIni + 1) };
   }
 
   const iniciSel = blocFisic.querySelector(".fi-tram-inici");
   const finalSel = blocFisic.querySelector(".fi-tram-final");
+
+  function calcularBasePreu() {
+    if (!modalitatActiva) return 0;
+    if (modalitatActiva === "dorsal0") return 0;
+    const tarifa = tarifaActual();
+    if (modalitatActiva === "animar") return tarifa.preus.animar;
+    // Modalitats físiques: el preu depèn del nombre d'etapes (dies) que cobreix el tram triat
+    const iniciOpt = iniciSel.selectedOptions[0];
+    const finalOpt = finalSel.selectedOptions[0];
+    if (!iniciOpt || !iniciOpt.value || !finalOpt || !finalOpt.value) return 0;
+    const tram = calcularTramClient(iniciOpt, finalOpt);
+    if (tram.error) return 0;
+    return tarifa.preus[tram.dies] || 0;
+  }
   const kmBlock = blocFisic.querySelector("[data-tram-km]");
   const kmVal = blocFisic.querySelector("[data-tram-km-value]");
   const errBlock = blocFisic.querySelector("[data-tram-error]");
@@ -1209,6 +1346,7 @@
     if (!iniciOpt || !iniciOpt.value || !finalOpt || !finalOpt.value) {
       kmBlock.classList.remove("visible");
       errBlock.classList.remove("visible");
+      actualitzarTotal();
       return;
     }
     const resultat = calcularTramClient(iniciOpt, finalOpt);
@@ -1217,9 +1355,15 @@
       errBlock.classList.add("visible");
     } else {
       errBlock.classList.remove("visible");
-      kmVal.textContent = resultat.km + " km";
+      const etapaWord = { ca: "etapa", es: "etapa", en: "stage" }[currentLang];
+      const etapesWord = { ca: "etapes", es: "etapas", en: "stages" }[currentLang];
+      const samarretaWord = { ca: "samarreta", es: "camiseta", en: "t-shirt" }[currentLang];
+      const samarretesWord = { ca: "samarretes", es: "camisetas", en: "t-shirts" }[currentLang];
+      const nDies = resultat.dies;
+      kmVal.textContent = `${resultat.km} km · ${nDies} ${nDies === 1 ? etapaWord : etapesWord} · ${nDies} ${nDies === 1 ? samarretaWord : samarretesWord}`;
       kmBlock.classList.add("visible");
     }
+    actualitzarTotal();
   }
 
   iniciSel.addEventListener("change", () => {
@@ -1289,6 +1433,7 @@
       finalSel.querySelector("option").textContent = t("opt_tria_inici_primer");
       kmBlock.classList.remove("visible");
       errBlock.classList.remove("visible");
+      actualitzarTotal();
       return;
     }
 
@@ -1375,7 +1520,7 @@
   }
 
   function actualitzarTotal() {
-    const base = modalitatActiva ? PREU_BASE[modalitatActiva] : 0;
+    const base = calcularBasePreu();
     const donacio = donacioSeleccionada || 0;
     const total = base + donacio;
     totalDisplay.textContent = formatEur(total);
@@ -1537,7 +1682,7 @@
           ...dades, nom, cognoms, dni, dataNaixement, telefon, email,
           emergenciaNom, emergenciaTelefon, relacioText, talla,
           tramInici: iniciOpt.textContent, tramFinal: finalOpt.textContent,
-          tramKm: tram.km, federat, llicencia, recollida: recollidaText,
+          tramKm: tram.km, tramDies: tram.dies, federat, llicencia, recollida: recollidaText,
           esMenor: esMenor === true, tutorNom, tutorCognoms,
         };
       }
@@ -1546,7 +1691,7 @@
       return;
     }
 
-    const base = PREU_BASE[modalitatActiva];
+    const base = calcularBasePreu();
     const donacio = donacioSeleccionada || 0;
     const total = base + donacio;
 
@@ -1557,6 +1702,7 @@
     if (dades.municipi) html += `<dt>${t("resum_municipi")}</dt><dd>${dades.municipi}</dd>`;
     if (dades.tramInici) {
       html += `<dt>${t("resum_tram")}</dt><dd>${dades.tramInici} → ${dades.tramFinal} (${dades.tramKm} km)</dd>`;
+      html += `<dt>${t("resum_etapes")}</dt><dd>${dades.tramDies} ${dades.tramDies === 1 ? t("resum_etapa_sing") : t("resum_etapes_plur")} · ${dades.tramDies} ${dades.tramDies === 1 ? t("resum_samarreta_sing") : t("resum_samarretes_plur")}</dd>`;
       html += `<dt>${t("resum_menor")}</dt><dd>${dades.esMenor ? t("resum_menor_si") : t("resum_menor_no")}</dd>`;
       if (dades.esMenor && dades.tutorNom) {
         html += `<dt>${t("resum_tutor")}</dt><dd>${dades.tutorNom} ${dades.tutorCognoms}</dd>`;
