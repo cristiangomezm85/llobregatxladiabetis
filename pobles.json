@@ -175,20 +175,6 @@
       "foto": null
     },
     {
-      "id": "vilomara",
-      "nom": "Vilomara",
-      "dia": 2,
-      "km": 58,
-      "comarca": "Bages",
-      "tipus": "municipi",
-      "municipi_oficial": "El Pont de Vilomara i Rocafort",
-      "estat": "pendent",
-      "embaixador": null,
-      "aporta": [],
-      "notes": null,
-      "foto": null
-    },
-    {
       "id": "sant-vicenc-de-castellet",
       "nom": "Sant Vicenç de Castellet",
       "dia": 2,
