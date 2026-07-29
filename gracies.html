@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ca" data-lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gràcies — Llobregat x la Diabetis</title>
+<link rel="icon" type="image/png" href="img/logo-small.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blau-llobregat:#15315F;
+    --blau-diabetis:#1E72D4;
+    --blau-aigua:#5AC0E6;
+    --coral:#FF6B47;
+    --paper:#FAFAF6;
+    --tinta:#0E1B36;
+    --gris:#5A6478;
+  }
+  *{box-sizing:border-box;}
+  [data-lang="ca"] [lang="es"],
+  [data-lang="ca"] [lang="en"],
+  [data-lang="es"] [lang="ca"],
+  [data-lang="es"] [lang="en"],
+  [data-lang="en"] [lang="ca"],
+  [data-lang="en"] [lang="es"] { display: none !important; }
+  body{
+    margin:0; min-height:100vh; display:flex; flex-direction:column;
+    background:var(--paper); color:var(--tinta); font-family:'Manrope',sans-serif; line-height:1.5;
+  }
+  h1,h2{ font-family:'Bricolage Grotesque',sans-serif; color:var(--blau-llobregat); margin:0; }
+  .nav{ background:var(--blau-llobregat); padding:14px 20px; }
+  .nav-inner{ max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:8px; }
+  .nav-inner img{ height:24px; }
+  .nav-inner span{ color:#fff; font-weight:700; font-family:'Bricolage Grotesque',sans-serif; font-size:14px; }
+  .nav-inner em{ font-style:italic; color:var(--blau-aigua); }
+  .contingut{ flex:1; display:flex; align-items:center; justify-content:center; padding:40px 20px; }
+  .targeta{
+    max-width:480px; width:100%; background:#fff; border-radius:16px;
+    padding:40px 32px; text-align:center; box-shadow:0 10px 40px rgba(14,27,54,0.08);
+  }
+  .icona{
+    width:64px; height:64px; border-radius:50%; background:#EAF7EE; color:#2E9E5B;
+    display:flex; align-items:center; justify-content:center; margin:0 auto 20px;
+  }
+  .icona svg{ width:32px; height:32px; }
+  h1{ font-size:26px; margin-bottom:12px; }
+  p{ color:var(--gris); font-size:15px; margin:0 0 8px; }
+  .ref{
+    display:inline-block; margin:16px 0; padding:8px 16px; background:var(--paper);
+    border-radius:8px; font-family:monospace; font-size:12.5px; color:var(--blau-llobregat);
+    word-break:break-all;
+  }
+  .ref-label{ font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--gris); display:block; margin-bottom:4px; }
+  .cta{
+    display:inline-block; margin-top:16px; background:var(--coral); color:#fff;
+    text-decoration:none; font-weight:700; padding:13px 28px; border-radius:10px;
+    font-family:'Bricolage Grotesque',sans-serif; font-size:15px;
+  }
+  .cta:hover{ background:#F0562F; }
+  .nota{ font-size:12.5px; color:var(--gris); margin-top:24px; }
+  footer{ text-align:center; padding:20px; font-size:12px; color:var(--gris); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <img src="img/logo-small.png" alt="Llobregat x la Diabetis">
+    <span>Llobregat <em>x la</em> Diabetis</span>
+  </div>
+</nav>
+
+<div class="contingut">
+  <div class="targeta">
+    <div class="icona">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+    </div>
+    <h1>
+      <span lang="ca">Gràcies! Ja hi ets.</span>
+      <span lang="es">¡Gracias! Ya estás dentro.</span>
+      <span lang="en">Thank you! You're all set.</span>
+    </h1>
+    <p>
+      <span lang="ca">El teu pagament s'ha confirmat correctament. En breu rebràs un email de confirmació.</span>
+      <span lang="es">Tu pago se ha confirmado correctamente. En breve recibirás un email de confirmación.</span>
+      <span lang="en">Your payment has been confirmed. You'll receive a confirmation email shortly.</span>
+    </p>
+
+    <div class="ref" id="ref-block" style="display:none;">
+      <span class="ref-label">
+        <span lang="ca">Referència de la comanda</span>
+        <span lang="es">Referencia del pedido</span>
+        <span lang="en">Order reference</span>
+      </span>
+      <span id="ref-value"></span>
+    </div>
+
+    <div>
+      <a href="index.html" class="cta">
+        <span lang="ca">Tornar a l'inici</span>
+        <span lang="es">Volver al inicio</span>
+        <span lang="en">Back to home</span>
+      </a>
+    </div>
+
+    <p class="nota">
+      <span lang="ca">Si tens qualsevol dubte, escriu-nos a</span>
+      <span lang="es">Si tienes alguna duda, escríbenos a</span>
+      <span lang="en">If you have any questions, write to us at</span>
+      <a href="mailto:info@llobregat.org" style="color:var(--blau-diabetis);">info@llobregat.org</a>
+    </p>
+  </div>
+</div>
+
+<footer>
+  #LlobregatXLaDiabetis · #LxD2026
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  // Idioma: mateix mecanisme que la resta del lloc (localStorage 'llxd-lang').
+  var lang = 'ca';
+  try { lang = localStorage.getItem('llxd-lang') || 'ca'; } catch(e){}
+  document.documentElement.setAttribute('data-lang', lang);
+  document.documentElement.setAttribute('lang', lang);
+
+  // Mostrem la referència de la comanda si arriba per URL (?order_id=...)
+  var params = new URLSearchParams(window.location.search);
+  var orderId = params.get('order_id');
+  if (orderId) {
+    document.getElementById('ref-value').textContent = orderId;
+    document.getElementById('ref-block').style.display = 'inline-block';
+  }
+})();
+</script>
+
+</body>
+</html>
