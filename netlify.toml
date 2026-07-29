@@ -22,6 +22,11 @@
   to = "/.netlify/functions/admin-content"
   status = 200
 
+[[redirects]]
+  from = "/inscripcio"
+  to = "/inscripcio.html"
+  status = 200
+
 # Evita exponer bandejas privadas, código de apoyo y configuración si se publica la raíz.
 [[redirects]]
   from = "/admin/*.json"
