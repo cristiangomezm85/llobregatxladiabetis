@@ -227,7 +227,15 @@ function renderProgress(){
 }
 
 function renderCard(){
-  if (!state || checkpoints.length === 0) return;
+  if (checkpoints.length === 0){
+    toline.textContent = '⚠ Sense configuració';
+    fromline.textContent = 'Ves a config-admin.html i desa el recorregut primer';
+    etaline.textContent = '';
+    mainbtn.disabled = true;
+    mainbtn.textContent = 'Falta configuració';
+    return;
+  }
+  if (!state) return;
 
   if (state.status === 'finished'){
     fromline.textContent = 'Repte completat';
