@@ -84,6 +84,7 @@
   <div id="login">
     <input id="tokeninput" type="password" placeholder="Token d'admin">
     <button id="loginbtn">Entrar</button>
+    <div id="loginerror" style="color:var(--coral); font-size:12px; display:none;">Token incorrecte</div>
   </div>
 
   <div id="panel">
@@ -392,12 +393,43 @@ async function startPanel(){
   renderAll();
 }
 
-document.getElementById('loginbtn').addEventListener('click', () => {
+document.getElementById('loginbtn').addEventListener('click', async () => {
   const val = document.getElementById('tokeninput').value.trim();
   if (!val) return;
-  token = val;
-  localStorage.setItem('lxd_admin_token', token);
-  startPanel();
+  const errEl = document.getElementById('loginerror');
+  // Talla d'entrada qualsevol caràcter que no es pugui enviar en una
+  // capçalera HTTP (evita l'error "non ISO-8859-1 code point").
+  if (/[^\x00-\xFF]/.test(val)) {
+    errEl.textContent = '⚠ El token conté caràcters no vàlids (emojis, accents estranys...)';
+    errEl.style.display = 'block';
+    return;
+  }
+  const btn = document.getElementById('loginbtn');
+  btn.disabled = true;
+  btn.textContent = 'Comprovant...';
+  try {
+    const res = await fetch(`${FUNCTIONS_BASE}/set-position`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${val}` },
+      body: JSON.stringify({ action: 'ping' })
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      errEl.textContent = res.status === 401 ? '⚠ Token incorrecte' : `⚠ Error (${res.status}): ${data.error || res.statusText}`;
+      errEl.style.display = 'block';
+      return;
+    }
+    token = val;
+    localStorage.setItem('lxd_admin_token', token);
+    errEl.style.display = 'none';
+    startPanel();
+  } catch (e) {
+    errEl.textContent = '⚠ Sense connexió: ' + e.message;
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
+  }
 });
 
 if (token) startPanel();
