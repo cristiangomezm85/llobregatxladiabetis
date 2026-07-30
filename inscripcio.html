@@ -580,7 +580,7 @@
       </div>
 
       <div class="camp" style="margin-top:16px;margin-bottom:0;">
-        <label data-i18n="lbl_recollida">Quan i on vols recollir la teva samarreta? *</label>
+        <label data-i18n="lbl_recollida">M'aniria millor recollir la samarreta al municipi més proper a... *</label>
         <select class="an-recollida" required>
           <option value="">—</option>
         </select>
@@ -677,7 +677,7 @@
       </div>
 
       <div class="camp">
-        <label data-i18n="lbl_recollida">Quan i on vols recollir la teva samarreta? *</label>
+        <label data-i18n="lbl_recollida">M'aniria millor recollir la samarreta al municipi més proper a... *</label>
         <select class="fi-recollida" required>
           <option value="">—</option>
         </select>
@@ -703,17 +703,17 @@
         <label data-i18n="lbl_talla">Talla de samarreta *</label>
         <select class="fi-talla" required>
           <option value="" data-i18n="opt_talla_placeholder">Tria talla</option>
-          <optgroup label="Adult" data-i18n-label="grup_talla_adult">
-            <option>XS</option><option>S</option><option>M</option>
-            <option>L</option><option>XL</option><option>XXL</option>
+          <optgroup label="Home" data-i18n-label="grup_talla_home">
+            <option value="home-XS">XS</option><option value="home-S">S</option><option value="home-M">M</option>
+            <option value="home-L">L</option><option value="home-XL">XL</option><option value="home-XXL">XXL</option><option value="home-XXXL">XXXL</option>
           </optgroup>
-          <optgroup label="Infantil" data-i18n-label="grup_talla_infantil">
-            <option value="Infantil 3-4" data-i18n="talla_inf_3_4">3-4 anys</option>
-            <option value="Infantil 5-6" data-i18n="talla_inf_5_6">5-6 anys</option>
-            <option value="Infantil 7-8" data-i18n="talla_inf_7_8">7-8 anys</option>
-            <option value="Infantil 9-10" data-i18n="talla_inf_9_10">9-10 anys</option>
-            <option value="Infantil 11-12" data-i18n="talla_inf_11_12">11-12 anys</option>
-            <option value="Infantil 13-14" data-i18n="talla_inf_13_14">13-14 anys</option>
+          <optgroup label="Dona" data-i18n-label="grup_talla_dona">
+            <option value="dona-XS">XS</option><option value="dona-S">S</option><option value="dona-M">M</option>
+            <option value="dona-L">L</option><option value="dona-XL">XL</option><option value="dona-XXL">XXL</option><option value="dona-XXXL">XXXL</option>
+          </optgroup>
+          <optgroup label="Infantils" data-i18n-label="grup_talla_infantil">
+            <option value="infantil-4">4</option><option value="infantil-6">6</option><option value="infantil-8">8</option>
+            <option value="infantil-10">10</option><option value="infantil-12">12</option><option value="infantil-14">14</option>
           </optgroup>
         </select>
         <p class="nota-talla" data-i18n="nota_talla_multiple" style="font-size:11.5px;color:var(--gris);margin:6px 0 0;">Si fas més d'una etapa, totes les samarretes que rebis seran d'aquesta talla.</p>
@@ -853,20 +853,9 @@
   const POBLES_ORDENATS = POBLES.slice().sort((a, b) => (a.dia - b.dia) || (a.km - b.km));
 
   // ---------- Punts de recollida de samarreta ----------
-  const DIA_LABELS = {
-    fri: { ca: "Div.", es: "Vie.", en: "Fri." },
-    thu: { ca: "Dij.", es: "Jue.", en: "Thu." },
-  };
-  const PICKUP_POINTS = [
-    { store: "Decathlon Puigcerdà", day: "fri", date: "9/10" },
-    { store: "Decathlon Puigcerdà", day: "thu", date: "15/10" },
-    { store: "Decathlon Manresa", day: "fri", date: "9/10" },
-    { store: "Decathlon Manresa", day: "thu", date: "15/10" },
-    { store: "Decathlon Sant Boi", day: "fri", date: "9/10" },
-    { store: "Decathlon Sant Boi", day: "thu", date: "15/10" },
-    { store: "Decathlon L'Illa Diagonal", day: "fri", date: "9/10" },
-    { store: "Decathlon L'Illa Diagonal", day: "thu", date: "15/10" },
-  ];
+  // La recollida es fa al municipi del recorregut més proper a on visquis
+  // (encara s'estan tancant els punts exactes amb els ajuntaments col·laboradors).
+  // Reutilitzem el mateix llistat de municipis que el selector de tram.
 
   // ---------- Diccionari d'idiomes ----------
   const T = {
@@ -928,7 +917,7 @@
     lbl_distancia_estimada: { ca:"Distància estimada:", es:"Distancia estimada:", en:"Estimated distance:" },
     lbl_federat: { ca:"Estàs federat/da? *", es:"¿Estás federado/a? *", en:"Are you federated? *" },
     lbl_llicencia: { ca:"Número de llicència federativa *", es:"Número de licencia federativa *", en:"Federation licence number *" },
-    lbl_recollida: { ca:"Quan i on vols recollir la teva samarreta? *", es:"¿Cuándo y dónde quieres recoger tu camiseta? *", en:"When and where do you want to collect your t-shirt? *" },
+    lbl_recollida: { ca:"M'aniria millor recollir la samarreta al municipi més proper a... *", es:"Me iría mejor recoger la camiseta en el municipio más cercano a... *", en:"It would suit me best to collect the t-shirt in the town closest to... *" },
     lbl_talla: { ca:"Talla de samarreta *", es:"Talla de camiseta *", en:"T-shirt size *" },
     lbl_total: { ca:"Total a pagar", es:"Total a pagar", en:"Total to pay" },
     lbl_import: { ca:"Import (€) *", es:"Importe (€) *", en:"Amount (€) *" },
@@ -1002,14 +991,9 @@
     resum_samarretes_plur: { ca:"samarretes", es:"camisetas", en:"t-shirts" },
     nota_talla_multiple: { ca:"Si fas més d'una etapa, totes les samarretes que rebis seran d'aquesta talla.", es:"Si haces más de una etapa, todas las camisetas que recibas serán de esta talla.", en:"If you do more than one stage, all the t-shirts you receive will be this size." },
 
-    grup_talla_adult: { ca:"Adult", es:"Adulto", en:"Adult" },
-    grup_talla_infantil: { ca:"Infantil", es:"Infantil", en:"Kids" },
-    talla_inf_3_4: { ca:"3-4 anys", es:"3-4 años", en:"3-4 years" },
-    talla_inf_5_6: { ca:"5-6 anys", es:"5-6 años", en:"5-6 years" },
-    talla_inf_7_8: { ca:"7-8 anys", es:"7-8 años", en:"7-8 years" },
-    talla_inf_9_10: { ca:"9-10 anys", es:"9-10 años", en:"9-10 years" },
-    talla_inf_11_12: { ca:"11-12 anys", es:"11-12 años", en:"11-12 years" },
-    talla_inf_13_14: { ca:"13-14 anys", es:"13-14 años", en:"13-14 years" },
+    grup_talla_home: { ca:"Home", es:"Hombre", en:"Men" },
+    grup_talla_dona: { ca:"Dona", es:"Mujer", en:"Women" },
+    grup_talla_infantil: { ca:"Infantils", es:"Infantiles", en:"Kids" },
 
     taula_col_modalitat: { ca:"Modalitat", es:"Modalidad", en:"Category" },
     taula_col_earlybird: {
@@ -1100,9 +1084,9 @@
     },
     faq_q10: { ca:"Com i quan recullo la samarreta?", es:"¿Cómo y cuándo recojo la camiseta?", en:"How and when do I collect my t-shirt?" },
     faq_a10: {
-      ca:"A qualsevol dels punts Decathlon indicats al formulari (Puigcerdà, Manresa, Sant Boi o L'Illa Diagonal), els dies 9 o 15 d'octubre.",
-      es:"En cualquiera de los puntos Decathlon indicados en el formulario (Puigcerdà, Manresa, Sant Boi o L'Illa Diagonal), los días 9 o 15 de octubre.",
-      en:"At any of the Decathlon points listed in the form (Puigcerdà, Manresa, Sant Boi or L'Illa Diagonal), on October 9th or 15th."
+      ca:"Al formulari tries el municipi del recorregut més proper a on visquis. Encara estem acabant de concretar els punts exactes de recollida amb els ajuntaments col·laboradors; t'avisarem per email amb els detalls.",
+      es:"En el formulario eliges el municipio del recorrido más cercano a donde vives. Todavía estamos cerrando los puntos exactos de recogida con los ayuntamientos colaboradores; te avisaremos por email con los detalles.",
+      en:"In the form you choose the town along the route closest to where you live. We're still finalising the exact pickup points with the collaborating town councils; we'll email you the details."
     },
     faq_q11: { ca:"Estic federat/da, això canvia alguna cosa?", es:"Estoy federado/a, ¿esto cambia algo?", en:"I'm federated — does that change anything?" },
     faq_a11: {
@@ -1152,10 +1136,6 @@
     const diaWord = { ca: "Dia", es: "Día", en: "Day" }[currentLang];
     const kmWord = "km";
     return `${p.nom} (${diaWord} ${p.dia} · ${kmWord} ${p.km})`;
-  }
-
-  function etiquetaPickup(p) {
-    return `${p.store} ${DIA_LABELS[p.day][currentLang]} ${p.date}`;
   }
 
   // ---------- Aplicar idioma a tot el DOM ----------
@@ -1404,10 +1384,10 @@
     opt0.value = "";
     opt0.textContent = "—";
     sel.appendChild(opt0);
-    PICKUP_POINTS.forEach((p, idx) => {
+    POBLES_ORDENATS.forEach((p) => {
       const opt = document.createElement("option");
-      opt.value = String(idx);
-      opt.textContent = etiquetaPickup(p);
+      opt.value = p.id;
+      opt.textContent = p.nom;
       sel.appendChild(opt);
     });
     if (valorActual) sel.value = valorActual;
@@ -1421,17 +1401,17 @@
   // ---------- Samarreta solidària: files repetibles de talla + quantitat ----------
   const OPCIONS_TALLA_HTML = `
     <option value="" data-i18n="opt_talla_placeholder">Tria talla</option>
-    <optgroup label="Adult" data-i18n-label="grup_talla_adult">
-      <option>XS</option><option>S</option><option>M</option>
-      <option>L</option><option>XL</option><option>XXL</option>
+    <optgroup label="Home" data-i18n-label="grup_talla_home">
+      <option value="home-XS">XS</option><option value="home-S">S</option><option value="home-M">M</option>
+      <option value="home-L">L</option><option value="home-XL">XL</option><option value="home-XXL">XXL</option><option value="home-XXXL">XXXL</option>
     </optgroup>
-    <optgroup label="Infantil" data-i18n-label="grup_talla_infantil">
-      <option value="Infantil 3-4" data-i18n="talla_inf_3_4">3-4 anys</option>
-      <option value="Infantil 5-6" data-i18n="talla_inf_5_6">5-6 anys</option>
-      <option value="Infantil 7-8" data-i18n="talla_inf_7_8">7-8 anys</option>
-      <option value="Infantil 9-10" data-i18n="talla_inf_9_10">9-10 anys</option>
-      <option value="Infantil 11-12" data-i18n="talla_inf_11_12">11-12 anys</option>
-      <option value="Infantil 13-14" data-i18n="talla_inf_13_14">13-14 anys</option>
+    <optgroup label="Dona" data-i18n-label="grup_talla_dona">
+      <option value="dona-XS">XS</option><option value="dona-S">S</option><option value="dona-M">M</option>
+      <option value="dona-L">L</option><option value="dona-XL">XL</option><option value="dona-XXL">XXL</option><option value="dona-XXXL">XXXL</option>
+    </optgroup>
+    <optgroup label="Infantils" data-i18n-label="grup_talla_infantil">
+      <option value="infantil-4">4</option><option value="infantil-6">6</option><option value="infantil-8">8</option>
+      <option value="infantil-10">10</option><option value="infantil-12">12</option><option value="infantil-14">14</option>
     </optgroup>
   `;
 
@@ -1842,7 +1822,8 @@
         payloadAPI = {
           modalitat: "animar", email_contacte: email, nom, cognoms, telefon, relacio,
           samarretes: samarretes.map((s) => ({ talla: s.talla, quantitat: s.quantitat })),
-          recollida_idx: Number(recollidaSel.value),
+          recollida_municipi: recollidaSel.value,
+          recollida_municipi_nom: recollidaText,
           corporativa: corporativaCheck.checked, empresa_nom: empresaNom, empresa_cif: empresaCif,
         };
       }
@@ -1910,7 +1891,8 @@
           tutor_nom: tutorNom, tutor_cognoms: tutorCognoms, tutor_dni: tutorDni,
           tutor_data_naixement: tutorDataNaixement, tutor_consentiment: tutorConsentiment,
           acceptacio_reglament: reglament, consentiment_dades: rgpd, cessio_imatge: imatge,
-          recollida_idx: Number(recollidaSel.value),
+          recollida_municipi: recollidaSel.value,
+          recollida_municipi_nom: recollidaText,
         };
       }
     } catch (err) {
