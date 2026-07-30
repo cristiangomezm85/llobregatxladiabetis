@@ -106,18 +106,41 @@ async function handleRequest(event) {
 
   if (action === "setGarminUrl") {
     const { garminUrl } = body;
-    if (typeof garminUrl !== "string") {
+    if (typeof garminUrl !== "string" || !garminUrl.trim()) {
       return { statusCode: 400, body: JSON.stringify({ error: "garminUrl invàlid" }) };
     }
-    const m = garminUrl.match(/session\/([a-f0-9-]+)\/token\/([A-Za-z0-9]+)/i);
+
+    let resolvedUrl = garminUrl.trim();
+    let m = resolvedUrl.match(/session\/([a-f0-9-]+)\/token\/([A-Za-z0-9]+)/i);
+
+    // Si és un short-link (p.ex. gar.mn/XXXX) encara no conté
+    // session/token — el seguim (redirect) per obtenir la URL final.
+    if (!m) {
+      try {
+        const res = await fetch(resolvedUrl, { redirect: "follow" });
+        resolvedUrl = res.url || resolvedUrl;
+        m = resolvedUrl.match(/session\/([a-f0-9-]+)\/token\/([A-Za-z0-9]+)/i);
+      } catch (e) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: "No s'ha pogut resoldre l'enllaç curt de Garmin", detail: String(e) }),
+        };
+      }
+    }
+
     if (!m) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "No s'ha reconegut l'enllaç de Garmin LiveTrack (ha de contenir /session/.../token/...)" }),
+        body: JSON.stringify({
+          error: "No s'ha reconegut l'enllaç de Garmin LiveTrack (ni directament ni seguint el redirect)",
+          resolvedUrl,
+        }),
       };
     }
+
     pushHistory(state);
-    state.garminUrl = garminUrl;
+    state.garminUrl = garminUrl.trim();
+    state.garminResolvedUrl = resolvedUrl;
     state.garminSessionId = m[1];
     state.garminToken = m[2];
     state.updatedAt = Date.now();
