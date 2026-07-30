@@ -166,7 +166,14 @@ function arcFracAtKm(km){
    ========================================================= */
 async function loadConfig(){
   const res = await fetch(`${FUNCTIONS_BASE}/get-config`, { cache: 'no-store' });
-  const config = await res.json();
+  const config = await res.json().catch(() => ({}));
+
+  if (!res.ok || !Array.isArray(config.points) || config.points.length === 0) {
+    document.getElementById('loading').textContent =
+      '⚠ No s\'ha pogut carregar el mapa' + (config.detail ? ': ' + config.detail : ' (encara no hi ha configuració desada)');
+    document.getElementById('status-line').textContent = '⚠ Sense configuració al servidor';
+    return false;
+  }
 
   document.getElementById('mapimg').src = config.mapImage;
   document.getElementById('loading').style.display = 'none';
@@ -226,6 +233,8 @@ async function loadConfig(){
     tick.style.left = (cumKm[i]/totalKm*100) + '%';
     xpwrap.appendChild(tick);
   });
+
+  return true;
 }
 
 /* =========================================================
@@ -461,7 +470,8 @@ async function setGpsMode(on){
 document.getElementById('modetoggle').addEventListener('click', () => setGpsMode(!gpsMode));
 
 (async () => {
-  await loadConfig();
+  const ok = await loadConfig();
+  if (!ok) return;
   await poll();
   setInterval(poll, 8000);
 })();

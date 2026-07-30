@@ -167,7 +167,7 @@ async function apiSaveConfig(cfg){
   });
   let data;
   try { data = await res.json(); } catch(e){ data = {}; }
-  if (!res.ok) throw new Error(`(${res.status}) ${data.error || res.statusText || 'Error desconegut'}`);
+  if (!res.ok) throw new Error(`(${res.status}) ${data.error || res.statusText || 'Error desconegut'}${data.detail ? ' · ' + data.detail : ''}`);
   return data;
 }
 
@@ -415,7 +415,7 @@ document.getElementById('loginbtn').addEventListener('click', async () => {
     });
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
-      errEl.textContent = res.status === 401 ? '⚠ Token incorrecte' : `⚠ Error (${res.status}): ${data.error || res.statusText}`;
+      errEl.textContent = res.status === 401 ? '⚠ Token incorrecte' : `⚠ Error (${res.status}): ${data.error || res.statusText}${data.detail ? ' · ' + data.detail : ''}`;
       errEl.style.display = 'block';
       return;
     }
