@@ -29,7 +29,7 @@
     margin:0; min-height:100vh; display:flex; flex-direction:column;
     background:var(--paper); color:var(--tinta); font-family:'Manrope',sans-serif; line-height:1.5;
   }
-  h1,h2{ font-family:'Bricolage Grotesque',sans-serif; color:var(--blau-llobregat); margin:0; }
+  h1,h2,h3{ font-family:'Bricolage Grotesque',sans-serif; color:var(--blau-llobregat); margin:0; }
   .nav{ background:var(--blau-llobregat); padding:14px 20px; }
   .nav-inner{ max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:8px; }
   .nav-inner img{ height:24px; }
@@ -56,11 +56,34 @@
   .cta{
     display:inline-block; margin-top:16px; background:var(--coral); color:#fff;
     text-decoration:none; font-weight:700; padding:13px 28px; border-radius:10px;
-    font-family:'Bricolage Grotesque',sans-serif; font-size:15px;
+    font-family:'Bricolage Grotesque',sans-serif; font-size:15px; border:none; cursor:pointer;
   }
   .cta:hover{ background:#F0562F; }
+  .cta-secundari{
+    display:inline-block; margin-top:10px; background:#fff; color:var(--blau-diabetis);
+    border:1.5px solid var(--blau-diabetis); text-decoration:none; font-weight:700;
+    padding:11px 24px; border-radius:10px; font-family:'Bricolage Grotesque',sans-serif;
+    font-size:14px; cursor:pointer;
+  }
+  .cta-secundari:hover{ background:#EEF5FD; }
   .nota{ font-size:12.5px; color:var(--gris); margin-top:24px; }
   footer{ text-align:center; padding:20px; font-size:12px; color:var(--gris); }
+
+  /* ---------- Bloc de compartir ---------- */
+  .compartir-bloc{ margin-top:28px; padding-top:24px; border-top:1px solid #EEECE4; display:none; }
+  .compartir-bloc.visible{ display:block; }
+  .compartir-titol{ font-size:15px; margin-bottom:6px; }
+  .compartir-desc{ font-size:13px; color:var(--gris); margin-bottom:16px; }
+  #targeta-preview{
+    width:100%; max-width:220px; border-radius:12px; margin:0 auto 16px; display:block;
+    box-shadow:0 6px 20px rgba(14,27,54,0.15);
+  }
+  .compartir-botons{ display:flex; flex-direction:column; gap:8px; align-items:center; }
+  .compartir-avis-copiat{
+    font-size:12px; color:#2E9E5B; font-weight:700; margin-top:8px; display:none;
+  }
+  .compartir-avis-copiat.visible{ display:block; }
+  .carregant{ font-size:13px; color:var(--gris); }
 </style>
 </head>
 <body>
@@ -105,6 +128,52 @@
       </a>
     </div>
 
+    <!-- ---------- Bloc de compartir a Instagram ---------- -->
+    <div class="compartir-bloc" id="compartir-bloc">
+      <h3 class="compartir-titol">
+        <span lang="ca">Comparteix-ho!</span>
+        <span lang="es">¡Compártelo!</span>
+        <span lang="en">Share it!</span>
+      </h3>
+      <p class="compartir-desc">
+        <span lang="ca">Descarrega la teva targeta i publica-la a Instagram. Cada persona que ho comparteix, arriba a més gent.</span>
+        <span lang="es">Descarga tu tarjeta y publícala en Instagram. Cada persona que lo comparte, llega a más gente.</span>
+        <span lang="en">Download your card and post it on Instagram. Every share reaches more people.</span>
+      </p>
+
+      <p class="carregant" id="targeta-carregant">
+        <span lang="ca">Generant la teva targeta...</span>
+        <span lang="es">Generando tu tarjeta...</span>
+        <span lang="en">Generating your card...</span>
+      </p>
+
+      <canvas id="targeta-canvas" width="1080" height="1920" style="display:none;"></canvas>
+      <img id="targeta-preview" style="display:none;" alt="">
+
+      <div class="compartir-botons" id="compartir-botons" style="display:none;">
+        <button type="button" class="cta" id="btn-descarregar">
+          <span lang="ca">Descarregar imatge</span>
+          <span lang="es">Descargar imagen</span>
+          <span lang="en">Download image</span>
+        </button>
+        <button type="button" class="cta-secundari" id="btn-compartir" style="display:none;">
+          <span lang="ca">Compartir</span>
+          <span lang="es">Compartir</span>
+          <span lang="en">Share</span>
+        </button>
+        <button type="button" class="cta-secundari" id="btn-copiar-text">
+          <span lang="ca">Copiar text per a la publicació</span>
+          <span lang="es">Copiar texto para la publicación</span>
+          <span lang="en">Copy caption text</span>
+        </button>
+        <div class="compartir-avis-copiat" id="avis-copiat">
+          <span lang="ca">✓ Text copiat</span>
+          <span lang="es">✓ Texto copiado</span>
+          <span lang="en">✓ Text copied</span>
+        </div>
+      </div>
+    </div>
+
     <p class="nota">
       <span lang="ca">Si tens qualsevol dubte, escriu-nos a</span>
       <span lang="es">Si tienes alguna duda, escríbenos a</span>
@@ -121,19 +190,225 @@
 <script>
 (function(){
   "use strict";
-  // Idioma: mateix mecanisme que la resta del lloc (localStorage 'llxd-lang').
+
   var lang = 'ca';
   try { lang = localStorage.getItem('llxd-lang') || 'ca'; } catch(e){}
   document.documentElement.setAttribute('data-lang', lang);
   document.documentElement.setAttribute('lang', lang);
 
-  // Mostrem la referència de la comanda si arriba per URL (?order_id=...)
   var params = new URLSearchParams(window.location.search);
   var orderId = params.get('order_id');
   if (orderId) {
     document.getElementById('ref-value').textContent = orderId;
     document.getElementById('ref-block').style.display = 'inline-block';
   }
+
+  var TEXTOS = {
+    modalitat_dorsal0: { ca: "Dorsal 0", es: "Dorsal 0", en: "Bib 0" },
+    modalitat_animar: { ca: "Samarreta solidària", es: "Camiseta solidaria", en: "Solidarity t-shirt" },
+    modalitat_caminant: { ca: "Caminant", es: "Caminando", en: "Walking" },
+    modalitat_corrent: { ca: "Corrent", es: "Corriendo", en: "Running" },
+    modalitat_bici: { ca: "Bici", es: "Bici", en: "Bike" },
+    headline_dorsal0: { ca: "FAIG COSTAT AL REPTE", es: "APOYO EL RETO", en: "SUPPORTING THE CHALLENGE" },
+    headline_animar: { ca: "HI SÓC PER ANIMAR", es: "AQUÍ ESTOY PARA ANIMAR", en: "HERE TO CHEER" },
+    headline_fisic: { ca: "JA HI SÓC!", es: "¡YA ESTOY DENTRO!", en: "I'M IN!" },
+    label_km: { ca: "KM", es: "KM", en: "KM" },
+    label_etapa: { ca: "etapa", es: "etapa", en: "stage" },
+    label_etapes: { ca: "etapes", es: "etapas", en: "stages" },
+    caption_dorsal0: {
+      ca: "Faig costat al repte Llobregat x la Diabetis amb un Dorsal 0! Cada euro va directe a la recerca de la cura de la diabetis tipus 1. #LlobregatXLaDiabetis #LxD2026",
+      es: "¡Apoyo el reto Llobregat x la Diabetis con un Dorsal 0! Cada euro va directo a la investigación de la cura de la diabetes tipo 1. #LlobregatXLaDiabetis #LxD2026",
+      en: "Supporting the Llobregat x la Diabetis challenge with Bib 0! Every euro goes straight to type 1 diabetes cure research. #LlobregatXLaDiabetis #LxD2026"
+    },
+    caption_animar: {
+      ca: "Ja tinc la meva samarreta solidària del repte Llobregat x la Diabetis! Del 16 al 18 d'octubre, un riu sencer es mobilitza per la recerca de la diabetis tipus 1. #LlobregatXLaDiabetis #LxD2026",
+      es: "¡Ya tengo mi camiseta solidaria del reto Llobregat x la Diabetis! Del 16 al 18 de octubre, un río entero se moviliza por la investigación de la diabetes tipo 1. #LlobregatXLaDiabetis #LxD2026",
+      en: "Got my solidarity t-shirt for the Llobregat x la Diabetis challenge! From October 16-18, a whole river mobilises for type 1 diabetes research. #LlobregatXLaDiabetis #LxD2026"
+    },
+    caption_fisic: {
+      ca: "Ja estic inscrit/a al repte Llobregat x la Diabetis! Del 16 al 18 d'octubre recorreré el Llobregat per la recerca de la cura de la diabetis tipus 1. Ens hi sumes? #LlobregatXLaDiabetis #LxD2026",
+      es: "¡Ya estoy inscrito/a en el reto Llobregat x la Diabetis! Del 16 al 18 de octubre recorreré el Llobregat por la investigación de la cura de la diabetes tipo 1. ¿Te sumas? #LlobregatXLaDiabetis #LxD2026",
+      en: "I'm registered for the Llobregat x la Diabetis challenge! From October 16-18 I'll follow the Llobregat river for type 1 diabetes cure research. Join in? #LlobregatXLaDiabetis #LxD2026"
+    },
+  };
+  function tr(key) { return (TEXTOS[key] && TEXTOS[key][lang]) || (TEXTOS[key] && TEXTOS[key].ca) || ""; }
+
+  function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    var words = text.split(" ");
+    var line = "";
+    var lines = [];
+    for (var i = 0; i < words.length; i++) {
+      var test = line + words[i] + " ";
+      if (ctx.measureText(test).width > maxWidth && line !== "") {
+        lines.push(line.trim());
+        line = words[i] + " ";
+      } else {
+        line = test;
+      }
+    }
+    lines.push(line.trim());
+    var startY = y - ((lines.length - 1) * lineHeight) / 2;
+    for (var j = 0; j < lines.length; j++) {
+      ctx.fillText(lines[j], x, startY + j * lineHeight);
+    }
+    return lines.length;
+  }
+
+  async function generarTargeta(dades) {
+    if (document.fonts && document.fonts.ready) {
+      try { await document.fonts.ready; } catch (e) {}
+    }
+
+    var canvas = document.getElementById("targeta-canvas");
+    var ctx = canvas.getContext("2d");
+    var W = 1080, H = 1920, cx = W / 2;
+
+    var grad = ctx.createLinearGradient(0, 0, W, H);
+    grad.addColorStop(0, "#1c3d70");
+    grad.addColorStop(0.55, "#15315F");
+    grad.addColorStop(1, "#0E1B36");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.textAlign = "center";
+
+    ctx.fillStyle = "#5AC0E6";
+    ctx.font = "700 32px Manrope";
+    ctx.fillText("16–18 OCTUBRE 2026", cx, 170);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "800 54px 'Bricolage Grotesque'";
+    ctx.fillText("Llobregat x la Diabetis", cx, 250);
+
+    var headlineKey = "headline_fisic";
+    var isFisic = ["caminant", "corrent", "bici"].indexOf(dades.modalitat) !== -1;
+    if (dades.modalitat === "dorsal0") headlineKey = "headline_dorsal0";
+    else if (dades.modalitat === "animar") headlineKey = "headline_animar";
+
+    var nomLinia = dades.nom ? dades.nom.split(" ")[0].toUpperCase() : "";
+
+    ctx.fillStyle = "#FF6B47";
+    ctx.font = "800 64px 'Bricolage Grotesque'";
+    ctx.fillText(nomLinia, cx, 480);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "800 78px 'Bricolage Grotesque'";
+    wrapText(ctx, tr(headlineKey), cx, 640, 880, 88);
+
+    if (isFisic && dades.tram_km) {
+      ctx.fillStyle = "#FF6B47";
+      ctx.font = "800 260px 'Bricolage Grotesque'";
+      ctx.fillText(String(dades.tram_km), cx, 1060);
+
+      ctx.fillStyle = "#D7E3F5";
+      ctx.font = "700 40px Manrope";
+      ctx.fillText(tr("label_km"), cx, 1130);
+
+      if (dades.tram_dies) {
+        var etapaWord = dades.tram_dies === 1 ? tr("label_etapa") : tr("label_etapes");
+        ctx.fillStyle = "#B9C6DE";
+        ctx.font = "600 36px Manrope";
+        ctx.fillText(dades.tram_dies + " " + etapaWord, cx, 1210);
+      }
+      if (dades.tram_inici_nom && dades.tram_final_nom) {
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "700 42px Manrope";
+        wrapText(ctx, dades.tram_inici_nom + " → " + dades.tram_final_nom, cx, 1300, 880, 52);
+      }
+    } else if (dades.modalitat === "animar") {
+      ctx.fillStyle = "#FF6B47";
+      ctx.font = "800 140px 'Bricolage Grotesque'";
+      ctx.fillText("×" + (dades.unitats || 1), cx, 1020);
+      ctx.fillStyle = "#D7E3F5";
+      ctx.font = "700 38px Manrope";
+      ctx.fillText(tr("modalitat_animar"), cx, 1090);
+    } else if (dades.modalitat === "dorsal0") {
+      ctx.fillStyle = "#FF6B47";
+      ctx.font = "800 200px 'Bricolage Grotesque'";
+      ctx.fillText("0", cx, 1020);
+      ctx.fillStyle = "#D7E3F5";
+      ctx.font = "700 38px Manrope";
+      ctx.fillText(tr("modalitat_dorsal0"), cx, 1090);
+    }
+
+    ctx.fillStyle = "#5AC0E6";
+    ctx.font = "700 40px Manrope";
+    ctx.fillText("#LlobregatXLaDiabetis · #LxD2026", cx, 1800);
+
+    ctx.fillStyle = "#B9C6DE";
+    ctx.font = "600 32px Manrope";
+    ctx.fillText("llobregat.org", cx, 1860);
+
+    return canvas;
+  }
+
+  function baixarBlob(blob, filename) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
+  }
+
+  async function iniciarCompartir(orderId) {
+    var bloc = document.getElementById("compartir-bloc");
+    var carregant = document.getElementById("targeta-carregant");
+    var preview = document.getElementById("targeta-preview");
+    var botons = document.getElementById("compartir-botons");
+
+    try {
+      var res = await fetch("/.netlify/functions/get-order?order_id=" + encodeURIComponent(orderId));
+      if (!res.ok) return; // si no es troba, simplement no mostrem el bloc
+      var dades = await res.json();
+
+      bloc.classList.add("visible");
+      var canvas = await generarTargeta(dades);
+
+      canvas.toBlob(function (blob) {
+        if (!blob) return;
+        var url = URL.createObjectURL(blob);
+        preview.src = url;
+        preview.style.display = "block";
+        carregant.style.display = "none";
+        botons.style.display = "flex";
+
+        document.getElementById("btn-descarregar").addEventListener("click", function () {
+          baixarBlob(blob, "llobregat-x-la-diabetis.png");
+        });
+
+        var captionKey = "caption_fisic";
+        if (dades.modalitat === "dorsal0") captionKey = "caption_dorsal0";
+        else if (dades.modalitat === "animar") captionKey = "caption_animar";
+        var caption = tr(captionKey);
+
+        document.getElementById("btn-copiar-text").addEventListener("click", function () {
+          navigator.clipboard.writeText(caption).then(function () {
+            var avis = document.getElementById("avis-copiat");
+            avis.classList.add("visible");
+            setTimeout(function () { avis.classList.remove("visible"); }, 2500);
+          });
+        });
+
+        var btnCompartir = document.getElementById("btn-compartir");
+        var fitxer = new File([blob], "llobregat-x-la-diabetis.png", { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [fitxer] })) {
+          btnCompartir.style.display = "inline-block";
+          btnCompartir.addEventListener("click", function () {
+            navigator.share({ files: [fitxer], text: caption }).catch(function () {});
+          });
+        }
+      }, "image/png");
+    } catch (e) {
+      // si falla la generació, simplement no molestem: la pàgina de gràcies
+      // ja funciona igualment sense la targeta
+      console.warn("No s'ha pogut generar la targeta per compartir:", e);
+    }
+  }
+
+  if (orderId) iniciarCompartir(orderId);
 })();
 </script>
 
