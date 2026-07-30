@@ -100,6 +100,10 @@ async function handleRequest(event) {
 
   const { action, segmentIndex, pace } = body;
 
+  if (action === "ping") {
+    return { statusCode: 200, body: JSON.stringify({ ok: true }) };
+  }
+
   if (action === "setGarminUrl") {
     const { garminUrl } = body;
     if (typeof garminUrl !== "string") {
