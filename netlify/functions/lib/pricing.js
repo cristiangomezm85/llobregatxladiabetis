@@ -20,10 +20,15 @@ function tarifaActual() {
   return TARIFES[TARIFES.length - 1];
 }
 
+// Cada valor porta el prefix de categoria (home- / dona- / infantil-) perquè
+// una mateixa lletra (p. ex. "M") és un tall diferent segons la categoria.
+const TALLES_ADULT = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+const TALLES_INFANTIL = ["4", "6", "8", "10", "12", "14"];
+
 const TALLES_VALIDES = [
-  "XS", "S", "M", "L", "XL", "XXL",
-  "Infantil 3-4", "Infantil 5-6", "Infantil 7-8",
-  "Infantil 9-10", "Infantil 11-12", "Infantil 13-14",
+  ...TALLES_ADULT.map((t) => `home-${t}`),
+  ...TALLES_ADULT.map((t) => `dona-${t}`),
+  ...TALLES_INFANTIL.map((t) => `infantil-${t}`),
 ];
 
 const DATA_INICI_REPTE = "2026-10-16";
@@ -88,8 +93,8 @@ async function validarAnimar(payload) {
       throw new Error("Falta el nom o el CIF/NIF de l'empresa");
     }
   }
-  if (payload.recollida_idx === undefined || payload.recollida_idx === null || payload.recollida_idx === "") {
-    throw new Error("Falta el punt de recollida de la samarreta");
+  if (!payload.recollida_municipi) {
+    throw new Error("Falta el municipi de recollida de la samarreta");
   }
   const tarifa = tarifaActual();
   return { baseCentims: tarifa.preus.animar * unitats, unitats };
@@ -137,8 +142,8 @@ async function validarFisic(payload) {
   if (!payload.acceptacio_reglament || !payload.consentiment_dades || !payload.cessio_imatge) {
     throw new Error("Falta acceptar totes les caselles legals");
   }
-  if (payload.recollida_idx === undefined || payload.recollida_idx === null || payload.recollida_idx === "") {
-    throw new Error("Falta el punt de recollida de la samarreta");
+  if (!payload.recollida_municipi) {
+    throw new Error("Falta el municipi de recollida de la samarreta");
   }
 
   const tarifa = tarifaActual();
@@ -193,6 +198,8 @@ function descripcioComanda(payload) {
 module.exports = {
   TARIFES,
   TALLES_VALIDES,
+  TALLES_ADULT,
+  TALLES_INFANTIL,
   DATA_INICI_REPTE,
   tarifaActual,
   calcularEsMenor,
