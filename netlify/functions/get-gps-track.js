@@ -47,7 +47,8 @@ exports.handler = async () => {
 
   try {
     const store = getStore("livetrack");
-    const state = await store.get("current", { type: "json" });
+    let state = null;
+    try { state = await store.get("current", { type: "json" }); } catch (e) { state = null; }
 
     if (!state || !state.garminSessionId || !state.garminToken) {
       return {
@@ -58,7 +59,8 @@ exports.handler = async () => {
     }
 
     // Caché: si tenim dades recents, no truquem a Garmin de nou
-    const cached = await store.get("gps-cache", { type: "json" });
+    let cached = null;
+    try { cached = await store.get("gps-cache", { type: "json" }); } catch (e) { cached = null; }
     if (cached && cached.sessionId === state.garminSessionId && Date.now() - cached.fetchedAt < CACHE_TTL_MS) {
       return { statusCode: 200, headers: CORS, body: JSON.stringify({ available: true, ...cached }) };
     }

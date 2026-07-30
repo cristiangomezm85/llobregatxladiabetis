@@ -8,7 +8,12 @@ const { getStore } = require("@netlify/blobs");
 exports.handler = async () => {
   try {
     const store = getStore("livetrack");
-    const config = await store.get("config", { type: "json" });
+    let config = null;
+    try {
+      config = await store.get("config", { type: "json" });
+    } catch (e) {
+      config = null; // clau encara no creada — és normal la primera vegada
+    }
 
     return {
       statusCode: 200,

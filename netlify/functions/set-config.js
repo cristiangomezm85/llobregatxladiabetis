@@ -12,12 +12,12 @@ function sha256hex(input) {
 }
 
 function checkAuth(event) {
-  const expectedHash = process.env.ADMIN_TOKEN_HASH;
-  if (!expectedHash) return false;
+  const expected = process.env.ADMIN_TOKEN;
+  if (!expected) return false;
   const authHeader = event.headers.authorization || event.headers.Authorization || "";
   const token = authHeader.replace(/^Bearer\s+/i, "").trim();
   if (!token) return false;
-  return sha256hex(token) === expectedHash;
+  return token === expected || sha256hex(token) === expected;
 }
 
 const CORS_HEADERS = {

@@ -30,12 +30,25 @@ function sha256hex(input) {
 }
 
 function checkAuth(event) {
-  const expectedHash = process.env.ADMIN_TOKEN_HASH;
-  if (!expectedHash) return false;
+  const expected = process.env.ADMIN_TOKEN;
+  if (!expected) return false;
   const authHeader = event.headers.authorization || event.headers.Authorization || "";
   const token = authHeader.replace(/^Bearer\s+/i, "").trim();
   if (!token) return false;
-  return sha256hex(token) === expectedHash;
+  // Accepta tant si la variable d'entorn guarda el token en text pla
+  // com si guarda el seu hash SHA-256.
+  return token === expected || sha256hex(token) === expected;
+}
+
+/* Netlify Blobs llança un error si la clau encara no existeix, en
+   comptes de retornar null — ho normalitzem aquí perquè la primera
+   vegada (abans de desar res) no faci petar la funció. */
+async function safeGet(store, key) {
+  try {
+    return await store.get(key, { type: "json" });
+  } catch (e) {
+    return null;
+  }
 }
 
 /* Extreu la llista ordenada de checkpoints (només els punts amb
@@ -80,7 +93,7 @@ async function handleRequest(event) {
   }
 
   const store = getStore("livetrack");
-  const state = (await store.get("current", { type: "json" })) || { ...DEFAULT_STATE };
+  const state = (await safeGet(store, "current")) || { ...DEFAULT_STATE };
   state.paces = state.paces || {};
   state.arrivals = state.arrivals || {};
   state.history = state.history || [];
@@ -123,7 +136,7 @@ async function handleRequest(event) {
   }
 
   if (action === "start") {
-    const config = await store.get("config", { type: "json" });
+    const config = await safeGet(store, "config");
     const { list, cumKm } = getCheckpointList(config);
 
     if (state.status !== "idle") {
@@ -162,7 +175,7 @@ async function handleRequest(event) {
     if (state.status !== "moving") {
       return { statusCode: 409, body: JSON.stringify({ error: "No hi ha cap tram en marxa", state }) };
     }
-    const config = await store.get("config", { type: "json" });
+    const config = await safeGet(store, "config");
     const { list } = getCheckpointList(config);
 
     pushHistory(state);

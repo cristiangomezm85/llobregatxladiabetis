@@ -19,7 +19,12 @@ const DEFAULT_STATE = {
 exports.handler = async () => {
   try {
     const store = getStore("livetrack");
-    const data = await store.get("current", { type: "json" });
+    let data = null;
+    try {
+      data = await store.get("current", { type: "json" });
+    } catch (e) {
+      data = null; // clau encara no creada — és normal la primera vegada
+    }
 
     return {
       statusCode: 200,
