@@ -4,7 +4,7 @@
 // El panell config-admin.html envia l'objecte sencer cada vegada
 // que es prem "Desar" — no cal fer merges parcials.
 
-const { getStore } = require("@netlify/blobs");
+const { openStore } = require("./lib/blobs");
 const crypto = require("crypto");
 
 function sha256hex(input) {
@@ -56,7 +56,7 @@ exports.handler = async (event) => {
   };
 
   try {
-    const store = getStore("livetrack");
+    const store = openStore("livetrack");
     await store.setJSON("config", config);
     return {
       statusCode: 200,

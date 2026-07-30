@@ -15,7 +15,7 @@
 // forma exacta de la resposta — el parsing de punts de sota prova
 // diversos noms de camp habituals, però pot necessitar ajust.
 
-const { getStore } = require("@netlify/blobs");
+const { openStore } = require("./lib/blobs");
 
 const CACHE_TTL_MS = 30000; // no tornem a trucar a Garmin més sovint que això
 
@@ -46,7 +46,7 @@ exports.handler = async () => {
   const CORS = { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json" };
 
   try {
-    const store = getStore("livetrack");
+    const store = openStore("livetrack");
     let state = null;
     try { state = await store.get("current", { type: "json" }); } catch (e) { state = null; }
 

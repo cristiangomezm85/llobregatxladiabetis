@@ -2,7 +2,7 @@
 // Lectura pública, sense autenticació — qualsevol pot consultar
 // l'estat actual de la cursa (no pot modificar-lo).
 
-const { getStore } = require("@netlify/blobs");
+const { openStore } = require("./lib/blobs");
 
 const DEFAULT_STATE = {
   currentIndex: 0,
@@ -18,7 +18,7 @@ const DEFAULT_STATE = {
 
 exports.handler = async () => {
   try {
-    const store = getStore("livetrack");
+    const store = openStore("livetrack");
     let data = null;
     try {
       data = await store.get("current", { type: "json" });

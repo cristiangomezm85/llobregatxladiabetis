@@ -3,11 +3,11 @@
 // mapa, sprite del corredor, i tots els punts (de traçat i de
 // poble). No requereix autenticació — és només lectura.
 
-const { getStore } = require("@netlify/blobs");
+const { openStore } = require("./lib/blobs");
 
 exports.handler = async () => {
   try {
-    const store = getStore("livetrack");
+    const store = openStore("livetrack");
     let config = null;
     try {
       config = await store.get("config", { type: "json" });

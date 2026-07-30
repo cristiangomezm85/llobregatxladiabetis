@@ -5,7 +5,7 @@
 // config-admin.html — aquesta funció ja NO porta cap ruta fixa
 // al codi.
 
-const { getStore } = require("@netlify/blobs");
+const { openStore } = require("./lib/blobs");
 const crypto = require("crypto");
 
 const DEFAULT_STATE = {
@@ -92,7 +92,7 @@ async function handleRequest(event) {
     return { statusCode: 400, body: JSON.stringify({ error: "JSON invàlid" }) };
   }
 
-  const store = getStore("livetrack");
+  const store = openStore("livetrack");
   const state = (await safeGet(store, "current")) || { ...DEFAULT_STATE };
   state.paces = state.paces || {};
   state.arrivals = state.arrivals || {};
