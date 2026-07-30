@@ -90,6 +90,7 @@
   <div id="login">
     <input id="tokeninput" type="password" placeholder="Token d'admin">
     <button id="loginbtn">Entrar</button>
+    <div id="loginerror" style="color:var(--coral); font-size:12px; display:none;">Token incorrecte</div>
   </div>
 
   <div id="panel">
@@ -348,9 +349,33 @@ async function startPanel(){
 document.getElementById('loginbtn').addEventListener('click', async () => {
   const val = document.getElementById('tokeninput').value.trim();
   if (!val) return;
-  token = val;
-  localStorage.setItem('lxd_admin_token', token);
-  startPanel();
+  const errEl2 = document.getElementById('loginerror');
+  const btn = document.getElementById('loginbtn');
+  btn.disabled = true;
+  btn.textContent = 'Comprovant...';
+  try {
+    const res = await fetch(`${FUNCTIONS_BASE}/set-position`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${val}` },
+      body: JSON.stringify({ action: 'ping' })
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      errEl2.textContent = res.status === 401 ? '⚠ Token incorrecte' : `⚠ Error (${res.status}): ${data.error || res.statusText}`;
+      errEl2.style.display = 'block';
+      return;
+    }
+    token = val;
+    localStorage.setItem('lxd_admin_token', token);
+    errEl2.style.display = 'none';
+    startPanel();
+  } catch (e) {
+    errEl2.textContent = '⚠ Sense connexió: ' + e.message;
+    errEl2.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
+  }
 });
 
 if (token) startPanel();
