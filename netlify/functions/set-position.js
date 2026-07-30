@@ -225,9 +225,21 @@ exports.handler = async (event) => {
   if (event.httpMethod === "OPTIONS") {
     return { statusCode: 200, headers: CORS_HEADERS, body: "" };
   }
-  const result = await handleRequest(event);
-  return {
-    ...result,
-    headers: { ...(result.headers || {}), ...CORS_HEADERS, "Content-Type": "application/json" },
-  };
+  try {
+    const result = await handleRequest(event);
+    return {
+      ...result,
+      headers: { ...(result.headers || {}), ...CORS_HEADERS, "Content-Type": "application/json" },
+    };
+  } catch (err) {
+    // Blindatge: si alguna cosa llança una excepció no controlada
+    // (per exemple, un error de connexió amb Netlify Blobs que no
+    // hàgim capturat explícitament), retornem un JSON llegible en
+    // comptes de deixar que Netlify talli amb un 502 en cru.
+    return {
+      statusCode: 500,
+      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      body: JSON.stringify({ error: "Error intern no controlat", detail: String(err && err.stack || err) }),
+    };
+  }
 };
