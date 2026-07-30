@@ -6,7 +6,6 @@
 
 const { randomUUID } = require("crypto");
 const { calcularImport, descripcioComanda } = require("./lib/pricing");
-const { textPerIdx } = require("./lib/pickup");
 const { crearOrdre } = require("./lib/store");
 
 exports.handler = async (event) => {
@@ -30,7 +29,9 @@ exports.handler = async (event) => {
 
   const orderId = randomUUID();
   const descripcio = descripcioComanda(payload);
-  const recollidaText = payload.recollida_idx !== undefined ? textPerIdx(payload.recollida_idx) : "";
+  // El municipi de recollida ve ja resolt des del frontend (id + nom),
+  // no cal cap taula de correspondència al backend.
+  const recollidaText = payload.recollida_municipi_nom || payload.recollida_municipi || "";
 
   try {
     await crearOrdre(orderId, {
