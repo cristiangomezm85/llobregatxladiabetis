@@ -532,13 +532,10 @@ async function refreshGpsTrack(){
     }
     empty.style.display = 'none';
 
-    // De moment NOMÉS mostrem la ubicació actual, sense dibuixar el
-    // rastre de tot el recorregut: les primeres proves (fetes amb
-    // cotxe) van deixar un traçat poc net. Es pot reactivar més
-    // endavant fent servir `data.points` per dibuixar gpsPolyline.
-    const lastPoint = data.points[data.points.length - 1];
-    const last = [lastPoint.lat, lastPoint.lng];
+    const latlngs = data.points.map(p => [p.lat, p.lng]);
+    gpsPolyline.setLatLngs(latlngs);
 
+    const last = latlngs[latlngs.length - 1];
     if (!gpsMarker){
       const icon = L.divIcon({
         className: '',
