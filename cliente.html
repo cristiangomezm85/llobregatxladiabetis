@@ -484,9 +484,20 @@ async function initGpsMap(){
 
 async function refreshGpsTrack(){
   try {
-    const res = await fetch(`${FUNCTIONS_BASE}/get-gps-live`, { cache: 'no-store' });
+    const res = await fetch(`${FUNCTIONS_BASE}/get-gps-live?t=${Date.now()}`, { cache: 'no-store' });
     const data = await res.json();
     const empty = document.getElementById('gpsempty');
+
+    // Diagnòstic sempre visible, igual que fem amb la configuració:
+    // què ha respost realment get-gps-live en aquesta consulta.
+    let dbg = document.getElementById('gpsDebug');
+    if (!dbg) {
+      dbg = document.createElement('div');
+      dbg.id = 'gpsDebug';
+      dbg.style.cssText = 'position:absolute; bottom:4px; left:4px; right:4px; font-size:9px; color:var(--gris); background:rgba(0,0,0,0.5); padding:4px; border-radius:6px; z-index:20;';
+      document.getElementById('gpsview').appendChild(dbg);
+    }
+    dbg.textContent = `GPS debug: available=${data.available} · numPoints=${data.numPoints ?? (data.points ? data.points.length : 0)} · ${data.reason || ''}`;
 
     if (!data.available || !data.points || data.points.length === 0){
       empty.style.display = 'flex';
@@ -514,7 +525,7 @@ async function refreshGpsTrack(){
     gpsMap.panTo(last, { animate: true });
   } catch (e) {
     document.getElementById('gpsempty').style.display = 'flex';
-    document.getElementById('gpsempty').textContent = '⚠ Error consultant el GPS';
+    document.getElementById('gpsempty').textContent = '⚠ Error consultant el GPS: ' + e.message;
   }
 }
 
