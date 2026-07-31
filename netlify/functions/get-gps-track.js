@@ -69,24 +69,74 @@ exports.handler = async () => {
     const requestTime = Date.now();
     const trackLogUrl = `https://livetrack.garmin.com/services/trackLog/${garminSessionId}/token/${garminToken}?requestTime=${requestTime}&from=0`;
 
-    const res = await fetch(trackLogUrl, {
-      headers: { Accept: "application/json", "User-Agent": "Mozilla/5.0 (compatible; LlobregatXLaDiabetis/1.0)" },
-    });
+    let res;
+    try {
+      res = await fetch(trackLogUrl, {
+        headers: { Accept: "application/json", "User-Agent": "Mozilla/5.0 (compatible; LlobregatXLaDiabetis/1.0)" },
+      });
+    } catch (fetchErr) {
+      return {
+        statusCode: 200,
+        headers: CORS,
+        body: JSON.stringify({
+          available: false,
+          reason: "No s'ha pogut connectar amb Garmin (xarxa)",
+          detail: String(fetchErr),
+          triedUrl: trackLogUrl,
+        }),
+      };
+    }
 
     if (!res.ok) {
+      let bodyText = "";
+      try { bodyText = (await res.text()).slice(0, 300); } catch (e) {}
       return {
         statusCode: 200,
         headers: CORS,
         body: JSON.stringify({
           available: false,
           reason: `Garmin ha respost ${res.status} — la sessió pot haver caducat o l'enllaç no és correcte`,
-          points: [],
+          garminStatus: res.status,
+          garminBody: bodyText,
+          triedUrl: trackLogUrl,
         }),
       };
     }
 
-    const json = await res.json();
+    let json;
+    let rawText = "";
+    try {
+      rawText = await res.text();
+      json = JSON.parse(rawText);
+    } catch (parseErr) {
+      return {
+        statusCode: 200,
+        headers: CORS,
+        body: JSON.stringify({
+          available: false,
+          reason: "Garmin ha respost però no és JSON vàlid",
+          rawResponseSnippet: rawText.slice(0, 300),
+        }),
+      };
+    }
+
     const points = extractPoints(json);
+
+    if (points.length === 0) {
+      // Diagnòstic: expliquem quines claus de primer nivell hem rebut
+      // perquè, si el format real de Garmin no coincideix amb el que
+      // esperàvem, ho puguem veure sense haver d'endevinar més.
+      return {
+        statusCode: 200,
+        headers: CORS,
+        body: JSON.stringify({
+          available: false,
+          reason: "Garmin ha respost correctament però no s'hi han trobat punts (0 punts). Pot ser que encara no hi hagi activitat en marxa, o que el format de resposta sigui diferent de l'esperat.",
+          responseTopLevelKeys: Array.isArray(json) ? `array[${json.length}]` : Object.keys(json || {}),
+          responseSample: JSON.stringify(json).slice(0, 500),
+        }),
+      };
+    }
 
     const result = {
       sessionId: garminSessionId,
