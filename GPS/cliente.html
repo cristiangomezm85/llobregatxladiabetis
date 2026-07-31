@@ -459,24 +459,40 @@ let runnerSprites = {};
 
 function loadLeaflet(){
   if (leafletLoaded) return Promise.resolve();
-  return new Promise((resolve, reject) => {
-    const css = document.createElement('link');
-    css.rel = 'stylesheet';
-    css.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
-    document.head.appendChild(css);
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
-    // Abans no hi havia cap gestió d'error ni de temps límit: si la
-    // llibreria no carregava (xarxa, bloquejador d'anuncis, etc.), el
-    // codi es quedava esperant per sempre en silenci i el mode GPS
-    // semblava simplement "no fer res", sense cap missatge d'error.
-    const timeoutId = setTimeout(() => {
-      reject(new Error('Leaflet no ha carregat a temps (10s) — comprova la connexió o si algun bloquejador està tallant cdnjs.cloudflare.com'));
-    }, 10000);
-    script.onload = () => { clearTimeout(timeoutId); leafletLoaded = true; resolve(); };
-    script.onerror = () => { clearTimeout(timeoutId); reject(new Error('No s\'ha pogut carregar Leaflet des de cdnjs.cloudflare.com')); };
-    document.head.appendChild(script);
-  });
+
+  // Fem servir la còpia pròpia de Leaflet (a vendor/leaflet/), penjada
+  // al mateix domini, en comptes de dependre d'una CDN externa: així
+  // no depenem de si algun bloquejador d'anuncis, tallafocs de xarxa
+  // o CSP bloqueja cdnjs.cloudflare.com (que és exactament el que
+  // estava passant). Si per algun motiu la còpia pròpia no hi és
+  // (per exemple perquè encara no s'ha pujat la carpeta vendor/),
+  // ho intentem per la CDN com a últim recurs.
+  function tryLoad(cssHref, jsSrc, isLastAttempt){
+    return new Promise((resolve, reject) => {
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = cssHref;
+      document.head.appendChild(css);
+      const script = document.createElement('script');
+      script.src = jsSrc;
+      const timeoutId = setTimeout(() => {
+        reject(new Error(`Leaflet no ha carregat a temps (10s) des de ${jsSrc}`));
+      }, 10000);
+      script.onload = () => { clearTimeout(timeoutId); leafletLoaded = true; resolve(); };
+      script.onerror = () => { clearTimeout(timeoutId); reject(new Error(`No s'ha pogut carregar Leaflet des de ${jsSrc}`)); };
+      document.head.appendChild(script);
+    });
+  }
+
+  return tryLoad('vendor/leaflet/leaflet.css', 'vendor/leaflet/leaflet.js')
+    .catch((err) => {
+      console.warn('Còpia pròpia de Leaflet no disponible, provant CDN de reserva:', err.message);
+      return tryLoad(
+        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js',
+        true
+      );
+    });
 }
 
 async function initGpsMap(){
