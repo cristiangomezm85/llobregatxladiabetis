@@ -233,29 +233,46 @@ function renderPoints(){
   });
 }
 
+function calcTotalKm(cfg){
+  const cps = cfg.points.filter(p => p.checkpoint);
+  let total = 0;
+  cps.forEach((p, i) => { if (i > 0) total += Number(p.checkpoint.distFromPrevKm) || 0; });
+  return total;
+}
+
 function renderCheckpointSummary(){
   const rowsEl = document.getElementById('cpSummaryRows');
   rowsEl.innerHTML = '';
-  let total = 0;
   const checkpoints = config.points.filter(p => p.checkpoint);
-  checkpoints.forEach((p) => {
-    total += Number(p.checkpoint.distFromPrevKm) || 0;
+  checkpoints.forEach((p, i) => {
+    const isFirst = i === 0;
+    // El primer poble és el punt de sortida: no té "distància des de
+    // l'anterior" perquè no hi ha cap anterior. El forcem a 0 perquè
+    // mai més torni a sumar-se per error al total (aquest ha estat
+    // exactament el bug: 31.30 vs 19.30 km eren els mateixos 4 pobles,
+    // la diferència eren els km que s'havien escrit per error a Navarcles).
+    if (isFirst) p.checkpoint.distFromPrevKm = 0;
+
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${p.checkpoint.name}</td>
-      <td><input type="number" class="cpSumDist" step="0.01" min="0" value="${p.checkpoint.distFromPrevKm}" style="width:70px;"></td>
+      <td>${p.checkpoint.name}${isFirst ? ' <span style="color:var(--gris); font-size:9px;">(sortida)</span>' : ''}</td>
+      <td>${isFirst
+          ? '<span style="color:var(--gris);">— (0, punt de sortida)</span>'
+          : `<input type="number" class="cpSumDist" step="0.01" min="0" value="${p.checkpoint.distFromPrevKm}" style="width:70px;">`}</td>
       <td><input type="number" class="cpSumPace" step="0.5" min="1" value="${p.checkpoint.paceMinKm || 7.5}" style="width:60px;"></td>
     `;
-    tr.querySelector('.cpSumDist').addEventListener('change', (e) => {
-      p.checkpoint.distFromPrevKm = parseFloat(e.target.value) || 0;
-      renderTable();
-    });
+    if (!isFirst) {
+      tr.querySelector('.cpSumDist').addEventListener('change', (e) => {
+        p.checkpoint.distFromPrevKm = parseFloat(e.target.value) || 0;
+        renderTable();
+      });
+    }
     tr.querySelector('.cpSumPace').addEventListener('change', (e) => {
       p.checkpoint.paceMinKm = parseFloat(e.target.value) || 7.5;
     });
     rowsEl.appendChild(tr);
   });
-  document.getElementById('totalDist').textContent = `Distància total: ${total.toFixed(2)} km · ${checkpoints.length} pobles configurats`;
+  document.getElementById('totalDist').textContent = `Distància total: ${calcTotalKm(config).toFixed(2)} km · ${checkpoints.length} pobles configurats`;
 }
 
 function renderTable(){
@@ -325,9 +342,11 @@ function saveEditFromForm(){
   const p = config.points[selectedIndex];
   const isCp = document.getElementById('isCp').checked;
   if (isCp){
+    const allCps = config.points.filter(pt => pt.checkpoint || pt === p);
+    const isFirstCheckpoint = allCps.length && allCps[0] === p;
     p.checkpoint = {
       name: document.getElementById('cpName').value.trim() || `Punt ${selectedIndex+1}`,
-      distFromPrevKm: parseFloat(document.getElementById('cpDist').value) || 0,
+      distFromPrevKm: isFirstCheckpoint ? 0 : (parseFloat(document.getElementById('cpDist').value) || 0),
       paceMinKm: parseFloat(document.getElementById('cpPace').value) || 7.5,
       etaOffsetX: parseFloat(document.getElementById('cpEtaX').value) || 0,
       etaOffsetY: parseFloat(document.getElementById('cpEtaY').value) || 0,
@@ -471,7 +490,7 @@ document.getElementById('savebtn').addEventListener('click', async () => {
     savestatus.textContent = 'Desant...';
     const result = await apiSaveConfig(config);
     loadedUpdatedAt = result.updatedAt || Date.now();
-    const total = config.points.filter(p => p.checkpoint).reduce((s,p) => s + (Number(p.checkpoint.distFromPrevKm)||0), 0);
+    const total = calcTotalKm(config);
     const hhmm = new Date(loadedUpdatedAt).toLocaleString('ca-ES');
     savestatus.textContent = `✓ Desat al servidor (confirmat: ${hhmm}) — total: ${total.toFixed(2)} km, ${config.points.filter(p=>p.checkpoint).length} pobles`;
   } catch (e) {
@@ -496,7 +515,7 @@ document.getElementById('reloadbtn').addEventListener('click', async () => {
     selectedIndex = null;
     editbox.classList.remove('show');
     renderAll();
-    const total = config.points.filter(p => p.checkpoint).reduce((s,p) => s + (Number(p.checkpoint.distFromPrevKm)||0), 0);
+    const total = calcTotalKm(config);
     const savedWhen = loadedUpdatedAt ? new Date(loadedUpdatedAt).toLocaleString('ca-ES') : 'mai desat';
     savestatus.textContent = `🔄 Carregat del servidor (desat el: ${savedWhen}) — total: ${total.toFixed(2)} km, ${config.points.filter(p=>p.checkpoint).length} pobles`;
   } catch (e) {
