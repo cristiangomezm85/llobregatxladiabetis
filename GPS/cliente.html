@@ -459,14 +459,22 @@ let runnerSprites = {};
 
 function loadLeaflet(){
   if (leafletLoaded) return Promise.resolve();
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const css = document.createElement('link');
     css.rel = 'stylesheet';
     css.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
     document.head.appendChild(css);
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
-    script.onload = () => { leafletLoaded = true; resolve(); };
+    // Abans no hi havia cap gestió d'error ni de temps límit: si la
+    // llibreria no carregava (xarxa, bloquejador d'anuncis, etc.), el
+    // codi es quedava esperant per sempre en silenci i el mode GPS
+    // semblava simplement "no fer res", sense cap missatge d'error.
+    const timeoutId = setTimeout(() => {
+      reject(new Error('Leaflet no ha carregat a temps (10s) — comprova la connexió o si algun bloquejador està tallant cdnjs.cloudflare.com'));
+    }, 10000);
+    script.onload = () => { clearTimeout(timeoutId); leafletLoaded = true; resolve(); };
+    script.onerror = () => { clearTimeout(timeoutId); reject(new Error('No s\'ha pogut carregar Leaflet des de cdnjs.cloudflare.com')); };
     document.head.appendChild(script);
   });
 }
@@ -537,11 +545,23 @@ async function setGpsMode(on){
   document.getElementById('modetoggle').textContent = on ? '🗺️ Mode Fantasy' : '🛰️ Mode GPS';
 
   if (on){
-    await initGpsMap();
-    setTimeout(() => gpsMap.invalidateSize(), 150);
-    refreshGpsTrack();
-    if (gpsInterval) clearInterval(gpsInterval);
-    gpsInterval = setInterval(refreshGpsTrack, 20000);
+    const empty = document.getElementById('gpsempty');
+    empty.style.display = 'flex';
+    empty.textContent = '📡 Carregant el mapa...';
+    try {
+      await initGpsMap();
+      setTimeout(() => gpsMap.invalidateSize(), 150);
+      refreshGpsTrack();
+      if (gpsInterval) clearInterval(gpsInterval);
+      gpsInterval = setInterval(refreshGpsTrack, 20000);
+    } catch (e) {
+      // Abans, si initGpsMap() fallava (per exemple perquè Leaflet no
+      // carregava), aquí es tallava tot en silenci i no es veia res.
+      empty.style.display = 'flex';
+      empty.style.whiteSpace = 'pre-wrap';
+      empty.style.fontSize = '10px';
+      empty.textContent = '⚠ No s\'ha pogut carregar el mapa GPS: ' + e.message;
+    }
   } else if (gpsInterval){
     clearInterval(gpsInterval);
     gpsInterval = null;
