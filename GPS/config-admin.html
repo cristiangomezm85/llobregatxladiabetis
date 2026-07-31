@@ -167,6 +167,7 @@ const FUNCTIONS_BASE = '/.netlify/functions';
 let token = localStorage.getItem('lxd_admin_token') || '';
 let config = null;
 let selectedIndex = null;
+let loadedUpdatedAt = null; // updatedAt del servidor en el moment de carregar, per detectar sobreescriptures
 
 const loginEl = document.getElementById('login');
 const panelEl = document.getElementById('panel');
@@ -177,7 +178,7 @@ const ptRows = document.getElementById('ptRows');
 const savestatus = document.getElementById('savestatus');
 
 async function apiGetConfig(){
-  const res = await fetch(`${FUNCTIONS_BASE}/get-config`, { cache: 'no-store' });
+  const res = await fetch(`${FUNCTIONS_BASE}/get-config?t=${Date.now()}`, { cache: 'no-store' });
   if (!res.ok) {
     let detail = '';
     try { detail = await res.text(); } catch(e){}
@@ -450,13 +451,29 @@ function renderSpritePreviews(){
 document.getElementById('savebtn').addEventListener('click', async () => {
   const btn = document.getElementById('savebtn');
   btn.disabled = true;
-  savestatus.textContent = 'Desant...';
+  savestatus.textContent = 'Comprovant si algú ha desat abans que tu...';
   try {
-    await apiSaveConfig(config);
+    // Comprovació de seguretat: si el servidor té una versió més nova
+    // que la que vas carregar en aquesta pestanya (per exemple perquè
+    // vas desar des d'una altra pestanya, o algú altre ho ha fet),
+    // avisem abans de sobreescriure-ho a cegues.
+    const current = await apiGetConfig().catch(() => null);
+    if (current && current.updatedAt && loadedUpdatedAt && current.updatedAt !== loadedUpdatedAt) {
+      const serverWhen = new Date(current.updatedAt).toLocaleString('ca-ES');
+      const ok = confirm(
+        `⚠ Al servidor hi ha una versió més recent (desada el ${serverWhen}) que la que tens carregada aquí.\n\n` +
+        `Si continues, ESBORRARÀS aquells canvis i els substituiràs pels teus.\n\n` +
+        `Prem "Cancel·lar" i fes servir "🔄 Tornar a carregar" si vols veure primer què hi ha, o "Acceptar" per sobreescriure igualment.`
+      );
+      if (!ok) { savestatus.textContent = '⚠ Desat cancel·lat — recarrega primer per no perdre canvis.'; btn.disabled = false; return; }
+    }
+
+    savestatus.textContent = 'Desant...';
+    const result = await apiSaveConfig(config);
+    loadedUpdatedAt = result.updatedAt || Date.now();
     const total = config.points.filter(p => p.checkpoint).reduce((s,p) => s + (Number(p.checkpoint.distFromPrevKm)||0), 0);
-    const now = new Date();
-    const hhmm = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0') + ':' + now.getSeconds().toString().padStart(2,'0');
-    savestatus.textContent = `✓ Desat al servidor a les ${hhmm} — total: ${total.toFixed(2)} km, ${config.points.filter(p=>p.checkpoint).length} pobles`;
+    const hhmm = new Date(loadedUpdatedAt).toLocaleString('ca-ES');
+    savestatus.textContent = `✓ Desat al servidor (confirmat: ${hhmm}) — total: ${total.toFixed(2)} km, ${config.points.filter(p=>p.checkpoint).length} pobles`;
   } catch (e) {
     savestatus.textContent = '⚠ Error: ' + e.message;
   } finally {
@@ -470,6 +487,7 @@ document.getElementById('reloadbtn').addEventListener('click', async () => {
   try {
     const remote = await apiGetConfig();
     config = (remote && remote.points && remote.points.length) ? remote : DEFAULT_CONFIG;
+    loadedUpdatedAt = remote ? remote.updatedAt : null;
     if (!config.runnerSprites || (!config.runnerSprites.moving && !config.runnerSprites.idle)) {
       const old = config.runnerSprite || null;
       config.runnerSprites = { moving: old, idle: old, sleeping: null };
@@ -479,7 +497,8 @@ document.getElementById('reloadbtn').addEventListener('click', async () => {
     editbox.classList.remove('show');
     renderAll();
     const total = config.points.filter(p => p.checkpoint).reduce((s,p) => s + (Number(p.checkpoint.distFromPrevKm)||0), 0);
-    savestatus.textContent = `🔄 Carregat del servidor — total: ${total.toFixed(2)} km, ${config.points.filter(p=>p.checkpoint).length} pobles`;
+    const savedWhen = loadedUpdatedAt ? new Date(loadedUpdatedAt).toLocaleString('ca-ES') : 'mai desat';
+    savestatus.textContent = `🔄 Carregat del servidor (desat el: ${savedWhen}) — total: ${total.toFixed(2)} km, ${config.points.filter(p=>p.checkpoint).length} pobles`;
   } catch (e) {
     savestatus.textContent = '⚠ Error carregant: ' + e.message;
   }
@@ -494,11 +513,13 @@ async function startPanel(){
   try {
     const remote = await apiGetConfig();
     config = (remote && remote.points && remote.points.length) ? remote : DEFAULT_CONFIG;
+    loadedUpdatedAt = remote ? remote.updatedAt : null;
     if (remote && (!remote.points || !remote.points.length)) {
       savestatus.textContent = 'ℹ Encara no hi havia res desat al servidor — usant configuració per defecte.';
     }
   } catch (e) {
     config = DEFAULT_CONFIG;
+    loadedUpdatedAt = null;
     savestatus.textContent = '⚠ ' + e.message + ' (usant configuració per defecte, no desada al servidor)';
   }
   // Compatibilitat: migra l'esquema antic d'un sol sprite al nou de tres

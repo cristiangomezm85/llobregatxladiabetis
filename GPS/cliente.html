@@ -117,6 +117,7 @@
 
   <div id="panel">
     <div id="status-line">Connectant...</div>
+    <div id="configDebug" style="font-size:9px; color:var(--gris); margin-bottom:4px;"></div>
     <div id="note">La posició s'actualitza automàticament segons el ritme marcat des del control de la cursa.</div>
   </div>
 </div>
@@ -166,7 +167,7 @@ function arcFracAtKm(km){
    CÀRREGA DE CONFIGURACIÓ
    ========================================================= */
 async function loadConfig(){
-  const res = await fetch(`${FUNCTIONS_BASE}/get-config`, { cache: 'no-store' });
+  const res = await fetch(`${FUNCTIONS_BASE}/get-config?t=${Date.now()}`, { cache: 'no-store' });
   const config = await res.json().catch(() => ({}));
 
   if (!res.ok || !Array.isArray(config.points) || config.points.length === 0) {
@@ -197,6 +198,14 @@ async function loadConfig(){
     cumKm.push(cumKm[i-1] + (Number(checkpoints[i].distFromPrevKm)||0));
   }
   totalKm = cumKm[cumKm.length-1] || 1;
+
+  // Diagnòstic sempre visible: quan es va desar aquesta configuració
+  // al servidor per última vegada, i quantes parades/km té carregades
+  // ara mateix aquest client. Serveix per saber sense dubtes si el
+  // que veus és realment l'últim que vas guardar.
+  const savedWhen = config.updatedAt ? new Date(config.updatedAt).toLocaleString('ca-ES') : 'desconegut';
+  document.getElementById('configDebug').textContent =
+    `Config del servidor desada: ${savedWhen} · ${checkpoints.length} pobles · ${totalKm.toFixed(2)} km · sprites: ${['moving','idle','sleeping'].map(k => (config.runnerSprites && config.runnerSprites[k]) ? k : null).filter(Boolean).join(',') || 'cap'}`;
 
   // Sprites del corredor (marxa / aturat / dormint)
   // Compatibilitat amb configuracions antigues que encara tenien
