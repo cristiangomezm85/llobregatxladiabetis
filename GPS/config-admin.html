@@ -155,6 +155,13 @@
     <div id="savebar">
       <button id="savebtn">💾 Desar configuració</button>
       <button id="reloadbtn" style="background:transparent; border:1px solid var(--gris); color:var(--paper); border-radius:8px; padding:10px; font-size:11px; margin-top:6px; width:100%; cursor:pointer;">🔄 Descartar canvis i tornar a carregar del servidor</button>
+      <div style="display:flex; gap:8px; margin-top:6px;">
+        <button id="exportbtn" style="flex:1; background:transparent; border:1px solid var(--gris); color:var(--paper); border-radius:8px; padding:10px; font-size:11px; cursor:pointer;">⬇️ Exportar JSON</button>
+        <label style="flex:1; background:transparent; border:1px solid var(--gris); color:var(--paper); border-radius:8px; padding:10px; font-size:11px; cursor:pointer; text-align:center;">
+          ⬆️ Importar JSON
+          <input type="file" id="importfile" accept="application/json" style="display:none;">
+        </label>
+      </div>
       <div id="savestatus"></div>
     </div>
   </div>
@@ -560,6 +567,45 @@ document.getElementById('reloadbtn').addEventListener('click', async () => {
   } catch (e) {
     savestatus.textContent = '⚠ Error carregant: ' + e.message;
   }
+});
+
+document.getElementById('exportbtn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `llobregat-config-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  savestatus.textContent = '⬇️ Configuració exportada';
+});
+
+document.getElementById('importfile').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const imported = JSON.parse(text);
+    if (!imported || !Array.isArray(imported.points)) {
+      throw new Error('El fitxer no té la forma esperada (falta "points")');
+    }
+    config = imported;
+    if (!config.runnerSprites || (!config.runnerSprites.moving && !config.runnerSprites.idle)) {
+      const old = config.runnerSprite || null;
+      config.runnerSprites = { moving: old, idle: old, sleeping: (config.runnerSprites && config.runnerSprites.sleeping) || null };
+    }
+    delete config.runnerSprite;
+    selectedIndex = null;
+    editbox.classList.remove('show');
+    renderAll();
+    const total = calcTotalKm(config);
+    savestatus.textContent = `⬆️ Importat des del fitxer — total: ${total.toFixed(2)} km, ${config.points.filter(p=>p.checkpoint).length} pobles. Revisa i prem "Desar" per confirmar-ho al servidor.`;
+  } catch (err) {
+    savestatus.textContent = '⚠ Error important: ' + err.message;
+  }
+  e.target.value = '';
 });
 
 /* =========================================================
