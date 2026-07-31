@@ -120,14 +120,17 @@
 
     <div id="progress"></div>
 
-    <div id="gpsbox" style="margin-top:18px; border-top:1px solid rgba(90,192,230,0.2); padding-top:14px;">
+    <div id="owntracksbox" style="margin-top:18px; border-top:1px solid rgba(90,192,230,0.2); padding-top:14px;">
       <label style="font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--gris); display:block; margin-bottom:6px;">
-        Enllaç de Garmin LiveTrack (opcional)
+        📍 GPS real (OwnTracks) — recomanat
       </label>
-      <input id="garminurlinput" type="text" placeholder="https://livetrack.garmin.com/session/.../token/..."
-        style="width:100%; background:rgba(255,255,255,0.08); border:1px solid var(--gris); color:var(--paper); border-radius:8px; padding:10px; font-size:12px; margin-bottom:8px;">
-      <button id="garminbtn" class="secbtn" style="width:100%;">📡 Desar enllaç GPS</button>
-      <div id="garminstatus" style="font-size:11px; color:var(--aigua); margin-top:6px;"></div>
+      <div style="font-size:11px; color:var(--paper); opacity:0.85; margin-bottom:8px; line-height:1.5;">
+        Instal·la <b>OwnTracks</b> al mòbil del corredor (Android/iPhone). Als seus ajustos, posa Mode = <b>HTTP</b> i el camp Host exactament com aquest (ja porta el teu token):
+      </div>
+      <div id="owntracksUrl" style="font-size:10px; word-break:break-all; background:rgba(255,255,255,0.08); border-radius:8px; padding:10px; margin-bottom:8px; color:var(--aigua);"></div>
+      <button id="copyOwntracksUrlBtn" class="secbtn" style="width:100%; margin-bottom:8px;">📋 Copiar l'URL</button>
+      <button id="resetGpsBtn" class="secbtn danger" style="width:100%;">🗑 Esborrar traçat GPS (per començar de nou)</button>
+      <div id="owntracksStatus" style="font-size:11px; color:var(--aigua); margin-top:6px;"></div>
     </div>
   </div>
 </div>
@@ -324,14 +327,26 @@ document.getElementById('sleepbtn').addEventListener('click', async () => {
   } catch (e) { showError(e.message); }
 });
 
-document.getElementById('garminbtn').addEventListener('click', async () => {
-  const url = document.getElementById('garminurlinput').value.trim();
-  if (!url) return;
-  const status = document.getElementById('garminstatus');
-  status.textContent = 'Desant...';
+document.getElementById('copyOwntracksUrlBtn').addEventListener('click', () => {
+  const text = document.getElementById('owntracksUrl').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    document.getElementById('owntracksStatus').textContent = '✓ URL copiada';
+  }).catch(() => {
+    document.getElementById('owntracksStatus').textContent = '⚠ No s\'ha pogut copiar automàticament — selecciona-la manualment.';
+  });
+});
+
+document.getElementById('resetGpsBtn').addEventListener('click', async () => {
+  if (!confirm('Això esborra tot el traçat GPS acumulat fins ara. Continuar?')) return;
+  const status = document.getElementById('owntracksStatus');
+  status.textContent = 'Esborrant...';
   try {
-    state = await apiPost({ action: 'setGarminUrl', garminUrl: url });
-    status.textContent = '✓ Enllaç GPS desat — el mode GPS del client ja hauria de funcionar';
+    const res = await fetch(`${FUNCTIONS_BASE}/reset-gps-track`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (!res.ok) throw new Error('(' + res.status + ') ' + res.statusText);
+    status.textContent = '✓ Traçat GPS esborrat';
   } catch (e) {
     status.textContent = '⚠ ' + e.message;
   }
@@ -359,11 +374,9 @@ async function startPanel(){
     showError('⚠ Config: ' + e.message);
     return;
   }
+  document.getElementById('owntracksUrl').textContent =
+    `${window.location.origin}${FUNCTIONS_BASE}/receive-gps-point?token=${encodeURIComponent(token)}`;
   await poll();
-  if (state && state.garminUrl) {
-    document.getElementById('garminurlinput').value = state.garminUrl;
-    document.getElementById('garminstatus').textContent = '✓ Enllaç GPS configurat';
-  }
   setInterval(poll, 5000);
   setInterval(() => { if (state && state.status === 'moving') renderCard(); }, 1000);
 }

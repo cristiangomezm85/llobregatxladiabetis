@@ -446,8 +446,10 @@ setInterval(() => {
 
 /* =========================================================
    MODE GPS (satèl·lit real) — es carrega Leaflet només quan
-   cal, i es consulta el pont amb Garmin LiveTrack via la
-   funció get-gps-track (que fa de caché i evita CORS).
+   cal, i es consulta el traçat rebut directament del mòbil
+   del corredor via OwnTracks (get-gps-live). Ja no depèn de
+   cap web externa (Garmin bloquejava aquest tipus de petició
+   amb la seva protecció anti-bots).
    ========================================================= */
 let gpsMode = false;
 let gpsMap = null, gpsPolyline = null, gpsMarker = null;
@@ -482,21 +484,26 @@ async function initGpsMap(){
 
 async function refreshGpsTrack(){
   try {
-    const res = await fetch(`${FUNCTIONS_BASE}/get-gps-track`, { cache: 'no-store' });
+    const res = await fetch(`${FUNCTIONS_BASE}/get-gps-live?t=${Date.now()}`, { cache: 'no-store' });
     const data = await res.json();
     const empty = document.getElementById('gpsempty');
 
+    // Diagnòstic sempre visible, igual que fem amb la configuració:
+    // què ha respost realment get-gps-live en aquesta consulta.
+    let dbg = document.getElementById('gpsDebug');
+    if (!dbg) {
+      dbg = document.createElement('div');
+      dbg.id = 'gpsDebug';
+      dbg.style.cssText = 'position:absolute; bottom:4px; left:4px; right:4px; font-size:9px; color:var(--gris); background:rgba(0,0,0,0.5); padding:4px; border-radius:6px; z-index:20;';
+      document.getElementById('gpsview').appendChild(dbg);
+    }
+    dbg.textContent = `GPS debug: available=${data.available} · numPoints=${data.numPoints ?? (data.points ? data.points.length : 0)} · ${data.reason || ''}`;
+
     if (!data.available || !data.points || data.points.length === 0){
       empty.style.display = 'flex';
-      let msg = '📡 ' + (data.reason || 'Encara no hi ha senyal GPS.');
-      if (data.garminStatus) msg += `\n\nGarmin ha respost: ${data.garminStatus}`;
-      if (data.garminBody) msg += `\n${data.garminBody}`;
-      if (data.responseTopLevelKeys) msg += `\n\nClaus rebudes: ${JSON.stringify(data.responseTopLevelKeys)}`;
-      if (data.responseSample) msg += `\nMostra: ${data.responseSample}`;
-      if (data.detail) msg += `\n${data.detail}`;
       empty.style.whiteSpace = 'pre-wrap';
       empty.style.fontSize = '10px';
-      empty.textContent = msg;
+      empty.textContent = '📡 ' + (data.reason || 'Encara no hi ha senyal GPS.');
       return;
     }
     empty.style.display = 'none';
@@ -518,7 +525,7 @@ async function refreshGpsTrack(){
     gpsMap.panTo(last, { animate: true });
   } catch (e) {
     document.getElementById('gpsempty').style.display = 'flex';
-    document.getElementById('gpsempty').textContent = '⚠ Error consultant el GPS';
+    document.getElementById('gpsempty').textContent = '⚠ Error consultant el GPS: ' + e.message;
   }
 }
 
