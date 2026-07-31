@@ -126,6 +126,7 @@
 const FUNCTIONS_BASE = '/.netlify/functions';
 
 let fullPath = [];       // tots els punts (traçat + checkpoints), en ordre
+let fullPathArcLen = [];  // distància acumulada real (en % d'imatge) fins a cada punt de fullPath
 let checkpoints = [];    // només els punts amb nom
 let checkpointArc = [];  // fracció (0-1) de cada checkpoint sobre fullPath
 let cumKm = [];
@@ -141,12 +142,29 @@ function arcLengthTable(points){
   return arclen;
 }
 
+/* IMPORTANT: arcFrac és una fracció de LONGITUD DE CAMÍ real (no
+   d'índex). Els punts del traçat no estan separats per la mateixa
+   distància entre ells (és un camí dibuixat a mà), així que cal
+   buscar la posició real dins fullPathArcLen — mai suposar que
+   l'índex i la longitud avancen igual. Aquest era exactament el bug:
+   els punts sortien desplaçats perquè s'interpolava per índex. */
 function pointOnPath(arcFrac){
   const n = fullPath.length;
   if (n === 0) return { x:50, y:50 };
-  const pos = Math.min(Math.max(arcFrac,0),1) * (n-1);
-  const i0 = Math.floor(pos), i1 = Math.min(i0+1, n-1);
-  const t = pos - i0;
+  if (n === 1) return { x: fullPath[0].xPct, y: fullPath[0].yPct };
+
+  const totalArc = fullPathArcLen[fullPathArcLen.length-1] || 1;
+  const targetDist = Math.min(Math.max(arcFrac,0),1) * totalArc;
+
+  // Cerca binària del segment [i0,i1] on cau targetDist
+  let lo = 0, hi = n - 1;
+  while (hi - lo > 1) {
+    const mid = (lo + hi) >> 1;
+    if (fullPathArcLen[mid] <= targetDist) lo = mid; else hi = mid;
+  }
+  const i0 = lo, i1 = hi;
+  const segLen = fullPathArcLen[i1] - fullPathArcLen[i0];
+  const t = segLen === 0 ? 0 : (targetDist - fullPathArcLen[i0]) / segLen;
   const a = fullPath[i0], b = fullPath[i1];
   return { x: a.xPct + (b.xPct-a.xPct)*t, y: a.yPct + (b.yPct-a.yPct)*t };
 }
@@ -182,6 +200,7 @@ async function loadConfig(){
 
   fullPath = config.points.map(p => ({ xPct: p.xPct, yPct: p.yPct }));
   const arclen = arcLengthTable(fullPath);
+  fullPathArcLen = arclen;
   const totalArc = arclen[arclen.length-1] || 1;
 
   checkpoints = [];

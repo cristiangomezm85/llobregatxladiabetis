@@ -456,11 +456,17 @@ function renderSpritePreviews(){
 ['spriteMovingFile','spriteIdleFile','spriteSleepingFile'].forEach(id => {
   const key = id.replace('sprite','').replace('File','').toLowerCase(); // moving/idle/sleeping
   document.getElementById(id).addEventListener('change', async (e) => {
-    if (!e.target.files[0]) return;
+    const file = e.target.files[0];
+    if (!file) return;
+    const kb = Math.round(file.size / 1024);
     config.runnerSprites = config.runnerSprites || { moving:null, idle:null, sleeping:null };
-    config.runnerSprites[key] = await fileToDataUri(e.target.files[0]);
+    config.runnerSprites[key] = await fileToDataUri(file);
     renderSpritePreviews();
-    savestatus.textContent = `Sprite "${key}" actualitzat (recorda desar)`;
+    if (kb > 1500) {
+      savestatus.textContent = `⚠ Sprite "${key}" pesa ${kb} KB — és força gran, podria fer fallar el desat. Ideal per sota de 500 KB. Recorda desar igualment per provar.`;
+    } else {
+      savestatus.textContent = `Sprite "${key}" actualitzat (${kb} KB) — recorda desar.`;
+    }
   });
 });
 
@@ -492,7 +498,28 @@ document.getElementById('savebtn').addEventListener('click', async () => {
     loadedUpdatedAt = result.updatedAt || Date.now();
     const total = calcTotalKm(config);
     const hhmm = new Date(loadedUpdatedAt).toLocaleString('ca-ES');
-    savestatus.textContent = `✓ Desat al servidor (confirmat: ${hhmm}) — total: ${total.toFixed(2)} km, ${config.points.filter(p=>p.checkpoint).length} pobles`;
+
+    // Verificació real: tornem a llegir del servidor (no de memòria)
+    // just després de desar, per confirmar que el que hi ha desat de
+    // veritat coincideix amb el que acabem d'enviar. Això ens diu amb
+    // certesa si el problema és de persistència real al servidor, o
+    // si és la pàgina que s'està veient en caché.
+    savestatus.textContent = 'Desat — verificant que realment s\'ha quedat al servidor...';
+    await new Promise(r => setTimeout(r, 800)); // marge per si hi ha propagació
+    const verify = await apiGetConfig().catch(() => null);
+    const wantedMoving = !!(config.runnerSprites && config.runnerSprites.moving);
+    const gotMoving = !!(verify && verify.runnerSprites && verify.runnerSprites.moving);
+    const spriteOk = !wantedMoving || gotMoving;
+    const verifyTotal = verify ? calcTotalKm(verify) : null;
+    const totalsMatch = verify && Math.abs(verifyTotal - total) < 0.01;
+
+    if (spriteOk && totalsMatch) {
+      savestatus.textContent = `✓ Desat i verificat al servidor (${hhmm}) — total: ${total.toFixed(2)} km, ${config.points.filter(p=>p.checkpoint).length} pobles, sprite marxa: ${gotMoving ? 'sí' : 'no'}`;
+    } else {
+      savestatus.textContent = `⚠ ATENCIÓ: el servidor ha dit "desat correctament" però en tornar-ho a llegir NO coincideix amb el que acabes d'enviar ` +
+        `(sprite marxa esperat=${wantedMoving?'sí':'no'} / al servidor=${gotMoving?'sí':'no'}; km esperats=${total.toFixed(2)} / al servidor=${verifyTotal!=null?verifyTotal.toFixed(2):'?'}). ` +
+        `Això és un problema real de persistència, no de caché del navegador — avisa'm amb aquest missatge exacte.`;
+    }
   } catch (e) {
     savestatus.textContent = '⚠ Error: ' + e.message;
   } finally {
