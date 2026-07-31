@@ -476,6 +476,18 @@ function renderSpritePreviews(){
 document.getElementById('savebtn').addEventListener('click', async () => {
   const btn = document.getElementById('savebtn');
   btn.disabled = true;
+
+  // Diagnòstic immediat: què hi ha EN MEMÒRIA just abans d'enviar res.
+  // Si aquí ja surt "buit", el problema és abans de desar (la pujada
+  // no s'ha quedat enganxada al objecte config). Si aquí surt bé però
+  // després el debug-config diu "buit", el problema és en l'enviament.
+  const preCheck = ['moving','idle','sleeping'].map(k => {
+    const v = config.runnerSprites && config.runnerSprites[k];
+    return `${k}=${v ? Math.round(v.length/1024)+'KB' : 'buit'}`;
+  }).join(' · ');
+  savestatus.textContent = `🔍 Just abans d'enviar, en memòria: ${preCheck}`;
+  await new Promise(r => setTimeout(r, 1200)); // temps per poder llegir-ho abans que canviï
+
   savestatus.textContent = 'Comprovant si algú ha desat abans que tu...';
   try {
     // Comprovació de seguretat: si el servidor té una versió més nova
