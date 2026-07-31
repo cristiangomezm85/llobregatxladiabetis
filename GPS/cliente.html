@@ -51,9 +51,10 @@
   .runner-gps-icon img{ width:100%; height:100%; object-fit:contain; }
 
   #runner{
-    position:absolute; width:38px; height:38px; margin:-32px 0 0 -19px;
+    position:absolute; width:88px; height:88px; margin:-74px 0 0 -44px;
     transition: left 0.6s ease-out, top 0.6s ease-out;
-    z-index:15; filter:drop-shadow(0 3px 6px rgba(0,0,0,0.6));
+    z-index:100; filter:drop-shadow(0 3px 6px rgba(0,0,0,0.6));
+    pointer-events:none;
   }
   #runner img{ width:100%; height:100%; object-fit:contain; animation:pulse 1.2s ease-in-out infinite; }
   @keyframes pulse{0%,100%{transform:scale(1);} 50%{transform:scale(1.08);}}
@@ -197,15 +198,16 @@ async function loadConfig(){
   }
   totalKm = cumKm[cumKm.length-1] || 1;
 
-  // Sprite del corredor
-  runnerSpriteUrl = config.runnerSprite || '';
+  // Sprites del corredor (marxa / aturat / dormint)
+  runnerSprites = config.runnerSprites || {};
+  runnerSpriteUrl = runnerSprites.moving || runnerSprites.idle || '';
   const runner = document.createElement('div');
   runner.id = 'runner';
-  runner.innerHTML = `<img src="${config.runnerSprite || ''}" alt="corredor">`;
+  runner.innerHTML = `<img id="runnerImg" src="${runnerSpriteUrl}" alt="corredor">`;
   document.getElementById('mapinner').appendChild(runner);
   window.__runner = runner;
 
-  // Marcadors + etiquetes ETA per checkpoint
+  // Marcadors + etiquetes ETA per checkpoint (amb desplaçament configurable)
   window.__cpMarkerEls = checkpoints.map((c, i) => {
     const pos = pointOnPath(checkpointArc[i]);
     const el = document.createElement('div');
@@ -217,10 +219,13 @@ async function loadConfig(){
   });
   window.__cpEtaEls = checkpoints.map((c, i) => {
     const pos = pointOnPath(checkpointArc[i]);
+    const offX = Number(c.etaOffsetX) || 0;
+    const offY = Number(c.etaOffsetY) || 3;
     const el = document.createElement('div');
     el.className = 'cp-eta';
-    el.style.left = pos.x + '%';
-    el.style.top = pos.y + '%';
+    el.style.left = (pos.x + offX) + '%';
+    el.style.top = (pos.y + offY) + '%';
+    el.style.transform = 'translate(-50%, 0)';
     document.getElementById('mapinner').appendChild(el);
     return el;
   });
@@ -248,6 +253,19 @@ const toast = document.getElementById('toast');
 const statusLine = document.getElementById('status-line');
 const mapwrap = document.getElementById('mapwrap');
 
+/* Detecció d'interacció manual: si l'usuari toca/arrossega el
+   mapa, deixem d'auto-centrar la càmera durant un temps llarg
+   (per defecte 180 minuts) perquè pugui explorar sense que li
+   "robem" la vista contínuament. */
+const CAMERA_IDLE_MS = 180 * 60 * 1000;
+let lastUserInteraction = 0;
+['wheel', 'touchstart', 'pointerdown'].forEach(evt => {
+  mapwrap.addEventListener(evt, () => { lastUserInteraction = Date.now(); }, { passive: true });
+});
+function userScrolledRecently(){
+  return (Date.now() - lastUserInteraction) < CAMERA_IDLE_MS;
+}
+
 let lastReachedIndex = -1;
 
 function showToast(text){
@@ -269,7 +287,7 @@ function render(km){
   if (runner){ runner.style.left = pos.x + '%'; runner.style.top = pos.y + '%'; }
 
   const mapimg = document.getElementById('mapimg');
-  if (mapimg.offsetHeight){
+  if (mapimg.offsetHeight && !userScrolledRecently()){
     const targetScrollTop = (pos.y/100) * mapimg.offsetHeight - mapwrap.clientHeight*0.4;
     mapwrap.scrollTo({ top: Math.max(targetScrollTop,0), behavior:'smooth' });
   }
@@ -294,7 +312,10 @@ function render(km){
 
 function fmtHM(ts){
   const d = new Date(ts);
-  return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+  let h = d.getHours();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12; if (h === 0) h = 12;
+  return h + ':' + d.getMinutes().toString().padStart(2,'0') + ' ' + ampm;
 }
 
 function computeEtas(state){
@@ -331,7 +352,7 @@ function renderEtaLabels(state){
     el.classList.toggle('current', isCurrentTarget && !isDone);
     if (etas[i] == null) el.textContent = '—';
     else if (isDone) el.textContent = (i === 0 ? '🏁 ' : '✓ ') + fmtHM(etas[i]);
-    else el.textContent = '~' + fmtHM(etas[i]);
+    else el.textContent = fmtHM(etas[i]);
   });
 }
 
@@ -360,6 +381,16 @@ function currentKmFromState(state){
 
 let serverState = null;
 
+function updateRunnerSprite(state){
+  const img = document.getElementById('runnerImg');
+  if (!img) return;
+  let src;
+  if (state.sleeping) src = runnerSprites.sleeping || runnerSprites.idle || runnerSprites.moving;
+  else if (state.status === 'moving') src = runnerSprites.moving || runnerSprites.idle;
+  else src = runnerSprites.idle || runnerSprites.moving;
+  if (src && img.getAttribute('src') !== src) img.setAttribute('src', src);
+}
+
 async function poll(){
   try {
     const res = await fetch(`${FUNCTIONS_BASE}/get-position`, { cache: 'no-store' });
@@ -368,6 +399,7 @@ async function poll(){
     render(currentKmFromState(state));
     renderEtaLabels(state);
     renderStatusLine(state);
+    updateRunnerSprite(state);
   } catch (e) {
     statusLine.textContent = '⚠ Sense connexió amb el servidor';
   }
@@ -388,6 +420,7 @@ let gpsMode = false;
 let gpsMap = null, gpsPolyline = null, gpsMarker = null;
 let leafletLoaded = false;
 let runnerSpriteUrl = '';
+let runnerSprites = {};
 
 function loadLeaflet(){
   if (leafletLoaded) return Promise.resolve();

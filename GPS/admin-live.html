@@ -114,6 +114,9 @@
       <button class="secbtn" id="undobtn">↩ Desfer</button>
       <button class="secbtn danger" id="resetbtn">⚠ Reiniciar</button>
     </div>
+    <div class="secrow">
+      <button class="secbtn" id="sleepbtn">😴 Marcar com a dormint</button>
+    </div>
 
     <div id="progress"></div>
 
@@ -267,6 +270,7 @@ function renderCard(){
   }
 
   document.getElementById('undobtn').disabled = !state.history || state.history.length === 0;
+  document.getElementById('sleepbtn').textContent = state.sleeping ? '☀️ Despertar' : '😴 Marcar com a dormint';
   renderProgress();
 }
 
@@ -306,6 +310,16 @@ document.getElementById('resetbtn').addEventListener('click', async () => {
   if (!ok) return;
   try {
     state = await apiPost({ action: 'reset' });
+    renderCard();
+  } catch (e) { showError(e.message); }
+});
+
+document.getElementById('sleepbtn').addEventListener('click', async () => {
+  const goingToSleep = !(state && state.sleeping);
+  const ok = await askConfirm(goingToSleep ? 'Marcar el corredor com a dormint (descans llarg)?' : 'Despertar el corredor?');
+  if (!ok) return;
+  try {
+    state = await apiPost({ action: 'setSleeping', sleeping: goingToSleep });
     renderCard();
   } catch (e) { showError(e.message); }
 });
