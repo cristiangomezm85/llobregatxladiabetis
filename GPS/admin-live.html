@@ -365,6 +365,12 @@ async function poll(){
 async function startPanel(){
   loginEl.style.display = 'none';
   panelEl.style.display = 'flex';
+
+  // Això no depèn de cap dada de configuració, així que ho fem sempre
+  // el primer de tot — abans que res pugui fallar i tallar la resta.
+  document.getElementById('owntracksUrl').textContent =
+    `${window.location.origin}${FUNCTIONS_BASE}/receive-gps-point?token=${encodeURIComponent(token)}`;
+
   try {
     const config = await apiGet('get-config');
     checkpoints = (config.points || []).filter(p => p.checkpoint).map(p => p.checkpoint);
@@ -374,8 +380,6 @@ async function startPanel(){
     showError('⚠ Config: ' + e.message);
     return;
   }
-  document.getElementById('owntracksUrl').textContent =
-    `${window.location.origin}${FUNCTIONS_BASE}/receive-gps-point?token=${encodeURIComponent(token)}`;
   await poll();
   setInterval(poll, 5000);
   setInterval(() => { if (state && state.status === 'moving') renderCard(); }, 1000);
