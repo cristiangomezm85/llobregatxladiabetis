@@ -154,6 +154,7 @@
 
     <div id="savebar">
       <button id="savebtn">💾 Desar configuració</button>
+      <button id="reloadbtn" style="background:transparent; border:1px solid var(--gris); color:var(--paper); border-radius:8px; padding:10px; font-size:11px; margin-top:6px; width:100%; cursor:pointer;">🔄 Descartar canvis i tornar a carregar del servidor</button>
       <div id="savestatus"></div>
     </div>
   </div>
@@ -253,7 +254,7 @@ function renderCheckpointSummary(){
     });
     rowsEl.appendChild(tr);
   });
-  document.getElementById('totalDist').textContent = `Distància total: ${total.toFixed(2)} km`;
+  document.getElementById('totalDist').textContent = `Distància total: ${total.toFixed(2)} km · ${checkpoints.length} pobles configurats`;
 }
 
 function renderTable(){
@@ -452,11 +453,35 @@ document.getElementById('savebtn').addEventListener('click', async () => {
   savestatus.textContent = 'Desant...';
   try {
     await apiSaveConfig(config);
-    savestatus.textContent = '✓ Desat correctament';
+    const total = config.points.filter(p => p.checkpoint).reduce((s,p) => s + (Number(p.checkpoint.distFromPrevKm)||0), 0);
+    const now = new Date();
+    const hhmm = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0') + ':' + now.getSeconds().toString().padStart(2,'0');
+    savestatus.textContent = `✓ Desat al servidor a les ${hhmm} — total: ${total.toFixed(2)} km, ${config.points.filter(p=>p.checkpoint).length} pobles`;
   } catch (e) {
     savestatus.textContent = '⚠ Error: ' + e.message;
   } finally {
     btn.disabled = false;
+  }
+});
+
+document.getElementById('reloadbtn').addEventListener('click', async () => {
+  if (!confirm('Això descarta qualsevol canvi que no hagis desat i torna a carregar el que hi ha realment al servidor. Continuar?')) return;
+  savestatus.textContent = 'Carregant del servidor...';
+  try {
+    const remote = await apiGetConfig();
+    config = (remote && remote.points && remote.points.length) ? remote : DEFAULT_CONFIG;
+    if (!config.runnerSprites || (!config.runnerSprites.moving && !config.runnerSprites.idle)) {
+      const old = config.runnerSprite || null;
+      config.runnerSprites = { moving: old, idle: old, sleeping: null };
+    }
+    delete config.runnerSprite;
+    selectedIndex = null;
+    editbox.classList.remove('show');
+    renderAll();
+    const total = config.points.filter(p => p.checkpoint).reduce((s,p) => s + (Number(p.checkpoint.distFromPrevKm)||0), 0);
+    savestatus.textContent = `🔄 Carregat del servidor — total: ${total.toFixed(2)} km, ${config.points.filter(p=>p.checkpoint).length} pobles`;
+  } catch (e) {
+    savestatus.textContent = '⚠ Error carregant: ' + e.message;
   }
 });
 
@@ -476,6 +501,12 @@ async function startPanel(){
     config = DEFAULT_CONFIG;
     savestatus.textContent = '⚠ ' + e.message + ' (usant configuració per defecte, no desada al servidor)';
   }
+  // Compatibilitat: migra l'esquema antic d'un sol sprite al nou de tres
+  if (!config.runnerSprites || (!config.runnerSprites.moving && !config.runnerSprites.idle)) {
+    const old = config.runnerSprite || (config.runnerSprites && config.runnerSprites.moving) || null;
+    config.runnerSprites = { moving: old, idle: old, sleeping: (config.runnerSprites && config.runnerSprites.sleeping) || null };
+  }
+  delete config.runnerSprite;
   renderAll();
 }
 

@@ -199,7 +199,12 @@ async function loadConfig(){
   totalKm = cumKm[cumKm.length-1] || 1;
 
   // Sprites del corredor (marxa / aturat / dormint)
+  // Compatibilitat amb configuracions antigues que encara tenien
+  // un únic camp "runnerSprite" en comptes de "runnerSprites".
   runnerSprites = config.runnerSprites || {};
+  if (!runnerSprites.moving && !runnerSprites.idle && config.runnerSprite) {
+    runnerSprites = { moving: config.runnerSprite, idle: config.runnerSprite, sleeping: null };
+  }
   runnerSpriteUrl = runnerSprites.moving || runnerSprites.idle || '';
   const runner = document.createElement('div');
   runner.id = 'runner';
@@ -455,7 +460,15 @@ async function refreshGpsTrack(){
 
     if (!data.available || !data.points || data.points.length === 0){
       empty.style.display = 'flex';
-      empty.textContent = '📡 ' + (data.reason || 'Encara no hi ha senyal GPS.') ;
+      let msg = '📡 ' + (data.reason || 'Encara no hi ha senyal GPS.');
+      if (data.garminStatus) msg += `\n\nGarmin ha respost: ${data.garminStatus}`;
+      if (data.garminBody) msg += `\n${data.garminBody}`;
+      if (data.responseTopLevelKeys) msg += `\n\nClaus rebudes: ${JSON.stringify(data.responseTopLevelKeys)}`;
+      if (data.responseSample) msg += `\nMostra: ${data.responseSample}`;
+      if (data.detail) msg += `\n${data.detail}`;
+      empty.style.whiteSpace = 'pre-wrap';
+      empty.style.fontSize = '10px';
+      empty.textContent = msg;
       return;
     }
     empty.style.display = 'none';
