@@ -47,7 +47,7 @@ async function handleRequest(event) {
 
   const config = {
     mapImage: body.mapImage || null,
-    runnerSprite: body.runnerSprite || null,
+    runnerSprites: body.runnerSprites || null,
     points: body.points,
     updatedAt: Date.now(),
   };

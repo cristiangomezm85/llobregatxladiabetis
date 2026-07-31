@@ -22,7 +22,7 @@ exports.handler = async () => {
         "Cache-Control": "no-store",
         "Access-Control-Allow-Origin": "*",
       },
-      body: JSON.stringify(config || { points: [], mapImage: null, runnerSprite: null }),
+      body: JSON.stringify(config || { points: [], mapImage: null, runnerSprites: null }),
     };
   } catch (err) {
     return {
