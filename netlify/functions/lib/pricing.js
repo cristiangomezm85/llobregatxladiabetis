@@ -7,9 +7,9 @@ const { calcularTram } = require("./route");
 // Tarifes per fases (early bird / estàndard / last call). Els preus de
 // cada casella són valors fixos per tarifa, no una fórmula.
 const TARIFES = [
-  { id: "earlybird", cutoff: "2026-08-15", preus: { animar: 1000, 1: 1500, 2: 3000, 3: 4500 } },
-  { id: "standard", cutoff: "2026-08-31", preus: { animar: 1200, 1: 2000, 2: 3500, 3: 5000 } },
-  { id: "lastcall", cutoff: "2026-09-15", preus: { animar: 1500, 1: 2500, 2: 4500, 3: 6000 } },
+  { id: "earlybird", cutoff: "2026-08-31", preus: { animar: 1000, 1: 1500, 2: 3000, 3: 4500 } },
+  { id: "standard", cutoff: "2026-09-20", preus: { animar: 1200, 1: 2000, 2: 3500, 3: 5000 } },
+  { id: "lastcall", cutoff: "2026-10-04", preus: { animar: 1500, 1: 2500, 2: 4500, 3: 6000 } },
 ];
 
 function tarifaActual() {
@@ -53,6 +53,18 @@ function calcularEsMenor(dataNaixementStr) {
 
 function emailValid(str) {
   return typeof str === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str);
+}
+
+// Codis d'Heroi vàlids: llista separada per comes a la variable d'entorn
+// HEROIS_CODES (p. ex. "ANNA2026,MARC2026"). Es guarda com a secret a
+// Netlify, no al codi, perquè es pugui actualitzar sense fer deploy.
+function codiHeroiValid(codi) {
+  if (!codi) return false;
+  const llista = (process.env.HEROIS_CODES || "")
+    .split(",")
+    .map((c) => c.trim().toUpperCase())
+    .filter(Boolean);
+  return llista.includes(String(codi).trim().toUpperCase());
 }
 
 function validarDonacio(payload) {
@@ -176,11 +188,24 @@ async function calcularImport(payload) {
     throw new Error(`Modalitat desconeguda: ${payload.modalitat}`);
   }
 
+  // Codi de descompte d'Heroi: participació sense cost com a reconeixement
+  // per qui ajuda a recaptar fons. El Dorsal 0 ja és una donació simbòlica,
+  // així que el codi no hi aplica.
+  let descompteHeroiAplicat = false;
+  if (payload.codi_descompte && payload.modalitat !== "dorsal0") {
+    if (!codiHeroiValid(payload.codi_descompte)) {
+      throw new Error("El codi de descompte d'Heroi no és vàlid");
+    }
+    resultat.baseCentims = 0;
+    descompteHeroiAplicat = true;
+  }
+
   return {
     baseCentims: resultat.baseCentims,
     donacioCentims,
     totalCentims: resultat.baseCentims + donacioCentims,
     unitats: resultat.unitats,
+    descompteHeroiAplicat,
   };
 }
 
