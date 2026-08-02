@@ -348,6 +348,8 @@
     margin-left:8px; vertical-align:middle; font-family:'Manrope',sans-serif;
   }
   .preu-info-btn:hover{ background:rgba(255,255,255,0.32); }
+  .preu-info-btn.info-btn-clar{ background:var(--blau-diabetis); color:#fff; }
+  .preu-info-btn.info-btn-clar:hover{ background:var(--blau-llobregat); }
   .preu-popup-overlay{
     display:none; position:fixed; inset:0; background:rgba(14,27,54,0.55);
     z-index:100; align-items:center; justify-content:center; padding:20px;
@@ -477,6 +479,18 @@
     <details class="faq-item">
       <summary data-i18n="faq_q16">Què passa amb la motxilla o les coses per dormir o canviar-me entre trams?</summary>
       <div data-i18n-html="faq_a16">Hi haurà voluntaris que ajudaran a portar-les.</div>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq_q17">He de portar el track de la ruta?</summary>
+      <div data-i18n-html="faq_a17">Sí. L'organització compartirà el track oficial del recorregut i és obligatori portar-lo carregat al rellotge GPS, o bé córrer sempre acompanyat/da d'algú que el porti.</div>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq_q18">Sabré a quina hora passaré per cada punt?</summary>
+      <div data-i18n-html="faq_a18">Sí, us donarem una previsió d'hores estimades de sortida i pas per cada municipi, perquè pugueu organitzar-vos i perquè els amfitrions locals sàpiguen quan esperar-vos.</div>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq_q19">Com sabré on i quan recollir la samarreta i la bossa de participant?</summary>
+      <div data-i18n-html="faq_a19">T'ho confirmarem per email i també ho publicarem a la web i a Instagram (@llobregatxladiabetis) a mesura que tanquem els detalls amb cada municipi.</div>
     </details>
   </div>
 
@@ -722,7 +736,7 @@
       <div class="legal-caixa">
         <div class="legal-check">
           <input type="checkbox" class="fi-reglament" id="fi-reglament">
-          <label for="fi-reglament" data-i18n="txt_reglament">Accepto el descàrrec de responsabilitat i el reglament de la cursa. *</label>
+          <label for="fi-reglament" data-i18n-html="txt_reglament">Accepto el descàrrec de responsabilitat i el <a href="reglament.html" target="_blank" rel="noopener">reglament de la cursa</a>. *</label>
         </div>
         <div class="legal-check">
           <input type="checkbox" class="fi-dades" id="fi-dades">
@@ -756,6 +770,14 @@
       <div class="donacio-avis" id="donacio-avis" data-i18n="don_avis">Cal triar una opció de donació (pot ser 0 €).</div>
     </div>
 
+    <div class="camp codi-heroi-camp" id="codi-heroi-camp" hidden>
+      <label for="codi-descompte">
+        <span data-i18n="lbl_codi_heroi">Codi descompte Herois (opcional)</span>
+        <button type="button" class="preu-info-btn info-btn-clar" onclick="window.obrirPopupHerois()" aria-label="Què és el codi d'Heroi?" title="Què és el codi d'Heroi?">i</button>
+      </label>
+      <input type="text" id="codi-descompte" placeholder="Ex: HEROI2026" autocomplete="off">
+    </div>
+
     <div class="resum-total" id="resum-total" hidden>
       <div class="resum-total-fila">
         <span class="label">
@@ -787,9 +809,9 @@
         <thead>
           <tr>
             <th data-i18n="taula_col_modalitat">Modalitat</th>
-            <th id="col-earlybird" data-i18n-html="taula_col_earlybird">Early bird<br><span style="font-weight:400;">fins 15/8</span></th>
-            <th id="col-standard" data-i18n-html="taula_col_standard">Preu estàndard<br><span style="font-weight:400;">fins 31/8</span></th>
-            <th id="col-lastcall" data-i18n-html="taula_col_lastcall">Last call<br><span style="font-weight:400;">fins 15/9</span></th>
+            <th id="col-earlybird" data-i18n-html="taula_col_earlybird">Early bird<br><span style="font-weight:400;">fins 31/8</span></th>
+            <th id="col-standard" data-i18n-html="taula_col_standard">Preu estàndard<br><span style="font-weight:400;">fins 20/9</span></th>
+            <th id="col-lastcall" data-i18n-html="taula_col_lastcall">Last call<br><span style="font-weight:400;">fins 4/10</span></th>
           </tr>
         </thead>
         <tbody>
@@ -824,6 +846,16 @@
   </div>
 </div>
 
+<div class="preu-popup-overlay" id="heroi-popup-overlay">
+  <div class="preu-popup">
+    <button type="button" class="preu-popup-tancar" onclick="window.tancarPopupHerois()" aria-label="Tancar">&times;</button>
+    <h3 data-i18n="heroi_popup_titol">Què és ser un Heroi?</h3>
+    <p data-i18n="heroi_popup_text1">Els Herois i Heroïnes són persones que, a més de fer el repte, ajuden activament a recaptar fons per a AREDI. Tenen un perfil públic al web i material propi per difondre la seva campanya de recaptació.</p>
+    <p data-i18n-html="heroi_popup_text2">Com a reconeixement d'aquesta col·laboració, l'organització premia els Herois amb la <strong>participació sense cost</strong> al repte.</p>
+    <p data-i18n-html="heroi_popup_text3">Pots fer-te Heroi/ïna a la web d'Herois. Per a més informació, escriu-nos a <a href="mailto:info@llobregat.org">info@llobregat.org</a>.</p>
+  </div>
+</div>
+
 <script>
 (function(){
   "use strict";
@@ -834,9 +866,9 @@
   // fila (animar, 1/2/3 etapes) són valors fixos per tarifa, no una fórmula
   // per etapa: es defineixen tal qual per a cada casella.
   const TARIFES = [
-    { id: "earlybird", cutoff: "2026-08-15", preus: { animar: 1000, 1: 1500, 2: 3000, 3: 4500 } },
-    { id: "standard",  cutoff: "2026-08-31", preus: { animar: 1200, 1: 2000, 2: 3500, 3: 5000 } },
-    { id: "lastcall",  cutoff: "2026-09-15", preus: { animar: 1500, 1: 2500, 2: 4500, 3: 6000 } },
+    { id: "earlybird", cutoff: "2026-08-31", preus: { animar: 1000, 1: 1500, 2: 3000, 3: 4500 } },
+    { id: "standard",  cutoff: "2026-09-20", preus: { animar: 1200, 1: 2000, 2: 3500, 3: 5000 } },
+    { id: "lastcall",  cutoff: "2026-10-04", preus: { animar: 1500, 1: 2500, 2: 4500, 3: 6000 } },
   ];
 
   function tarifaActual() {
@@ -920,6 +952,23 @@
     lbl_recollida: { ca:"M'aniria millor recollir la samarreta al municipi més proper a... *", es:"Me iría mejor recoger la camiseta en el municipio más cercano a... *", en:"It would suit me best to collect the t-shirt in the town closest to... *" },
     lbl_talla: { ca:"Talla de samarreta *", es:"Talla de camiseta *", en:"T-shirt size *" },
     lbl_total: { ca:"Total a pagar", es:"Total a pagar", en:"Total to pay" },
+    lbl_codi_heroi: { ca:"Codi descompte Herois (opcional)", es:"Código descuento Héroes (opcional)", en:"Hero discount code (optional)" },
+    heroi_popup_titol: { ca:"Què és ser un Heroi?", es:"¿Qué es ser un Héroe?", en:"What does it mean to be a Hero?" },
+    heroi_popup_text1: {
+      ca:"Els Herois i Heroïnes són persones que, a més de fer el repte, ajuden activament a recaptar fons per a AREDI. Tenen un perfil públic al web i material propi per difondre la seva campanya de recaptació.",
+      es:"Los Héroes y Heroínas son personas que, además de hacer el reto, ayudan activamente a recaudar fondos para AREDI. Tienen un perfil público en la web y material propio para difundir su campaña de recaudación.",
+      en:"Heroes are people who, besides taking on the challenge, actively help raise funds for AREDI. They get a public profile on the website and their own material to promote their fundraising campaign."
+    },
+    heroi_popup_text2: {
+      ca:"Com a reconeixement d'aquesta col·laboració, l'organització premia els Herois amb la <strong>participació sense cost</strong> al repte.",
+      es:"Como reconocimiento a esta colaboración, la organización premia a los Héroes con la <strong>participación sin coste</strong> en el reto.",
+      en:"As recognition for this collaboration, the organisation rewards Heroes with <strong>cost-free participation</strong> in the challenge."
+    },
+    heroi_popup_text3: {
+      ca:"Pots fer-te Heroi/ïna a la web d'Herois. Per a més informació, escriu-nos a <a href=\"mailto:info@llobregat.org\">info@llobregat.org</a>.",
+      es:"Puedes hacerte Héroe/Heroína en la web de Héroes. Para más información, escríbenos a <a href=\"mailto:info@llobregat.org\">info@llobregat.org</a>.",
+      en:"You can become a Hero on the Heroes page of the website. For more information, write to us at <a href=\"mailto:info@llobregat.org\">info@llobregat.org</a>."
+    },
     lbl_import: { ca:"Import (€) *", es:"Importe (€) *", en:"Amount (€) *" },
 
     sec_identificacio: { ca:"Identificació", es:"Identificación", en:"Identification" },
@@ -948,7 +997,7 @@
     lbl_tutor_dni: { ca:"DNI/NIE del mare/pare/tutor legal *", es:"DNI/NIE de la madre/padre/tutor legal *", en:"Parent/guardian's ID number *" },
     lbl_tutor_data_naixement: { ca:"Data de naixement del mare/pare/tutor legal *", es:"Fecha de nacimiento de la madre/padre/tutor legal *", en:"Parent/guardian's date of birth *" },
     txt_tutor_consentiment: { ca:"Com a mare/pare/tutor legal, dono el meu consentiment per a la inscripció d'aquest/a menor al repte.", es:"Como madre/padre/tutor legal, doy mi consentimiento para la inscripción de este/a menor al reto.", en:"As parent/legal guardian, I give my consent for this minor's registration in the challenge." },
-    txt_reglament: { ca:"Accepto el descàrrec de responsabilitat i el reglament de la cursa. *", es:"Acepto el descargo de responsabilidad y el reglamento de la carrera. *", en:"I accept the liability waiver and the race rules. *" },
+    txt_reglament: { ca:"Accepto el descàrrec de responsabilitat i el <a href=\"reglament.html\" target=\"_blank\" rel=\"noopener\">reglament de la cursa</a>. *", es:"Acepto el descargo de responsabilidad y el <a href=\"reglament.html\" target=\"_blank\" rel=\"noopener\">reglamento de la carrera</a>. *", en:"I accept the liability waiver and the <a href=\"reglament.html\" target=\"_blank\" rel=\"noopener\">race rules</a>. *" },
     txt_rgpd: { ca:"Dono el meu consentiment explícit al tractament de dades de salut i personals (RGPD). *", es:"Doy mi consentimiento explícito al tratamiento de datos de salud y personales (RGPD). *", en:"I explicitly consent to the processing of my health and personal data (GDPR). *" },
     txt_imatge: { ca:"Cedeixo els drets d'imatge per a fotografies i vídeos del repte. *", es:"Cedo los derechos de imagen para fotografías y vídeos del reto. *", en:"I grant image rights for photos and videos of the challenge. *" },
 
@@ -997,19 +1046,19 @@
 
     taula_col_modalitat: { ca:"Modalitat", es:"Modalidad", en:"Category" },
     taula_col_earlybird: {
-      ca:'Early bird<br><span style="font-weight:400;">fins 15/8</span>',
-      es:'Early bird<br><span style="font-weight:400;">hasta 15/8</span>',
-      en:'Early bird<br><span style="font-weight:400;">until 8/15</span>'
+      ca:'Early bird<br><span style="font-weight:400;">fins 31/8</span>',
+      es:'Early bird<br><span style="font-weight:400;">hasta 31/8</span>',
+      en:'Early bird<br><span style="font-weight:400;">until 8/31</span>'
     },
     taula_col_standard: {
-      ca:'Preu estàndard<br><span style="font-weight:400;">fins 31/8</span>',
-      es:'Precio estándar<br><span style="font-weight:400;">hasta 31/8</span>',
-      en:'Standard price<br><span style="font-weight:400;">until 8/31</span>'
+      ca:'Preu estàndard<br><span style="font-weight:400;">fins 20/9</span>',
+      es:'Precio estándar<br><span style="font-weight:400;">hasta 20/9</span>',
+      en:'Standard price<br><span style="font-weight:400;">until 9/20</span>'
     },
     taula_col_lastcall: {
-      ca:'Last call<br><span style="font-weight:400;">fins 15/9</span>',
-      es:'Last call<br><span style="font-weight:400;">hasta 15/9</span>',
-      en:'Last call<br><span style="font-weight:400;">until 9/15</span>'
+      ca:'Last call<br><span style="font-weight:400;">fins 4/10</span>',
+      es:'Last call<br><span style="font-weight:400;">hasta 4/10</span>',
+      en:'Last call<br><span style="font-weight:400;">until 10/4</span>'
     },
     taula_fila_animar: { ca:"Samarreta solidària", es:"Camiseta solidaria", en:"Solidarity t-shirt" },
     taula_fila_1etapa: { ca:"Participar 1 etapa", es:"Participar 1 etapa", en:"Participate 1 stage" },
@@ -1124,6 +1173,24 @@
       es:"La organización intentará contar con personas voluntarias que ayuden a llevar las mochilas y otras pertenencias de los participantes entre los puntos de inicio y final de cada etapa, y lo comunicará por email.",
       en:"The organization will try to have volunteers who can help carry participants' backpacks and belongings between the start and finish points of each stage, and will notify by email."
     },
+    faq_q17: { ca:"He de portar el track de la ruta?", es:"¿Tengo que llevar el track de la ruta?", en:"Do I need to carry the route track?" },
+    faq_a17: {
+      ca:"Sí. L'organització compartirà el track oficial del recorregut i és <strong>obligatori</strong> portar-lo carregat al rellotge GPS, o bé córrer sempre acompanyat/da d'algú que el porti.",
+      es:"Sí. La organización compartirá el track oficial del recorrido y es <strong>obligatorio</strong> llevarlo cargado en el reloj GPS, o bien correr siempre acompañado/a de alguien que lo lleve.",
+      en:"Yes. The organisation will share the official route track and it is <strong>mandatory</strong> to have it loaded on your GPS watch, or to always run alongside someone who does."
+    },
+    faq_q18: { ca:"Sabré a quina hora passaré per cada punt?", es:"¿Sabré a qué hora pasaré por cada punto?", en:"Will I know what time I'll pass each point?" },
+    faq_a18: {
+      ca:"Sí, us donarem una previsió d'hores estimades de sortida i de pas/arribada a cada municipi, perquè pugueu organitzar-vos i perquè els amfitrions locals sàpiguen quan esperar-vos.",
+      es:"Sí, os daremos una previsión de horas estimadas de salida y de paso/llegada a cada municipio, para que podáis organizaros y para que los anfitriones locales sepan cuándo esperaros.",
+      en:"Yes, we'll give you an estimate of departure times and arrival/passing times at each town, so you can plan ahead and local hosts know when to expect you."
+    },
+    faq_q19: { ca:"Com sabré on i quan recollir la samarreta i la bossa de participant?", es:"¿Cómo sabré dónde y cuándo recoger la camiseta y la bolsa de participante?", en:"How will I know where and when to collect my t-shirt and participant bag?" },
+    faq_a19: {
+      ca:"T'ho confirmarem per email i també ho publicarem a la web i a Instagram (@llobregatxladiabetis) a mesura que tanquem els detalls amb cada municipi.",
+      es:"Te lo confirmaremos por email y también lo publicaremos en la web y en Instagram (@llobregatxladiabetis) a medida que cerremos los detalles con cada municipio.",
+      en:"We'll confirm it by email and also publish it on the website and on Instagram (@llobregatxladiabetis) as we finalise the details with each town."
+    },
   };
 
   let currentLang = "ca";
@@ -1215,7 +1282,19 @@
     if (e.target === preuPopupOverlay) window.tancarPopupPreus();
   });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") window.tancarPopupPreus();
+    if (e.key === "Escape") { window.tancarPopupPreus(); window.tancarPopupHerois(); }
+  });
+
+  // ---------- Popup informatiu sobre el codi de descompte d'Heroi ----------
+  const heroiPopupOverlay = document.getElementById("heroi-popup-overlay");
+  window.obrirPopupHerois = function () {
+    heroiPopupOverlay.classList.add("visible");
+  };
+  window.tancarPopupHerois = function () {
+    heroiPopupOverlay.classList.remove("visible");
+  };
+  heroiPopupOverlay.addEventListener("click", (e) => {
+    if (e.target === heroiPopupOverlay) window.tancarPopupHerois();
   });
 
   const faqToggleBtn = document.getElementById("faq-toggle-btn");
@@ -1233,6 +1312,8 @@
   const donacioCaixa = document.getElementById("donacio-caixa");
   const donacioD0Avis = document.getElementById("donacio-d0-avis");
   const resumTotal = document.getElementById("resum-total");
+  const codiHeroiCamp = document.getElementById("codi-heroi-camp");
+  const codiDescompteInput = document.getElementById("codi-descompte");
   const totalDisplay = document.getElementById("total-display");
   const desglosDisplay = document.getElementById("desglose-display");
   const blocSenseModalitat = document.getElementById("bloc-sense-modalitat");
@@ -1270,6 +1351,7 @@
 
       donacioCaixa.hidden = false;
       resumTotal.hidden = false;
+      codiHeroiCamp.hidden = modalitatActiva === "dorsal0";
       submitBtn.hidden = false;
 
       // Dorsal 0: no permet donació de 0 €
@@ -1901,6 +1983,7 @@
     }
 
     payloadAPI.donacio_centims = donacioSeleccionada || 0;
+    payloadAPI.codi_descompte = codiDescompteInput.value.trim();
 
     submitBtn.disabled = true;
     const textOriginalBoto = submitBtn.textContent;
@@ -1914,6 +1997,12 @@
       });
       const data1 = await res1.json();
       if (!res1.ok) throw new Error(data1.error || "No s'ha pogut registrar la comanda.");
+
+      if (data1.gratuit) {
+        // Codi de descompte d'Heroi vàlid: no cal passar per Stripe.
+        window.location.href = `gracies.html?order_id=${encodeURIComponent(data1.order_id)}`;
+        return;
+      }
 
       const res2 = await fetch("/.netlify/functions/create-checkout-session", {
         method: "POST",

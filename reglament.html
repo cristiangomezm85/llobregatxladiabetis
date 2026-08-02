@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ca" data-lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reglament — Llobregat x la Diabetis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blau-llobregat:#15315F;
+    --blau-diabetis:#1E72D4;
+    --blau-aigua:#5AC0E6;
+    --coral:#FF6B47;
+    --paper:#FAFAF6;
+    --tinta:#0E1B36;
+    --gris:#5A6478;
+    --radi:14px;
+  }
+  *{box-sizing:border-box;}
+  [data-lang="ca"] [lang="es"],
+  [data-lang="ca"] [lang="en"],
+  [data-lang="es"] [lang="ca"],
+  [data-lang="es"] [lang="en"],
+  [data-lang="en"] [lang="ca"],
+  [data-lang="en"] [lang="es"] { display: none !important; }
+  body{
+    margin:0; background:var(--paper); color:var(--tinta);
+    font-family:'Manrope',sans-serif; line-height:1.6;
+  }
+  h1,h2{ font-family:'Bricolage Grotesque',sans-serif; color:var(--blau-llobregat); }
+  .wrap{ max-width:680px; margin:0 auto; padding:0 20px 80px; }
+  .capcalera{
+    background:linear-gradient(180deg, rgba(21,49,95,0.92) 0%, rgba(14,27,54,0.96) 100%);
+    color:#fff; padding:28px 20px 32px; text-align:center; margin-bottom:8px;
+  }
+  .capcalera .eyebrow{ color:var(--blau-aigua); font-weight:700; font-size:13px; letter-spacing:.06em; text-transform:uppercase; }
+  .capcalera h1{ color:#fff; font-size:28px; margin:8px 0 6px; }
+  .capcalera p{ color:#D7E3F5; font-size:14.5px; margin:0; }
+  .tornar{ display:inline-block; margin-top:16px; color:var(--blau-aigua); font-size:13px; text-decoration:none; font-weight:700; }
+
+  .lang-bar{ display:flex; justify-content:center; gap:6px; padding-bottom:14px; }
+  .lang-btn{
+    background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3);
+    color:#D7E3F5; font-size:12px; font-weight:700; letter-spacing:.04em;
+    padding:5px 12px; border-radius:999px; cursor:pointer; font-family:'Manrope',sans-serif;
+  }
+  .lang-btn.actiu{ background:#fff; color:var(--blau-llobregat); border-color:#fff; }
+
+  section{ margin-top:34px; }
+  h2{ font-size:18px; margin:0 0 10px; display:flex; align-items:center; gap:8px; }
+  h2 .num{ color:var(--coral); font-family:'Bricolage Grotesque',sans-serif; }
+  p{ font-size:14.5px; color:var(--tinta); margin:0 0 10px; }
+  ul{ margin:0 0 10px; padding-left:20px; }
+  li{ font-size:14.5px; margin-bottom:6px; }
+  strong{ color:var(--blau-llobregat); }
+  .avis{
+    background:#FFF3EE; border-left:4px solid var(--coral); border-radius:8px;
+    padding:12px 14px; font-size:13.5px; margin:14px 0;
+  }
+  .info{
+    background:#EEF5FD; border-left:4px solid var(--blau-diabetis); border-radius:8px;
+    padding:12px 14px; font-size:13.5px; margin:14px 0;
+  }
+  footer{ text-align:center; font-size:12px; color:var(--gris); margin-top:50px; }
+  a{ color:var(--blau-diabetis); }
+</style>
+</head>
+<body>
+
+<div class="capcalera">
+  <div class="lang-bar">
+    <button type="button" class="lang-btn" data-set-lang="ca">CA</button>
+    <button type="button" class="lang-btn" data-set-lang="es">ES</button>
+    <button type="button" class="lang-btn" data-set-lang="en">EN</button>
+  </div>
+  <div class="eyebrow">
+    <span lang="ca">Repte solidari · 16–18 octubre 2026</span>
+    <span lang="es">Reto solidario · 16–18 octubre 2026</span>
+    <span lang="en">Solidarity challenge · Oct 16–18, 2026</span>
+  </div>
+  <h1>
+    <span lang="ca">Reglament del repte</span>
+    <span lang="es">Reglamento del reto</span>
+    <span lang="en">Challenge rules</span>
+  </h1>
+  <p>Llobregat x la Diabetis — Castellar de n'Hug → Desembocadura del Llobregat</p>
+  <a class="tornar" href="inscripcio.html">
+    <span lang="ca">← Tornar a la inscripció</span>
+    <span lang="es">← Volver a la inscripción</span>
+    <span lang="en">← Back to registration</span>
+  </a>
+</div>
+
+<div class="wrap">
+
+  <section>
+    <h2><span class="num">01</span>
+      <span lang="ca">El format del repte</span>
+      <span lang="es">El formato del reto</span>
+      <span lang="en">The challenge format</span>
+    </h2>
+    <p>
+      <span lang="ca">El repte recorre el Llobregat de dalt a baix en 3 etapes consecutives (16, 17 i 18 d'octubre de 2026). Es pot participar corrent, caminant o en bicicleta, fent el tram sencer o només una part, sense marca de temps ni classificació: és un repte solidari d'autosuperació i visibilització, no una competició.</span>
+      <span lang="es">El reto recorre el Llobregat de arriba abajo en 3 etapas consecutivas (16, 17 y 18 de octubre de 2026). Se puede participar corriendo, caminando o en bicicleta, haciendo el tramo entero o solo una parte, sin marca de tiempo ni clasificación: es un reto solidario de autosuperación y visibilización, no una competición.</span>
+      <span lang="en">The challenge follows the Llobregat river from source to sea over 3 consecutive stages (October 16, 17 and 18, 2026). You can take part running, walking or cycling, doing the whole segment or just part of it, with no time record or ranking: it's a solidarity challenge of personal achievement and visibility, not a competition.</span>
+    </p>
+  </section>
+
+  <section>
+    <h2><span class="num">02</span>
+      <span lang="ca">Track GPS obligatori</span>
+      <span lang="es">Track GPS obligatorio</span>
+      <span lang="en">Mandatory GPS track</span>
+    </h2>
+    <div class="avis">
+      <span lang="ca">L'organització us farà arribar el <strong>track oficial en format .gpx i a través de Wikiloc</strong>. És <strong>obligatori</strong> portar-lo carregat al rellotge o al mòbil durant tot el tram.</span>
+      <span lang="es">La organización os hará llegar el <strong>track oficial en formato .gpx y a través de Wikiloc</strong>. Es <strong>obligatorio</strong> llevarlo cargado en el reloj o en el móvil durante todo el tramo.</span>
+      <span lang="en">The organisation will send you the <strong>official track in .gpx format and via Wikiloc</strong>. It is <strong>mandatory</strong> to have it loaded on your watch or phone throughout your segment.</span>
+    </div>
+    <p>
+      <span lang="ca">El track és una <strong>adaptació de la ruta GR-270</strong> i marca el camí segur i homologat pels ajuntaments col·laboradors. Actualment els municipis de <strong>Castellbisbal, el Papiol, Molins de Rei i Sant Feliu de Llobregat queden exclosos del recorregut</strong> a causa de les restriccions per la Pesta Porcina Africana (PPA), i entre <strong>Martorell i Sant Boi de Llobregat el pas només és possible pel marge dret del riu</strong> (prenent com a referència el sentit de l'aigua). Apartar-se del track pot suposar travessar aquestes zones restringides o carreteres sense les mesures de seguretat previstes per l'organització.</span>
+      <span lang="es">El track es una <strong>adaptación de la ruta GR-270</strong> y marca el camino seguro y homologado por los ayuntamientos colaboradores. Actualmente los municipios de <strong>Castellbisbal, el Papiol, Molins de Rei y Sant Feliu de Llobregat quedan excluidos del recorrido</strong> debido a las restricciones por la Peste Porcina Africana (PPA), y entre <strong>Martorell y Sant Boi de Llobregat el paso solo es posible por el margen derecho del río</strong> (tomando como referencia el sentido del agua). Apartarse del track puede suponer atravesar estas zonas restringidas o carreteras sin las medidas de seguridad previstas por la organización.</span>
+      <span lang="en">The track is an <strong>adaptation of the GR-270 route</strong> and marks the safe path approved by the collaborating town councils. Currently the towns of <strong>Castellbisbal, el Papiol, Molins de Rei and Sant Feliu de Llobregat are excluded from the route</strong> due to African Swine Fever (ASF) restrictions, and between <strong>Martorell and Sant Boi de Llobregat you may only pass along the right bank of the river</strong> (based on the direction of the water flow). Straying from the track may mean crossing these restricted areas or roads without the safety measures planned by the organisation.</span>
+    </p>
+  </section>
+
+  <section>
+    <h2><span class="num">03</span>
+      <span lang="ca">Horaris estimats</span>
+      <span lang="es">Horarios estimados</span>
+      <span lang="en">Estimated times</span>
+    </h2>
+    <p>
+      <span lang="ca">Us farem arribar una previsió d'hores de sortida i de pas o arribada per cada municipi del recorregut <strong>uns dies abans del repte</strong>. Són horaris <strong>estimats</strong>, pensats perquè pugueu organitzar-vos i perquè els amfitrions locals sàpiguen quan esperar-vos; poden variar segons el ritme de cada persona i les condicions del dia.</span>
+      <span lang="es">Os haremos llegar una previsión de horas de salida y de paso o llegada por cada municipio del recorrido <strong>unos días antes del reto</strong>. Son horarios <strong>estimados</strong>, pensados para que podáis organizaros y para que los anfitriones locales sepan cuándo esperaros; pueden variar según el ritmo de cada persona y las condiciones del día.</span>
+      <span lang="en">We'll send you an estimate of departure and passing/arrival times for each town along the route <strong>a few days before the challenge</strong>. These are <strong>estimated</strong> times, meant to help you plan ahead and let local hosts know when to expect you; they may vary depending on each person's pace and the day's conditions.</span>
+    </p>
+  </section>
+
+  <section>
+    <h2><span class="num">04</span>
+      <span lang="ca">Recollida de samarreta i bossa de participant</span>
+      <span lang="es">Recogida de camiseta y bolsa de participante</span>
+      <span lang="en">T-shirt and participant bag collection</span>
+    </h2>
+    <p>
+      <span lang="ca">Es procurarà fer la recollida en <strong>diferents ubicacions al llarg del recorregut</strong> per facilitar-la a totes les persones inscrites. Els punts i horaris exactes s'aniran confirmant a mesura que tanquem els acords amb cada municipi. Us informarem sempre per dos canals:</span>
+      <span lang="es">Se procurará hacer la recogida en <strong>diferentes ubicaciones a lo largo del recorrido</strong> para facilitarla a todas las personas inscritas. Los puntos y horarios exactos se irán confirmando a medida que cerremos los acuerdos con cada municipio. Os informaremos siempre por dos canales:</span>
+      <span lang="en">We'll try to offer collection at <strong>different locations along the route</strong> to make it easier for everyone registered. The exact points and times will be confirmed as we close agreements with each town. We'll always let you know through two channels:</span>
+    </p>
+    <ul>
+      <li>
+        <span lang="ca">Per <strong>email</strong>, a l'adreça que heu indicat a la inscripció.</span>
+        <span lang="es">Por <strong>email</strong>, a la dirección que indicasteis en la inscripción.</span>
+        <span lang="en">By <strong>email</strong>, to the address you gave at registration.</span>
+      </li>
+      <li>
+        <span lang="ca">A la <strong>web</strong> (llobregat.org) i a <strong>Instagram</strong> (<a href="https://instagram.com/llobregatxladiabetis" target="_blank" rel="noopener">@llobregatxladiabetis</a>).</span>
+        <span lang="es">En la <strong>web</strong> (llobregat.org) y en <strong>Instagram</strong> (<a href="https://instagram.com/llobregatxladiabetis" target="_blank" rel="noopener">@llobregatxladiabetis</a>).</span>
+        <span lang="en">On the <strong>website</strong> (llobregat.org) and on <strong>Instagram</strong> (<a href="https://instagram.com/llobregatxladiabetis" target="_blank" rel="noopener">@llobregatxladiabetis</a>).</span>
+      </li>
+    </ul>
+    <div class="info">
+      <span lang="ca">És important que indiquis correctament la teva ubicació de preferència al formulari d'inscripció, perquè puguem fer-te arribar la samarreta al lloc més proper possible.</span>
+      <span lang="es">Es importante que indiques correctamente tu ubicación de preferencia en el formulario de inscripción, para poder hacerte llegar la camiseta en el lugar más cercano posible.</span>
+      <span lang="en">Please make sure to correctly indicate your preferred location on the registration form, so we can get your t-shirt to you at the closest possible spot.</span>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">05</span>
+      <span lang="ca">Seguretat i equipament recomanat</span>
+      <span lang="es">Seguridad y equipamiento recomendado</span>
+      <span lang="en">Safety and recommended gear</span>
+    </h2>
+    <p>
+      <span lang="ca">Us recomanem portar:</span>
+      <span lang="es">Os recomendamos llevar:</span>
+      <span lang="en">We recommend bringing:</span>
+    </p>
+    <ul>
+      <li>
+        <span lang="ca">Frontal o llanterna si preveieu córrer/caminar a primera o última hora del dia.</span>
+        <span lang="es">Frontal o linterna si prevéis correr/caminar a primera o última hora del día.</span>
+        <span lang="en">A headlamp or torch if you expect to run/walk early or late in the day.</span>
+      </li>
+      <li>
+        <span lang="ca">Mòbil carregat i el track GPX descarregat també al mòbil com a suport.</span>
+        <span lang="es">Móvil cargado y el track GPX descargado también en el móvil como apoyo.</span>
+        <span lang="en">A charged phone with the GPX track also downloaded as a backup.</span>
+      </li>
+      <li>
+        <span lang="ca">Aigua i menjar suficient entre punts d'avituallament. Us informarem dels diferents punts d'avituallament i de les franges horàries en què estaran disponibles.</span>
+        <span lang="es">Agua y comida suficiente entre puntos de avituallamiento. Os informaremos de los diferentes puntos de avituallamiento y de las franjas horarias en que estarán disponibles.</span>
+        <span lang="en">Enough water and food between aid stations. We'll let you know the different aid station locations and the time windows they'll be available.</span>
+      </li>
+    </ul>
+    <div class="info">
+      <span lang="ca">Si les condicions meteorològiques o de seguretat ho requereixen, l'organització es reserva el dret de modificar, escurçar o suspendre una etapa. S'avisarà per email i xarxes el més aviat possible.</span>
+      <span lang="es">Si las condiciones meteorológicas o de seguridad lo requieren, la organización se reserva el derecho de modificar, acortar o suspender una etapa. Se avisará por email y redes lo antes posible.</span>
+      <span lang="en">If weather or safety conditions require it, the organisation reserves the right to modify, shorten or suspend a stage. You'll be notified by email and social media as soon as possible.</span>
+    </div>
+    <p>
+      <span lang="ca">Disposareu d'un <strong>telèfon d'atenció als participants, atès per persones voluntàries de l'organització</strong>, per a qualsevol assistència en cas d'incidència o suport de mobilitat en cas de força major durant el repte.</span>
+      <span lang="es">Dispondréis de un <strong>teléfono de atención a los participantes, atendido por personas voluntarias de la organización</strong>, para cualquier asistencia en caso de incidencia o apoyo de movilidad en caso de fuerza mayor durante el reto.</span>
+      <span lang="en">You'll have a <strong>participant helpline, staffed by organisation volunteers</strong>, for any assistance in case of an incident or mobility support in case of force majeure during the challenge.</span>
+    </p>
+  </section>
+
+  <section>
+    <h2><span class="num">06</span>
+      <span lang="ca">Menors d'edat</span>
+      <span lang="es">Menores de edad</span>
+      <span lang="en">Minors</span>
+    </h2>
+    <p>
+      <span lang="ca">Els menors de 18 anys poden participar sempre que un mare/pare/tutor legal doni el consentiment des del mateix formulari d'inscripció i n'aporti les dades. Recomanem que els menors facin el repte sempre acompanyats d'una persona adulta responsable.</span>
+      <span lang="es">Los menores de 18 años pueden participar siempre que una madre/padre/tutor legal dé el consentimiento desde el mismo formulario de inscripción y aporte sus datos. Recomendamos que los menores hagan el reto siempre acompañados de una persona adulta responsable.</span>
+      <span lang="en">Minors under 18 may take part as long as a parent or legal guardian gives consent through the registration form and provides their details. We recommend minors always do the challenge accompanied by a responsible adult.</span>
+    </p>
+  </section>
+
+  <section>
+    <h2><span class="num">07</span>
+      <span lang="ca">Assegurança i responsabilitat</span>
+      <span lang="es">Seguro y responsabilidad</span>
+      <span lang="en">Insurance and liability</span>
+    </h2>
+    <p>
+      <span lang="ca">La inscripció inclou una <strong>assegurança de responsabilitat civil</strong> i una <strong>assegurança d'accidents</strong> per al dia o dies en què participes. Les persones federades en atletisme, muntanya o triatló poden indicar-ho i aportar el número de llicència federativa a la inscripció.</span>
+      <span lang="es">La inscripción incluye un <strong>seguro de responsabilidad civil</strong> y un <strong>seguro de accidentes</strong> para el día o días en que participas. Las personas federadas en atletismo, montaña o triatlón pueden indicarlo y aportar el número de licencia federativa en la inscripción.</span>
+      <span lang="en">Registration includes <strong>civil liability insurance</strong> and <strong>accident insurance</strong> for the day or days you take part. People federated in athletics, mountain sports or triathlon can indicate this and provide their federation licence number at registration.</span>
+    </p>
+    <p>
+      <span lang="ca">Cada participant és responsable de valorar la seva pròpia condició física abans d'inscriure's, i de portar l'equipament adequat a la distància i modalitat triada.</span>
+      <span lang="es">Cada participante es responsable de valorar su propia condición física antes de inscribirse, y de llevar el equipamiento adecuado a la distancia y modalidad elegida.</span>
+      <span lang="en">Each participant is responsible for assessing their own physical condition before registering, and for bringing gear appropriate to the distance and modality chosen.</span>
+    </p>
+  </section>
+
+  <section>
+    <h2><span class="num">08</span>
+      <span lang="ca">Donacions i baixes</span>
+      <span lang="es">Donaciones y bajas</span>
+      <span lang="en">Donations and cancellations</span>
+    </h2>
+    <p>
+      <span lang="ca">El 100% dels donatius es destinen a AREDI per a la recerca de la cura de la diabetis tipus 1 i, per tant, <strong>no són reemborsables</strong>, tampoc en cas de no poder participar finalment. Si per causes alienes a l'organització (meteorologia, força major) alguna etapa s'hagués de suspendre, la donació es manté igualment com a aportació a la causa.</span>
+      <span lang="es">El 100% de los donativos se destinan a AREDI para la investigación de la cura de la diabetes tipo 1 y, por tanto, <strong>no son reembolsables</strong>, tampoco en caso de no poder participar finalmente. Si por causas ajenas a la organización (meteorología, fuerza mayor) alguna etapa tuviera que suspenderse, la donación se mantiene igualmente como aportación a la causa.</span>
+      <span lang="en">100% of donations go to AREDI for type 1 diabetes cure research and are therefore <strong>non-refundable</strong>, including if you're ultimately unable to take part. If a stage has to be suspended for reasons beyond the organisation's control (weather, force majeure), the donation still stands as a contribution to the cause.</span>
+    </p>
+  </section>
+
+  <section>
+    <h2><span class="num">09</span>
+      <span lang="ca">Protecció de dades i imatge</span>
+      <span lang="es">Protección de datos e imagen</span>
+      <span lang="en">Data protection and image rights</span>
+    </h2>
+    <p>
+      <span lang="ca">Les dades personals es tracten d'acord amb el RGPD i només s'utilitzen per a la gestió del repte. Durant el repte es podran fer fotografies i vídeos amb finalitat de difusió del projecte i d'AREDI; la cessió d'imatge s'accepta explícitament a la inscripció.</span>
+      <span lang="es">Los datos personales se tratan de acuerdo con el RGPD y solo se utilizan para la gestión del reto. Durante el reto se podrán hacer fotografías y vídeos con finalidad de difusión del proyecto y de AREDI; la cesión de imagen se acepta explícitamente en la inscripción.</span>
+      <span lang="en">Personal data is processed in accordance with GDPR and used solely to manage the challenge. Photos and videos may be taken during the challenge for the purpose of promoting the project and AREDI; image rights are explicitly granted at registration.</span>
+    </p>
+  </section>
+
+  <section>
+    <h2><span class="num">10</span>
+      <span lang="ca">Contacte</span>
+      <span lang="es">Contacto</span>
+      <span lang="en">Contact</span>
+    </h2>
+    <p>
+      <span lang="ca">Per qualsevol dubte sobre aquest reglament, escriu-nos a</span>
+      <span lang="es">Para cualquier duda sobre este reglamento, escríbenos a</span>
+      <span lang="en">For any questions about these rules, write to us at</span>
+      <a href="mailto:info@llobregat.org">info@llobregat.org</a>.
+    </p>
+  </section>
+
+</div>
+
+<footer>
+  <span lang="ca">Llobregat x la Diabetis · #LxD2026 · Aquest reglament es pot actualitzar a mesura que es confirmin detalls operatius del repte.</span>
+  <span lang="es">Llobregat x la Diabetis · #LxD2026 · Este reglamento se puede actualizar a medida que se confirmen detalles operativos del reto.</span>
+  <span lang="en">Llobregat x la Diabetis · #LxD2026 · These rules may be updated as operational details of the challenge are confirmed.</span>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var lang = 'ca';
+  try { lang = localStorage.getItem('llxd-lang') || 'ca'; } catch(e){}
+
+  function aplicar(l) {
+    lang = l;
+    document.documentElement.setAttribute('data-lang', l);
+    document.documentElement.setAttribute('lang', l);
+    document.querySelectorAll('[data-set-lang]').forEach(function(btn){
+      btn.classList.toggle('actiu', btn.getAttribute('data-set-lang') === l);
+    });
+    try { localStorage.setItem('llxd-lang', l); } catch(e){}
+  }
+
+  document.querySelectorAll('[data-set-lang]').forEach(function(btn){
+    btn.addEventListener('click', function(){ aplicar(btn.getAttribute('data-set-lang')); });
+  });
+
+  aplicar(lang);
+})();
+</script>
+
+</body>
+</html>
