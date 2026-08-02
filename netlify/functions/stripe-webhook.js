@@ -8,6 +8,7 @@
 
 const Stripe = require("stripe");
 const { obtenirOrdre, actualitzarOrdre } = require("./lib/store");
+const { notificarMailerLite } = require("./lib/mailerlite");
 
 exports.handler = async (event) => {
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
@@ -59,22 +60,3 @@ exports.handler = async (event) => {
 
   return { statusCode: 200, body: "OK" };
 };
-
-async function notificarMailerLite(ordre) {
-  const apiKey = process.env.MAILERLITE_API_KEY;
-  const groupId = process.env.MAILERLITE_GROUP_ID;
-  if (!apiKey || !groupId) return; // opcional, no bloqueja res si no està configurat
-
-  const email = ordre.email_contacte;
-  if (!email) return;
-
-  await fetch("https://connect.mailerlite.com/api/subscribers", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      email,
-      groups: [groupId],
-      fields: { modalitat: ordre.modalitat || "" },
-    }),
-  });
-}
