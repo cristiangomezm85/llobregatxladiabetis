@@ -217,6 +217,8 @@
   .federat-opcions input{ width:16px; height:16px; }
   .llicencia-camp{ display:none; margin-top:10px; }
   .llicencia-camp.visible{ display:block; }
+  .club-camp{ display:none; margin-top:10px; }
+  .club-camp.visible{ display:block; }
 
   .menor-caixa{
     background:#FFF4EE; border:1.5px solid #FFD9C6; border-radius:10px;
@@ -586,20 +588,21 @@
         </select>
       </div>
 
+      <div class="camp">
+        <label style="margin-bottom:6px;" data-i18n="lbl_club">Tens club? *</label>
+        <div class="federat-opcions">
+          <label><input type="radio" class="an-club" name="an-club" value="no" checked> <span data-i18n="opt_no">No</span></label>
+          <label><input type="radio" class="an-club" name="an-club" value="si"> <span data-i18n="opt_si">Sí</span></label>
+        </div>
+        <div class="camp club-camp" data-club-camp style="margin-bottom:0;">
+          <label data-i18n="lbl_club_nom">Nom del club</label>
+          <input type="text" class="an-club-nom">
+        </div>
+      </div>
+
       <h3 class="subseccio" data-i18n="sec_samarretes">Samarretes</h3>
       <div id="an-samarretes-llista"></div>
       <button type="button" class="afegir-btn" id="afegir-an-samarreta" data-i18n="btn_afegir_talla">+ Afegir una altra talla</button>
-
-      <div class="checkbox-linia" style="margin-top:16px;">
-        <input type="checkbox" id="an-corporativa">
-        <label for="an-corporativa" data-i18n="lbl_compra_corporativa">Aquesta comanda és corporativa (per a una empresa)</label>
-      </div>
-      <div class="legal-caixa" id="an-corporativa-caixa" style="display:none;margin-top:10px;">
-        <div class="fila-2">
-          <div class="camp" style="margin-bottom:0;"><label data-i18n="lbl_empresa_nom">Nom de l'empresa *</label><input type="text" id="an-empresa-nom"></div>
-          <div class="camp" style="margin-bottom:0;"><label data-i18n="lbl_empresa_cif">CIF/NIF de l'empresa *</label><input type="text" id="an-empresa-cif"></div>
-        </div>
-      </div>
 
       <div class="camp" style="margin-top:16px;margin-bottom:0;">
         <label data-i18n="lbl_recollida">M'aniria millor recollir la samarreta al municipi més proper a... *</label>
@@ -695,6 +698,18 @@
         <div class="camp llicencia-camp" data-llicencia-camp style="margin-bottom:0;">
           <label data-i18n="lbl_llicencia">Número de llicència federativa *</label>
           <input type="text" class="fi-llicencia">
+        </div>
+      </div>
+
+      <div class="camp">
+        <label style="margin-bottom:6px;" data-i18n="lbl_club">Tens club? *</label>
+        <div class="federat-opcions">
+          <label><input type="radio" class="fi-club" name="fi-club" value="no" checked> <span data-i18n="opt_no">No</span></label>
+          <label><input type="radio" class="fi-club" name="fi-club" value="si"> <span data-i18n="opt_si">Sí</span></label>
+        </div>
+        <div class="camp club-camp" data-club-camp style="margin-bottom:0;">
+          <label data-i18n="lbl_club_nom">Nom del club</label>
+          <input type="text" class="fi-club-nom">
         </div>
       </div>
 
@@ -956,9 +971,6 @@
     },
     sec_samarretes: { ca:"Samarretes", es:"Camisetas", en:"T-shirts" },
     btn_afegir_talla: { ca:"+ Afegir una altra talla", es:"+ Añadir otra talla", en:"+ Add another size" },
-    lbl_compra_corporativa: { ca:"Aquesta comanda és corporativa (per a una empresa)", es:"Este pedido es corporativo (para una empresa)", en:"This order is corporate (for a company)" },
-    lbl_empresa_nom: { ca:"Nom de l'empresa *", es:"Nombre de la empresa *", en:"Company name *" },
-    lbl_empresa_cif: { ca:"CIF/NIF de l'empresa *", es:"CIF/NIF de la empresa *", en:"Company tax ID *" },
     lbl_quantitat: { ca:"Quantitat", es:"Cantidad", en:"Quantity" },
     btn_eliminar: { ca:"Eliminar", es:"Eliminar", en:"Remove" },
 
@@ -980,6 +992,8 @@
     lbl_municipi_final: { ca:"Municipi final *", es:"Municipio final *", en:"Finishing town *" },
     lbl_distancia_estimada: { ca:"Distància estimada:", es:"Distancia estimada:", en:"Estimated distance:" },
     lbl_federat: { ca:"Estàs federat/da? *", es:"¿Estás federado/a? *", en:"Are you federated? *" },
+    lbl_club: { ca:"Tens club? *", es:"¿Tienes club? *", en:"Do you have a club? *" },
+    lbl_club_nom: { ca:"Nom del club", es:"Nombre del club", en:"Club name" },
     lbl_llicencia: { ca:"Número de llicència federativa *", es:"Número de licencia federativa *", en:"Federation licence number *" },
     lbl_recollida: { ca:"M'aniria millor recollir la samarreta al municipi més proper a... *", es:"Me iría mejor recoger la camiseta en el municipio más cercano a... *", en:"It would suit me best to collect the t-shirt in the town closest to... *" },
     lbl_talla: { ca:"Talla de samarreta *", es:"Talla de camiseta *", en:"T-shirt size *" },
@@ -1568,16 +1582,6 @@
   document.getElementById("afegir-an-samarreta").addEventListener("click", crearFilaSamarreta);
   crearFilaSamarreta();
 
-  const corporativaCheck = document.getElementById("an-corporativa");
-  const corporativaCaixa = document.getElementById("an-corporativa-caixa");
-  corporativaCheck.addEventListener("change", () => {
-    corporativaCaixa.style.display = corporativaCheck.checked ? "block" : "none";
-    if (!corporativaCheck.checked) {
-      document.getElementById("an-empresa-nom").value = "";
-      document.getElementById("an-empresa-cif").value = "";
-    }
-  });
-
   function totalSamarretesAnimar() {
     let total = 0;
     llistaSamarretes.querySelectorAll(".samarreta-fila").forEach((f) => {
@@ -1768,6 +1772,24 @@
     });
   });
 
+  blocFisic.querySelectorAll(".fi-club").forEach((radio) => {
+    radio.addEventListener("change", () => {
+      const clubCamp = blocFisic.querySelector("[data-club-camp]");
+      const esSi = blocFisic.querySelector('.fi-club[value="si"]').checked;
+      clubCamp.classList.toggle("visible", esSi);
+      if (!esSi) blocFisic.querySelector(".fi-club-nom").value = "";
+    });
+  });
+
+  blocAnimar.querySelectorAll(".an-club").forEach((radio) => {
+    radio.addEventListener("change", () => {
+      const clubCamp = blocAnimar.querySelector("[data-club-camp]");
+      const esSi = blocAnimar.querySelector('.an-club[value="si"]').checked;
+      clubCamp.classList.toggle("visible", esSi);
+      if (!esSi) blocAnimar.querySelector(".an-club-nom").value = "";
+    });
+  });
+
   // ---------- Donació (obligatòria) ----------
   const donacioOpcions = document.getElementById("donacio-opcions");
   const donacioAltraCamp = document.getElementById("donacio-altra-camp");
@@ -1849,7 +1871,6 @@
     falta_telefon: { ca:"Falta el telèfon.", es:"Falta el teléfono.", en:"Missing phone number." },
     falta_relacio: { ca:"Falta indicar la relació amb la diabetis tipus 1.", es:"Falta indicar la relación con la diabetes tipo 1.", en:"Please indicate your connection to type 1 diabetes." },
     falta_samarretes: { ca:"Afegeix almenys una samarreta (talla i quantitat).", es:"Añade al menos una camiseta (talla y cantidad).", en:"Add at least one t-shirt (size and quantity)." },
-    falta_empresa: { ca:"Falta el nom o el CIF/NIF de l'empresa.", es:"Falta el nombre o el CIF/NIF de la empresa.", en:"Missing company name or tax ID." },
     falta_talla: { ca:"Falta la talla de samarreta.", es:"Falta la talla de camiseta.", en:"Missing t-shirt size." },
     falta_recollida: { ca:"Falta triar quan i on recollir la samarreta.", es:"Falta elegir cuándo y dónde recoger la camiseta.", en:"Please choose when and where to collect the t-shirt." },
     falta_identificacio: { ca:"Falten dades d'identificació.", es:"Faltan datos de identificación.", en:"Missing identification details." },
@@ -1929,20 +1950,16 @@
         if (!relacio) throw new Error(msg("falta_relacio"));
         if (!recollidaSel.value) throw new Error(msg("falta_recollida"));
 
-        let empresaNom = "", empresaCif = "";
-        if (corporativaCheck.checked) {
-          empresaNom = document.getElementById("an-empresa-nom").value.trim();
-          empresaCif = document.getElementById("an-empresa-cif").value.trim();
-          if (!empresaNom || !empresaCif) throw new Error(msg("falta_empresa"));
-        }
+        const teClub = checked('.an-club[value="si"]', blocAnimar);
+        const clubNom = teClub ? val(".an-club-nom", blocAnimar) : "";
 
-        dades = { ...dades, nom, cognoms, email, telefon, relacioText, samarretes, recollida: recollidaText, empresaNom, empresaCif };
+        dades = { ...dades, nom, cognoms, email, telefon, relacioText, samarretes, recollida: recollidaText, clubNom };
         payloadAPI = {
           modalitat: "animar", email_contacte: email, nom, cognoms, telefon, relacio,
           samarretes: samarretes.map((s) => ({ talla: s.talla, quantitat: s.quantitat })),
           recollida_municipi: recollidaSel.value,
           recollida_municipi_nom: recollidaText,
-          corporativa: corporativaCheck.checked, empresa_nom: empresaNom, empresa_cif: empresaCif,
+          club_nom: clubNom,
         };
       }
 
@@ -1962,6 +1979,8 @@
         const finalOpt = finalSel.selectedOptions[0];
         const federat = checked('.fi-federat[value="si"]', blocFisic);
         const llicencia = val(".fi-llicencia", blocFisic);
+        const teClub = checked('.fi-club[value="si"]', blocFisic);
+        const clubNom = teClub ? val(".fi-club-nom", blocFisic) : "";
         const recollidaSel = blocFisic.querySelector(".fi-recollida");
         const recollidaText = recollidaSel.selectedOptions[0] ? recollidaSel.selectedOptions[0].textContent : "";
         const tutorNom = val(".fi-tutor-nom", blocFisic);
@@ -1997,7 +2016,7 @@
           emergenciaNom, emergenciaTelefon, relacioText, talla,
           tramInici: iniciOpt.textContent, tramFinal: finalOpt.textContent,
           tramKm: tram.km, tramDies: tram.dies, federat, llicencia, recollida: recollidaText,
-          esMenor: esMenor === true, tutorNom, tutorCognoms,
+          esMenor: esMenor === true, tutorNom, tutorCognoms, clubNom,
         };
         payloadAPI = {
           modalitat: modalitatActiva, email_contacte: email, nom, cognoms, dni,
@@ -2006,6 +2025,7 @@
           relacio, talla_samarreta: talla,
           tram_inici: iniciOpt.value, tram_final: finalOpt.value,
           federat, num_llicencia_federativa: llicencia,
+          club_nom: clubNom,
           tutor_nom: tutorNom, tutor_cognoms: tutorCognoms, tutor_dni: tutorDni,
           tutor_data_naixement: tutorDataNaixement, tutor_consentiment: tutorConsentiment,
           acceptacio_reglament: reglament, consentiment_dades: rgpd, cessio_imatge: imatge,

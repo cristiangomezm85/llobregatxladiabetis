@@ -54,36 +54,65 @@
   }
   .ref-label{ font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--gris); display:block; margin-bottom:4px; }
   .cta{
-    display:inline-block; margin-top:16px; background:var(--coral); color:#fff;
-    text-decoration:none; font-weight:700; padding:13px 28px; border-radius:10px;
+    display:inline-block; width:100%; background:var(--coral); color:#fff;
+    text-decoration:none; font-weight:700; padding:13px 22px; border-radius:10px;
     font-family:'Bricolage Grotesque',sans-serif; font-size:15px; border:none; cursor:pointer;
   }
   .cta:hover{ background:#F0562F; }
   .cta-secundari{
-    display:inline-block; margin-top:10px; background:#fff; color:var(--blau-diabetis);
+    display:inline-block; width:100%; background:#fff; color:var(--blau-diabetis);
     border:1.5px solid var(--blau-diabetis); text-decoration:none; font-weight:700;
-    padding:11px 24px; border-radius:10px; font-family:'Bricolage Grotesque',sans-serif;
-    font-size:14px; cursor:pointer;
+    padding:11px 20px; border-radius:10px; font-family:'Bricolage Grotesque',sans-serif;
+    font-size:14px; cursor:pointer; text-align:center;
   }
   .cta-secundari:hover{ background:#EEF5FD; }
+  .cta-instagram{
+    background:linear-gradient(135deg, #4f5bd5, #962fbf 30%, #d62976 55%, #fa7e1e 75%, #feda75);
+    color:#fff; border:none;
+  }
   .nota{ font-size:12.5px; color:var(--gris); margin-top:24px; }
   footer{ text-align:center; padding:20px; font-size:12px; color:var(--gris); }
 
   /* ---------- Bloc de compartir ---------- */
-  .compartir-bloc{ margin-top:28px; padding-top:24px; border-top:1px solid #EEECE4; display:none; }
+  .compartir-bloc{ margin-top:28px; padding-top:24px; border-top:1px solid #EEECE4; text-align:left; display:none; }
   .compartir-bloc.visible{ display:block; }
-  .compartir-titol{ font-size:15px; margin-bottom:6px; }
-  .compartir-desc{ font-size:13px; color:var(--gris); margin-bottom:16px; }
-  #targeta-preview{
-    width:100%; max-width:220px; border-radius:12px; margin:0 auto 16px; display:block;
-    box-shadow:0 6px 20px rgba(14,27,54,0.15);
+  .compartir-titol{ font-size:15px; margin-bottom:6px; text-align:center; }
+  .compartir-desc{ font-size:13px; color:var(--gris); margin-bottom:16px; text-align:center; }
+  .compartir-desc strong{ color:var(--blau-diabetis); }
+
+  #targeta-preview-wrap{
+    position:relative; width:100%; max-width:230px; margin:0 auto 14px;
+    border-radius:14px; overflow:hidden; box-shadow:0 6px 20px rgba(14,27,54,0.18);
+    aspect-ratio:9/16; background:var(--blau-llobregat);
   }
-  .compartir-botons{ display:flex; flex-direction:column; gap:8px; align-items:center; }
+  #targeta-preview{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  .foto-controls{ display:none; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:18px; }
+  .foto-controls label input[type="file"]{ display:none; }
+  .foto-controls label, .foto-controls button{ flex:1; min-width:140px; width:auto; }
+
+  .text-label{
+    font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--gris); margin-bottom:6px; display:block;
+  }
+  #text-publicacio{
+    width:100%; min-height:110px; border:1.5px solid #E4E1D8; border-radius:10px;
+    padding:12px; font-family:'Manrope',sans-serif; font-size:13.5px; color:var(--tinta);
+    resize:vertical; margin-bottom:14px; background:var(--paper);
+  }
+  #text-publicacio:focus{ outline:none; border-color:var(--blau-diabetis); }
+
+  .compartir-botons{ display:flex; flex-direction:column; gap:8px; }
   .compartir-avis-copiat{
-    font-size:12px; color:#2E9E5B; font-weight:700; margin-top:8px; display:none;
+    font-size:12px; color:#2E9E5B; font-weight:700; margin-top:6px; text-align:center; display:none;
   }
   .compartir-avis-copiat.visible{ display:block; }
-  .carregant{ font-size:13px; color:var(--gris); }
+  .carregant{ font-size:13px; color:var(--gris); text-align:center; }
+  .etiqueta-nota{
+    font-size:12.5px; color:var(--gris); text-align:center; margin-top:16px;
+    background:#EEF5FD; border-radius:8px; padding:10px 12px;
+  }
+  .etiqueta-nota strong{ color:var(--blau-llobregat); }
 </style>
 </head>
 <body>
@@ -100,12 +129,12 @@
     <div class="icona">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
     </div>
-    <h1>
+    <h1 style="text-align:center;">
       <span lang="ca">Gràcies! Ja hi ets.</span>
       <span lang="es">¡Gracias! Ya estás dentro.</span>
       <span lang="en">Thank you! You're all set.</span>
     </h1>
-    <p>
+    <p style="text-align:center;">
       <span lang="ca">El teu pagament s'ha confirmat correctament. En breu rebràs un email de confirmació.</span>
       <span lang="es">Tu pago se ha confirmado correctamente. En breve recibirás un email de confirmación.</span>
       <span lang="en">Your payment has been confirmed. You'll receive a confirmation email shortly.</span>
@@ -120,14 +149,6 @@
       <span id="ref-value"></span>
     </div>
 
-    <div>
-      <a href="index.html" class="cta">
-        <span lang="ca">Tornar a l'inici</span>
-        <span lang="es">Volver al inicio</span>
-        <span lang="en">Back to home</span>
-      </a>
-    </div>
-
     <!-- ---------- Bloc de compartir a Instagram ---------- -->
     <div class="compartir-bloc" id="compartir-bloc">
       <h3 class="compartir-titol">
@@ -136,9 +157,9 @@
         <span lang="en">Share it!</span>
       </h3>
       <p class="compartir-desc">
-        <span lang="ca">Descarrega la teva targeta i publica-la a Instagram. Cada persona que ho comparteix, arriba a més gent.</span>
-        <span lang="es">Descarga tu tarjeta y publícala en Instagram. Cada persona que lo comparte, llega a más gente.</span>
-        <span lang="en">Download your card and post it on Instagram. Every share reaches more people.</span>
+        <span lang="ca">Descarrega la teva targeta, publica-la a Instagram i etiqueta'ns. Cada persona que ho comparteix, arriba a més gent.</span>
+        <span lang="es">Descarga tu tarjeta, publícala en Instagram y etiquétanos. Cada persona que lo comparte, llega a más gente.</span>
+        <span lang="en">Download your card, post it on Instagram and tag us. Every share reaches more people.</span>
       </p>
 
       <p class="carregant" id="targeta-carregant">
@@ -148,33 +169,78 @@
       </p>
 
       <canvas id="targeta-canvas" width="1080" height="1920" style="display:none;"></canvas>
-      <img id="targeta-preview" style="display:none;" alt="">
 
-      <div class="compartir-botons" id="compartir-botons" style="display:none;">
-        <button type="button" class="cta" id="btn-descarregar">
-          <span lang="ca">Descarregar imatge</span>
-          <span lang="es">Descargar imagen</span>
-          <span lang="en">Download image</span>
+      <div id="targeta-preview-wrap" style="display:none;">
+        <img id="targeta-preview" alt="">
+      </div>
+
+      <div class="foto-controls" id="foto-controls">
+        <label class="cta-secundari">
+          <span lang="ca">📷 Puja la teva foto</span>
+          <span lang="es">📷 Sube tu foto</span>
+          <span lang="en">📷 Upload your photo</span>
+          <input type="file" accept="image/*" id="photo-input">
+        </label>
+        <button type="button" class="cta-secundari" id="btn-treure-foto" style="display:none;">
+          <span lang="ca">Treure foto</span>
+          <span lang="es">Quitar foto</span>
+          <span lang="en">Remove photo</span>
         </button>
-        <button type="button" class="cta-secundari" id="btn-compartir" style="display:none;">
-          <span lang="ca">Compartir</span>
-          <span lang="es">Compartir</span>
-          <span lang="en">Share</span>
-        </button>
-        <button type="button" class="cta-secundari" id="btn-copiar-text">
-          <span lang="ca">Copiar text per a la publicació</span>
-          <span lang="es">Copiar texto para la publicación</span>
-          <span lang="en">Copy caption text</span>
-        </button>
+      </div>
+
+      <div id="bloc-text-i-botons" style="display:none;">
+        <label class="text-label" for="text-publicacio">
+          <span lang="ca">Text per a la publicació (pots editar-lo)</span>
+          <span lang="es">Texto para la publicación (puedes editarlo)</span>
+          <span lang="en">Caption text (you can edit it)</span>
+        </label>
+        <textarea id="text-publicacio"></textarea>
+
+        <div class="compartir-botons">
+          <button type="button" class="cta" id="btn-descarregar">
+            <span lang="ca">⬇ Descarregar imatge</span>
+            <span lang="es">⬇ Descargar imagen</span>
+            <span lang="en">⬇ Download image</span>
+          </button>
+          <button type="button" class="cta-secundari" id="btn-copiar-text">
+            <span lang="ca">Copiar text</span>
+            <span lang="es">Copiar texto</span>
+            <span lang="en">Copy text</span>
+          </button>
+          <button type="button" class="cta-secundari" id="btn-compartir" style="display:none;">
+            <span lang="ca">Compartir</span>
+            <span lang="es">Compartir</span>
+            <span lang="en">Share</span>
+          </button>
+          <a class="cta-secundari cta-instagram" id="btn-instagram" href="https://www.instagram.com/" target="_blank" rel="noopener">
+            <span lang="ca">Obrir Instagram</span>
+            <span lang="es">Abrir Instagram</span>
+            <span lang="en">Open Instagram</span>
+          </a>
+        </div>
         <div class="compartir-avis-copiat" id="avis-copiat">
           <span lang="ca">✓ Text copiat</span>
           <span lang="es">✓ Texto copiado</span>
           <span lang="en">✓ Text copied</span>
         </div>
+
+        <p class="etiqueta-nota">
+          <span lang="ca">Etiqueta'ns a <strong>@llobregatxladiabetis</strong> i ho compartirem! 🙌</span>
+          <span lang="es">Etiquétanos en <strong>@llobregatxladiabetis</strong> ¡y lo compartiremos! 🙌</span>
+          <span lang="en">Tag us at <strong>@llobregatxladiabetis</strong> and we'll share it! 🙌</span>
+        </p>
       </div>
     </div>
 
-    <p class="nota">
+    <div style="margin-top:24px;text-align:center;">
+      <a href="index.html" class="cta-secundari" style="width:auto;display:inline-block;">
+        <span lang="ca">Tornar a l'inici</span>
+        <span lang="es">Volver al inicio</span>
+        <span lang="en">Back to home</span>
+      </a>
+    </div>
+
+    <p class="nota" style="text-align:center;">
       <span lang="ca">Si tens qualsevol dubte, escriu-nos a</span>
       <span lang="es">Si tienes alguna duda, escríbenos a</span>
       <span lang="en">If you have any questions, write to us at</span>
@@ -205,30 +271,27 @@
 
   var TEXTOS = {
     modalitat_dorsal0: { ca: "Dorsal 0", es: "Dorsal 0", en: "Bib 0" },
-    modalitat_animar: { ca: "Samarreta solidària", es: "Camiseta solidaria", en: "Solidarity t-shirt" },
-    modalitat_caminant: { ca: "Caminant", es: "Caminando", en: "Walking" },
-    modalitat_corrent: { ca: "Corrent", es: "Corriendo", en: "Running" },
-    modalitat_bici: { ca: "Bici", es: "Bici", en: "Bike" },
     headline_dorsal0: { ca: "FAIG COSTAT AL REPTE", es: "APOYO EL RETO", en: "SUPPORTING THE CHALLENGE" },
-    headline_animar: { ca: "HI SÓC PER ANIMAR", es: "AQUÍ ESTOY PARA ANIMAR", en: "HERE TO CHEER" },
+    headline_animar: { ca: "JA TINC LA MEVA SAMARRETA!", es: "¡YA TENGO MI CAMISETA!", en: "GOT MY T-SHIRT!" },
+    sub_animar: { ca: "del Llobregat x la Diabetis", es: "del Llobregat x la Diabetis", en: "of Llobregat x la Diabetis" },
     headline_fisic: { ca: "JA HI SÓC!", es: "¡YA ESTOY DENTRO!", en: "I'M IN!" },
     label_km: { ca: "KM", es: "KM", en: "KM" },
     label_etapa: { ca: "etapa", es: "etapa", en: "stage" },
     label_etapes: { ca: "etapes", es: "etapas", en: "stages" },
     caption_dorsal0: {
-      ca: "Faig costat al repte Llobregat x la Diabetis amb un Dorsal 0! Cada euro va directe a la recerca de la cura de la diabetis tipus 1. #LlobregatXLaDiabetis #LxD2026",
-      es: "¡Apoyo el reto Llobregat x la Diabetis con un Dorsal 0! Cada euro va directo a la investigación de la cura de la diabetes tipo 1. #LlobregatXLaDiabetis #LxD2026",
-      en: "Supporting the Llobregat x la Diabetis challenge with Bib 0! Every euro goes straight to type 1 diabetes cure research. #LlobregatXLaDiabetis #LxD2026"
+      ca: "Faig costat al repte @llobregatxladiabetis amb un Dorsal 0! Cada euro va directe a la recerca de la cura de la diabetis tipus 1. #LlobregatXLaDiabetis #LxD2026",
+      es: "¡Apoyo el reto @llobregatxladiabetis con un Dorsal 0! Cada euro va directo a la investigación de la cura de la diabetes tipo 1. #LlobregatXLaDiabetis #LxD2026",
+      en: "Supporting the @llobregatxladiabetis challenge with Bib 0! Every euro goes straight to type 1 diabetes cure research. #LlobregatXLaDiabetis #LxD2026"
     },
     caption_animar: {
-      ca: "Ja tinc la meva samarreta solidària del repte Llobregat x la Diabetis! Del 16 al 18 d'octubre, un riu sencer es mobilitza per la recerca de la diabetis tipus 1. #LlobregatXLaDiabetis #LxD2026",
-      es: "¡Ya tengo mi camiseta solidaria del reto Llobregat x la Diabetis! Del 16 al 18 de octubre, un río entero se moviliza por la investigación de la diabetes tipo 1. #LlobregatXLaDiabetis #LxD2026",
-      en: "Got my solidarity t-shirt for the Llobregat x la Diabetis challenge! From October 16-18, a whole river mobilises for type 1 diabetes research. #LlobregatXLaDiabetis #LxD2026"
+      ca: "Ja tinc la meva samarreta solidària del repte @llobregatxladiabetis! Del 16 al 18 d'octubre, un riu sencer es mobilitza per la recerca de la diabetis tipus 1. #LlobregatXLaDiabetis #LxD2026",
+      es: "¡Ya tengo mi camiseta solidaria del reto @llobregatxladiabetis! Del 16 al 18 de octubre, un río entero se moviliza por la investigación de la diabetes tipo 1. #LlobregatXLaDiabetis #LxD2026",
+      en: "Got my solidarity t-shirt for the @llobregatxladiabetis challenge! From October 16-18, a whole river mobilises for type 1 diabetes research. #LlobregatXLaDiabetis #LxD2026"
     },
     caption_fisic: {
-      ca: "Ja estic inscrit/a al repte Llobregat x la Diabetis! Del 16 al 18 d'octubre recorreré el Llobregat per la recerca de la cura de la diabetis tipus 1. Ens hi sumes? #LlobregatXLaDiabetis #LxD2026",
-      es: "¡Ya estoy inscrito/a en el reto Llobregat x la Diabetis! Del 16 al 18 de octubre recorreré el Llobregat por la investigación de la cura de la diabetes tipo 1. ¿Te sumas? #LlobregatXLaDiabetis #LxD2026",
-      en: "I'm registered for the Llobregat x la Diabetis challenge! From October 16-18 I'll follow the Llobregat river for type 1 diabetes cure research. Join in? #LlobregatXLaDiabetis #LxD2026"
+      ca: "Ja estic inscrit/a al repte @llobregatxladiabetis! Del 16 al 18 d'octubre recorreré el Llobregat per la recerca de la cura de la diabetis tipus 1. Ens hi sumes? #LlobregatXLaDiabetis #LxD2026",
+      es: "¡Ya estoy inscrito/a en el reto @llobregatxladiabetis! Del 16 al 18 de octubre recorreré el Llobregat por la investigación de la cura de la diabetes tipo 1. ¿Te sumas? #LlobregatXLaDiabetis #LxD2026",
+      en: "I'm registered for the @llobregatxladiabetis challenge! From October 16-18 I'll follow the Llobregat river for type 1 diabetes cure research. Join in? #LlobregatXLaDiabetis #LxD2026"
     },
   };
   function tr(key) { return (TEXTOS[key] && TEXTOS[key][lang]) || (TEXTOS[key] && TEXTOS[key].ca) || ""; }
@@ -254,7 +317,27 @@
     return lines.length;
   }
 
-  async function generarTargeta(dades) {
+  // Dibuixa una imatge cobrint tot el rectangle donat (equivalent a
+  // background-size:cover), retallant per fora si cal.
+  function drawCover(ctx, img, x, y, w, h) {
+    var imgRatio = img.width / img.height;
+    var boxRatio = w / h;
+    var sx, sy, sw, sh;
+    if (imgRatio > boxRatio) {
+      sh = img.height;
+      sw = sh * boxRatio;
+      sx = (img.width - sw) / 2;
+      sy = 0;
+    } else {
+      sw = img.width;
+      sh = sw / boxRatio;
+      sx = 0;
+      sy = (img.height - sh) / 2;
+    }
+    ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+  }
+
+  async function generarTargeta(dades, photoImg) {
     if (document.fonts && document.fonts.ready) {
       try { await document.fonts.ready; } catch (e) {}
     }
@@ -263,12 +346,25 @@
     var ctx = canvas.getContext("2d");
     var W = 1080, H = 1920, cx = W / 2;
 
-    var grad = ctx.createLinearGradient(0, 0, W, H);
-    grad.addColorStop(0, "#1c3d70");
-    grad.addColorStop(0.55, "#15315F");
-    grad.addColorStop(1, "#0E1B36");
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, W, H);
+    ctx.clearRect(0, 0, W, H);
+
+    if (photoImg) {
+      drawCover(ctx, photoImg, 0, 0, W, H);
+      var veil = ctx.createLinearGradient(0, 0, 0, H);
+      veil.addColorStop(0, "rgba(14,27,54,0.55)");
+      veil.addColorStop(0.45, "rgba(14,27,54,0.35)");
+      veil.addColorStop(0.75, "rgba(14,27,54,0.75)");
+      veil.addColorStop(1, "rgba(14,27,54,0.94)");
+      ctx.fillStyle = veil;
+      ctx.fillRect(0, 0, W, H);
+    } else {
+      var grad = ctx.createLinearGradient(0, 0, W, H);
+      grad.addColorStop(0, "#1c3d70");
+      grad.addColorStop(0.55, "#15315F");
+      grad.addColorStop(1, "#0E1B36");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+    }
 
     ctx.textAlign = "center";
 
@@ -280,8 +376,8 @@
     ctx.font = "800 54px 'Bricolage Grotesque'";
     ctx.fillText("Llobregat x la Diabetis", cx, 250);
 
-    var headlineKey = "headline_fisic";
     var isFisic = ["caminant", "corrent", "bici"].indexOf(dades.modalitat) !== -1;
+    var headlineKey = "headline_fisic";
     if (dades.modalitat === "dorsal0") headlineKey = "headline_dorsal0";
     else if (dades.modalitat === "animar") headlineKey = "headline_animar";
 
@@ -292,8 +388,8 @@
     ctx.fillText(nomLinia, cx, 480);
 
     ctx.fillStyle = "#ffffff";
-    ctx.font = "800 78px 'Bricolage Grotesque'";
-    wrapText(ctx, tr(headlineKey), cx, 640, 880, 88);
+    ctx.font = "800 74px 'Bricolage Grotesque'";
+    wrapText(ctx, tr(headlineKey), cx, 640, 880, 84);
 
     if (isFisic && dades.tram_km) {
       ctx.fillStyle = "#FF6B47";
@@ -304,24 +400,34 @@
       ctx.font = "700 40px Manrope";
       ctx.fillText(tr("label_km"), cx, 1130);
 
+      var ySeguent = 1210;
       if (dades.tram_dies) {
         var etapaWord = dades.tram_dies === 1 ? tr("label_etapa") : tr("label_etapes");
         ctx.fillStyle = "#B9C6DE";
         ctx.font = "600 36px Manrope";
-        ctx.fillText(dades.tram_dies + " " + etapaWord, cx, 1210);
+        ctx.fillText(dades.tram_dies + " " + etapaWord, cx, ySeguent);
+        ySeguent += 90;
       }
       if (dades.tram_inici_nom && dades.tram_final_nom) {
         ctx.fillStyle = "#ffffff";
         ctx.font = "700 42px Manrope";
-        wrapText(ctx, dades.tram_inici_nom + " → " + dades.tram_final_nom, cx, 1300, 880, 52);
+        var linies = wrapText(ctx, dades.tram_inici_nom + " → " + dades.tram_final_nom, cx, ySeguent, 880, 52);
+        ySeguent += linies * 52 + 20;
+      }
+      if (dades.club_nom) {
+        ctx.fillStyle = "#5AC0E6";
+        ctx.font = "700 36px Manrope";
+        ctx.fillText(dades.club_nom, cx, ySeguent);
       }
     } else if (dades.modalitat === "animar") {
-      ctx.fillStyle = "#FF6B47";
-      ctx.font = "800 140px 'Bricolage Grotesque'";
-      ctx.fillText("×" + (dades.unitats || 1), cx, 1020);
       ctx.fillStyle = "#D7E3F5";
-      ctx.font = "700 38px Manrope";
-      ctx.fillText(tr("modalitat_animar"), cx, 1090);
+      ctx.font = "600 40px Manrope";
+      ctx.fillText(tr("sub_animar"), cx, 760);
+      if (dades.club_nom) {
+        ctx.fillStyle = "#5AC0E6";
+        ctx.font = "700 36px Manrope";
+        ctx.fillText(dades.club_nom, cx, 830);
+      }
     } else if (dades.modalitat === "dorsal0") {
       ctx.fillStyle = "#FF6B47";
       ctx.font = "800 200px 'Bricolage Grotesque'";
@@ -353,59 +459,104 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
   }
 
+  function esperar(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  // Reintentem uns quants cops per si la comanda encara no s'ha desat del
+  // tot (rar, però evita una pantalla en blanc si hi ha latència).
+  async function obtenirComandaAmbReintents(orderId) {
+    var intents = [0, 1000, 1500, 2000];
+    for (var i = 0; i < intents.length; i++) {
+      if (intents[i]) await esperar(intents[i]);
+      try {
+        var res = await fetch("/.netlify/functions/get-order?order_id=" + encodeURIComponent(orderId));
+        if (res.ok) return await res.json();
+      } catch (e) { /* seguim intentant */ }
+    }
+    return null;
+  }
+
+  var estatActual = { blob: null };
+  var potCompartirFitxers = false;
+  try {
+    potCompartirFitxers = !!(navigator.canShare && navigator.canShare({
+      files: [new File([""], "test.png", { type: "image/png" })],
+    }));
+  } catch (e) { potCompartirFitxers = false; }
+
+  var textArea = document.getElementById("text-publicacio");
+
+  document.getElementById("btn-descarregar").addEventListener("click", function () {
+    if (estatActual.blob) baixarBlob(estatActual.blob, "llobregat-x-la-diabetis.png");
+  });
+  document.getElementById("btn-copiar-text").addEventListener("click", function () {
+    navigator.clipboard.writeText(textArea.value).then(function () {
+      var avis = document.getElementById("avis-copiat");
+      avis.classList.add("visible");
+      setTimeout(function () { avis.classList.remove("visible"); }, 2500);
+    });
+  });
+  document.getElementById("btn-compartir").addEventListener("click", function () {
+    if (!estatActual.blob) return;
+    var fitxer = new File([estatActual.blob], "llobregat-x-la-diabetis.png", { type: "image/png" });
+    navigator.share({ files: [fitxer], text: textArea.value }).catch(function () {});
+  });
+
   async function iniciarCompartir(orderId) {
     var bloc = document.getElementById("compartir-bloc");
     var carregant = document.getElementById("targeta-carregant");
+    var previewWrap = document.getElementById("targeta-preview-wrap");
     var preview = document.getElementById("targeta-preview");
-    var botons = document.getElementById("compartir-botons");
+    var fotoControls = document.getElementById("foto-controls");
+    var btnTreureFoto = document.getElementById("btn-treure-foto");
+    var photoInput = document.getElementById("photo-input");
+    var blocTextIBotons = document.getElementById("bloc-text-i-botons");
 
-    try {
-      var res = await fetch("/.netlify/functions/get-order?order_id=" + encodeURIComponent(orderId));
-      if (!res.ok) return; // si no es troba, simplement no mostrem el bloc
-      var dades = await res.json();
+    var dades = await obtenirComandaAmbReintents(orderId);
+    if (!dades) return; // no bloquegem la pàgina de gràcies si no s'ha pogut confirmar
 
-      bloc.classList.add("visible");
-      var canvas = await generarTargeta(dades);
+    bloc.classList.add("visible");
 
-      canvas.toBlob(function (blob) {
-        if (!blob) return;
-        var url = URL.createObjectURL(blob);
-        preview.src = url;
-        preview.style.display = "block";
-        carregant.style.display = "none";
-        botons.style.display = "flex";
+    var captionKey = "caption_fisic";
+    if (dades.modalitat === "dorsal0") captionKey = "caption_dorsal0";
+    else if (dades.modalitat === "animar") captionKey = "caption_animar";
+    textArea.value = tr(captionKey);
 
-        document.getElementById("btn-descarregar").addEventListener("click", function () {
-          baixarBlob(blob, "llobregat-x-la-diabetis.png");
-        });
-
-        var captionKey = "caption_fisic";
-        if (dades.modalitat === "dorsal0") captionKey = "caption_dorsal0";
-        else if (dades.modalitat === "animar") captionKey = "caption_animar";
-        var caption = tr(captionKey);
-
-        document.getElementById("btn-copiar-text").addEventListener("click", function () {
-          navigator.clipboard.writeText(caption).then(function () {
-            var avis = document.getElementById("avis-copiat");
-            avis.classList.add("visible");
-            setTimeout(function () { avis.classList.remove("visible"); }, 2500);
-          });
-        });
-
-        var btnCompartir = document.getElementById("btn-compartir");
-        var fitxer = new File([blob], "llobregat-x-la-diabetis.png", { type: "image/png" });
-        if (navigator.canShare && navigator.canShare({ files: [fitxer] })) {
-          btnCompartir.style.display = "inline-block";
-          btnCompartir.addEventListener("click", function () {
-            navigator.share({ files: [fitxer], text: caption }).catch(function () {});
-          });
-        }
-      }, "image/png");
-    } catch (e) {
-      // si falla la generació, simplement no molestem: la pàgina de gràcies
-      // ja funciona igualment sense la targeta
-      console.warn("No s'ha pogut generar la targeta per compartir:", e);
+    async function regenerar(photoImg) {
+      var canvas = await generarTargeta(dades, photoImg);
+      var blob = await new Promise(function (resolve) { canvas.toBlob(resolve, "image/png"); });
+      if (!blob) return;
+      var url = URL.createObjectURL(blob);
+      preview.src = url;
+      previewWrap.style.display = "block";
+      carregant.style.display = "none";
+      fotoControls.style.display = "flex";
+      blocTextIBotons.style.display = "block";
+      if (potCompartirFitxers) document.getElementById("btn-compartir").style.display = "inline-block";
+      estatActual.blob = blob;
     }
+
+    await regenerar(null);
+
+    photoInput.addEventListener("change", function (e) {
+      var f = e.target.files[0];
+      if (!f) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        var img = new Image();
+        img.onload = function () {
+          regenerar(img);
+          btnTreureFoto.style.display = "inline-block";
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(f);
+    });
+
+    btnTreureFoto.addEventListener("click", function () {
+      photoInput.value = "";
+      btnTreureFoto.style.display = "none";
+      regenerar(null);
+    });
   }
 
   if (orderId) iniciarCompartir(orderId);
