@@ -7,19 +7,39 @@
 const { llistarOrdres } = require("./lib/store");
 
 exports.handler = async (event) => {
-  const token = event.queryStringParameters?.token;
-  if (!process.env.EXPORT_SECRET || token !== process.env.EXPORT_SECRET) {
-    return { statusCode: 401, body: "No autoritzat" };
+  const secretConfigurat = (process.env.EXPORT_SECRET || "").trim();
+  const tokenRebut = (event.queryStringParameters?.token || "").trim();
+
+  if (!secretConfigurat) {
+    // Ajuda a diagnosticar: si veus aquest missatge, la variable EXPORT_SECRET
+    // no està configurada a Netlify, o es va afegir sense fer un nou deploy
+    // després (els canvis a variables d'entorn requereixen redeploy).
+    return {
+      statusCode: 500,
+      body: "EXPORT_SECRET no configurat al servidor. Afegeix-lo a Netlify (Environment variables) i torna a desplegar.",
+    };
   }
 
-  const ordres = await llistarOrdres();
+  if (tokenRebut !== secretConfigurat) {
+    return { statusCode: 401, body: "Token incorrecte." };
+  }
+
+  let ordres;
+  try {
+    ordres = await llistarOrdres();
+  } catch (err) {
+    return {
+      statusCode: 500,
+      body: "Error accedint a l'emmagatzematge: " + (err && err.message ? err.message : String(err)),
+    };
+  }
 
   const columnes = [
     "order_id", "modalitat", "estat", "import_base_centims", "donacio_centims",
     "import_centims", "unitats", "email_contacte", "recollida_text",
     "nom", "cognoms", "telefon", "dni", "data_naixement", "es_menor",
     "tutor_nom", "tutor_cognoms", "relacio", "talla_samarreta", "samarretes",
-    "corporativa", "empresa_nom", "empresa_cif",
+    "club_nom",
     "tram_inici_nom", "tram_final_nom", "tram_km", "tram_dies",
     "federat", "num_llicencia_federativa",
     "acceptacio_reglament", "consentiment_dades", "cessio_imatge",
@@ -45,7 +65,7 @@ exports.handler = async (event) => {
       samarretes: Array.isArray(p.samarretes)
         ? p.samarretes.map((s) => `${s.talla}×${s.quantitat}`).join(" + ")
         : "",
-      corporativa: p.corporativa, empresa_nom: p.empresa_nom, empresa_cif: p.empresa_cif,
+      club_nom: p.club_nom,
       tram_inici_nom: p.tram_inici_nom, tram_final_nom: p.tram_final_nom,
       tram_km: p.tram_km, tram_dies: Array.isArray(p.tram_dies) ? p.tram_dies.join("+") : "",
       federat: p.federat, num_llicencia_federativa: p.num_llicencia_federativa,
