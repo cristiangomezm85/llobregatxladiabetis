@@ -100,11 +100,6 @@ async function validarAnimar(payload) {
     if (!Number.isInteger(q) || q < 1) throw new Error("Quantitat de samarretes no vàlida");
     unitats += q;
   }
-  if (payload.corporativa) {
-    if (!payload.empresa_nom || !payload.empresa_cif) {
-      throw new Error("Falta el nom o el CIF/NIF de l'empresa");
-    }
-  }
   if (!payload.recollida_municipi) {
     throw new Error("Falta el municipi de recollida de la samarreta");
   }
