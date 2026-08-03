@@ -523,15 +523,27 @@
 
     async function regenerar(photoImg) {
       var canvas = await generarTargeta(dades, photoImg);
-      var blob = await new Promise(function (resolve) { canvas.toBlob(resolve, "image/png"); });
-      if (!blob) return;
-      var url = URL.createObjectURL(blob);
-      preview.src = url;
+
+      // Fem servir un data: URL per a la vista prèvia en pantalla: és el
+      // format més compatible per a <img src>, ja que algunes app-webviews
+      // (Instagram, navegadors mòbils integrats) no renderitzen bé les
+      // blob: URLs encara que el fitxer generat sigui correcte.
+      var dataUrl = canvas.toDataURL("image/png");
+      preview.src = dataUrl;
       previewWrap.style.display = "block";
       carregant.style.display = "none";
       fotoControls.style.display = "flex";
       blocTextIBotons.style.display = "block";
-      if (potCompartirFitxers) document.getElementById("btn-compartir").style.display = "inline-block";
+
+      // Per descarregar/compartir sí que fem servir un Blob (més eficient
+      // que mantenir el base64 sencer a memòria per aquestes accions).
+      var blob;
+      try {
+        blob = await (await fetch(dataUrl)).blob();
+      } catch (e) {
+        blob = null;
+      }
+      if (potCompartirFitxers && blob) document.getElementById("btn-compartir").style.display = "inline-block";
       estatActual.blob = blob;
     }
 
