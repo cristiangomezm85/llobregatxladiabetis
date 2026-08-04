@@ -893,7 +893,7 @@
   "use strict";
 
   const DATA_INICI_REPTE = "2026-10-16";
-  const TRAM_TOTALS = { 1: 62, 2: 75, 3: 69 };
+  const TRAM_TOTALS = { 1: 60, 2: 75, 3: 60 };
   // Tarifes per fases (early bird / estàndard / last call). Els preus de cada
   // fila (animar, 1/2/3 etapes) són valors fixos per tarifa, no una fórmula
   // per etapa: es defineixen tal qual per a cada casella.
@@ -1251,7 +1251,17 @@
   function etiquetaPoble(p) {
     const diaWord = { ca: "Dia", es: "Día", en: "Day" }[currentLang];
     const kmWord = "km";
-    return `${p.nom} (${diaWord} ${p.dia} · ${kmWord} ${p.km})`;
+    // Els municipis "frontissa" (final d'una etapa i inici de la següent,
+    // p.ex. Gironella o Monistrol de Montserrat) tenen dues entrades al
+    // recorregut amb el mateix nom: aclarim quina és quina al desplegable
+    // perquè triar la incorrecta no infli el nombre d'etapes seleccionades.
+    let sufix = "";
+    if (p.km === 0 && p.dia > 1) {
+      sufix = " · " + { ca: "inici etapa", es: "inicio etapa", en: "stage start" }[currentLang];
+    } else if (TRAM_TOTALS[p.dia] === p.km) {
+      sufix = " · " + { ca: "final etapa", es: "final etapa", en: "stage end" }[currentLang];
+    }
+    return `${p.nom} (${diaWord} ${p.dia} · ${kmWord} ${p.km}${sufix})`;
   }
 
   // ---------- Aplicar idioma a tot el DOM ----------
@@ -1517,7 +1527,15 @@
     opt0.value = "";
     opt0.textContent = "—";
     sel.appendChild(opt0);
+    // Els municipis "frontissa" (Gironella, Monistrol de Montserrat) tenen
+    // dues entrades al recorregut (final d'una etapa / inici de la
+    // següent): per a la recollida de samarreta només interessa el
+    // municipi, no en quin punt del recorregut cau, així que evitem
+    // oferir-lo dues vegades.
+    const vistos = new Set();
     POBLES_ORDENATS.forEach((p) => {
+      if (vistos.has(p.nom)) return;
+      vistos.add(p.nom);
       const opt = document.createElement("option");
       opt.value = p.id;
       opt.textContent = p.nom;

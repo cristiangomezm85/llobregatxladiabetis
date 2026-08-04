@@ -1,7 +1,7 @@
 {
   "actualitzat": "2026-08-04",
   "ordre": "riu",
-  "comentari": "Llistat de pobles i punts del recorregut, ordenats pel pas del riu. Estat: 'pendent' (punt de pas), 'interessat' (tramitant), 'adherit' (oficial), 'punt-etapa' (inici/fi d'etapa).",
+  "comentari": "Llistat de pobles i punts del recorregut, ordenats pel pas del riu. Estat: 'pendent' (punt de pas), 'interessat' (tramitant), 'adherit' (oficial), 'punt-etapa' (inici/fi d'etapa). Els municipis 'frontissa' (Gironella, Monistrol de Montserrat) tenen dues entrades: una com a final d'una etapa i una altra com a inici de la seguent, per evitar que el selector de tram compti una etapa de mes quan el tram comenca just al punt de canvi.",
   "pobles": [
     {
       "id": "castellar-de-n-hug",
@@ -94,7 +94,23 @@
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "frontissa": true
+    },
+    {
+      "id": "gironella-inici-etapa2",
+      "nom": "Gironella",
+      "dia": 2,
+      "km": 0,
+      "comarca": "Berguedà",
+      "tipus": "municipi",
+      "estat": "interessat",
+      "embaixador": null,
+      "aporta": [],
+      "notes": "Punt frontissa: mateix municipi que 'gironella', pero com a inici de l'etapa 2 (dia 2, km 0). No mostrar duplicat al desplegable de recollida.",
+      "foto": null,
+      "frontissa": true,
+      "exclos_recollida": true
     },
     {
       "id": "puig-reig",
@@ -212,7 +228,23 @@
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "frontissa": true
+    },
+    {
+      "id": "monistrol-de-montserrat-inici-etapa3",
+      "nom": "Monistrol de Montserrat",
+      "dia": 3,
+      "km": 0,
+      "comarca": "Bages",
+      "tipus": "municipi",
+      "estat": "interessat",
+      "embaixador": null,
+      "aporta": [],
+      "notes": "Punt frontissa: mateix municipi que 'monistrol-de-montserrat', pero com a inici de l'etapa 3 (dia 3, km 0). No mostrar duplicat al desplegable de recollida.",
+      "foto": null,
+      "frontissa": true,
+      "exclos_recollida": true
     },
     {
       "id": "esparreguera",
