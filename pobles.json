@@ -261,7 +261,10 @@
       "comarca": "Vallés Occidental",
       "tipus": "municipi",
       "estat": "adherit",
-      "aporta": [],
+      "aporta": [
+        "punt-trobada",
+        "difusio"
+      ],
       "embaixador": null
     },
     {
