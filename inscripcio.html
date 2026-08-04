@@ -1539,7 +1539,8 @@
       return;
     }
 
-    omplirSelectMunicipis(iniciSel, POBLES_ORDENATS);
+    const finalIdActual = finalSel.value;
+    omplirSelectMunicipis(iniciSel, POBLES_ORDENATS.filter((p) => p.id !== finalIdActual));
     const iniciOpt = iniciSel.selectedOptions[0];
     if (iniciOpt && iniciOpt.value) {
       const dIni = Number(iniciOpt.dataset.dia);
@@ -1722,7 +1723,11 @@
     omplirSelectMunicipis(finalSel, posteriors, "");
     recomputeTramFisic();
   });
-  finalSel.addEventListener("change", recomputeTramFisic);
+  finalSel.addEventListener("change", () => {
+    const finalIdActual = finalSel.value;
+    omplirSelectMunicipis(iniciSel, POBLES_ORDENATS.filter((p) => p.id !== finalIdActual), iniciSel.value);
+    recomputeTramFisic();
+  });
 
   // ---------- Tipus de tram: tot / personalitzat / caminada de cloenda ----------
   const tramTipusContainer = document.getElementById("tram-tipus-opcions");
