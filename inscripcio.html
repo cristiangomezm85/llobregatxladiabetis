@@ -2059,6 +2059,10 @@
 
     payloadAPI.donacio_centims = donacioSeleccionada || 0;
     payloadAPI.codi_descompte = codiDescompteInput.value.trim();
+    // Idioma triat pel formulari (CA/ES/EN): es guarda a la comanda i es
+    // passa a MailerLite perquè l'automatització de correu pugui triar la
+    // versió correcta del missatge de confirmació.
+    payloadAPI.idioma = currentLang.toUpperCase();
 
     submitBtn.disabled = true;
     const textOriginalBoto = submitBtn.textContent;
