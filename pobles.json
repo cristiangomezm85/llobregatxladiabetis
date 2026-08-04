@@ -262,6 +262,7 @@
       "tipus": "municipi",
       "estat": "adherit",
       "aporta": [
+        "embaixador",
         "difusio"
       ],
       "embaixador": null
