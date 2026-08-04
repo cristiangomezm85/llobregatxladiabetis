@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-07-29",
+  "actualitzat": "2026-08-04",
   "ordre": "riu",
   "comentari": "Llistat de pobles i punts del recorregut, ordenats pel pas del riu. Estat: 'pendent' (punt de pas), 'interessat' (tramitant), 'adherit' (oficial), 'punt-etapa' (inici/fi d'etapa).",
   "pobles": [
@@ -73,7 +73,7 @@
       "id": "cal-rosal",
       "nom": "Cal Rosal",
       "dia": 1,
-      "km": 56,
+      "km": 55,
       "comarca": "Berguedà",
       "tipus": "nucli",
       "municipi_principal": "Olvan",
