@@ -4,7 +4,7 @@
 // mantenir-ne una còpia duplicada: així no hi ha risc que aquest backend
 // quedi desincronitzat si algú actualitza els municipis des de l'admin.
 
-const TRAM_TOTALS = { 1: 62, 2: 75, 3: 69 }; // ha de coincidir amb inscripcio.html
+const TRAM_TOTALS = { 1: 60, 2: 75, 3: 60 }; // ha de coincidir amb inscripcio.html
 
 let cachedPobles = null;
 let cachedAt = 0;
