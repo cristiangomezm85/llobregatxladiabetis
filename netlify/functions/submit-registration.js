@@ -6,7 +6,7 @@
 
 const { randomUUID } = require("crypto");
 const { calcularImport, descripcioComanda } = require("./lib/pricing");
-const { crearOrdre } = require("./lib/store");
+const { crearOrdre, emailJaRegistrat } = require("./lib/store");
 const { notificarMailerLite } = require("./lib/mailerlite");
 
 exports.handler = async (event) => {
@@ -19,6 +19,20 @@ exports.handler = async (event) => {
     payload = JSON.parse(event.body);
   } catch {
     return resposta(400, { error: "JSON invàlid" });
+  }
+
+  // Inscripció única per email: si ja hi ha una comanda pagada amb aquest
+  // mateix email, no deixem continuar (MailerLite no permet enviar-hi un
+  // altre correu igual el mateix dia).
+  try {
+    if (await emailJaRegistrat(payload.email_contacte)) {
+      return resposta(409, { error: "EMAIL_JA_REGISTRAT" });
+    }
+  } catch (e) {
+    console.error("Error comprovant email duplicat:", e);
+    // Si la comprovació falla per error tècnic, deixem continuar: és
+    // preferible arriscar-se a un duplicat rar que bloquejar inscripcions
+    // legítimes per una caiguda temporal de l'emmagatzematge.
   }
 
   let calcul;
