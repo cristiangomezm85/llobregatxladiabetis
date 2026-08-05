@@ -418,6 +418,7 @@
     modalitat_dorsal0: { ca: "Dorsal 0", es: "Dorsal 0", en: "Bib 0" },
     headline_dorsal0: { ca: "FAIG COSTAT AL REPTE", es: "APOYO EL RETO", en: "SUPPORTING THE CHALLENGE" },
     headline_animar: { ca: "JA TINC LA MEVA SAMARRETA!", es: "¡YA TENGO MI CAMISETA!", en: "GOT MY T-SHIRT!" },
+    headline_animar_prefix: { ca: "JO SUMO A", es: "YO SUMO EN", en: "I'M IN AT" },
     sub_animar: { ca: "del Llobregat x la Diabetis", es: "del Llobregat x la Diabetis", en: "of Llobregat x la Diabetis" },
     headline_fisic: { ca: "JA HI SÓC!", es: "¡YA ESTOY DENTRO!", en: "I'M IN!" },
     label_fare: { ca: "FARÉ", es: "HARÉ", en: "I'LL DO" },
@@ -633,6 +634,12 @@
     var headlineKey = "headline_fisic";
     if (dades.modalitat === "dorsal0") headlineKey = "headline_dorsal0";
     else if (dades.modalitat === "animar") headlineKey = "headline_animar";
+    // Per a "animar" el titular inclou el municipi triat (p.ex. "JO SUMO A
+    // GIRONELLA"), en comptes d'un text fix sobre la samarreta.
+    var headlineText = tr(headlineKey);
+    if (dades.modalitat === "animar" && dades.municipi) {
+      headlineText = tr("headline_animar_prefix") + " " + dades.municipi.toUpperCase();
+    }
     var nomLinia = dades.nom ? dades.nom.split(" ")[0].toUpperCase() : "";
 
     if (layout === "centrat") {
@@ -673,7 +680,7 @@
 
       ctx.fillStyle = "#ffffff";
       ctx.font = fnt("800 74px 'Bricolage Grotesque'");
-      wrapText(ctx, tr(headlineKey), cx, Y(640), 880, Y(84));
+      wrapText(ctx, headlineText, cx, Y(640), 880, Y(84));
 
       if (isFisic && dades.tram_km) {
         ctx.fillStyle = "#D7E3F5";
@@ -824,7 +831,7 @@
 
       ctx.fillStyle = "#5AC0E6";
       ctx.font = fnt("800 72px 'Bricolage Grotesque'");
-      var headlineLines = wrapTextLeft(ctx, tr(headlineKey), textX, y, maxW, Y(78));
+      var headlineLines = wrapTextLeft(ctx, headlineText, textX, y, maxW, Y(78));
       y += headlineLines * Y(78) + Y(34);
 
       if (isFisic && dades.tram_km) {

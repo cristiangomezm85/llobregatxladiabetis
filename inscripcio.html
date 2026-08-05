@@ -168,6 +168,18 @@
     outline:3px solid var(--blau-aigua); outline-offset:1px; border-color:var(--blau-diabetis);
   }
   .camp{ margin-bottom:14px; }
+  .codi-heroi-fila{ display:flex; gap:8px; }
+  .codi-heroi-fila input{ flex:1; }
+  .codi-heroi-validar-btn{
+    flex-shrink:0; padding:0 16px; border-radius:8px; border:1px solid var(--blau-diabetis);
+    background:#fff; color:var(--blau-diabetis); font-weight:700; font-size:13px; cursor:pointer;
+    font-family:'Manrope',sans-serif;
+  }
+  .codi-heroi-validar-btn:hover{ background:var(--blau-diabetis); color:#fff; }
+  .codi-heroi-validar-btn:disabled{ opacity:0.6; cursor:default; }
+  .codi-heroi-estat{ margin-top:6px; font-size:12.5px; font-weight:600; min-height:16px; }
+  .codi-heroi-estat.valid{ color:#1E9E5A; }
+  .codi-heroi-estat.invalid{ color:var(--coral); }
   .fila-2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   @media (max-width:480px){ .fila-2{ grid-template-columns:1fr; } }
 
@@ -832,7 +844,11 @@
         <span data-i18n="lbl_codi_heroi">Codi descompte Herois (opcional)</span>
         <button type="button" class="preu-info-btn info-btn-clar" onclick="window.obrirPopupHerois()" aria-label="Què és el codi d'Heroi?" title="Què és el codi d'Heroi?">i</button>
       </label>
-      <input type="text" id="codi-descompte" placeholder="Ex: HEROI2026" autocomplete="off">
+      <div class="codi-heroi-fila">
+        <input type="text" id="codi-descompte" placeholder="Ex: HEROI2026" autocomplete="off">
+        <button type="button" id="codi-heroi-validar" class="codi-heroi-validar-btn" data-i18n="btn_validar_codi">Validar</button>
+      </div>
+      <div class="codi-heroi-estat" id="codi-heroi-estat"></div>
     </div>
 
     <div class="resum-total" id="resum-total" hidden>
@@ -1035,6 +1051,10 @@
     aredi_linia1: { ca:"100% a AREDI", es:"100% a AREDI", en:"100% to AREDI" },
     aredi_linia2: { ca:"100% a recerca", es:"100% a investigación", en:"100% to research" },
     lbl_codi_heroi: { ca:"Codi descompte Herois (opcional)", es:"Código descuento Héroes (opcional)", en:"Hero discount code (optional)" },
+    btn_validar_codi: { ca:"Validar", es:"Validar", en:"Validate" },
+    codi_validant: { ca:"Comprovant…", es:"Comprobando…", en:"Checking…" },
+    codi_valid: { ca:"✓ Codi aplicat", es:"✓ Código aplicado", en:"✓ Code applied" },
+    codi_invalid: { ca:"Aquest codi no és vàlid.", es:"Este código no es válido.", en:"This code is not valid." },
     heroi_popup_titol: { ca:"Què és ser un Heroi?", es:"¿Qué es ser un Héroe?", en:"What does it mean to be a Hero?" },
     heroi_popup_text1: {
       ca:"Els Herois i Heroïnes són persones que, a més de fer el repte, ajuden activament a recaptar fons per a AREDI. Tenen un perfil públic al web i material propi per difondre la seva campanya de recaptació.",
@@ -1406,6 +1426,52 @@
   const resumTotal = document.getElementById("resum-total");
   const codiHeroiCamp = document.getElementById("codi-heroi-camp");
   const codiDescompteInput = document.getElementById("codi-descompte");
+  const codiHeroiValidarBtn = document.getElementById("codi-heroi-validar");
+  const codiHeroiEstat = document.getElementById("codi-heroi-estat");
+  let codiHeroiValidat = false;
+
+  async function validarCodiHeroi() {
+    const codi = codiDescompteInput.value.trim();
+    if (!codi) return;
+    codiHeroiValidarBtn.disabled = true;
+    codiHeroiEstat.className = "codi-heroi-estat";
+    codiHeroiEstat.textContent = t("codi_validant");
+    try {
+      const res = await fetch("/.netlify/functions/validar-codi?codi=" + encodeURIComponent(codi));
+      const data = await res.json();
+      if (data.valid) {
+        codiHeroiValidat = true;
+        codiHeroiEstat.className = "codi-heroi-estat valid";
+        codiHeroiEstat.textContent = t("codi_valid");
+        codiDescompteInput.disabled = true;
+      } else {
+        codiHeroiValidat = false;
+        codiDescompteInput.value = "";
+        codiHeroiEstat.className = "codi-heroi-estat invalid";
+        codiHeroiEstat.textContent = t("codi_invalid");
+      }
+    } catch (e) {
+      codiHeroiValidat = false;
+      codiHeroiEstat.className = "codi-heroi-estat invalid";
+      codiHeroiEstat.textContent = t("codi_invalid");
+    }
+    codiHeroiValidarBtn.disabled = false;
+    actualitzarTotal();
+  }
+  codiHeroiValidarBtn.addEventListener("click", validarCodiHeroi);
+  codiDescompteInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); validarCodiHeroi(); }
+  });
+  // Si l'usuari torna a editar el codi (per exemple, l'esborra i en prova un
+  // altre), invalidem l'estat anterior fins que el torni a validar.
+  codiDescompteInput.addEventListener("input", () => {
+    if (codiHeroiValidat) {
+      codiHeroiValidat = false;
+      codiHeroiEstat.className = "codi-heroi-estat";
+      codiHeroiEstat.textContent = "";
+      actualitzarTotal();
+    }
+  });
   const arediCaixa = document.getElementById("aredi-caixa");
   const totalDisplay = document.getElementById("total-display");
   const desglosDisplay = document.getElementById("desglose-display");
@@ -1667,6 +1733,7 @@
   function calcularBasePreu() {
     if (!modalitatActiva) return 0;
     if (modalitatActiva === "dorsal0") return 0;
+    if (codiHeroiValidat) return 0;
     const tarifa = tarifaActual();
     if (modalitatActiva === "animar") return tarifa.preus.animar * totalSamarretesAnimar();
     // Modalitats físiques: el preu depèn del nombre d'etapes (dies) que cobreix el tram triat
