@@ -43,7 +43,16 @@ exports.handler = async (event) => {
   }
 
   const orderId = randomUUID();
-  const descripcio = descripcioComanda(payload);
+  let descripcio;
+  try {
+    descripcio = descripcioComanda(payload);
+  } catch (e) {
+    console.error("Error generant la descripció de la comanda:", e);
+    return resposta(500, {
+      error: "No s'ha pogut registrar la comanda. Torna-ho a provar.",
+      detall: e && e.message ? e.message : String(e),
+    });
+  }
   // El municipi de recollida ve ja resolt des del frontend (id + nom),
   // no cal cap taula de correspondència al backend.
   const recollidaText = payload.recollida_municipi_nom || payload.recollida_municipi || "";
@@ -72,7 +81,10 @@ exports.handler = async (event) => {
     await crearOrdre(orderId, dadesOrdre);
   } catch (e) {
     console.error("Error creant comanda:", e);
-    return resposta(500, { error: "No s'ha pogut registrar la comanda. Torna-ho a provar." });
+    return resposta(500, {
+      error: "No s'ha pogut registrar la comanda. Torna-ho a provar.",
+      detall: e && e.message ? e.message : String(e),
+    });
   }
 
   if (esGratuit) {
