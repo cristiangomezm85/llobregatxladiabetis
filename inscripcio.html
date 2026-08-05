@@ -2188,7 +2188,8 @@
       const data1 = await res1.json();
       if (!res1.ok) {
         if (data1.error === "EMAIL_JA_REGISTRAT") throw new Error(msg("email_ja_registrat"));
-        throw new Error(data1.error || "No s'ha pogut registrar la comanda.");
+        const base = data1.error || "No s'ha pogut registrar la comanda.";
+        throw new Error(data1.detall ? `${base} (${data1.detall})` : base);
       }
 
       if (data1.gratuit) {
