@@ -226,4 +226,5 @@ module.exports = {
   emailValid,
   calcularImport,
   descripcioComanda,
+  codiHeroiValid,
 };

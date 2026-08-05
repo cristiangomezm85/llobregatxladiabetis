@@ -10,7 +10,7 @@
 // s'ha de muntar amb el mateix criteri (condició/filtre pel camp idioma)
 // que ja feu servir.
 
-async function notificarMailerLite(ordre) {
+async function notificarMailerLite(ordre, orderId) {
   const apiKey = process.env.MAILERLITE_API_KEY;
   const groupId = process.env.MAILERLITE_GROUP_ID;
   if (!apiKey || !groupId) return; // opcional, no bloqueja res si no està configurat
@@ -36,6 +36,19 @@ async function notificarMailerLite(ordre) {
     tram = "Dorsal 0";
   }
 
+  // Dades perquè el correu funcioni com a comprovant d'inscripció (a banda
+  // del rebut de pagament que envia Stripe): numero de comanda curt,
+  // import i data. La data que fem servir és la de pagament si ja existeix
+  // (comanda pagada) o la de creacio (comanda gratuita/Heroi).
+  const numComanda = orderId ? orderId.slice(0, 8).toUpperCase() : "";
+  const importPagat = ordre.import_centims != null ? (ordre.import_centims / 100).toFixed(2) + " €" : "";
+  const dataIso = ordre.data_pagament || ordre.data_creacio || "";
+  let dataInscripcio = "";
+  if (dataIso) {
+    const d = new Date(dataIso);
+    if (!isNaN(d)) dataInscripcio = d.toLocaleDateString("ca-ES", { day: "2-digit", month: "2-digit", year: "numeric" });
+  }
+
   const fields = {
     name: payload.nom || "",
     last_name: payload.cognoms || "",
@@ -45,6 +58,9 @@ async function notificarMailerLite(ordre) {
     municipi,
     colla_nom: payload.club_nom || "",
     tram,
+    num_comanda: numComanda,
+    import_pagat: importPagat,
+    data_inscripcio: dataInscripcio,
   };
 
   await fetch("https://connect.mailerlite.com/api/subscribers", {
