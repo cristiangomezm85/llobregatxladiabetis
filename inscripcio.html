@@ -1768,7 +1768,12 @@
       const samarretaWord = { ca: "samarreta", es: "camiseta", en: "t-shirt" }[currentLang];
       const samarretesWord = { ca: "samarretes", es: "camisetas", en: "t-shirts" }[currentLang];
       const nDies = resultat.dies;
-      kmVal.textContent = `${resultat.km} km · ${nDies} ${nDies === 1 ? etapaWord : etapesWord} · ${nDies} ${nDies === 1 ? samarretaWord : samarretesWord}`;
+      // La Caminada de Cloenda és d'anada i tornada des d'un mateix punt:
+      // el km calculat pel tram (diferència entre els dos punts) només és
+      // la meitat del recorregut real, així que el dupliquem només per a
+      // mostrar-lo (no afecta el preu, que depèn del nombre de dies/etapes).
+      const kmMostrat = tramTipusActiu === "cloenda" ? resultat.km * 2 : resultat.km;
+      kmVal.textContent = `${kmMostrat} km · ${nDies} ${nDies === 1 ? etapaWord : etapesWord} · ${nDies} ${nDies === 1 ? samarretaWord : samarretesWord}`;
       kmBlock.classList.add("visible");
     }
     actualitzarTotal();
@@ -2006,6 +2011,7 @@
     falta_autoritzacio: { ca:"Falten les dades del mare/pare/tutor legal i el seu consentiment (ets menor d'edat).", es:"Faltan los datos de la madre/padre/tutor legal y su consentimiento (eres menor de edad).", en:"Missing the parent/guardian's details and consent (you are under 18)." },
     falta_legals: { ca:"Falta acceptar totes les caselles legals.", es:"Falta aceptar todas las casillas legales.", en:"Please accept all the legal checkboxes." },
     tria_modalitat: { ca:"Tria una modalitat per continuar.", es:"Elige una modalidad para continuar.", en:"Choose a category to continue." },
+    email_ja_registrat: { ca:"Aquest email ja té una inscripció pagada. Si creus que és un error, escriu-nos a info@llobregat.org.", es:"Este email ya tiene una inscripción pagada. Si crees que es un error, escríbenos a info@llobregat.org.", en:"This email already has a paid registration. If you think this is a mistake, write to us at info@llobregat.org." },
   };
   function msg(key) { return MISSATGES[key][currentLang] || MISSATGES[key].ca; }
 
@@ -2180,7 +2186,10 @@
         body: JSON.stringify(payloadAPI),
       });
       const data1 = await res1.json();
-      if (!res1.ok) throw new Error(data1.error || "No s'ha pogut registrar la comanda.");
+      if (!res1.ok) {
+        if (data1.error === "EMAIL_JA_REGISTRAT") throw new Error(msg("email_ja_registrat"));
+        throw new Error(data1.error || "No s'ha pogut registrar la comanda.");
+      }
 
       if (data1.gratuit) {
         // Codi de descompte d'Heroi vàlid: no cal passar per Stripe.
