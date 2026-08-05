@@ -63,7 +63,7 @@ exports.handler = async (event) => {
 
   if (esGratuit) {
     try {
-      await notificarMailerLite(dadesOrdre);
+      await notificarMailerLite(dadesOrdre, orderId);
     } catch (e) {
       console.error("Error notificant MailerLite:", e);
     }

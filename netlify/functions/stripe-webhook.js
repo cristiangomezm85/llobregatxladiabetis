@@ -53,7 +53,7 @@ exports.handler = async (event) => {
   });
 
   try {
-    await notificarMailerLite(ordre);
+    await notificarMailerLite(ordre, orderId);
   } catch (e) {
     console.error("Error notificant MailerLite:", e);
   }

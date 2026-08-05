@@ -26,6 +26,7 @@ exports.handler = async (event) => {
     modalitat: ordre.modalitat,
     nom: p.nom || "",
     club_nom: p.club_nom || "",
+    municipi: ordre.recollida_text || p.recollida_municipi_nom || "",
     tram_inici_nom: p.tram_inici_nom || "",
     tram_final_nom: p.tram_final_nom || "",
     tram_km: typeof p.tram_km === "number" ? p.tram_km : null,
