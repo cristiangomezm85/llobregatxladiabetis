@@ -129,7 +129,12 @@ async function validarFisic(payload) {
 
   const tram = await calcularTram(payload.tram_inici, payload.tram_final);
   payload.tram_dies = tram.dies;
-  payload.tram_km = tram.kmTotal;
+  // La Caminada de Cloenda es fa d'anada i tornada des d'un mateix punt: el
+  // km que dona calcularTram es nomes la meitat (la distancia entre els dos
+  // punts), aixi que el dupliquem aqui, a l'origen, perque tot el que es
+  // deriva d'aquest valor (MailerLite, la targeta de gracies.html, el propi
+  // resum de la comanda) surti ja consistent amb els 4 km reals.
+  payload.tram_km = payload.tram_tipus === "cloenda" ? tram.kmTotal * 2 : tram.kmTotal;
   payload.tram_inici_nom = tram.iniciNom;
   payload.tram_final_nom = tram.finalNom;
 
