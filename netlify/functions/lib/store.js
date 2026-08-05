@@ -1,11 +1,28 @@
 // lib/store.js
 // Emmagatzematge amb Netlify Blobs: inclòs gratis amb Netlify, sense compte
 // externa ni API key que gestionar.
+//
+// En principi getStore(name) hauria de detectar automàticament el context
+// (site ID i token) quan la funció corre desplegada a Netlify. Si per
+// qualsevol motiu no ho fa ("The environment has not been configured to
+// use Netlify Blobs..."), calen les variables d'entorn NETLIFY_SITE_ID i
+// NETLIFY_BLOBS_TOKEN (Site configuration > Environment variables), que ja
+// estaven documentades com a necessàries per aquest projecte. Les passem
+// explícitament sempre que existeixin, com a xarxa de seguretat.
 
 const { getStore } = require("@netlify/blobs");
 
+function opcionsStore(name) {
+  const opcions = { name };
+  if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_BLOBS_TOKEN) {
+    opcions.siteID = process.env.NETLIFY_SITE_ID;
+    opcions.token = process.env.NETLIFY_BLOBS_TOKEN;
+  }
+  return opcions;
+}
+
 function ordresStore() {
-  return getStore("ordres");
+  return getStore(opcionsStore("ordres"));
 }
 
 // Índex lleuger, només per emails amb comanda ja PAGADA: una entrada per
@@ -14,7 +31,7 @@ function ordresStore() {
 // quan una comanda passa a "pagat" (gratuïta a l'instant, o des del
 // webhook de Stripe) i només es llegeix (1 lectura) per comprovar-ho.
 function emailsPagatsStore() {
-  return getStore("emails-pagats");
+  return getStore(opcionsStore("emails-pagats"));
 }
 
 function normalitzarEmail(email) {
