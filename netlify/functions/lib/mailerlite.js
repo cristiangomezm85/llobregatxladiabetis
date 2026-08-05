@@ -49,6 +49,16 @@ async function notificarMailerLite(ordre, orderId) {
     if (!isNaN(d)) dataInscripcio = d.toLocaleDateString("ca-ES", { day: "2-digit", month: "2-digit", year: "numeric" });
   }
 
+  // Resum de totes les samarretes comprades (només "animar" en pot tenir
+  // més d'una, amb tallа i quantitat cadascuna). Per a la resta de
+  // modalitats queda buit.
+  let samarretesResum = "";
+  if (Array.isArray(payload.samarretes) && payload.samarretes.length) {
+    samarretesResum = payload.samarretes
+      .map((s) => `${s.talla || "?"} x${s.quantitat || 0}`)
+      .join(", ");
+  }
+
   const fields = {
     name: payload.nom || "",
     last_name: payload.cognoms || "",
@@ -61,6 +71,7 @@ async function notificarMailerLite(ordre, orderId) {
     num_comanda: numComanda,
     import_pagat: importPagat,
     data_inscripcio: dataInscripcio,
+    samarretes: samarretesResum,
   };
 
   await fetch("https://connect.mailerlite.com/api/subscribers", {
