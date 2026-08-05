@@ -433,10 +433,10 @@
       es: "¡Apoyo el reto @llobregatxladiabetis con un Dorsal 0! Cada euro va directo a la investigación de la cura de la diabetes tipo 1 con @arediabetis. #LlobregatXLaDiabetis #LxD2026",
       en: "Supporting the @llobregatxladiabetis challenge with Bib 0! Every euro goes straight to type 1 diabetes cure research with @arediabetis. #LlobregatXLaDiabetis #LxD2026"
     },
-    caption_animar: {
-      ca: "Ja tinc la meva samarreta solidària del repte @llobregatxladiabetis! Del 16 al 18 d'octubre, un riu sencer es mobilitza per la recerca de la diabetis tipus 1 amb @arediabetis. #LlobregatXLaDiabetis #LxD2026",
-      es: "¡Ya tengo mi camiseta solidaria del reto @llobregatxladiabetis! Del 16 al 18 de octubre, un río entero se moviliza por la investigación de la diabetes tipo 1 con @arediabetis. #LlobregatXLaDiabetis #LxD2026",
-      en: "Got my solidarity t-shirt for the @llobregatxladiabetis challenge! From October 16-18, a whole river mobilises for type 1 diabetes research with @arediabetis. #LlobregatXLaDiabetis #LxD2026"
+    caption_animar_tpl: {
+      ca: "M'hi sumo per animar des de {municipi}! Del 16 al 18 d'octubre, un riu sencer es mobilitza per la recerca de la diabetis tipus 1 amb @llobregatxladiabetis i @arediabetis. #LlobregatXLaDiabetis #LxD2026",
+      es: "¡Me sumo para animar desde {municipi}! Del 16 al 18 de octubre, un río entero se moviliza por la investigación de la diabetes tipo 1 con @llobregatxladiabetis y @arediabetis. #LlobregatXLaDiabetis #LxD2026",
+      en: "I'm joining in to cheer from {municipi}! From October 16-18, a whole river mobilises for type 1 diabetes research with @llobregatxladiabetis and @arediabetis. #LlobregatXLaDiabetis #LxD2026"
     },
   };
   function tr(key) { return (TEXTOS[key] && TEXTOS[key][lang]) || (TEXTOS[key] && TEXTOS[key].ca) || ""; }
@@ -455,7 +455,11 @@
   };
   function construirCaption(dades) {
     if (dades.modalitat === "dorsal0") return tr("caption_dorsal0");
-    if (dades.modalitat === "animar") return tr("caption_animar");
+    if (dades.modalitat === "animar") {
+      var tplAnimar = TEXTOS.caption_animar_tpl[lang] || TEXTOS.caption_animar_tpl.ca;
+      var municipiFallback = { ca: "el meu poble", es: "mi pueblo", en: "my town" }[lang] || "el meu poble";
+      return tplAnimar.replace("{municipi}", dades.municipi || municipiFallback);
+    }
     var tpl = CAPTION_FISIC_TPL[lang] || CAPTION_FISIC_TPL.ca;
     var modalitatText = (MODALITAT_PARAULA[dades.modalitat] && MODALITAT_PARAULA[dades.modalitat][lang]) || dades.modalitat || "";
     return tpl
