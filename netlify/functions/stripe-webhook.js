@@ -7,7 +7,7 @@
 // Esdeveniment: checkout.session.completed
 
 const Stripe = require("stripe");
-const { obtenirOrdre, actualitzarOrdre } = require("./lib/store");
+const { obtenirOrdre, actualitzarOrdre, marcarEmailPagat } = require("./lib/store");
 const { notificarMailerLite } = require("./lib/mailerlite");
 
 exports.handler = async (event) => {
@@ -51,6 +51,12 @@ exports.handler = async (event) => {
     stripe_payment_intent: session.payment_intent,
     data_pagament: new Date().toISOString(),
   });
+
+  try {
+    await marcarEmailPagat(ordre.email_contacte, orderId);
+  } catch (e) {
+    console.error("Error marcant email com a pagat:", e);
+  }
 
   try {
     await notificarMailerLite(ordre, orderId);
