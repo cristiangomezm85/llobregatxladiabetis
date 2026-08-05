@@ -1,26 +1,10 @@
 // lib/store.js
-// Emmagatzematge amb Netlify Blobs.
-//
-// Important: el mode "automàtic" de Netlify Blobs (sense passar credencials)
-// només funciona quan el lloc es desplega via Git connectat a Netlify. Si el
-// desplegament es fa pujant fitxers manualment (drag & drop o reemplaçant
-// fitxers solts), Netlify no injecta el context necessari i salta
-// "MissingBlobsEnvironmentError". Per això aquí es configura sempre de
-// forma manual, amb el Site ID i un token d'accés (variables d'entorn
-// NETLIFY_SITE_ID i NETLIFY_BLOBS_TOKEN).
+// Emmagatzematge amb Netlify Blobs: inclòs gratis amb Netlify, sense compte
+// externa ni API key que gestionar.
 
 const { getStore } = require("@netlify/blobs");
 
 function ordresStore() {
-  const siteID = process.env.NETLIFY_SITE_ID;
-  const token = process.env.NETLIFY_BLOBS_TOKEN;
-
-  if (siteID && token) {
-    return getStore({ name: "ordres", siteID, token });
-  }
-
-  // Fallback al mode automàtic, per si algun dia es desplega via Git
-  // (en aquest cas sí que Netlify injecta el context tot sol).
   return getStore("ordres");
 }
 
@@ -52,4 +36,17 @@ async function llistarOrdres() {
   return resultats;
 }
 
-module.exports = { crearOrdre, obtenirOrdre, actualitzarOrdre, llistarOrdres };
+// Com MailerLite no permet enviar més d'un correu igual el mateix dia,
+// forcem que la inscripció sigui única per email: mirem si ja existeix
+// alguna comanda PAGADA amb aquest email abans de deixar continuar cap a
+// pagament. Comparació sense distingir majúscules/minúscules ni espais.
+async function emailJaRegistrat(email) {
+  const emailNormalitzat = String(email || "").trim().toLowerCase();
+  if (!emailNormalitzat) return false;
+  const ordres = await llistarOrdres();
+  return ordres.some(
+    (o) => o.estat === "pagat" && String(o.email_contacte || "").trim().toLowerCase() === emailNormalitzat
+  );
+}
+
+module.exports = { crearOrdre, obtenirOrdre, actualitzarOrdre, llistarOrdres, emailJaRegistrat };
