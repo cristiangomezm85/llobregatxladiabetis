@@ -64,6 +64,12 @@ exports.handler = async (event) => {
       payment_method_types: ["card"],
       client_reference_id: order_id,
       customer_email: ordre.email_contacte || undefined,
+      // receipt_email força que Stripe enviï el seu rebut de pagament a
+      // aquest email quan el pagament es completi, independentment de com
+      // estigui configurat l'ajust "Successful payments" al Dashboard (que
+      // a més es configura per separat en mode test i en mode live, i és
+      // fàcil deixar-lo activat només en un dels dos per error).
+      payment_intent_data: { receipt_email: ordre.email_contacte || undefined },
       line_items,
       metadata: { order_id },
       success_url: `${siteUrl}/gracies.html?order_id=${order_id}`,
