@@ -597,6 +597,14 @@
         <div class="camp"><label data-i18n="lbl_email">Email *</label><input type="email" class="d0-email" required></div>
         <div class="camp"><label data-i18n="lbl_telefon">Telèfon *</label><input type="tel" class="d0-telefon" inputmode="numeric" pattern="[0-9]*" required></div>
       </div>
+      <div class="camp">
+        <label data-i18n="lbl_sexe">Sexe *</label>
+        <select class="d0-sexe" required>
+          <option value="" data-i18n="opt_sexe_placeholder">Tria una opció</option>
+          <option value="home" data-i18n="opt_sexe_home">Home</option>
+          <option value="dona" data-i18n="opt_sexe_dona">Dona</option>
+        </select>
+      </div>
       <div class="camp" style="margin-bottom:0;">
         <label data-i18n="lbl_relacio_diabetis">Quina és la teva relació amb la diabetis tipus 1? *</label>
         <select class="d0-relacio" required>
@@ -623,6 +631,14 @@
       <div class="fila-2">
         <div class="camp"><label data-i18n="lbl_email">Email *</label><input type="email" class="an-email" required></div>
         <div class="camp"><label data-i18n="lbl_telefon">Telèfon *</label><input type="tel" class="an-telefon" inputmode="numeric" pattern="[0-9]*" required></div>
+      </div>
+      <div class="camp">
+        <label data-i18n="lbl_sexe">Sexe *</label>
+        <select class="an-sexe" required>
+          <option value="" data-i18n="opt_sexe_placeholder">Tria una opció</option>
+          <option value="home" data-i18n="opt_sexe_home">Home</option>
+          <option value="dona" data-i18n="opt_sexe_dona">Dona</option>
+        </select>
       </div>
       <div class="camp">
         <label data-i18n="lbl_relacio_diabetis">Quina és la teva relació amb la diabetis tipus 1? *</label>
@@ -687,6 +703,15 @@
       <div class="fila-2">
         <div class="camp"><label data-i18n="lbl_nom">Nom *</label><input type="text" class="fi-emergencia-nom" required></div>
         <div class="camp"><label data-i18n="lbl_telefon">Telèfon *</label><input type="tel" class="fi-emergencia-telefon" inputmode="numeric" pattern="[0-9]*" required></div>
+      </div>
+
+      <div class="camp">
+        <label data-i18n="lbl_sexe">Sexe *</label>
+        <select class="fi-sexe" required>
+          <option value="" data-i18n="opt_sexe_placeholder">Tria una opció</option>
+          <option value="home" data-i18n="opt_sexe_home">Home</option>
+          <option value="dona" data-i18n="opt_sexe_dona">Dona</option>
+        </select>
       </div>
 
       <div class="camp">
@@ -1038,6 +1063,11 @@
     lbl_dni: { ca:"DNI / NIE / Passaport *", es:"DNI / NIE / Pasaporte *", en:"ID / Passport *" },
     lbl_data_naixement: { ca:"Data de naixement *", es:"Fecha de nacimiento *", en:"Date of birth *" },
     lbl_relacio_diabetis: { ca:"Quina és la teva relació amb la diabetis tipus 1? *", es:"¿Cuál es tu relación con la diabetes tipo 1? *", en:"What is your connection to type 1 diabetes? *" },
+    lbl_sexe: { ca:"Sexe *", es:"Sexo *", en:"Sex *" },
+    opt_sexe_placeholder: { ca:"Tria una opció", es:"Elige una opción", en:"Choose an option" },
+    opt_sexe_home: { ca:"Home", es:"Hombre", en:"Male" },
+    opt_sexe_dona: { ca:"Dona", es:"Mujer", en:"Female" },
+    falta_sexe: { ca:"Cal indicar el sexe.", es:"Debes indicar el sexo.", en:"Please select your sex." },
     lbl_municipi_inici: { ca:"Municipi d'inici *", es:"Municipio de inicio *", en:"Starting town *" },
     lbl_municipi_final: { ca:"Municipi final *", es:"Municipio final *", en:"Finishing town *" },
     lbl_distancia_estimada: { ca:"Distància estimada:", es:"Distancia estimada:", en:"Estimated distance:" },
@@ -1557,6 +1587,16 @@
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str);
   }
 
+  // ---------- Validacions mínimes (evitar valors clarament random, sense
+  // ser massa estrictes: no comprovem dígit de control del DNI ni res per
+  // l'estil, només que la forma general tingui sentit) ----------
+  function telefonValid(str) {
+    return /^[0-9]{9,15}$/.test((str || "").trim());
+  }
+  function dniValid(str) {
+    return /^[A-Za-z0-9]{5,12}$/.test((str || "").trim());
+  }
+
   // ---------- Telèfon: només dígits, es netegen en temps real ----------
   function sanititzarTelefon(input) {
     input.addEventListener("input", () => {
@@ -1998,6 +2038,10 @@
     email_invalid: { ca:"L'email no és vàlid (ha de contenir @ i un domini, ex: nom@exemple.com).", es:"El email no es válido (debe contener @ y un dominio, ej: nombre@ejemplo.com).", en:"The email is not valid (it must contain @ and a domain, e.g. name@example.com)." },
     data_invalida: { ca:"La data de naixement no és vàlida.", es:"La fecha de nacimiento no es válida.", en:"The date of birth is not valid." },
     falta_telefon: { ca:"Falta el telèfon.", es:"Falta el teléfono.", en:"Missing phone number." },
+    telefon_invalid: { ca:"El telèfon no és vàlid (només xifres, entre 9 i 15).", es:"El teléfono no es válido (solo cifras, entre 9 y 15).", en:"The phone number is not valid (digits only, 9 to 15)." },
+    dni_invalid: { ca:"El DNI/NIE/Passaport no és vàlid.", es:"El DNI/NIE/Pasaporte no es válido.", en:"The DNI/NIE/Passport is not valid." },
+    tutor_dni_invalid: { ca:"El DNI/NIE/Passaport del tutor legal no és vàlid.", es:"El DNI/NIE/Pasaporte del tutor legal no es válido.", en:"The guardian's DNI/NIE/Passport is not valid." },
+    emergencia_telefon_invalid: { ca:"El telèfon d'emergència no és vàlid (només xifres, entre 9 i 15).", es:"El teléfono de emergencia no es válido (solo cifras, entre 9 y 15).", en:"The emergency phone number is not valid (digits only, 9 to 15)." },
     falta_relacio: { ca:"Falta indicar la relació amb la diabetis tipus 1.", es:"Falta indicar la relación con la diabetes tipo 1.", en:"Please indicate your connection to type 1 diabetes." },
     falta_samarretes: { ca:"Afegeix almenys una samarreta (talla i quantitat).", es:"Añade al menos una camiseta (talla y cantidad).", en:"Add at least one t-shirt (size and quantity)." },
     falta_talla: { ca:"Falta la talla de samarreta.", es:"Falta la talla de camiseta.", en:"Missing t-shirt size." },
@@ -2043,12 +2087,15 @@
         const telefon = val(".d0-telefon", blocDorsal0);
         const relacio = val(".d0-relacio", blocDorsal0);
         const relacioText = selectText(".d0-relacio", blocDorsal0);
+        const sexe = val(".d0-sexe", blocDorsal0);
         if (!nom || !cognoms) throw new Error(msg("falta_nom_cognoms"));
         if (!email || !emailValid(email)) throw new Error(msg("email_invalid"));
         if (!telefon) throw new Error(msg("falta_telefon"));
+        if (!telefonValid(telefon)) throw new Error(msg("telefon_invalid"));
         if (!relacio) throw new Error(msg("falta_relacio"));
+        if (!sexe) throw new Error(msg("falta_sexe"));
         dades = { ...dades, nom, cognoms, email, telefon, relacioText };
-        payloadAPI = { modalitat: "dorsal0", email_contacte: email, nom, cognoms, telefon };
+        payloadAPI = { modalitat: "dorsal0", email_contacte: email, nom, cognoms, telefon, sexe };
       }
 
       if (modalitatActiva === "animar") {
@@ -2058,6 +2105,7 @@
         const telefon = val(".an-telefon", blocAnimar);
         const relacio = val(".an-relacio", blocAnimar);
         const relacioText = selectText(".an-relacio", blocAnimar);
+        const sexe = val(".an-sexe", blocAnimar);
         const recollidaSel = blocAnimar.querySelector(".an-recollida");
         const recollidaText = recollidaSel.selectedOptions[0] ? recollidaSel.selectedOptions[0].textContent : "";
 
@@ -2077,7 +2125,9 @@
         if (!nom || !cognoms) throw new Error(msg("falta_nom_cognoms"));
         if (!email || !emailValid(email)) throw new Error(msg("email_invalid"));
         if (!telefon) throw new Error(msg("falta_telefon"));
+        if (!telefonValid(telefon)) throw new Error(msg("telefon_invalid"));
         if (!relacio) throw new Error(msg("falta_relacio"));
+        if (!sexe) throw new Error(msg("falta_sexe"));
         if (!recollidaSel.value) throw new Error(msg("falta_recollida"));
 
         const teClub = checked('.an-club[value="si"]', blocAnimar);
@@ -2085,7 +2135,7 @@
 
         dades = { ...dades, nom, cognoms, email, telefon, relacioText, samarretes, recollida: recollidaText, clubNom };
         payloadAPI = {
-          modalitat: "animar", email_contacte: email, nom, cognoms, telefon, relacio,
+          modalitat: "animar", email_contacte: email, nom, cognoms, telefon, relacio, sexe,
           samarretes: samarretes.map((s) => ({ talla: s.talla, quantitat: s.quantitat })),
           recollida_municipi: recollidaSel.value,
           recollida_municipi_nom: recollidaText,
@@ -2104,6 +2154,7 @@
         const emergenciaTelefon = val(".fi-emergencia-telefon", blocFisic);
         const relacio = val(".fi-relacio", blocFisic);
         const relacioText = selectText(".fi-relacio", blocFisic);
+        const sexe = val(".fi-sexe", blocFisic);
         const talla = val(".fi-talla", blocFisic);
         const iniciOpt = iniciSel.selectedOptions[0];
         const finalOpt = finalSel.selectedOptions[0];
@@ -2123,11 +2174,15 @@
         const imatge = checked(".fi-imatge", blocFisic);
 
         if (!nom || !cognoms || !dni || !dataNaixement) throw new Error(msg("falta_identificacio"));
+        if (!dniValid(dni)) throw new Error(msg("dni_invalid"));
         if (!dataNaixementValida(dataNaixement)) throw new Error(msg("data_invalida"));
         if (!telefon) throw new Error(msg("falta_telefon"));
+        if (!telefonValid(telefon)) throw new Error(msg("telefon_invalid"));
         if (!email || !emailValid(email)) throw new Error(msg("email_invalid"));
         if (!emergenciaNom || !emergenciaTelefon) throw new Error(msg("falta_emergencia"));
+        if (!telefonValid(emergenciaTelefon)) throw new Error(msg("emergencia_telefon_invalid"));
         if (!relacio) throw new Error(msg("falta_relacio"));
+        if (!sexe) throw new Error(msg("falta_sexe"));
         if (!tramTipusActiu) throw new Error(msg("falta_tram_tipus"));
         if (!iniciOpt || !iniciOpt.value || !finalOpt || !finalOpt.value) throw new Error(msg("falta_tram"));
         const tram = calcularTramClient(iniciOpt, finalOpt);
@@ -2139,6 +2194,7 @@
         if (esMenor === true && (!tutorNom || !tutorCognoms || !tutorDni || !tutorDataNaixement || !tutorConsentiment)) {
           throw new Error(msg("falta_autoritzacio"));
         }
+        if (esMenor === true && !dniValid(tutorDni)) throw new Error(msg("tutor_dni_invalid"));
         if (!reglament || !rgpd || !imatge) throw new Error(msg("falta_legals"));
 
         dades = {
@@ -2150,7 +2206,7 @@
         };
         payloadAPI = {
           modalitat: modalitatActiva, email_contacte: email, nom, cognoms, dni,
-          data_naixement: dataNaixement, telefon,
+          data_naixement: dataNaixement, telefon, sexe,
           contacte_emergencia_nom: emergenciaNom, contacte_emergencia_telefon: emergenciaTelefon,
           relacio, talla_samarreta: talla,
           tram_inici: iniciOpt.value, tram_final: finalOpt.value, tram_tipus: tramTipusActiu,
