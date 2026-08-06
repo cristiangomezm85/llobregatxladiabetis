@@ -13,6 +13,8 @@ const DEFAULT_STATE = {
   paces: {}, // { "1": 7.5, "2": 8.0, ... } ritme min/km per segment (index = targetIndex)
   arrivals: {}, // { "0": tsSortida, "1": tsArribadaReal, ... }
   garminUrl: null,
+  sleeping: false,
+  activeStageId: null,
   updatedAt: null,
 };
 

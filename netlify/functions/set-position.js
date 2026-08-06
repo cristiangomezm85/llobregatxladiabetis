@@ -20,6 +20,8 @@ const DEFAULT_STATE = {
   garminUrl: null,
   garminSessionId: null,
   garminToken: null,
+  sleeping: false,
+  activeStageId: null, // quina etapa (dels "stages" de la configuració) està activa ara mateix
   updatedAt: null,
 };
 
@@ -99,6 +101,14 @@ async function handleRequest(event) {
   state.history = state.history || [];
 
   const { action, segmentIndex, pace } = body;
+
+  if (action === "setSleeping") {
+    pushHistory(state);
+    state.sleeping = !!body.sleeping;
+    state.updatedAt = Date.now();
+    await store.setJSON("current", state);
+    return { statusCode: 200, body: JSON.stringify(state) };
+  }
 
   if (action === "ping") {
     return { statusCode: 200, body: JSON.stringify({ ok: true }) };
@@ -227,6 +237,28 @@ async function handleRequest(event) {
     const restored = { ...prev, history: state.history, updatedAt: Date.now() };
     await store.setJSON("current", restored);
     return { statusCode: 200, body: JSON.stringify(restored) };
+  }
+
+  if (action === "setActiveStage") {
+    const stageId = body.stageId;
+    if (!stageId || typeof stageId !== "string") {
+      return { statusCode: 400, body: JSON.stringify({ error: "Falta stageId" }) };
+    }
+    pushHistory(state);
+    // Canviar d'etapa reinicia el progrés de cursa (som al km 0 de la
+    // nova etapa), però NO toca el traçat GPS acumulat ni els sprites
+    // — això és independent de l'etapa.
+    state.activeStageId = stageId;
+    state.currentIndex = 0;
+    state.status = "idle";
+    state.targetIndex = null;
+    state.segmentStart = null;
+    state.segmentDuration = null;
+    state.paces = {};
+    state.arrivals = {};
+    state.updatedAt = Date.now();
+    await store.setJSON("current", state);
+    return { statusCode: 200, body: JSON.stringify(state) };
   }
 
   if (action === "reset") {

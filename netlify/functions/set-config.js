@@ -41,16 +41,36 @@ async function handleRequest(event) {
     return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: "JSON invàlid" }) };
   }
 
-  if (!Array.isArray(body.points)) {
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: "Falta l'array 'points'" }) };
+  // Acceptem el format nou (amb "stages", una llista d'etapes cadascuna
+  // amb el seu propi mapa de dia/nit i punts) i, per compatibilitat,
+  // encara acceptem el format vell d'una sola etapa (amb "points" a
+  // l'arrel) per si mai es torna a fer servir.
+  const hasStages = Array.isArray(body.stages);
+  const hasLegacyPoints = Array.isArray(body.points);
+  if (!hasStages && !hasLegacyPoints) {
+    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: "Falta l'array 'stages' (o, en format antic, 'points')" }) };
   }
 
-  const config = {
-    mapImage: body.mapImage || null,
-    runnerSprites: body.runnerSprites || null,
-    points: body.points,
-    updatedAt: Date.now(),
-  };
+  const config = hasStages
+    ? {
+        stages: body.stages,
+        runnerSprites: body.runnerSprites || null,
+        updatedAt: Date.now(),
+      }
+    : {
+        // Format antic: ho embolcallem com una única etapa perquè tot
+        // el que llegeix la configuració (cliente.html, admin-live.html)
+        // ja sap treballar amb "stages".
+        stages: [{
+          id: "etapa1",
+          name: "Etapa 1",
+          mapImageDay: body.mapImage || null,
+          mapImageNight: body.mapImage || null,
+          points: body.points,
+        }],
+        runnerSprites: body.runnerSprites || null,
+        updatedAt: Date.now(),
+      };
 
   const store = openStore("livetrack");
   await store.setJSON("config", config);
