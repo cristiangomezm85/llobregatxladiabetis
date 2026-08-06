@@ -50,6 +50,13 @@
   }
   .runner-gps-icon img{ width:100%; height:100%; object-fit:contain; }
 
+  .gps-cp-label{
+    font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:11px;
+    color:var(--paper); background:rgba(14,27,54,0.75); white-space:nowrap;
+    padding:3px 8px; border-radius:6px; border:1px solid rgba(90,192,230,0.5);
+    transform:translate(-50%, -50%); pointer-events:none;
+  }
+
   #runner{
     position:absolute; width:88px; height:88px; margin:-74px 0 0 -44px;
     transition: left 0.6s ease-out, top 0.6s ease-out;
@@ -335,6 +342,7 @@ function applyStage(stageId, isNight){
   currentStageId = stage.id;
   currentIsNight = isNight;
   currentPlannedStartTime = stage.plannedStartTime ? new Date(stage.plannedStartTime).getTime() : null;
+  if (gpsMap) renderGpsCheckpointLabels();
   return true;
 }
 
@@ -591,15 +599,56 @@ function loadLeaflet(){
     });
 }
 
+let gpsCheckpointLabels = [];
+
+// Nom -> {lat, lng} dels municipis del recorregut, carregat d'un
+// fitxer JSON a part (municipis-gps.json, al mateix directori que
+// aquest cliente.html). Es manté separat de la configuració de
+// checkpoints perquè és una simple capa de referència geogràfica:
+// mostra el nom de tots els municipis del Llobregat sobre el mapa
+// real, independentment de quina etapa estigui activa.
+let allMunicipisGps = {};
+
+async function loadMunicipisGps(){
+  try {
+    const res = await fetch(`municipis-gps.json?t=${Date.now()}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('no trobat');
+    allMunicipisGps = await res.json();
+  } catch (e) {
+    allMunicipisGps = {};
+    console.warn('No s\'ha pogut carregar municipis-gps.json:', e.message);
+  }
+}
+
+// Mostra el nom de cada municipi sobre el mapa GPS real, a la seva
+// posició GPS de veritat (no la del mapa il·lustrat). És només text,
+// sense cap icona, perquè no es confongui amb la posició del corredor.
+function renderGpsCheckpointLabels(){
+  if (!gpsMap) return;
+  gpsCheckpointLabels.forEach(m => gpsMap.removeLayer(m));
+  gpsCheckpointLabels = Object.entries(allMunicipisGps)
+    .filter(([name, pos]) => pos && pos.lat != null && pos.lng != null)
+    .map(([name, pos]) => {
+      const icon = L.divIcon({
+        className: '',
+        html: `<div class="gps-cp-label">${name}</div>`,
+        iconSize: null,
+      });
+      return L.marker([pos.lat, pos.lng], { icon, interactive: false }).addTo(gpsMap);
+    });
+}
+
 async function initGpsMap(){
   await loadLeaflet();
-  if (gpsMap) return;
+  if (Object.keys(allMunicipisGps).length === 0) await loadMunicipisGps();
+  if (gpsMap) { renderGpsCheckpointLabels(); return; }
   gpsMap = L.map('gpsmap', { zoomControl: true }).setView([41.68, 1.87], 12);
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     attribution: 'Esri World Imagery',
     maxZoom: 18,
   }).addTo(gpsMap);
   gpsPolyline = L.polyline([], { color: '#FF6B47', weight: 4, opacity: 0.9 }).addTo(gpsMap);
+  renderGpsCheckpointLabels();
 }
 
 async function refreshGpsTrack(){
