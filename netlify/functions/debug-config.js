@@ -37,8 +37,22 @@ exports.handler = async () => {
       };
     }
 
-    const checkpoints = (parsed.points || []).filter(p => p.checkpoint);
-    const totalKm = checkpoints.reduce((s, p, i) => i === 0 ? s : s + (Number(p.checkpoint.distFromPrevKm) || 0), 0);
+    const stages = Array.isArray(parsed.stages) ? parsed.stages : [];
+    const stageInfo = stages.map(s => {
+      const checkpoints = (s.points || []).filter(p => p.checkpoint);
+      const totalKm = checkpoints.reduce((sum, p, i) => i === 0 ? sum : sum + (Number(p.checkpoint.distFromPrevKm) || 0), 0);
+      return {
+        id: s.id,
+        name: s.name,
+        numPoints: (s.points || []).length,
+        numCheckpoints: checkpoints.length,
+        checkpointNames: checkpoints.map(p => p.checkpoint.name),
+        totalKm: Number(totalKm.toFixed(2)),
+        mapImageDayKey: s.mapImageDayKey || null,
+        mapImageNightKey: s.mapImageNightKey || null,
+        hasLegacyInlineMapImage: !!(s.mapImageDay || s.mapImageNight),
+      };
+    });
     const spriteSizes = {};
     ["moving", "idle", "sleeping"].forEach(k => {
       const v = parsed.runnerSprites && parsed.runnerSprites[k];
@@ -54,12 +68,9 @@ exports.handler = async () => {
         sizeTotalKB: sizeKB,
         updatedAt: parsed.updatedAt || null,
         updatedAtReadable: parsed.updatedAt ? new Date(parsed.updatedAt).toString() : null,
-        numPoints: (parsed.points || []).length,
-        numCheckpoints: checkpoints.length,
-        checkpointNames: checkpoints.map(p => p.checkpoint.name),
-        totalKm: Number(totalKm.toFixed(2)),
+        numStages: stages.length,
+        stages: stageInfo,
         spriteSizes,
-        hasMapImage: !!parsed.mapImage,
       }, null, 2),
     };
   } catch (err) {
