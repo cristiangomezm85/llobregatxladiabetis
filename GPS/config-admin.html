@@ -617,6 +617,25 @@ document.getElementById('savebtn').addEventListener('click', async () => {
   const btn = document.getElementById('savebtn');
   btn.disabled = true;
 
+  // Xarxa de seguretat: mai enviem imatges de mapa incrustades dins
+  // la configuració general (és exactament el que causava l'error
+  // 413). Si alguna etapa encara en té (d'una importació antiga, o
+  // de qualsevol altra via), les traiem abans d'enviar res. Si
+  // l'etapa ja té la imatge pujada per separat (mapImageDayKey), no
+  // es perd res — només deixem d'enviar la còpia incrustada de més.
+  const strippedStages = [];
+  fullConfig.stages.forEach(s => {
+    let stripped = false;
+    if (s.mapImageDay) { delete s.mapImageDay; stripped = true; }
+    if (s.mapImageNight) { delete s.mapImageNight; stripped = true; }
+    if (s.mapImage) { delete s.mapImage; stripped = true; }
+    if (stripped) strippedStages.push(s.name || s.id);
+  });
+  if (strippedStages.length > 0) {
+    savestatus.textContent = `ℹ S'han tret imatges incrustades de: ${strippedStages.join(', ')} (fes servir els botons de mapa si els fa falta pujar-los).`;
+    await new Promise(r => setTimeout(r, 1500));
+  }
+
   const preCheck = ['moving','idle','sleeping'].map(k => {
     const v = fullConfig.runnerSprites && fullConfig.runnerSprites[k];
     return `${k}=${v ? Math.round(v.length/1024)+'KB' : 'buit'}`;
@@ -708,13 +727,17 @@ document.getElementById('importfile').addEventListener('change', async (e) => {
     if (!imported || !Array.isArray(imported.points)) {
       throw new Error('El fitxer no té la forma esperada (falta "points")');
     }
-    // Importa NOMÉS a l'etapa actualment seleccionada (manté el seu id
-    // i nom si el fitxer no en porta), no toca les altres etapes.
+    // Importa NOMÉS els punts (i el nom, si en porta) a l'etapa
+    // actualment seleccionada. MAI toca els mapes: si el fitxer
+    // importat és d'un format antic amb la imatge del mapa incrustada
+    // en base64, ignorem aquest camp expressament — reintroduir-lo
+    // aquí és exactament el que causava l'error 413 en desar (tornava
+    // a ficar una imatge enorme dins la configuració general).
     config.points = imported.points;
-    if (imported.mapImageDay) config.mapImageDay = imported.mapImageDay;
-    if (imported.mapImageNight) config.mapImageNight = imported.mapImageNight;
-    if (imported.mapImage && !imported.mapImageDay) config.mapImageDay = imported.mapImage;
     if (imported.name) config.name = imported.name;
+    if (imported.mapImage || imported.mapImageDay || imported.mapImageNight) {
+      savestatus.textContent = '⚠ (avís) El fitxer portava una imatge de mapa incrustada — s\'ha ignorat expressament. Puja els mapes amb els botons de dalt.';
+    }
     selectedIndex = null;
     editbox.classList.remove('show');
     renderAll();
