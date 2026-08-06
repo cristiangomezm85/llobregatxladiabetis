@@ -55,6 +55,16 @@ function emailValid(str) {
   return typeof str === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str);
 }
 
+// Validacions mínimes al backend (mateix criteri que el formulari): no és
+// una font de veritat estricta (no comprovem dígit de control del DNI),
+// només evitar valors clarament random si algú crida l'API directament.
+function telefonValid(str) {
+  return typeof str === "string" && /^[0-9]{9,15}$/.test(str.trim());
+}
+function dniValid(str) {
+  return typeof str === "string" && /^[A-Za-z0-9]{5,12}$/.test(str.trim());
+}
+
 // Codis d'Heroi vàlids: llista separada per comes a la variable d'entorn
 // HEROIS_CODES (p. ex. "ANNA2026,MARC2026"). Es guarda com a secret a
 // Netlify, no al codi, perquè es pugui actualitzar sense fer deploy.
@@ -79,6 +89,8 @@ async function validarDorsal0(payload, donacioCentims) {
   if (!payload.nom || !payload.cognoms) throw new Error("Falta el nom i cognoms");
   if (!emailValid(payload.email_contacte)) throw new Error("Falta un email vàlid");
   if (!payload.telefon) throw new Error("Falta el telèfon");
+  if (!telefonValid(payload.telefon)) throw new Error("El telèfon no és vàlid");
+  if (!["home", "dona"].includes(payload.sexe)) throw new Error("Falta indicar el sexe");
   if (donacioCentims <= 0) {
     throw new Error("El Dorsal 0 requereix una donació superior a 0 €");
   }
@@ -89,7 +101,9 @@ async function validarAnimar(payload) {
   if (!payload.nom || !payload.cognoms) throw new Error("Falta el nom i cognoms");
   if (!emailValid(payload.email_contacte)) throw new Error("Falta un email vàlid");
   if (!payload.telefon) throw new Error("Falta el telèfon");
+  if (!telefonValid(payload.telefon)) throw new Error("El telèfon no és vàlid");
   if (!payload.relacio) throw new Error("Falta la relació amb la diabetis tipus 1");
+  if (!["home", "dona"].includes(payload.sexe)) throw new Error("Falta indicar el sexe");
   if (!Array.isArray(payload.samarretes) || payload.samarretes.length === 0) {
     throw new Error("Cal afegir almenys una samarreta (talla i quantitat)");
   }
@@ -111,15 +125,21 @@ async function validarFisic(payload) {
   if (!payload.nom || !payload.cognoms || !payload.dni || !payload.data_naixement) {
     throw new Error("Falten dades d'identificació");
   }
+  if (!dniValid(payload.dni)) throw new Error("El DNI/NIE/Passaport no és vàlid");
   if (!dataNaixementValida(payload.data_naixement)) {
     throw new Error("La data de naixement no és vàlida");
   }
   if (!payload.telefon) throw new Error("Falta el telèfon mòbil");
+  if (!telefonValid(payload.telefon)) throw new Error("El telèfon no és vàlid");
   if (!emailValid(payload.email_contacte)) throw new Error("Falta un email vàlid");
   if (!payload.contacte_emergencia_nom || !payload.contacte_emergencia_telefon) {
     throw new Error("Falta el contacte d'emergència");
   }
+  if (!telefonValid(payload.contacte_emergencia_telefon)) {
+    throw new Error("El telèfon d'emergència no és vàlid");
+  }
   if (!payload.relacio) throw new Error("Falta la relació amb la diabetis tipus 1");
+  if (!["home", "dona"].includes(payload.sexe)) throw new Error("Falta indicar el sexe");
   if (!TALLES_VALIDES.includes(payload.talla_samarreta)) {
     throw new Error("Talla de samarreta no vàlida");
   }
@@ -148,6 +168,9 @@ async function validarFisic(payload) {
     if (!payload.tutor_nom || !payload.tutor_cognoms || !payload.tutor_dni ||
         !payload.tutor_data_naixement || !payload.tutor_consentiment) {
       throw new Error("Falten les dades i el consentiment del mare/pare/tutor legal (participant menor d'edat)");
+    }
+    if (!dniValid(payload.tutor_dni)) {
+      throw new Error("El DNI/NIE/Passaport del tutor legal no és vàlid");
     }
   }
 
