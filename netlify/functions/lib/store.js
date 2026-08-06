@@ -66,6 +66,22 @@ async function llistarOrdres() {
   return resultats;
 }
 
+// Elimina una comanda (des de l'admin: tant "pagades" com "incompletes").
+// Si tenia email marcat com a pagat a l'índex, el treiem també, perquè
+// aquell email pugui tornar a inscriure's si cal.
+async function eliminarOrdre(orderId) {
+  const actual = await obtenirOrdre(orderId);
+  await ordresStore().delete(orderId);
+  if (actual && actual.estat === "pagat" && actual.email_contacte) {
+    try {
+      await emailsPagatsStore().delete(normalitzarEmail(actual.email_contacte));
+    } catch (e) {
+      // no bloquegem l'eliminació de la comanda per això
+    }
+  }
+  return true;
+}
+
 // Marca un email com a ja inscrit i pagat. Cal cridar-ho just quan una
 // comanda passa a estat "pagat" (des de submit-registration.js si és
 // gratuïta, o des de stripe-webhook.js quan Stripe confirma el pagament).
@@ -91,6 +107,7 @@ module.exports = {
   obtenirOrdre,
   actualitzarOrdre,
   llistarOrdres,
+  eliminarOrdre,
   emailJaRegistrat,
   marcarEmailPagat,
 };
