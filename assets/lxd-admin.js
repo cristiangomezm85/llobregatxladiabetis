@@ -2,6 +2,7 @@
   'use strict';
 
   const API = '/api/admin-content';
+  const INSCRIPCIONS_API = '/.netlify/functions/admin-inscripcions';
   const state = {
     tab: 'herois',
     data: {},
@@ -9,6 +10,7 @@
     images: {},
     pendingRequestId: null,
     token: (sessionStorage.getItem('lxd-admin-token') || localStorage.getItem('lxd-admin-token') || ''),
+    inscripcions: { ordres: [], loaded: false, selected: null },
   };
 
   const $ = (sel, root = document) => root.querySelector(sel);
@@ -218,6 +220,228 @@
     return String(value || '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
   }
 
+  // ---------------- Inscripcions ----------------
+
+  const MODALITAT_LABEL = {
+    dorsal0: 'Dorsal 0', animar: 'Animar', caminant: 'Caminando', corrent: 'Corriendo', bici: 'Bici',
+  };
+
+  async function loadInscripcions(force) {
+    if (state.inscripcions.loaded && !force) return;
+    try {
+      const res = await fetch(INSCRIPCIONS_API, { headers: headers(), cache: 'no-store' });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || !json.ok) throw new Error(json.error || 'No se pudieron cargar las inscripciones');
+      state.inscripcions.ordres = json.ordres || [];
+      state.inscripcions.loaded = true;
+      renderInscripcions();
+    } catch (err) {
+      notify(err.message, true);
+    }
+  }
+
+  function pagades() {
+    return state.inscripcions.ordres.filter(o => o.estat === 'pagat');
+  }
+  function pendents() {
+    return state.inscripcions.ordres.filter(o => o.estat !== 'pagat');
+  }
+
+  function renderStats() {
+    const grid = $('#statsGrid');
+    if (!grid) return;
+    const pagats = pagades();
+    const totalRecaptat = pagats.reduce((sum, o) => sum + (o.import_centims || 0), 0) / 100;
+    const totalDonacions = pagats.reduce((sum, o) => sum + (o.donacio_centims || 0), 0) / 100;
+    const perSexe = { home: 0, dona: 0, sense: 0 };
+    const perModalitat = { dorsal0: 0, animar: 0, caminant: 0, corrent: 0, bici: 0 };
+    let totalMenors = 0;
+    let totalSamarretes = 0;
+    const municipis = {};
+
+    pagats.forEach(o => {
+      const p = o.payload || {};
+      if (p.sexe === 'home' || p.sexe === 'dona') perSexe[p.sexe]++;
+      else perSexe.sense++;
+      if (perModalitat[o.modalitat] !== undefined) perModalitat[o.modalitat]++;
+      if (p.es_menor) totalMenors++;
+      if (Array.isArray(p.samarretes) && p.samarretes.length) {
+        totalSamarretes += p.samarretes.reduce((s, x) => s + (Number(x.quantitat) || 0), 0);
+      } else if (['caminant', 'corrent', 'bici'].includes(o.modalitat)) {
+        totalSamarretes += 1;
+      }
+      const m = o.recollida_text || p.recollida_municipi_nom;
+      if (m) municipis[m] = (municipis[m] || 0) + 1;
+    });
+
+    let municipiTop = '—';
+    let municipiTopCount = 0;
+    Object.entries(municipis).forEach(([nom, count]) => {
+      if (count > municipiTopCount) { municipiTop = nom; municipiTopCount = count; }
+    });
+
+    const cards = [
+      ['Inscritos', pagats.length],
+      ['Total recaudado', totalRecaptat.toFixed(2) + ' €'],
+      ['Donaciones extra', totalDonacions.toFixed(2) + ' €'],
+      ['Hombres', perSexe.home],
+      ['Mujeres', perSexe.dona],
+      ['Sin especificar', perSexe.sense],
+      ['Corriendo', perModalitat.corrent],
+      ['Caminando', perModalitat.caminant],
+      ['Bici', perModalitat.bici],
+      ['Animar', perModalitat.animar],
+      ['Dorsal 0', perModalitat.dorsal0],
+      ['Menores de edad', totalMenors],
+      ['Camisetas vendidas', totalSamarretes],
+      ['Pueblo con más recogidas', municipiTop + (municipiTopCount ? ` (${municipiTopCount})` : '')],
+      ['Incompletos (no cuentan)', pendents().length],
+    ];
+    grid.innerHTML = cards.map(([label, value]) => `
+      <div class="stat-card"><span class="stat-value">${escapeHtml(String(value))}</span><span class="stat-label">${escapeHtml(label)}</span></div>
+    `).join('');
+  }
+
+  function inscripcioTitle(o) {
+    const p = o.payload || {};
+    return [p.nom, p.cognoms].filter(Boolean).join(' ') || o.email_contacte || (o.order_id || '').slice(0, 8);
+  }
+  function inscripcioMeta(o) {
+    return [
+      MODALITAT_LABEL[o.modalitat] || o.modalitat,
+      o.email_contacte,
+      o.import_centims != null ? (o.import_centims / 100).toFixed(2) + ' €' : '',
+    ].filter(Boolean).join(' · ');
+  }
+
+  function renderInscripcionsList() {
+    const pagats = pagades();
+    const pend = pendents();
+    if ($('#countPagats')) $('#countPagats').textContent = pagats.length;
+    if ($('#countPendents')) $('#countPendents').textContent = pend.length;
+
+    function build(list, arr, isPendent) {
+      if (!list) return;
+      list.innerHTML = '';
+      if (!arr.length) {
+        list.innerHTML = '<div class="empty-state">Nada por aquí.</div>';
+        return;
+      }
+      arr.forEach(o => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'item-button'
+          + (state.inscripcions.selected === o.order_id ? ' is-selected' : '')
+          + (isPendent ? ' is-pendent' : '');
+        btn.innerHTML = `<span class="item-title">${escapeHtml(inscripcioTitle(o))}</span><span class="item-meta">${escapeHtml(inscripcioMeta(o))}</span>`;
+        btn.addEventListener('click', () => selectInscripcio(o.order_id));
+        list.appendChild(btn);
+      });
+    }
+    build($('#inscripcionsList'), pagats, false);
+    build($('#incompletsList'), pend, true);
+  }
+
+  function selectInscripcio(orderId) {
+    state.inscripcions.selected = orderId;
+    const o = state.inscripcions.ordres.find(x => x.order_id === orderId);
+    renderInscripcionsList();
+    if (o) fillInscripcioForm(o);
+  }
+
+  function fillInscripcioForm(o) {
+    const form = $('#inscripcioForm');
+    if (!form) return;
+    form.hidden = false;
+    form.elements.order_id.value = o.order_id;
+    const p = o.payload || {};
+    const combinat = { ...o, payload: p };
+    $$('input, select', form).forEach(input => {
+      if (!input.name || input.name === 'order_id') return;
+      const val = get(combinat, input.name);
+      input.value = val !== undefined && val !== null ? val : '';
+    });
+    const resum = $('#inscripcioResumNoEditable');
+    const tram = (p.tram_inici_nom && p.tram_final_nom)
+      ? `${p.tram_inici_nom} → ${p.tram_final_nom} (${p.tram_km != null ? p.tram_km : '?'} km)`
+      : '—';
+    const estatClasse = o.estat === 'pagat' ? 'estat-pill' : 'estat-pill pendent';
+    resum.innerHTML = `
+      <div><strong>Estado:</strong> <span class="${estatClasse}">${escapeHtml(o.estat || 'desconocido')}</span></div>
+      <div><strong>Modalidad:</strong> ${escapeHtml(MODALITAT_LABEL[o.modalitat] || o.modalitat || '—')}</div>
+      <div><strong>Tramo:</strong> ${escapeHtml(tram)}</div>
+      <div><strong>Importe:</strong> ${o.import_centims != null ? (o.import_centims / 100).toFixed(2) + ' €' : '—'}</div>
+      <div><strong>Nº comanda:</strong> ${escapeHtml(o.order_id || '')}</div>
+      <div><strong>Fecha:</strong> ${escapeHtml(o.data_pagament || o.data_creacio || '—')}</div>
+    `;
+  }
+
+  async function saveInscripcio(e) {
+    e.preventDefault();
+    const form = $('#inscripcioForm');
+    const orderId = form.elements.order_id.value;
+    if (!orderId) return;
+    const patch = {};
+    $$('input, select', form).forEach(input => {
+      if (!input.name || input.name === 'order_id') return;
+      set(patch, input.name, input.value.trim());
+    });
+    form.querySelectorAll('button').forEach(b => b.disabled = true);
+    try {
+      const res = await fetch(INSCRIPCIONS_API, {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify({ action: 'update', order_id: orderId, patch }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || !json.ok) throw new Error(json.error || 'No se pudo guardar');
+      await loadInscripcions(true);
+      selectInscripcio(orderId);
+      notify('Inscripción actualizada.');
+    } catch (err) {
+      notify(err.message, true);
+    } finally {
+      form.querySelectorAll('button').forEach(b => b.disabled = false);
+    }
+  }
+
+  async function deleteInscripcio() {
+    const form = $('#inscripcioForm');
+    const orderId = form.elements.order_id.value;
+    if (!orderId) return;
+    if (!confirm('¿Eliminar esta inscripción? Esta acción no se puede deshacer.')) return;
+    try {
+      const res = await fetch(INSCRIPCIONS_API, {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify({ action: 'delete', order_id: orderId }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || !json.ok) throw new Error(json.error || 'No se pudo eliminar');
+      state.inscripcions.selected = null;
+      form.hidden = true;
+      form.reset();
+      await loadInscripcions(true);
+      notify('Inscripción eliminada.');
+    } catch (err) {
+      notify(err.message, true);
+    }
+  }
+
+  function renderInscripcions() {
+    renderStats();
+    renderInscripcionsList();
+  }
+
+  function setupInscripcions() {
+    const form = $('#inscripcioForm');
+    if (form) form.addEventListener('submit', saveInscripcio);
+    const delBtn = $('#deleteInscripcioBtn');
+    if (delBtn) delBtn.addEventListener('click', deleteInscripcio);
+    const reloadBtn = $('#reloadInscripcionsBtn');
+    if (reloadBtn) reloadBtn.addEventListener('click', () => loadInscripcions(true));
+  }
+
   function selectItem(type, id) {
     state.selected[type] = id;
     const item = items(type).find(x => x.id === id) || CONFIG[type].empty();
@@ -358,6 +582,7 @@
     state.tab = tab;
     $$('.tab-btn').forEach(btn => btn.classList.toggle('is-active', btn.dataset.tab === tab));
     $$('.panel').forEach(panel => panel.classList.toggle('is-active', panel.dataset.panel === tab));
+    if (tab === 'inscripcions') loadInscripcions(false);
   }
 
   function setupTabs() {
@@ -384,8 +609,14 @@
       const nameInput = cfg.form.elements.nom;
       const idInput = cfg.form.elements.id;
       if (nameInput && idInput) {
+        // Bug: abans, la condició "!idInput.value" feia que l'id només es
+        // generés amb la PRIMERA lletra escrita (en teclejar la 2a lletra
+        // idInput.value ja no estava buit i es deixava d'actualitzar), i
+        // si dos herois començaven per la mateixa lletra el segon
+        // sobreescrivia el primer en desar. Ara es regenera sencer a cada
+        // tecla mentre sigui un element nou (encara no seleccionat).
         nameInput.addEventListener('input', () => {
-          if (!state.selected[type] && !idInput.value) idInput.value = slugify(nameInput.value);
+          if (!state.selected[type]) idInput.value = slugify(nameInput.value);
         });
       }
       const file = cfg.form.elements.image;
@@ -451,6 +682,7 @@
     setupTabs();
     setupForms();
     setupToken();
+    setupInscripcions();
     loadAll();
   });
 })();
