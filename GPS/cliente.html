@@ -232,7 +232,20 @@ function applyStage(stageId, isNight){
     return false;
   }
 
-  const mapSrc = (isNight && stage.mapImageNight) ? stage.mapImageNight : (stage.mapImageDay || stage.mapImageNight);
+  // Cada mapa es pot servir de dues maneres: la nova (guardat a part
+  // per evitar superar el límit de mida de les peticions, només en
+  // guardem la "key" dins l'etapa) o la vella (la imatge directament
+  // dins del JSON, de quan només hi havia una etapa).
+  function resolveMapSrc(isNight){
+    const key = isNight ? stage.mapImageNightKey : stage.mapImageDayKey;
+    if (key) return `${FUNCTIONS_BASE}/get-map-image?key=${encodeURIComponent(key)}`;
+    const legacy = isNight ? stage.mapImageNight : stage.mapImageDay;
+    if (legacy) return legacy;
+    const keyOther = isNight ? stage.mapImageDayKey : stage.mapImageNightKey;
+    if (keyOther) return `${FUNCTIONS_BASE}/get-map-image?key=${encodeURIComponent(keyOther)}`;
+    return (isNight ? stage.mapImageDay : stage.mapImageNight) || '';
+  }
+  const mapSrc = resolveMapSrc(isNight);
   document.getElementById('mapimg').src = mapSrc || '';
   document.getElementById('loading').style.display = 'none';
 

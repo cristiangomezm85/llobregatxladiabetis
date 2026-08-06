@@ -391,8 +391,36 @@ function renderTable(){
   });
 }
 
+async function apiSaveMapImage(key, dataUri){
+  const res = await fetch(`${FUNCTIONS_BASE}/save-map-image`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+    body: JSON.stringify({ key, dataUri })
+  });
+  let data;
+  try { data = await res.json(); } catch(e){ data = {}; }
+  if (!res.ok) throw new Error(`(${res.status}) ${data.error || res.statusText || 'Error desconegut'}${data.detail ? ' · ' + data.detail : ''}`);
+  return data;
+}
+
+// Cada mapa es pot servir de dues maneres: la nova (guardat a part,
+// només en guardem la "key" dins l'etapa) o la vella, de quan encara
+// n'hi havia prou amb una sola etapa i la imatge anava directament
+// dins del JSON de configuració. Aquesta funció decideix quina URL
+// (o data URI) fer servir segons el que tingui l'etapa.
+function resolveMapSrc(stage, isNight){
+  const key = isNight ? stage.mapImageNightKey : stage.mapImageDayKey;
+  if (key) return `${FUNCTIONS_BASE}/get-map-image?key=${encodeURIComponent(key)}`;
+  const legacy = isNight ? stage.mapImageNight : stage.mapImageDay;
+  if (legacy) return legacy;
+  // Si només hi ha l'altra variant, la fem servir com a reserva.
+  const keyOther = isNight ? stage.mapImageDayKey : stage.mapImageNightKey;
+  if (keyOther) return `${FUNCTIONS_BASE}/get-map-image?key=${encodeURIComponent(keyOther)}`;
+  return (isNight ? stage.mapImageDay : stage.mapImageNight) || '';
+}
+
 function renderAll(){
-  mapimg.src = config.mapImageDay || config.mapImageNight || '';
+  mapimg.src = resolveMapSrc(config, false);
   renderStageTabs();
   renderPoints();
   renderTable();
@@ -516,14 +544,35 @@ function startDrag(ev, i){
    PUJAR MAPA / SPRITE
    ========================================================= */
 document.getElementById('mapfile').addEventListener('change', async (e) => {
-  if (!e.target.files[0]) return;
-  config.mapImageDay = await fileToDataUri(e.target.files[0]);
-  renderAll();
+  const file = e.target.files[0];
+  if (!file) return;
+  const dataUri = await fileToDataUri(file);
+  mapimg.src = dataUri; // vista prèvia immediata, sense esperar la pujada
+  savestatus.textContent = 'Pujant mapa de dia...';
+  try {
+    const key = `${config.id}_day`;
+    const result = await apiSaveMapImage(key, dataUri);
+    config.mapImageDayKey = key;
+    delete config.mapImageDay; // ja no cal guardar-la dins la config sencera
+    savestatus.textContent = `✓ Mapa de dia pujat (${result.sizeKB} KB) — recorda desar la configuració.`;
+  } catch (err) {
+    savestatus.textContent = '⚠ Error pujant el mapa de dia: ' + err.message;
+  }
 });
 document.getElementById('mapfileNight').addEventListener('change', async (e) => {
-  if (!e.target.files[0]) return;
-  config.mapImageNight = await fileToDataUri(e.target.files[0]);
-  renderAll();
+  const file = e.target.files[0];
+  if (!file) return;
+  const dataUri = await fileToDataUri(file);
+  savestatus.textContent = 'Pujant mapa de nit...';
+  try {
+    const key = `${config.id}_night`;
+    const result = await apiSaveMapImage(key, dataUri);
+    config.mapImageNightKey = key;
+    delete config.mapImageNight;
+    savestatus.textContent = `✓ Mapa de nit pujat (${result.sizeKB} KB) — recorda desar la configuració.`;
+  } catch (err) {
+    savestatus.textContent = '⚠ Error pujant el mapa de nit: ' + err.message;
+  }
 });
 
 function renderSpritePreviews(){
