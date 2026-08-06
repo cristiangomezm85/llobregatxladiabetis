@@ -184,28 +184,66 @@ function arcFracAtKm(km){
 /* =========================================================
    CÀRREGA DE CONFIGURACIÓ
    ========================================================= */
-async function loadConfig(){
+let rawConfig = null;      // config completa tal com ve del servidor (amb "stages")
+let currentStageId = null; // quina etapa tenim aplicada ara mateix al DOM
+let currentIsNight = null; // si el mapa mostrat ara és el de nit
+
+async function fetchConfig(){
   const res = await fetch(`${FUNCTIONS_BASE}/get-config?t=${Date.now()}`, { cache: 'no-store' });
   const config = await res.json().catch(() => ({}));
 
-  if (!res.ok || !Array.isArray(config.points) || config.points.length === 0) {
-    document.getElementById('loading').textContent =
-      '⚠ No s\'ha pogut carregar el mapa' + (config.detail ? ': ' + config.detail : ' (encara no hi ha configuració desada)');
-    document.getElementById('status-line').textContent = '⚠ Sense configuració al servidor';
+  // Compatibilitat: configuracions antigues (abans de tenir "etapes")
+  // guardaven "points" i "mapImage" directament a l'arrel. Si detectem
+  // aquest format vell, el tractem com si fos una única etapa.
+  if (!Array.isArray(config.stages) || config.stages.length === 0) {
+    if (Array.isArray(config.points) && config.points.length > 0) {
+      config.stages = [{
+        id: 'default',
+        name: 'Recorregut',
+        mapImageDay: config.mapImage || null,
+        mapImageNight: config.mapImage || null,
+        points: config.points,
+      }];
+    } else {
+      config.stages = [];
+    }
+  }
+
+  rawConfig = config;
+  return config;
+}
+
+function findStage(stageId){
+  if (!rawConfig || !Array.isArray(rawConfig.stages) || rawConfig.stages.length === 0) return null;
+  const byId = rawConfig.stages.find(s => s.id === stageId);
+  if (byId) return byId;
+  // Si l'etapa activa no existeix (esborrada, o encara no s'ha triat
+  // cap), fem servir la primera etapa disponible perquè el client
+  // sempre mostri alguna cosa en lloc de quedar-se en blanc.
+  return rawConfig.stages[0];
+}
+
+function applyStage(stageId, isNight){
+  const stage = findStage(stageId);
+  if (!stage) {
+    document.getElementById('loading').style.display = 'flex';
+    document.getElementById('loading').textContent = '⚠ Encara no hi ha cap etapa configurada al servidor';
+    document.getElementById('status-line').textContent = '⚠ Sense etapa configurada';
     return false;
   }
 
-  document.getElementById('mapimg').src = config.mapImage;
+  const mapSrc = (isNight && stage.mapImageNight) ? stage.mapImageNight : (stage.mapImageDay || stage.mapImageNight);
+  document.getElementById('mapimg').src = mapSrc || '';
   document.getElementById('loading').style.display = 'none';
 
-  fullPath = config.points.map(p => ({ xPct: p.xPct, yPct: p.yPct }));
+  fullPath = (stage.points || []).map(p => ({ xPct: p.xPct, yPct: p.yPct }));
   const arclen = arcLengthTable(fullPath);
   fullPathArcLen = arclen;
   const totalArc = arclen[arclen.length-1] || 1;
 
   checkpoints = [];
   checkpointArc = [];
-  config.points.forEach((p, i) => {
+  (stage.points || []).forEach((p, i) => {
     if (p.checkpoint){
       checkpoints.push(p.checkpoint);
       checkpointArc.push(arclen[i] / totalArc);
@@ -219,28 +257,36 @@ async function loadConfig(){
   totalKm = cumKm[cumKm.length-1] || 1;
 
   // Diagnòstic sempre visible: quan es va desar aquesta configuració
-  // al servidor per última vegada, i quantes parades/km té carregades
-  // ara mateix aquest client. Serveix per saber sense dubtes si el
-  // que veus és realment l'últim que vas guardar.
-  const savedWhen = config.updatedAt ? new Date(config.updatedAt).toLocaleString('ca-ES') : 'desconegut';
+  // al servidor per última vegada, quina etapa i quants pobles/km té
+  // carregats ara mateix aquest client.
+  const savedWhen = rawConfig.updatedAt ? new Date(rawConfig.updatedAt).toLocaleString('ca-ES') : 'desconegut';
   document.getElementById('configDebug').textContent =
-    `Config del servidor desada: ${savedWhen} · ${checkpoints.length} pobles · ${totalKm.toFixed(2)} km · sprites: ${['moving','idle','sleeping'].map(k => (config.runnerSprites && config.runnerSprites[k]) ? k : null).filter(Boolean).join(',') || 'cap'}`;
+    `Config desada: ${savedWhen} · Etapa: ${stage.name || stage.id} (${isNight ? 'nit' : 'dia'}) · ${checkpoints.length} pobles · ${totalKm.toFixed(2)} km · sprites: ${['moving','idle','sleeping'].map(k => (rawConfig.runnerSprites && rawConfig.runnerSprites[k]) ? k : null).filter(Boolean).join(',') || 'cap'}`;
 
-  // Sprites del corredor (marxa / aturat / dormint)
-  // Compatibilitat amb configuracions antigues que encara tenien
-  // un únic camp "runnerSprite" en comptes de "runnerSprites".
-  runnerSprites = config.runnerSprites || {};
-  if (!runnerSprites.moving && !runnerSprites.idle && config.runnerSprite) {
-    runnerSprites = { moving: config.runnerSprite, idle: config.runnerSprite, sleeping: null };
+  // Sprites del corredor (marxa / aturat / dormint) — són globals,
+  // no depenen de l'etapa.
+  runnerSprites = rawConfig.runnerSprites || {};
+  if (!runnerSprites.moving && !runnerSprites.idle && rawConfig.runnerSprite) {
+    runnerSprites = { moving: rawConfig.runnerSprite, idle: rawConfig.runnerSprite, sleeping: null };
   }
   runnerSpriteUrl = runnerSprites.moving || runnerSprites.idle || '';
-  const runner = document.createElement('div');
-  runner.id = 'runner';
-  runner.innerHTML = `<img id="runnerImg" src="${runnerSpriteUrl}" alt="corredor">`;
-  document.getElementById('mapinner').appendChild(runner);
-  window.__runner = runner;
 
-  // Marcadors + etiquetes ETA per checkpoint (amb desplaçament configurable)
+  let runner = window.__runner;
+  if (!runner) {
+    runner = document.createElement('div');
+    runner.id = 'runner';
+    runner.innerHTML = `<img id="runnerImg" src="${runnerSpriteUrl}" alt="corredor">`;
+    document.getElementById('mapinner').appendChild(runner);
+    window.__runner = runner;
+  }
+
+  // Els marcadors i etiquetes ETA sí que depenen de l'etapa (canvien
+  // els pobles), així que si veníem d'una etapa anterior els traiem
+  // tots abans de tornar-los a crear.
+  (window.__cpMarkerEls || []).forEach(el => el.remove());
+  (window.__cpEtaEls || []).forEach(el => el.remove());
+  document.querySelectorAll('.xptick').forEach(el => el.remove());
+
   window.__cpMarkerEls = checkpoints.map((c, i) => {
     const pos = pointOnPath(checkpointArc[i]);
     const el = document.createElement('div');
@@ -272,6 +318,8 @@ async function loadConfig(){
     xpwrap.appendChild(tick);
   });
 
+  currentStageId = stage.id;
+  currentIsNight = isNight;
   return true;
 }
 
@@ -429,6 +477,18 @@ async function poll(){
     const res = await fetch(`${FUNCTIONS_BASE}/get-position`, { cache: 'no-store' });
     const state = await res.json();
     serverState = state;
+
+    // Si ha canviat l'etapa activa (l'ha canviat l'admin des
+    // d'admin-live) o si hem passat de dia a nit (o al revés, lligat
+    // al botó de "dormint"), recarreguem el mapa i els punts abans de
+    // renderitzar res més.
+    const fallbackStageId = rawConfig && rawConfig.stages && rawConfig.stages[0] ? rawConfig.stages[0].id : null;
+    const wantStageId = state.activeStageId || fallbackStageId;
+    const wantNight = !!state.sleeping;
+    if (wantStageId && (wantStageId !== currentStageId || wantNight !== currentIsNight)) {
+      applyStage(wantStageId, wantNight);
+    }
+
     render(currentKmFromState(state));
     renderEtaLabels(state);
     renderStatusLine(state);
@@ -587,8 +647,12 @@ async function setGpsMode(on){
 document.getElementById('modetoggle').addEventListener('click', () => setGpsMode(!gpsMode));
 
 (async () => {
-  const ok = await loadConfig();
-  if (!ok) return;
+  await fetchConfig();
+  if (!rawConfig.stages || rawConfig.stages.length === 0) {
+    document.getElementById('loading').textContent = '⚠ Encara no hi ha cap etapa configurada al servidor';
+    document.getElementById('status-line').textContent = '⚠ Sense configuració al servidor';
+    return;
+  }
   await poll();
   setInterval(poll, 8000);
 })();

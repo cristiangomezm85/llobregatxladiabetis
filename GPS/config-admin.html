@@ -73,6 +73,20 @@
   #savebtn{ width:100%; font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:14px; background:var(--coral); color:var(--tinta); border:none; border-radius:8px; padding:14px; cursor:pointer; }
   #savebtn:disabled{ background:var(--gris); opacity:0.6; }
   #savestatus{ font-size:11px; color:var(--aigua); text-align:center; margin-top:6px; min-height:14px; }
+
+  #stagebar{ margin-bottom:14px; padding-bottom:12px; border-bottom:2px solid rgba(90,192,230,0.3); }
+  #stageTabs{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+  .stageTabBtn{
+    font-size:11px; font-weight:800; background:rgba(255,255,255,0.08); color:var(--paper);
+    border:1px solid var(--gris); border-radius:6px; padding:8px 12px; cursor:pointer;
+  }
+  .stageTabBtn.active{ background:var(--diabetis); border-color:var(--aigua); }
+  #stageActions{ display:flex; gap:6px; flex-wrap:wrap; }
+  #stageActions button{
+    font-size:10px; font-weight:700; background:transparent; color:var(--paper);
+    border:1px solid var(--gris); border-radius:6px; padding:6px 9px; cursor:pointer;
+  }
+  #stageActions .danger{ border-color:var(--coral); color:var(--coral); }
 </style>
 </head>
 <body>
@@ -88,8 +102,22 @@
   </div>
 
   <div id="panel">
+    <div id="stagebar">
+      <label style="font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--gris); display:block; margin-bottom:8px;">
+        🗺️ Etapes (cadascuna amb el seu mapa i els seus punts)
+      </label>
+      <div id="stageTabs"></div>
+      <div id="stageActions">
+        <button id="newStageBtn">➕ Nova etapa</button>
+        <button id="renameStageBtn">✏️ Reanomenar</button>
+        <button id="duplicateStageBtn">📋 Duplicar</button>
+        <button id="deleteStageBtn" class="danger">🗑 Eliminar etapa</button>
+      </div>
+    </div>
+
     <div class="toolbar">
-      <label>🖼️ Canviar mapa<input type="file" id="mapfile" accept="image/*"></label>
+      <label>🖼️ Mapa (dia)<input type="file" id="mapfile" accept="image/*"></label>
+      <label>🌙 Mapa (nit)<input type="file" id="mapfileNight" accept="image/*"></label>
       <button id="undoBtn">↩ Desfer últim punt</button>
     </div>
     <div class="toolbar">
@@ -172,9 +200,57 @@ const DEFAULT_CONFIG = {"mapImage": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAA
 
 const FUNCTIONS_BASE = '/.netlify/functions';
 let token = localStorage.getItem('lxd_admin_token') || '';
-let config = null;
+let fullConfig = null;   // { stages: [...], runnerSprites: {...}, updatedAt } — és el que es desa sencer
+let activeStageIndex = 0; // quina etapa s'està editant ara mateix en aquesta pantalla
+let config = null;       // SEMPRE apunta a fullConfig.stages[activeStageIndex] — la resta del codi
+                          // de l'editor de punts treballa amb "config" com sempre feia, sense
+                          // haver de canviar-ho tot arreu.
 let selectedIndex = null;
 let loadedUpdatedAt = null; // updatedAt del servidor en el moment de carregar, per detectar sobreescriptures
+
+function newStageId(){
+  return 'etapa_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+}
+
+function makeEmptyStage(name){
+  return { id: newStageId(), name: name || 'Nova etapa', mapImageDay: null, mapImageNight: null, points: [] };
+}
+
+// Migra un objecte de configuració vell (amb "points"/"mapImage" a l'arrel,
+// d'abans que existissin les etapes) cap al format nou amb "stages".
+function migrateConfigIfNeeded(raw){
+  if (raw && Array.isArray(raw.stages) && raw.stages.length > 0) return raw;
+  const migrated = { stages: [], runnerSprites: (raw && raw.runnerSprites) || null, updatedAt: raw ? raw.updatedAt : null };
+  if (raw && Array.isArray(raw.points) && raw.points.length > 0) {
+    migrated.stages.push({
+      id: 'etapa1',
+      name: 'Etapa 1',
+      mapImageDay: raw.mapImage || null,
+      mapImageNight: raw.mapImage || null,
+      points: raw.points,
+    });
+  }
+  return migrated;
+}
+
+function setActiveStageIndex(i){
+  activeStageIndex = i;
+  config = fullConfig.stages[activeStageIndex];
+  selectedIndex = null;
+  editbox.classList.remove('show');
+}
+
+function renderStageTabs(){
+  const wrap = document.getElementById('stageTabs');
+  wrap.innerHTML = '';
+  fullConfig.stages.forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.textContent = s.name || s.id;
+    btn.className = 'stageTabBtn' + (i === activeStageIndex ? ' active' : '');
+    btn.addEventListener('click', () => { setActiveStageIndex(i); renderAll(); });
+    wrap.appendChild(btn);
+  });
+}
 
 const loginEl = document.getElementById('login');
 const panelEl = document.getElementById('panel');
@@ -316,7 +392,8 @@ function renderTable(){
 }
 
 function renderAll(){
-  mapimg.src = config.mapImage;
+  mapimg.src = config.mapImageDay || config.mapImageNight || '';
+  renderStageTabs();
   renderPoints();
   renderTable();
   renderSpritePreviews();
@@ -440,17 +517,24 @@ function startDrag(ev, i){
    ========================================================= */
 document.getElementById('mapfile').addEventListener('change', async (e) => {
   if (!e.target.files[0]) return;
-  config.mapImage = await fileToDataUri(e.target.files[0]);
+  config.mapImageDay = await fileToDataUri(e.target.files[0]);
+  renderAll();
+});
+document.getElementById('mapfileNight').addEventListener('change', async (e) => {
+  if (!e.target.files[0]) return;
+  config.mapImageNight = await fileToDataUri(e.target.files[0]);
   renderAll();
 });
 
 function renderSpritePreviews(){
+  // Els sprites són globals (compartits per totes les etapes), es
+  // guarden a fullConfig.runnerSprites, no dins de cada etapa.
   const wrap = document.getElementById('spritePreviews');
   wrap.innerHTML = '';
   const labels = { moving: '🏃 Marxa', idle: '🧍 Aturat', sleeping: '😴 Dormint' };
-  config.runnerSprites = config.runnerSprites || { moving:null, idle:null, sleeping:null };
+  fullConfig.runnerSprites = fullConfig.runnerSprites || { moving:null, idle:null, sleeping:null };
   Object.keys(labels).forEach(key => {
-    const src = config.runnerSprites[key];
+    const src = fullConfig.runnerSprites[key];
     const box = document.createElement('div');
     box.style.cssText = 'text-align:center; font-size:9px; color:var(--gris);';
     box.innerHTML = src
@@ -466,8 +550,8 @@ function renderSpritePreviews(){
     const file = e.target.files[0];
     if (!file) return;
     const kb = Math.round(file.size / 1024);
-    config.runnerSprites = config.runnerSprites || { moving:null, idle:null, sleeping:null };
-    config.runnerSprites[key] = await fileToDataUri(file);
+    fullConfig.runnerSprites = fullConfig.runnerSprites || { moving:null, idle:null, sleeping:null };
+    fullConfig.runnerSprites[key] = await fileToDataUri(file);
     renderSpritePreviews();
     if (kb > 1500) {
       savestatus.textContent = `⚠ Sprite "${key}" pesa ${kb} KB — és força gran, podria fer fallar el desat. Ideal per sota de 500 KB. Recorda desar igualment per provar.`;
@@ -484,23 +568,15 @@ document.getElementById('savebtn').addEventListener('click', async () => {
   const btn = document.getElementById('savebtn');
   btn.disabled = true;
 
-  // Diagnòstic immediat: què hi ha EN MEMÒRIA just abans d'enviar res.
-  // Si aquí ja surt "buit", el problema és abans de desar (la pujada
-  // no s'ha quedat enganxada al objecte config). Si aquí surt bé però
-  // després el debug-config diu "buit", el problema és en l'enviament.
   const preCheck = ['moving','idle','sleeping'].map(k => {
-    const v = config.runnerSprites && config.runnerSprites[k];
+    const v = fullConfig.runnerSprites && fullConfig.runnerSprites[k];
     return `${k}=${v ? Math.round(v.length/1024)+'KB' : 'buit'}`;
   }).join(' · ');
   savestatus.textContent = `🔍 Just abans d'enviar, en memòria: ${preCheck}`;
-  await new Promise(r => setTimeout(r, 1200)); // temps per poder llegir-ho abans que canviï
+  await new Promise(r => setTimeout(r, 1200));
 
   savestatus.textContent = 'Comprovant si algú ha desat abans que tu...';
   try {
-    // Comprovació de seguretat: si el servidor té una versió més nova
-    // que la que vas carregar en aquesta pestanya (per exemple perquè
-    // vas desar des d'una altra pestanya, o algú altre ho ha fet),
-    // avisem abans de sobreescriure-ho a cegues.
     const current = await apiGetConfig().catch(() => null);
     if (current && current.updatedAt && loadedUpdatedAt && current.updatedAt !== loadedUpdatedAt) {
       const serverWhen = new Date(current.updatedAt).toLocaleString('ca-ES');
@@ -513,30 +589,25 @@ document.getElementById('savebtn').addEventListener('click', async () => {
     }
 
     savestatus.textContent = 'Desant...';
-    const result = await apiSaveConfig(config);
+    const result = await apiSaveConfig(fullConfig);
     loadedUpdatedAt = result.updatedAt || Date.now();
     const total = calcTotalKm(config);
     const hhmm = new Date(loadedUpdatedAt).toLocaleString('ca-ES');
 
-    // Verificació real: tornem a llegir del servidor (no de memòria)
-    // just després de desar, per confirmar que el que hi ha desat de
-    // veritat coincideix amb el que acabem d'enviar. Això ens diu amb
-    // certesa si el problema és de persistència real al servidor, o
-    // si és la pàgina que s'està veient en caché.
     savestatus.textContent = 'Desat — verificant que realment s\'ha quedat al servidor...';
-    await new Promise(r => setTimeout(r, 800)); // marge per si hi ha propagació
+    await new Promise(r => setTimeout(r, 800));
     const verify = await apiGetConfig().catch(() => null);
-    const wantedMoving = !!(config.runnerSprites && config.runnerSprites.moving);
+    const wantedMoving = !!(fullConfig.runnerSprites && fullConfig.runnerSprites.moving);
     const gotMoving = !!(verify && verify.runnerSprites && verify.runnerSprites.moving);
     const spriteOk = !wantedMoving || gotMoving;
-    const verifyTotal = verify ? calcTotalKm(verify) : null;
-    const totalsMatch = verify && Math.abs(verifyTotal - total) < 0.01;
+    const verifyStages = (verify && verify.stages && verify.stages.length) || 0;
+    const stagesMatch = verifyStages === fullConfig.stages.length;
 
-    if (spriteOk && totalsMatch) {
-      savestatus.textContent = `✓ Desat i verificat al servidor (${hhmm}) — total: ${total.toFixed(2)} km, ${config.points.filter(p=>p.checkpoint).length} pobles, sprite marxa: ${gotMoving ? 'sí' : 'no'}`;
+    if (spriteOk && stagesMatch) {
+      savestatus.textContent = `✓ Desat i verificat al servidor (${hhmm}) — ${fullConfig.stages.length} etapes, etapa actual: ${total.toFixed(2)} km, sprite marxa: ${gotMoving ? 'sí' : 'no'}`;
     } else {
       savestatus.textContent = `⚠ ATENCIÓ: el servidor ha dit "desat correctament" però en tornar-ho a llegir NO coincideix amb el que acabes d'enviar ` +
-        `(sprite marxa esperat=${wantedMoving?'sí':'no'} / al servidor=${gotMoving?'sí':'no'}; km esperats=${total.toFixed(2)} / al servidor=${verifyTotal!=null?verifyTotal.toFixed(2):'?'}). ` +
+        `(sprite marxa esperat=${wantedMoving?'sí':'no'} / al servidor=${gotMoving?'sí':'no'}; etapes esperades=${fullConfig.stages.length} / al servidor=${verifyStages}). ` +
         `Això és un problema real de persistència, no de caché del navegador — avisa'm amb aquest missatge exacte.`;
     }
   } catch (e) {
@@ -551,35 +622,32 @@ document.getElementById('reloadbtn').addEventListener('click', async () => {
   savestatus.textContent = 'Carregant del servidor...';
   try {
     const remote = await apiGetConfig();
-    config = (remote && remote.points && remote.points.length) ? remote : DEFAULT_CONFIG;
+    fullConfig = migrateConfigIfNeeded(remote);
+    if (fullConfig.stages.length === 0) fullConfig.stages.push(makeEmptyStage('Etapa 1'));
     loadedUpdatedAt = remote ? remote.updatedAt : null;
-    if (!config.runnerSprites || (!config.runnerSprites.moving && !config.runnerSprites.idle)) {
-      const old = config.runnerSprite || null;
-      config.runnerSprites = { moving: old, idle: old, sleeping: null };
-    }
-    delete config.runnerSprite;
-    selectedIndex = null;
-    editbox.classList.remove('show');
+    setActiveStageIndex(0);
     renderAll();
     const total = calcTotalKm(config);
     const savedWhen = loadedUpdatedAt ? new Date(loadedUpdatedAt).toLocaleString('ca-ES') : 'mai desat';
-    savestatus.textContent = `🔄 Carregat del servidor (desat el: ${savedWhen}) — total: ${total.toFixed(2)} km, ${config.points.filter(p=>p.checkpoint).length} pobles`;
+    savestatus.textContent = `🔄 Carregat del servidor (desat el: ${savedWhen}) — ${fullConfig.stages.length} etapes, etapa actual: ${total.toFixed(2)} km`;
   } catch (e) {
     savestatus.textContent = '⚠ Error carregant: ' + e.message;
   }
 });
 
 document.getElementById('exportbtn').addEventListener('click', () => {
+  // Exporta NOMÉS l'etapa que estàs editant ara mateix (mapes + punts),
+  // no totes les etapes — així és fàcil enviar-me una etapa concreta.
   const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `llobregat-config-${new Date().toISOString().slice(0,10)}.json`;
+  a.download = `llobregat-${config.id || 'etapa'}-${new Date().toISOString().slice(0,10)}.json`;
   document.body.appendChild(a);
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
-  savestatus.textContent = '⬇️ Configuració exportada';
+  savestatus.textContent = `⬇️ Etapa "${config.name || config.id}" exportada`;
 });
 
 document.getElementById('importfile').addEventListener('change', async (e) => {
@@ -591,21 +659,61 @@ document.getElementById('importfile').addEventListener('change', async (e) => {
     if (!imported || !Array.isArray(imported.points)) {
       throw new Error('El fitxer no té la forma esperada (falta "points")');
     }
-    config = imported;
-    if (!config.runnerSprites || (!config.runnerSprites.moving && !config.runnerSprites.idle)) {
-      const old = config.runnerSprite || null;
-      config.runnerSprites = { moving: old, idle: old, sleeping: (config.runnerSprites && config.runnerSprites.sleeping) || null };
-    }
-    delete config.runnerSprite;
+    // Importa NOMÉS a l'etapa actualment seleccionada (manté el seu id
+    // i nom si el fitxer no en porta), no toca les altres etapes.
+    config.points = imported.points;
+    if (imported.mapImageDay) config.mapImageDay = imported.mapImageDay;
+    if (imported.mapImageNight) config.mapImageNight = imported.mapImageNight;
+    if (imported.mapImage && !imported.mapImageDay) config.mapImageDay = imported.mapImage;
+    if (imported.name) config.name = imported.name;
     selectedIndex = null;
     editbox.classList.remove('show');
     renderAll();
     const total = calcTotalKm(config);
-    savestatus.textContent = `⬆️ Importat des del fitxer — total: ${total.toFixed(2)} km, ${config.points.filter(p=>p.checkpoint).length} pobles. Revisa i prem "Desar" per confirmar-ho al servidor.`;
+    savestatus.textContent = `⬆️ Importat a l'etapa "${config.name || config.id}" — total: ${total.toFixed(2)} km, ${config.points.filter(p=>p.checkpoint).length} pobles. Revisa i prem "Desar" per confirmar-ho al servidor.`;
   } catch (err) {
     savestatus.textContent = '⚠ Error important: ' + err.message;
   }
   e.target.value = '';
+});
+
+document.getElementById('newStageBtn').addEventListener('click', () => {
+  const name = prompt('Nom de la nova etapa (ex: "Etapa 2 - El Llobregat industrial")');
+  if (!name) return;
+  fullConfig.stages.push(makeEmptyStage(name));
+  setActiveStageIndex(fullConfig.stages.length - 1);
+  renderAll();
+  savestatus.textContent = `➕ Etapa "${name}" creada — recorda desar.`;
+});
+
+document.getElementById('renameStageBtn').addEventListener('click', () => {
+  const name = prompt('Nou nom per a aquesta etapa:', config.name || '');
+  if (!name) return;
+  config.name = name;
+  renderAll();
+  savestatus.textContent = `✏️ Etapa reanomenada — recorda desar.`;
+});
+
+document.getElementById('duplicateStageBtn').addEventListener('click', () => {
+  const copy = JSON.parse(JSON.stringify(config));
+  copy.id = newStageId();
+  copy.name = (config.name || config.id) + ' (còpia)';
+  fullConfig.stages.splice(activeStageIndex + 1, 0, copy);
+  setActiveStageIndex(activeStageIndex + 1);
+  renderAll();
+  savestatus.textContent = `📋 Etapa duplicada — recorda desar.`;
+});
+
+document.getElementById('deleteStageBtn').addEventListener('click', () => {
+  if (fullConfig.stages.length <= 1) {
+    savestatus.textContent = '⚠ No es pot eliminar l\'última etapa que queda.';
+    return;
+  }
+  if (!confirm(`Eliminar l'etapa "${config.name || config.id}"? Això no es pot desfer un cop desis.`)) return;
+  fullConfig.stages.splice(activeStageIndex, 1);
+  setActiveStageIndex(Math.max(0, activeStageIndex - 1));
+  renderAll();
+  savestatus.textContent = `🗑 Etapa eliminada — recorda desar.`;
 });
 
 /* =========================================================
@@ -616,22 +724,21 @@ async function startPanel(){
   panelEl.style.display = 'block';
   try {
     const remote = await apiGetConfig();
-    config = (remote && remote.points && remote.points.length) ? remote : DEFAULT_CONFIG;
+    fullConfig = migrateConfigIfNeeded(remote);
     loadedUpdatedAt = remote ? remote.updatedAt : null;
-    if (remote && (!remote.points || !remote.points.length)) {
-      savestatus.textContent = 'ℹ Encara no hi havia res desat al servidor — usant configuració per defecte.';
+    if (fullConfig.stages.length === 0) {
+      fullConfig.stages.push(makeEmptyStage('Etapa 1'));
+      savestatus.textContent = 'ℹ Encara no hi havia res desat al servidor — s\'ha creat una etapa buida per començar.';
     }
   } catch (e) {
-    config = DEFAULT_CONFIG;
+    fullConfig = migrateConfigIfNeeded(DEFAULT_CONFIG);
     loadedUpdatedAt = null;
     savestatus.textContent = '⚠ ' + e.message + ' (usant configuració per defecte, no desada al servidor)';
   }
-  // Compatibilitat: migra l'esquema antic d'un sol sprite al nou de tres
-  if (!config.runnerSprites || (!config.runnerSprites.moving && !config.runnerSprites.idle)) {
-    const old = config.runnerSprite || (config.runnerSprites && config.runnerSprites.moving) || null;
-    config.runnerSprites = { moving: old, idle: old, sleeping: (config.runnerSprites && config.runnerSprites.sleeping) || null };
+  if (!fullConfig.runnerSprites || (!fullConfig.runnerSprites.moving && !fullConfig.runnerSprites.idle)) {
+    fullConfig.runnerSprites = { moving: null, idle: null, sleeping: null };
   }
-  delete config.runnerSprite;
+  setActiveStageIndex(0);
   renderAll();
 }
 

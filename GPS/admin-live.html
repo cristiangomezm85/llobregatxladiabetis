@@ -96,6 +96,14 @@
   <div id="panel">
     <div id="err"></div>
 
+    <div id="stagebox" style="margin-bottom:16px; border:1px solid rgba(90,192,230,0.3); border-radius:10px; padding:12px;">
+      <label style="font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--gris); display:block; margin-bottom:8px;">
+        🗺️ Etapa activa ara mateix
+      </label>
+      <select id="stageSelect" style="width:100%; background:rgba(255,255,255,0.08); border:1px solid var(--gris); color:var(--paper); border-radius:8px; padding:10px; font-size:13px;"></select>
+      <div id="stageStatus" style="font-size:11px; color:var(--aigua); margin-top:6px;"></div>
+    </div>
+
     <div id="currentcard">
       <div class="from" id="fromline">—</div>
       <div class="to" id="toline">Carregant...</div>
@@ -150,6 +158,31 @@ const FUNCTIONS_BASE = '/.netlify/functions';
 let token = localStorage.getItem('lxd_admin_token') || '';
 let checkpoints = [];
 let cumKm = [];
+let rawConfig = null;
+let currentActiveStageId = null;
+
+function findStage(stageId){
+  if (!rawConfig || !Array.isArray(rawConfig.stages) || rawConfig.stages.length === 0) return null;
+  return rawConfig.stages.find(s => s.id === stageId) || rawConfig.stages[0];
+}
+
+function buildCheckpointsForStage(stage){
+  checkpoints = (stage.points || []).filter(p => p.checkpoint).map(p => p.checkpoint);
+  cumKm = [0];
+  for (let i=1;i<checkpoints.length;i++) cumKm.push(cumKm[i-1] + (Number(checkpoints[i].distFromPrevKm)||0));
+}
+
+function populateStageSelect(activeId){
+  const sel = document.getElementById('stageSelect');
+  sel.innerHTML = '';
+  (rawConfig.stages || []).forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.id;
+    opt.textContent = s.name || s.id;
+    if (s.id === activeId) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
 let state = null;
 
 const loginEl = document.getElementById('login');
@@ -373,17 +406,62 @@ async function startPanel(){
 
   try {
     const config = await apiGet('get-config');
-    checkpoints = (config.points || []).filter(p => p.checkpoint).map(p => p.checkpoint);
-    cumKm = [0];
-    for (let i=1;i<checkpoints.length;i++) cumKm.push(cumKm[i-1] + (Number(checkpoints[i].distFromPrevKm)||0));
+    // Compatibilitat amb configuracions antigues sense "stages".
+    if (!Array.isArray(config.stages) || config.stages.length === 0) {
+      if (Array.isArray(config.points) && config.points.length > 0) {
+        config.stages = [{ id: 'default', name: 'Recorregut', mapImageDay: config.mapImage || null, mapImageNight: config.mapImage || null, points: config.points }];
+      } else {
+        config.stages = [];
+      }
+    }
+    rawConfig = config;
+    if (rawConfig.stages.length === 0) {
+      showError('⚠ Encara no hi ha cap etapa configurada — ves primer a config-admin.html i crea\'n una.');
+      return;
+    }
   } catch (e) {
     showError('⚠ Config: ' + e.message);
     return;
   }
+
+  try {
+    state = await apiGet('get-position');
+  } catch (e) {
+    showError('⚠ Sense connexió amb el servidor');
+    return;
+  }
+
+  currentActiveStageId = state.activeStageId || rawConfig.stages[0].id;
+  populateStageSelect(currentActiveStageId);
+  buildCheckpointsForStage(findStage(currentActiveStageId));
+
+  renderCard();
   await poll();
   setInterval(poll, 5000);
   setInterval(() => { if (state && state.status === 'moving') renderCard(); }, 1000);
 }
+
+document.getElementById('stageSelect').addEventListener('change', async (e) => {
+  const newId = e.target.value;
+  const stageStatus = document.getElementById('stageStatus');
+  const stage = findStage(newId);
+  const ok = confirm(`Canviar a l'etapa "${stage ? (stage.name || stage.id) : newId}" reinicia el progrés de cursa (tornem al km 0 d'aquesta etapa). El traçat GPS i els sprites NO es toquen. Continuar?`);
+  if (!ok) {
+    e.target.value = currentActiveStageId;
+    return;
+  }
+  stageStatus.textContent = 'Canviant d\'etapa...';
+  try {
+    state = await apiPost({ action: 'setActiveStage', stageId: newId });
+    currentActiveStageId = newId;
+    buildCheckpointsForStage(findStage(newId));
+    renderCard();
+    stageStatus.textContent = `✓ Etapa activa: ${stage ? (stage.name || stage.id) : newId}`;
+  } catch (err) {
+    stageStatus.textContent = '⚠ ' + err.message;
+    e.target.value = currentActiveStageId;
+  }
+});
 
 document.getElementById('loginbtn').addEventListener('click', async () => {
   const val = document.getElementById('tokeninput').value.trim();
