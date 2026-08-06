@@ -40,6 +40,14 @@
 
   #gpsview{ display:none; position:absolute; inset:0; z-index:1; }
   #gpsmap{ width:100%; height:100%; }
+  #gpsRecenterBtn{
+    position:absolute; right:12px; bottom:90px; z-index:15;
+    width:44px; height:44px; border-radius:50%; border:none;
+    background:var(--paper); color:var(--tinta); font-size:19px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.4); cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #gpsRecenterBtn:active{ background:var(--aigua); }
   #gpsempty{
     position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
     text-align:center; padding:30px; font-size:13px; color:var(--gris); background:var(--tinta);
@@ -118,6 +126,7 @@
     </div>
     <div id="gpsview">
       <div id="gpsmap"></div>
+      <button id="gpsRecenterBtn" title="Centrar al corredor">🎯</button>
       <div id="gpsempty">📡 Encara no hi ha senyal GPS.<br>Prova el mode Fantasy mentrestant.</div>
     </div>
   </div>
@@ -557,6 +566,7 @@ setInterval(() => {
    ========================================================= */
 let gpsMode = false;
 let gpsMap = null, gpsPolyline = null, gpsMarker = null;
+let lastGpsPosition = null; // últim punt conegut del corredor, per al botó de centrar
 let leafletLoaded = false;
 let runnerSpriteUrl = '';
 let runnerSprites = {};
@@ -642,7 +652,7 @@ async function initGpsMap(){
   await loadLeaflet();
   if (Object.keys(allMunicipisGps).length === 0) await loadMunicipisGps();
   if (gpsMap) { renderGpsCheckpointLabels(); return; }
-  gpsMap = L.map('gpsmap', { zoomControl: true }).setView([41.68, 1.87], 12);
+  gpsMap = L.map('gpsmap', { zoomControl: true }).setView(lastGpsPosition || [41.68, 1.87], lastGpsPosition ? 14 : 12);
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     attribution: 'Esri World Imagery',
     maxZoom: 18,
@@ -650,6 +660,11 @@ async function initGpsMap(){
   gpsPolyline = L.polyline([], { color: '#FF6B47', weight: 4, opacity: 0.9 }).addTo(gpsMap);
   renderGpsCheckpointLabels();
 }
+
+document.getElementById('gpsRecenterBtn').addEventListener('click', () => {
+  if (!gpsMap || !lastGpsPosition) return;
+  gpsMap.setView(lastGpsPosition, gpsMap.getZoom() < 13 ? 15 : gpsMap.getZoom(), { animate: true });
+});
 
 async function refreshGpsTrack(){
   try {
@@ -691,7 +706,10 @@ async function refreshGpsTrack(){
     } else {
       gpsMarker.setLatLng(last);
     }
-    gpsMap.panTo(last, { animate: true });
+    // Ja no recentrem sols el mapa a cada consulta — l'usuari pot
+    // explorar el mapa lliurement sense que li "robem" la vista.
+    // Guardem la posició per si vol tornar-hi amb el botó 🎯.
+    lastGpsPosition = last;
   } catch (e) {
     document.getElementById('gpsempty').style.display = 'flex';
     document.getElementById('gpsempty').textContent = '⚠ Error consultant el GPS: ' + e.message;
