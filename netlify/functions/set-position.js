@@ -56,8 +56,17 @@ async function safeGet(store, key) {
 /* Extreu la llista ordenada de checkpoints (només els punts amb
    nom) i les distàncies acumulades reals, a partir de la
    configuració desada per config-admin.html. */
-function getCheckpointList(config) {
-  const list = (config && Array.isArray(config.points) ? config.points : [])
+function findStageById(config, stageId){
+  if (!config || !Array.isArray(config.stages) || config.stages.length === 0) return null;
+  return config.stages.find((s) => s.id === stageId) || config.stages[0];
+}
+
+// state.activeStageId ens diu quina etapa és la que està en marxa ara
+// mateix (es tria des d'admin-live). Si encara no se n'ha triat cap,
+// fem servir la primera etapa que hi hagi, com fa també cliente.html.
+function getCheckpointList(config, stageId) {
+  const stage = findStageById(config, stageId);
+  const list = (stage && Array.isArray(stage.points) ? stage.points : [])
     .filter((p) => p.checkpoint && p.checkpoint.name)
     .map((p) => p.checkpoint);
 
@@ -174,7 +183,7 @@ async function handleRequest(event) {
 
   if (action === "start") {
     const config = await safeGet(store, "config");
-    const { list, cumKm } = getCheckpointList(config);
+    const { list, cumKm } = getCheckpointList(config, state.activeStageId);
 
     if (state.status !== "idle") {
       return { statusCode: 409, body: JSON.stringify({ error: "Ja hi ha un tram en marxa", state }) };
@@ -213,7 +222,7 @@ async function handleRequest(event) {
       return { statusCode: 409, body: JSON.stringify({ error: "No hi ha cap tram en marxa", state }) };
     }
     const config = await safeGet(store, "config");
-    const { list } = getCheckpointList(config);
+    const { list } = getCheckpointList(config, state.activeStageId);
 
     pushHistory(state);
 
