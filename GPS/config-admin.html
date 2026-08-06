@@ -113,6 +113,13 @@
         <button id="duplicateStageBtn">📋 Duplicar</button>
         <button id="deleteStageBtn" class="danger">🗑 Eliminar etapa</button>
       </div>
+      <div style="margin-top:10px;">
+        <label style="font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--gris); display:block; margin-bottom:4px;">
+          🕐 Hora d'inici prevista d'aquesta etapa
+        </label>
+        <input type="datetime-local" id="plannedStartInput" style="width:100%; background:rgba(255,255,255,0.08); border:1px solid var(--gris); color:var(--paper); border-radius:8px; padding:10px; font-size:13px;">
+        <div style="font-size:10px; color:var(--gris); margin-top:4px;">Es fa servir per calcular totes les hores estimades ABANS de prémer "Iniciar" a admin-live. Un cop iniciada de veritat, mana l'hora real.</div>
+      </div>
     </div>
 
     <div class="toolbar">
@@ -149,6 +156,12 @@
         </div>
         <div class="row">
           <div>
+            <label>Pausa prevista aquí (min)</label>
+            <input type="number" id="cpPause" step="1" min="0" value="0">
+          </div>
+        </div>
+        <div class="row">
+          <div>
             <label>Etiqueta hora — despl. X (%)</label>
             <input type="number" id="cpEtaX" step="0.5" value="0">
           </div>
@@ -170,7 +183,7 @@
     <h3 style="font-family:'Bricolage Grotesque',sans-serif; font-size:13px; margin:14px 0 6px;">📍 Municipis (distància i ritme)</h3>
     <div id="totalDist" style="font-size:11px; color:var(--aigua); margin-bottom:6px;"></div>
     <table>
-      <thead><tr><th>Municipi</th><th>Km des d'anterior</th><th>Ritme (min/km)</th></tr></thead>
+      <thead><tr><th>Municipi</th><th>Km des d'anterior</th><th>Ritme (min/km)</th><th>Pausa (min)</th></tr></thead>
       <tbody id="cpSummaryRows"></tbody>
     </table>
 
@@ -343,6 +356,7 @@ function renderCheckpointSummary(){
           ? '<span style="color:var(--gris);">— (0, punt de sortida)</span>'
           : `<input type="number" class="cpSumDist" step="0.01" min="0" value="${p.checkpoint.distFromPrevKm}" style="width:70px;">`}</td>
       <td><input type="number" class="cpSumPace" step="0.5" min="1" value="${p.checkpoint.paceMinKm || 7.5}" style="width:60px;"></td>
+      <td><input type="number" class="cpSumPause" step="1" min="0" value="${p.checkpoint.pauseMin || 0}" style="width:60px;"></td>
     `;
     if (!isFirst) {
       tr.querySelector('.cpSumDist').addEventListener('change', (e) => {
@@ -352,6 +366,9 @@ function renderCheckpointSummary(){
     }
     tr.querySelector('.cpSumPace').addEventListener('change', (e) => {
       p.checkpoint.paceMinKm = parseFloat(e.target.value) || 7.5;
+    });
+    tr.querySelector('.cpSumPause').addEventListener('change', (e) => {
+      p.checkpoint.pauseMin = parseFloat(e.target.value) || 0;
     });
     rowsEl.appendChild(tr);
   });
@@ -425,6 +442,18 @@ function renderAll(){
   renderPoints();
   renderTable();
   renderSpritePreviews();
+
+  // "datetime-local" espera format "YYYY-MM-DDTHH:mm" en hora local,
+  // sense zona horària. Guardem plannedStartTime com a ISO string
+  // (amb zona) perquè no hi hagi ambigüitat entre dispositius.
+  const psi = document.getElementById('plannedStartInput');
+  if (config.plannedStartTime) {
+    const d = new Date(config.plannedStartTime);
+    const pad = n => String(n).padStart(2,'0');
+    psi.value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  } else {
+    psi.value = '';
+  }
 }
 
 /* =========================================================
@@ -441,6 +470,7 @@ function selectPoint(i){
   document.getElementById('cpPace').value = p.checkpoint ? (p.checkpoint.paceMinKm || 7.5) : 7.5;
   document.getElementById('cpEtaX').value = p.checkpoint ? (p.checkpoint.etaOffsetX ?? 0) : 0;
   document.getElementById('cpEtaY').value = p.checkpoint ? (p.checkpoint.etaOffsetY ?? 3) : 3;
+  document.getElementById('cpPause').value = p.checkpoint ? (p.checkpoint.pauseMin || 0) : 0;
   editbox.classList.add('show');
   renderPoints();
 }
@@ -462,6 +492,7 @@ function saveEditFromForm(){
       paceMinKm: parseFloat(document.getElementById('cpPace').value) || 7.5,
       etaOffsetX: parseFloat(document.getElementById('cpEtaX').value) || 0,
       etaOffsetY: parseFloat(document.getElementById('cpEtaY').value) || 0,
+      pauseMin: parseFloat(document.getElementById('cpPause').value) || 0,
     };
   } else {
     delete p.checkpoint;
@@ -475,7 +506,7 @@ document.getElementById('applyPaceAll').addEventListener('click', () => {
   renderTable();
 });
 
-['cpName','cpDist','cpPace','cpEtaX','cpEtaY'].forEach(id => {
+['cpName','cpDist','cpPace','cpEtaX','cpEtaY','cpPause'].forEach(id => {
   document.getElementById(id).addEventListener('input', () => { saveEditFromForm(); renderPoints(); renderTable(); });
 });
 document.getElementById('isCp').addEventListener('change', () => { saveEditFromForm(); renderPoints(); renderTable(); });
@@ -573,6 +604,21 @@ document.getElementById('mapfileNight').addEventListener('change', async (e) => 
   } catch (err) {
     savestatus.textContent = '⚠ Error pujant el mapa de nit: ' + err.message;
   }
+});
+
+document.getElementById('plannedStartInput').addEventListener('change', (e) => {
+  if (!e.target.value) {
+    config.plannedStartTime = null;
+  } else {
+    // El valor de datetime-local és hora local sense zona; new Date()
+    // l'interpreta com a hora local del dispositiu que l'ha posat,
+    // que és exactament el que volem (l'hora prevista tal com la
+    // pensa qui la configura).
+    config.plannedStartTime = new Date(e.target.value).toISOString();
+  }
+  savestatus.textContent = config.plannedStartTime
+    ? `🕐 Hora d'inici prevista fixada: ${new Date(config.plannedStartTime).toLocaleString('ca-ES')} — recorda desar.`
+    : `🕐 Hora d'inici prevista esborrada — recorda desar.`;
 });
 
 function renderSpritePreviews(){

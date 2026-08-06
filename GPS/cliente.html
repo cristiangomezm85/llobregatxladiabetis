@@ -186,6 +186,7 @@ function arcFracAtKm(km){
    ========================================================= */
 let rawConfig = null;      // config completa tal com ve del servidor (amb "stages")
 let currentStageId = null; // quina etapa tenim aplicada ara mateix al DOM
+let currentPlannedStartTime = null; // hora d'inici prevista de l'etapa activa (ms), o null
 let currentIsNight = null; // si el mapa mostrat ara és el de nit
 
 async function fetchConfig(){
@@ -333,6 +334,7 @@ function applyStage(stageId, isNight){
 
   currentStageId = stage.id;
   currentIsNight = isNight;
+  currentPlannedStartTime = stage.plannedStartTime ? new Date(stage.plannedStartTime).getTime() : null;
   return true;
 }
 
@@ -422,11 +424,31 @@ function computeEtas(state){
     anchorTime = state.segmentStart + state.segmentDuration;
     anchorIndex = state.targetIndex;
     etas[anchorIndex] = anchorTime;
+  } else if (
+    state.currentIndex === 0 &&
+    (!state.arrivals || state.arrivals['0'] == null) &&
+    currentPlannedStartTime
+  ) {
+    // Encara no s'ha premut "Iniciar" per a aquesta etapa: mentre no
+    // hi hagi cap sortida real registrada, fem servir l'hora d'inici
+    // prevista (configurada a config-admin) en comptes de l'hora
+    // actual — així les estimacions no van canviant cada segon abans
+    // que la cursa hagi començat de veritat.
+    anchorTime = currentPlannedStartTime;
+    anchorIndex = 0;
   } else {
     anchorTime = Date.now();
     anchorIndex = state.currentIndex;
   }
   for (let i=anchorIndex+1; i<checkpoints.length; i++){
+    // Si el punt de partida d'aquest tram (i-1) és posterior a
+    // l'àncora (és a dir, encara no és un lloc on realment estiguem
+    // parats ara mateix, sinó una parada futura projectada), hi
+    // sumem la pausa prevista abans de continuar cap al següent.
+    if (i - 1 > anchorIndex) {
+      const pauseMin = Number(checkpoints[i-1].pauseMin) || 0;
+      anchorTime += pauseMin * 60000;
+    }
     const pace = (state.paces && state.paces[String(i)]) || Number(checkpoints[i].paceMinKm) || 7.5;
     const distKm = cumKm[i]-cumKm[i-1];
     anchorTime += distKm * pace * 60000;
