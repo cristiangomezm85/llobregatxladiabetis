@@ -22,6 +22,7 @@
   <main class="admin-shell">
     <aside class="admin-sidebar" aria-label="Secciones de administración">
       <button class="tab-btn is-active" data-tab="herois" type="button">Héroes</button>
+      <button class="tab-btn" data-tab="inscripcions" type="button">Inscripciones</button>
       <button class="tab-btn" data-tab="solicitudes" type="button">Solicitudes</button>
       <button class="tab-btn" data-tab="pobles" type="button">Pueblos</button>
       <button class="tab-btn" data-tab="patrocinadors" type="button">Patrocinadores</button>
@@ -113,6 +114,70 @@
             <div class="form-actions">
               <button class="btn" type="submit">Guardar héroe</button>
               <button class="btn btn-danger" type="button" data-delete="herois">Eliminar</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="panel" data-panel="inscripcions">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Participants</p>
+            <h2>Inscripcions</h2>
+          </div>
+          <button class="btn btn-ghost" id="reloadInscripcionsBtn" type="button">Recargar</button>
+        </div>
+
+        <div class="stats-grid" id="statsGrid"></div>
+
+        <div class="split">
+          <div class="list-card">
+            <h3 style="margin-top:0;">Inscritos (pagados) <span class="count-badge" id="countPagats">0</span></h3>
+            <div id="inscripcionsList" class="item-list"></div>
+            <h3>Incompletos (no pagados) <span class="count-badge" id="countPendents">0</span></h3>
+            <p class="help-text" style="margin-top:-.4rem;">Empezaron el formulario pero no llegaron a pagar. No cuentan como inscritos ni en las estadísticas.</p>
+            <div id="incompletsList" class="item-list"></div>
+          </div>
+
+          <form id="inscripcioForm" class="editor-form" autocomplete="off" hidden>
+            <input type="hidden" name="order_id">
+            <div id="inscripcioResumNoEditable" class="resum-noeditable"></div>
+
+            <div class="form-grid two">
+              <label>Nombre<input name="payload.nom"></label>
+              <label>Apellidos<input name="payload.cognoms"></label>
+              <label>Email<input type="email" name="email_contacte"></label>
+              <label>Teléfono<input name="payload.telefon"></label>
+              <label>DNI / NIE / Pasaporte<input name="payload.dni"></label>
+              <label>Fecha de nacimiento<input type="date" name="payload.data_naixement"></label>
+              <label>Sexo
+                <select name="payload.sexe">
+                  <option value="">—</option>
+                  <option value="home">Home</option>
+                  <option value="dona">Dona</option>
+                </select>
+              </label>
+              <label>Club / colla<input name="payload.club_nom"></label>
+              <label>Municipio de recogida<input name="payload.recollida_municipi_nom"></label>
+            </div>
+
+            <details>
+              <summary>Contacto de emergencia y tutor legal</summary>
+              <div class="form-grid two">
+                <label>Nombre contacto emergencia<input name="payload.contacte_emergencia_nom"></label>
+                <label>Teléfono contacto emergencia<input name="payload.contacte_emergencia_telefon"></label>
+                <label>Nombre tutor legal<input name="payload.tutor_nom"></label>
+                <label>Apellidos tutor legal<input name="payload.tutor_cognoms"></label>
+                <label>DNI tutor legal<input name="payload.tutor_dni"></label>
+                <label>Fecha nacimiento tutor<input type="date" name="payload.tutor_data_naixement"></label>
+              </div>
+            </details>
+
+            <p class="help-text">El precio, la modalidad, el tramo y el estado de pago no se pueden editar aquí — si hay que corregirlos, hazlo directamente hablando con soporte de Stripe/Netlify Blobs.</p>
+
+            <div class="form-actions">
+              <button class="btn" type="submit">Guardar cambios</button>
+              <button class="btn btn-danger" type="button" id="deleteInscripcioBtn">Eliminar inscripción</button>
             </div>
           </form>
         </div>
