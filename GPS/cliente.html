@@ -436,6 +436,7 @@ function computeEtas(state){
     // que la cursa hagi començat de veritat.
     anchorTime = currentPlannedStartTime;
     anchorIndex = 0;
+    etas[0] = anchorTime;
   } else {
     anchorTime = Date.now();
     anchorIndex = state.currentIndex;
@@ -462,7 +463,7 @@ function renderEtaLabels(state){
   checkpoints.forEach((c, i) => {
     const el = window.__cpEtaEls[i];
     if (!el) return;
-    const isDone = i <= state.currentIndex;
+    const isDone = !!(state.arrivals && state.arrivals[String(i)] != null);
     const isCurrentTarget = state.status === 'moving' && state.targetIndex === i;
     el.classList.toggle('done', isDone);
     el.classList.toggle('current', isCurrentTarget && !isDone);
