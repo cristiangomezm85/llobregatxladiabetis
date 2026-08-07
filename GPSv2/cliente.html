@@ -33,15 +33,18 @@
   #mapimg{ display:block; width:100%; height:auto; }
   #loading{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--aigua); }
 
+  #mapOverlayBar{
+    position:sticky; top:0; height:0; z-index:30; pointer-events:none;
+  }
   #modetoggle{
-    position:fixed; top:8px; right:8px; z-index:30;
+    position:absolute; top:8px; right:8px; pointer-events:auto;
     background:var(--llobregat); color:var(--paper); border:1px solid var(--aigua);
     font-family:'Manrope',sans-serif; font-weight:800; font-size:11px;
     border-radius:20px; padding:8px 14px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.4);
   }
 
   #inventoryTray{
-    position:fixed; top:8px; left:8px; z-index:30; display:flex; gap:8px;
+    position:absolute; top:8px; left:8px; display:flex; gap:8px; pointer-events:auto;
   }
   #inventoryTray button{
     width:38px; height:38px; border-radius:50%; border:1px solid var(--aigua);
@@ -222,10 +225,12 @@
   </div>
 
   <div id="mapwrap">
-    <button id="modetoggle">🛰️ Mode GPS</button>
-    <div id="inventoryTray">
-      <button id="bookBtn" title="Llibre de la Solidaritat">📖</button>
-      <button id="bottleBtn" title="Ampolla de l'Esperança"><img src="assets/water-icon.png" alt="Ampolla"></button>
+    <div id="mapOverlayBar">
+      <button id="modetoggle">🛰️ Mode GPS</button>
+      <div id="inventoryTray">
+        <button id="bookBtn" title="Llibre de la Solidaritat">📖</button>
+        <button id="bottleBtn" title="Ampolla de l'Esperança"><img src="assets/water-icon.png" alt="Ampolla"></button>
+      </div>
     </div>
     <div id="mapinner">
       <div id="loading">Carregant mapa...</div>
