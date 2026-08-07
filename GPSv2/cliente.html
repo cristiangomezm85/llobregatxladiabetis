@@ -21,7 +21,8 @@
   .xpbar-wrap{flex:1; height:12px; background:rgba(255,255,255,0.12); border:2px solid rgba(90,192,230,0.4); border-radius:8px; overflow:hidden; position:relative;}
   .xpbar-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--diabetis), var(--aigua)); transition:width 0.4s ease;}
   .xptick{ position:absolute; top:0; bottom:0; width:2px; background:rgba(14,27,54,0.6); z-index:2; }
-  #goldlabel{font-family:'Press Start 2P', monospace; font-size:8px; color:#FFD24C; white-space:nowrap;}
+  #goldlabel{display:flex; align-items:center; gap:4px; font-family:'Press Start 2P', monospace; font-size:8px; color:#FFD24C; white-space:nowrap;}
+  #goldlabel img{ width:16px; height:16px; object-fit:contain; }
   #kmlabel{font-family:'Press Start 2P', monospace; font-size:8px; color:var(--coral); white-space:nowrap;}
   #timelabel{font-family:'Press Start 2P', monospace; font-size:8px; color:var(--aigua); text-align:center; margin:4px 0;}
   #nextcp{font-size:11px; margin-top:6px; color:var(--paper); opacity:0.9;}
@@ -33,23 +34,14 @@
   #loading{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--aigua); }
 
   #modetoggle{
-    position:absolute; top:8px; right:8px; z-index:30;
+    position:fixed; top:8px; right:8px; z-index:30;
     background:var(--llobregat); color:var(--paper); border:1px solid var(--aigua);
     font-family:'Manrope',sans-serif; font-weight:800; font-size:11px;
     border-radius:20px; padding:8px 14px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.4);
   }
 
-  #mapGoldPill{
-    position:absolute; top:54px; left:8px; z-index:30;
-    display:flex; align-items:center; gap:5px;
-    background:var(--llobregat); border:1px solid rgba(255,210,76,0.5); border-radius:20px;
-    padding:6px 12px 6px 6px; box-shadow:0 2px 8px rgba(0,0,0,0.4);
-  }
-  #mapGoldPill img{ width:20px; height:20px; object-fit:contain; }
-  #mapGoldAmount{ font-family:'Manrope',sans-serif; font-weight:800; font-size:11px; color:#FFD24C; white-space:nowrap; }
-
   #inventoryTray{
-    position:absolute; top:8px; left:8px; z-index:30; display:flex; gap:8px;
+    position:fixed; top:8px; left:8px; z-index:30; display:flex; gap:8px;
   }
   #inventoryTray button{
     width:38px; height:38px; border-radius:50%; border:1px solid var(--aigua);
@@ -220,7 +212,7 @@
     <div class="title">Llobregat <span style="color:var(--aigua); font-style:italic;">x la</span> Diabetis</div>
     <div class="subtitle">En directe</div>
     <div class="xpbar-row">
-      <div id="goldlabel">🪙 0 €</div>
+      <div id="goldlabel"><img src="assets/gold-coins.png" alt=""><span id="goldAmount">0 €</span></div>
       <div class="xpbar-wrap" id="xpwrap"><div class="xpbar-fill" id="xpfill"></div></div>
       <div id="kmlabel">0.0 / 0.0 KM</div>
     </div>
@@ -231,7 +223,6 @@
 
   <div id="mapwrap">
     <button id="modetoggle">🛰️ Mode GPS</button>
-    <div id="mapGoldPill"><img src="assets/gold-coins.png" alt=""><span id="mapGoldAmount">0 €</span></div>
     <div id="inventoryTray">
       <button id="bookBtn" title="Llibre de la Solidaritat">📖</button>
       <button id="bottleBtn" title="Ampolla de l'Esperança"><img src="assets/water-icon.png" alt="Ampolla"></button>
@@ -701,9 +692,7 @@ function render(km){
   // criteri que fem servir per al llibre i l'ampolla.
   const reachedIdx = bookAvailablePages();
   const goldTotal = reachedIdx.reduce((sum, i) => sum + (Number(checkpoints[i].moneyRaised) || 0), 0);
-  goldlabel.textContent = `🪙 ${goldTotal.toLocaleString('ca-ES')} €`;
-  const mapGoldEl = document.getElementById('mapGoldAmount');
-  if (mapGoldEl) mapGoldEl.textContent = goldTotal.toLocaleString('ca-ES') + ' €';
+  document.getElementById('goldAmount').textContent = goldTotal.toLocaleString('ca-ES') + ' €';
 
   renderElapsedTime();
 
@@ -979,8 +968,15 @@ async function initGpsMap(){
   renderGpsCheckpointLabels();
 }
 
-document.getElementById('gpsRecenterBtn').addEventListener('click', () => {
-  if (!gpsMap || !lastGpsPosition) return;
+document.getElementById('gpsRecenterBtn').addEventListener('click', async () => {
+  if (!gpsMap) return;
+  // Abans confiàvem en l'última posició que teníem en memòria, que
+  // podia ser d'abans d'un "Esborrar traçat GPS" si encara no havia
+  // arribat la següent consulta automàtica (cada 20s). Ara, en
+  // comptes d'esperar, consultem el servidor a l'acte just en prémer
+  // el botó — així mai pot ensenyar una posició ja esborrada.
+  await refreshGpsTrack();
+  if (!lastGpsPosition) return;
   gpsMap.setView(lastGpsPosition, gpsMap.getZoom() < 13 ? 15 : gpsMap.getZoom(), { animate: true });
 });
 
