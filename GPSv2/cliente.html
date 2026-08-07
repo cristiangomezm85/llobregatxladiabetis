@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Llobregat x la Diabetis — En directe</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Manrope:wght@400;600;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tinta:#0E1B36; --llobregat:#15315F; --diabetis:#1E72D4;
+    --aigua:#5AC0E6; --coral:#FF6B47; --paper:#FAFAF6; --gris:#5A6478;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%; background:var(--tinta); font-family:'Manrope',sans-serif; color:var(--paper);}
+  #app{max-width:480px; margin:0 auto; height:100vh; display:flex; flex-direction:column;}
+
+  #hud{padding:12px 14px 10px; background:var(--llobregat); z-index:20;}
+  #hud .title{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:14px;}
+  #hud .subtitle{font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:var(--aigua); margin-bottom:8px;}
+  .xpbar-row{display:flex; align-items:center; gap:8px;}
+  .xpbar-wrap{flex:1; height:12px; background:rgba(255,255,255,0.12); border:2px solid rgba(90,192,230,0.4); border-radius:8px; overflow:hidden; position:relative;}
+  .xpbar-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--diabetis), var(--aigua)); transition:width 0.4s ease;}
+  .xptick{ position:absolute; top:0; bottom:0; width:2px; background:rgba(14,27,54,0.6); z-index:2; }
+  #levellabel{font-family:'Press Start 2P', monospace; font-size:8px; color:var(--aigua); white-space:nowrap;}
+  #kmlabel{font-family:'Press Start 2P', monospace; font-size:8px; color:var(--coral); white-space:nowrap;}
+  #nextcp{font-size:11px; margin-top:6px; color:var(--paper); opacity:0.9;}
+  #nextcp b{color:var(--aigua);}
+
+  #mapwrap{flex:1; position:relative; overflow-y:auto; overflow-x:hidden; background:#0a1220;}
+  #mapinner{ position:relative; width:100%; }
+  #mapimg{ display:block; width:100%; height:auto; }
+  #loading{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--aigua); }
+
+  #modetoggle{
+    position:absolute; top:8px; right:8px; z-index:30;
+    background:var(--llobregat); color:var(--paper); border:1px solid var(--aigua);
+    font-family:'Manrope',sans-serif; font-weight:800; font-size:11px;
+    border-radius:20px; padding:8px 14px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  #inventoryTray{
+    position:absolute; top:8px; left:8px; z-index:30; display:flex; gap:8px;
+  }
+  #inventoryTray button{
+    width:38px; height:38px; border-radius:50%; border:1px solid var(--aigua);
+    background:var(--llobregat); font-size:18px; cursor:pointer;
+    box-shadow:0 2px 8px rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center;
+  }
+
+  .modal-overlay{
+    display:none; position:fixed; inset:0; z-index:200;
+    background:rgba(6,12,26,0.82); align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-overlay.show{ display:flex; }
+  .modal-box{
+    position:relative; background:var(--llobregat); border:1px solid rgba(90,192,230,0.4);
+    border-radius:14px; padding:22px 18px 18px; max-width:400px; width:100%;
+    box-shadow:0 12px 40px rgba(0,0,0,0.6);
+  }
+  .modal-box-wide{ max-width:460px; }
+  .modal-box h3{
+    font-family:'Bricolage Grotesque',sans-serif; font-size:16px; margin-bottom:10px; color:var(--paper);
+  }
+  .modal-box p{ font-family:'Manrope',sans-serif; font-size:13px; color:var(--paper); opacity:0.9; line-height:1.5; }
+  .modal-close{
+    position:absolute; top:10px; right:10px; width:28px; height:28px; border-radius:50%;
+    background:rgba(255,255,255,0.1); border:none; color:var(--paper); font-size:14px; cursor:pointer;
+  }
+
+  #bookPageWrap{
+    background:var(--tinta); border-radius:10px; aspect-ratio:4/3; display:flex;
+    align-items:center; justify-content:center; overflow:hidden; margin-bottom:8px;
+  }
+  #bookPageWrap img{ width:100%; height:100%; object-fit:contain; display:none; }
+  #bookEmptyMsg{ font-family:'Manrope',sans-serif; font-size:12px; color:var(--gris); text-align:center; padding:20px; }
+  #bookPageLabel{ font-family:'Manrope',sans-serif; font-weight:800; font-size:12px; color:var(--aigua); text-align:center; margin-bottom:10px; }
+  .book-nav{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .book-nav button{
+    flex:1; background:rgba(255,255,255,0.08); border:1px solid var(--gris); color:var(--paper);
+    border-radius:8px; padding:9px; font-size:12px; font-weight:700; cursor:pointer;
+  }
+  .book-nav button:disabled{ opacity:0.35; cursor:default; }
+  #bookPageCounter{ font-family:'Manrope',sans-serif; font-size:11px; color:var(--gris); white-space:nowrap; }
+
+  #bottleVisual{
+    width:90px; height:200px; margin:10px auto 14px; position:relative;
+    background:rgba(255,255,255,0.06); border:2px solid var(--aigua); border-radius:14px 14px 30px 30px;
+    overflow:hidden;
+  }
+  #bottleFill{
+    position:absolute; left:0; right:0; bottom:0; height:0%;
+    background:linear-gradient(180deg, var(--aigua), var(--diabetis));
+    transition:height 1s ease;
+  }
+  #bottleCaption{ font-family:'Manrope',sans-serif; font-size:12px; color:var(--paper); text-align:center; opacity:0.9; }
+
+  #gpsview{ display:none; position:absolute; inset:0; z-index:1; }
+  #gpsmap{ width:100%; height:100%; }
+  #gpsRecenterBtn{
+    position:absolute; right:12px; bottom:90px; z-index:1000;
+    width:44px; height:44px; border-radius:50%; border:none;
+    background:var(--paper); color:var(--tinta); font-size:19px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.4); cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #gpsRecenterBtn:active{ background:var(--aigua); }
+  #gpsempty{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    text-align:center; padding:30px; font-size:13px; color:var(--gris); background:var(--tinta);
+  }
+  .runner-gps-icon{
+    width:88px; height:88px;
+    filter:drop-shadow(0 3px 6px rgba(0,0,0,0.6));
+  }
+  .runner-gps-icon img{ width:100%; height:100%; object-fit:contain; }
+
+  .gps-cp-label{
+    font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:11px;
+    color:var(--paper); background:rgba(14,27,54,0.75); white-space:nowrap;
+    padding:3px 8px; border-radius:6px; border:1px solid rgba(90,192,230,0.5);
+    transform:translate(-50%, -50%); pointer-events:none;
+  }
+
+  #runner{
+    position:absolute; width:88px; height:88px; margin:-74px 0 0 -44px;
+    transition: left 0.6s ease-out, top 0.6s ease-out;
+    z-index:100; filter:drop-shadow(0 3px 6px rgba(0,0,0,0.6));
+    pointer-events:none;
+  }
+  #runner img{ width:100%; height:100%; object-fit:contain; animation:pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse{0%,100%{transform:scale(1);} 50%{transform:scale(1.08);}}
+
+  .cp-marker{
+    position:absolute; width:16px; height:16px; margin:-8px 0 0 -8px;
+    background:var(--tinta); border:2px solid var(--gris); border-radius:50%;
+    z-index:10;
+  }
+  .cp-marker.reached{ background:var(--diabetis); border-color:var(--aigua); box-shadow:0 0 8px rgba(90,192,230,0.8); }
+
+  .cp-eta{
+    position:absolute; transform:translate(-50%, 6px);
+    font-family:'Press Start 2P', monospace; font-size:6.5px; color:var(--paper);
+    background:rgba(14,27,54,0.85); border:1px solid var(--gris); border-radius:4px;
+    padding:3px 5px; white-space:nowrap; z-index:11; pointer-events:none;
+  }
+  .cp-eta.done{ color:var(--aigua); border-color:var(--aigua); }
+  .cp-eta.current{ color:var(--coral); border-color:var(--coral); }
+
+  #toast{
+    position:absolute; left:50%; top:14px; transform:translate(-50%,-140%);
+    z-index:50; background:var(--coral); color:var(--tinta);
+    font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:13px;
+    padding:10px 16px; border-radius:6px; box-shadow:0 4px 14px rgba(0,0,0,0.4);
+    white-space:nowrap; transition:transform 0.4s cubic-bezier(.2,1.4,.4,1); pointer-events:none;
+  }
+  #toast.show{ transform:translate(-50%, 0); }
+
+  #panel{ background:var(--tinta); border-top:1px solid rgba(90,192,230,0.25); z-index:20; padding:10px 14px 14px; }
+  #status-line{ font-size:12px; color:var(--aigua); margin-bottom:6px; }
+  #note{ font-size:9px; color:var(--gris); line-height:1.4; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="hud">
+    <div class="title">Llobregat <span style="color:var(--aigua); font-style:italic;">x la</span> Diabetis</div>
+    <div class="subtitle">En directe</div>
+    <div class="xpbar-row">
+      <div id="levellabel">LV.1</div>
+      <div class="xpbar-wrap" id="xpwrap"><div class="xpbar-fill" id="xpfill"></div></div>
+      <div id="kmlabel">0.0 / 0.0 KM</div>
+    </div>
+    <div id="nextcp">Proper punt: <b>—</b></div>
+  </div>
+
+  <div id="mapwrap">
+    <button id="modetoggle">🛰️ Mode GPS</button>
+    <div id="inventoryTray">
+      <button id="bookBtn" title="Llibre de la Solidaritat">📖</button>
+      <button id="bottleBtn" title="Ampolla de l'Esperança">🍾</button>
+    </div>
+    <div id="mapinner">
+      <div id="loading">Carregant mapa...</div>
+      <img id="mapimg" src="">
+      <div id="toast">🏅 Checkpoint!</div>
+    </div>
+    <div id="gpsview">
+      <div id="gpsmap"></div>
+      <button id="gpsRecenterBtn" title="Centrar al corredor">🎯</button>
+      <div id="gpsempty">📡 Encara no hi ha senyal GPS.<br>Prova el mode Fantasy mentrestant.</div>
+    </div>
+  </div>
+
+  <div id="panel">
+    <div id="status-line">Connectant...</div>
+    <div id="configDebug" style="font-size:9px; color:var(--gris); margin-bottom:4px;"></div>
+    <div id="note">La posició s'actualitza automàticament segons el ritme marcat des del control de la cursa.</div>
+  </div>
+</div>
+
+<div id="townModal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" data-close="townModal">✕</button>
+    <h3 id="townModalName"></h3>
+    <p id="townModalDesc"></p>
+  </div>
+</div>
+
+<div id="bookModal" class="modal-overlay">
+  <div class="modal-box modal-box-wide">
+    <button class="modal-close" data-close="bookModal">✕</button>
+    <h3>📖 Llibre Oficial de Solidaritat</h3>
+    <div id="bookPageWrap">
+      <img id="bookPageImg" src="" alt="">
+      <div id="bookEmptyMsg">Encara no hi ha cap firma escanejada per a aquest tram.</div>
+    </div>
+    <div id="bookPageLabel"></div>
+    <div class="book-nav">
+      <button id="bookPrevBtn">← Anterior</button>
+      <span id="bookPageCounter"></span>
+      <button id="bookNextBtn">Següent →</button>
+    </div>
+  </div>
+</div>
+
+<div id="bottleModal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" data-close="bottleModal">✕</button>
+    <h3>🍾 Ampolla de l'Esperança</h3>
+    <div id="bottleVisual"><div id="bottleFill"></div></div>
+    <div id="bottleCaption"></div>
+  </div>
+</div>
+
+<script>
+const FUNCTIONS_BASE = '/.netlify/functions';
+
+let fullPath = [];       // tots els punts (traçat + checkpoints), en ordre
+let fullPathArcLen = [];  // distància acumulada real (en % d'imatge) fins a cada punt de fullPath
+let checkpoints = [];    // només els punts amb nom
+let checkpointArc = [];  // fracció (0-1) de cada checkpoint sobre fullPath
+let cumKm = [];
+let totalKm = 0;
+
+function arcLengthTable(points){
+  const arclen = [0];
+  for (let i=1;i<points.length;i++){
+    const dx = points[i].xPct - points[i-1].xPct;
+    const dy = points[i].yPct - points[i-1].yPct;
+    arclen.push(arclen[i-1] + Math.hypot(dx,dy));
+  }
+  return arclen;
+}
+
+/* IMPORTANT: arcFrac és una fracció de LONGITUD DE CAMÍ real (no
+   d'índex). Els punts del traçat no estan separats per la mateixa
+   distància entre ells (és un camí dibuixat a mà), així que cal
+   buscar la posició real dins fullPathArcLen — mai suposar que
+   l'índex i la longitud avancen igual. Aquest era exactament el bug:
+   els punts sortien desplaçats perquè s'interpolava per índex. */
+function pointOnPath(arcFrac){
+  const n = fullPath.length;
+  if (n === 0) return { x:50, y:50 };
+  if (n === 1) return { x: fullPath[0].xPct, y: fullPath[0].yPct };
+
+  const totalArc = fullPathArcLen[fullPathArcLen.length-1] || 1;
+  const targetDist = Math.min(Math.max(arcFrac,0),1) * totalArc;
+
+  // Cerca binària del segment [i0,i1] on cau targetDist
+  let lo = 0, hi = n - 1;
+  while (hi - lo > 1) {
+    const mid = (lo + hi) >> 1;
+    if (fullPathArcLen[mid] <= targetDist) lo = mid; else hi = mid;
+  }
+  const i0 = lo, i1 = hi;
+  const segLen = fullPathArcLen[i1] - fullPathArcLen[i0];
+  const t = segLen === 0 ? 0 : (targetDist - fullPathArcLen[i0]) / segLen;
+  const a = fullPath[i0], b = fullPath[i1];
+  return { x: a.xPct + (b.xPct-a.xPct)*t, y: a.yPct + (b.yPct-a.yPct)*t };
+}
+
+function arcFracAtKm(km){
+  km = Math.min(Math.max(km,0), totalKm);
+  for (let i=1;i<cumKm.length;i++){
+    if (km <= cumKm[i]){
+      const segStart = cumKm[i-1], segEnd = cumKm[i];
+      const t = segEnd===segStart ? 0 : (km-segStart)/(segEnd-segStart);
+      return checkpointArc[i-1] + (checkpointArc[i]-checkpointArc[i-1])*t;
+    }
+  }
+  return 1;
+}
+
+/* =========================================================
+   CÀRREGA DE CONFIGURACIÓ
+   ========================================================= */
+let rawConfig = null;      // config completa tal com ve del servidor (amb "stages")
+let currentStageId = null; // quina etapa tenim aplicada ara mateix al DOM
+let currentPlannedStartTime = null; // hora d'inici prevista de l'etapa activa (ms), o null
+let currentIsNight = null; // si el mapa mostrat ara és el de nit
+
+async function fetchConfig(){
+  const res = await fetch(`${FUNCTIONS_BASE}/get-config?t=${Date.now()}`, { cache: 'no-store' });
+  const config = await res.json().catch(() => ({}));
+
+  // Compatibilitat: configuracions antigues (abans de tenir "etapes")
+  // guardaven "points" i "mapImage" directament a l'arrel. Si detectem
+  // aquest format vell, el tractem com si fos una única etapa.
+  if (!Array.isArray(config.stages) || config.stages.length === 0) {
+    if (Array.isArray(config.points) && config.points.length > 0) {
+      config.stages = [{
+        id: 'default',
+        name: 'Recorregut',
+        mapImageDay: config.mapImage || null,
+        mapImageNight: config.mapImage || null,
+        points: config.points,
+      }];
+    } else {
+      config.stages = [];
+    }
+  }
+
+  rawConfig = config;
+  return config;
+}
+
+function findStage(stageId){
+  if (!rawConfig || !Array.isArray(rawConfig.stages) || rawConfig.stages.length === 0) return null;
+  const byId = rawConfig.stages.find(s => s.id === stageId);
+  if (byId) return byId;
+  // Si l'etapa activa no existeix (esborrada, o encara no s'ha triat
+  // cap), fem servir la primera etapa disponible perquè el client
+  // sempre mostri alguna cosa en lloc de quedar-se en blanc.
+  return rawConfig.stages[0];
+}
+
+function applyStage(stageId, isNight){
+  const stage = findStage(stageId);
+  if (!stage) {
+    document.getElementById('loading').style.display = 'flex';
+    document.getElementById('loading').textContent = '⚠ Encara no hi ha cap etapa configurada al servidor';
+    document.getElementById('status-line').textContent = '⚠ Sense etapa configurada';
+    return false;
+  }
+
+  // Cada mapa es pot servir de dues maneres: la nova (guardat a part
+  // per evitar superar el límit de mida de les peticions, només en
+  // guardem la "key" dins l'etapa) o la vella (la imatge directament
+  // dins del JSON, de quan només hi havia una etapa).
+  function resolveMapSrc(isNight){
+    const key = isNight ? stage.mapImageNightKey : stage.mapImageDayKey;
+    if (key) return `${FUNCTIONS_BASE}/get-map-image?key=${encodeURIComponent(key)}`;
+    const legacy = isNight ? stage.mapImageNight : stage.mapImageDay;
+    if (legacy) return legacy;
+    const keyOther = isNight ? stage.mapImageDayKey : stage.mapImageNightKey;
+    if (keyOther) return `${FUNCTIONS_BASE}/get-map-image?key=${encodeURIComponent(keyOther)}`;
+    return (isNight ? stage.mapImageDay : stage.mapImageNight) || '';
+  }
+  const mapSrc = resolveMapSrc(isNight);
+  document.getElementById('mapimg').src = mapSrc || '';
+  document.getElementById('loading').style.display = 'none';
+
+  fullPath = (stage.points || []).map(p => ({ xPct: p.xPct, yPct: p.yPct }));
+  const arclen = arcLengthTable(fullPath);
+  fullPathArcLen = arclen;
+  const totalArc = arclen[arclen.length-1] || 1;
+
+  checkpoints = [];
+  checkpointArc = [];
+  (stage.points || []).forEach((p, i) => {
+    if (p.checkpoint){
+      checkpoints.push(p.checkpoint);
+      checkpointArc.push(arclen[i] / totalArc);
+    }
+  });
+
+  cumKm = [0];
+  for (let i=1;i<checkpoints.length;i++){
+    cumKm.push(cumKm[i-1] + (Number(checkpoints[i].distFromPrevKm)||0));
+  }
+  totalKm = cumKm[cumKm.length-1] || 1;
+
+  // Diagnòstic sempre visible: quan es va desar aquesta configuració
+  // al servidor per última vegada, quina etapa i quants pobles/km té
+  // carregats ara mateix aquest client.
+  const savedWhen = rawConfig.updatedAt ? new Date(rawConfig.updatedAt).toLocaleString('ca-ES') : 'desconegut';
+  document.getElementById('configDebug').textContent =
+    `Config desada: ${savedWhen} · Etapa: ${stage.name || stage.id} (${isNight ? 'nit' : 'dia'}) · ${checkpoints.length} pobles · ${totalKm.toFixed(2)} km · sprites: ${['moving','idle','sleeping'].map(k => (rawConfig.runnerSprites && rawConfig.runnerSprites[k]) ? k : null).filter(Boolean).join(',') || 'cap'}`;
+
+  // Sprites del corredor (marxa / aturat / dormint) — són globals,
+  // no depenen de l'etapa.
+  runnerSprites = rawConfig.runnerSprites || {};
+  if (!runnerSprites.moving && !runnerSprites.idle && rawConfig.runnerSprite) {
+    runnerSprites = { moving: rawConfig.runnerSprite, idle: rawConfig.runnerSprite, sleeping: null };
+  }
+  runnerSpriteUrl = runnerSprites.moving || runnerSprites.idle || '';
+
+  let runner = window.__runner;
+  if (!runner) {
+    runner = document.createElement('div');
+    runner.id = 'runner';
+    runner.innerHTML = `<img id="runnerImg" src="${runnerSpriteUrl}" alt="corredor">`;
+    document.getElementById('mapinner').appendChild(runner);
+    window.__runner = runner;
+  }
+
+  // Els marcadors i etiquetes ETA sí que depenen de l'etapa (canvien
+  // els pobles), així que si veníem d'una etapa anterior els traiem
+  // tots abans de tornar-los a crear.
+  (window.__cpMarkerEls || []).forEach(el => el.remove());
+  (window.__cpEtaEls || []).forEach(el => el.remove());
+  document.querySelectorAll('.xptick').forEach(el => el.remove());
+
+  window.__cpMarkerEls = checkpoints.map((c, i) => {
+    const pos = pointOnPath(checkpointArc[i]);
+    const el = document.createElement('div');
+    el.className = 'cp-marker';
+    el.style.left = pos.x + '%';
+    el.style.top = pos.y + '%';
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', () => openTownInfo(c));
+    document.getElementById('mapinner').appendChild(el);
+    return el;
+  });
+  window.__cpEtaEls = checkpoints.map((c, i) => {
+    const pos = pointOnPath(checkpointArc[i]);
+    const offX = Number(c.etaOffsetX) || 0;
+    const offY = Number(c.etaOffsetY) || 3;
+    const el = document.createElement('div');
+    el.className = 'cp-eta';
+    el.style.left = (pos.x + offX) + '%';
+    el.style.top = (pos.y + offY) + '%';
+    el.style.transform = 'translate(-50%, 0)';
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', () => openTownInfo(c));
+    document.getElementById('mapinner').appendChild(el);
+    return el;
+  });
+
+  const xpwrap = document.getElementById('xpwrap');
+  checkpoints.forEach((c,i) => {
+    if (i===0) return;
+    const tick = document.createElement('div');
+    tick.className = 'xptick';
+    tick.style.left = (cumKm[i]/totalKm*100) + '%';
+    xpwrap.appendChild(tick);
+  });
+
+  currentStageId = stage.id;
+  currentIsNight = isNight;
+  currentPlannedStartTime = stage.plannedStartTime ? new Date(stage.plannedStartTime).getTime() : null;
+  if (gpsMap) renderGpsCheckpointLabels();
+  return true;
+}
+
+/* =========================================================
+   RENDER DE L'ESTAT (posició, HUD, toast)
+   ========================================================= */
+const xpfill = document.getElementById('xpfill');
+const kmlabel = document.getElementById('kmlabel');
+const levellabel = document.getElementById('levellabel');
+const nextcp = document.getElementById('nextcp');
+const toast = document.getElementById('toast');
+const statusLine = document.getElementById('status-line');
+const mapwrap = document.getElementById('mapwrap');
+
+/* Detecció d'interacció manual: si l'usuari toca/arrossega el
+   mapa, deixem d'auto-centrar la càmera durant un temps llarg
+   (per defecte 180 minuts) perquè pugui explorar sense que li
+   "robem" la vista contínuament. */
+const CAMERA_IDLE_MS = 180 * 60 * 1000;
+let lastUserInteraction = 0;
+['wheel', 'touchstart', 'pointerdown'].forEach(evt => {
+  mapwrap.addEventListener(evt, () => { lastUserInteraction = Date.now(); }, { passive: true });
+});
+function userScrolledRecently(){
+  return (Date.now() - lastUserInteraction) < CAMERA_IDLE_MS;
+}
+
+let lastReachedIndex = -1;
+
+function showToast(text){
+  toast.textContent = text;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+/* =========================================================
+   MODALS: info de poble, llibre de firmes, ampolla de l'esperança
+   ========================================================= */
+function closeModal(id){
+  document.getElementById(id).classList.remove('show');
+}
+function openModal(id){
+  document.getElementById(id).classList.add('show');
+}
+document.querySelectorAll('.modal-close').forEach(btn => {
+  btn.addEventListener('click', () => closeModal(btn.dataset.close));
+});
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('show'); });
+});
+
+function openTownInfo(c){
+  document.getElementById('townModalName').textContent = c.name || '';
+  document.getElementById('townModalDesc').textContent = c.description && c.description.trim()
+    ? c.description
+    : 'Encara no hi ha descripció d\'aquest poble.';
+  openModal('townModal');
+}
+
+// LLIBRE: una "pàgina" per cada poble ja assolit (arribada real
+// confirmada), amb la foto de la firma si s'ha pujat des
+// d'admin-live. Les fotos es guarden amb el mateix sistema que els
+// mapes (save-map-image / get-map-image), amb la key "sig_<etapa>_<índex>".
+let bookPageIndex = 0;
+function bookAvailablePages(){
+  if (!serverState || !checkpoints.length) return [];
+  const reached = [];
+  for (let i=0;i<=serverState.currentIndex;i++){
+    if (serverState.arrivals && serverState.arrivals[String(i)] != null) reached.push(i);
+  }
+  return reached;
+}
+function renderBookPage(){
+  const pages = bookAvailablePages();
+  const img = document.getElementById('bookPageImg');
+  const empty = document.getElementById('bookEmptyMsg');
+  const label = document.getElementById('bookPageLabel');
+  const counter = document.getElementById('bookPageCounter');
+  document.getElementById('bookPrevBtn').disabled = bookPageIndex <= 0;
+  document.getElementById('bookNextBtn').disabled = bookPageIndex >= pages.length - 1;
+
+  if (pages.length === 0){
+    img.style.display = 'none';
+    empty.style.display = 'block';
+    label.textContent = '';
+    counter.textContent = '';
+    return;
+  }
+  const cpIndex = pages[bookPageIndex];
+  const cpName = checkpoints[cpIndex] ? checkpoints[cpIndex].name : '';
+  label.textContent = cpName;
+  counter.textContent = `${bookPageIndex+1} / ${pages.length}`;
+  const key = `sig_${currentStageId}_${cpIndex}`;
+  img.onload = () => { img.style.display = 'block'; empty.style.display = 'none'; };
+  img.onerror = () => { img.style.display = 'none'; empty.style.display = 'block'; empty.textContent = `Encara no hi ha foto de la firma a ${cpName}.`; };
+  img.src = `${FUNCTIONS_BASE}/get-map-image?key=${encodeURIComponent(key)}&t=${Date.now()}`;
+}
+document.getElementById('bookBtn').addEventListener('click', () => {
+  const pages = bookAvailablePages();
+  bookPageIndex = Math.max(0, pages.length - 1); // obre a la darrera pàgina (la més recent)
+  renderBookPage();
+  openModal('bookModal');
+});
+document.getElementById('bookPrevBtn').addEventListener('click', () => { bookPageIndex--; renderBookPage(); });
+document.getElementById('bookNextBtn').addEventListener('click', () => { bookPageIndex++; renderBookPage(); });
+
+// AMPOLLA: es va omplint segons quants pobles ja s'han assolit de
+// veritat sobre el total de l'etapa — igual que passaria amb gotes
+// reals d'aigua a cada punt de trobada.
+function renderBottle(){
+  const pages = bookAvailablePages();
+  const total = Math.max(1, checkpoints.length);
+  const pct = Math.min(100, Math.round((pages.length / total) * 100));
+  document.getElementById('bottleFill').style.height = pct + '%';
+  document.getElementById('bottleCaption').textContent = `${pages.length} / ${checkpoints.length} pobles · ${pct}% plena`;
+}
+document.getElementById('bottleBtn').addEventListener('click', () => {
+  renderBottle();
+  openModal('bottleModal');
+});
+
+function render(km){
+  if (checkpoints.length === 0) return;
+  const currentKm = Math.min(Math.max(km,0), totalKm);
+  xpfill.style.width = (currentKm/totalKm*100) + '%';
+  kmlabel.textContent = currentKm.toFixed(1) + ' / ' + totalKm.toFixed(1) + ' KM';
+  levellabel.textContent = 'LV.' + (Math.floor(currentKm/totalKm*checkpoints.length)+1);
+
+  const arcFrac = arcFracAtKm(currentKm);
+  const pos = pointOnPath(arcFrac);
+  const runner = window.__runner;
+  if (runner){ runner.style.left = pos.x + '%'; runner.style.top = pos.y + '%'; }
+
+  const mapimg = document.getElementById('mapimg');
+  if (mapimg.offsetHeight && !userScrolledRecently()){
+    const targetScrollTop = (pos.y/100) * mapimg.offsetHeight - mapwrap.clientHeight*0.4;
+    mapwrap.scrollTo({ top: Math.max(targetScrollTop,0), behavior:'smooth' });
+  }
+
+  let reachedIndex = -1;
+  checkpoints.forEach((c,i) => {
+    const reached = currentKm >= cumKm[i]-0.05;
+    if (window.__cpMarkerEls[i]) window.__cpMarkerEls[i].classList.toggle('reached', reached);
+    if (reached) reachedIndex = i;
+  });
+
+  if (reachedIndex !== lastReachedIndex && reachedIndex >= 0){
+    lastReachedIndex = reachedIndex;
+    showToast((reachedIndex === checkpoints.length-1 ? '🏁 Arribada a ' : '🏅 Checkpoint: ') + checkpoints[reachedIndex].name);
+  }
+
+  const nextIndex = checkpoints.findIndex((c,i) => cumKm[i] > currentKm + 0.05);
+  nextcp.innerHTML = nextIndex === -1
+    ? 'Proper punt: <b>Arribada! 🏁</b>'
+    : `Proper punt: <b>${checkpoints[nextIndex].name}</b> · ${(cumKm[nextIndex]-currentKm).toFixed(1)} km`;
+}
+
+function fmtHM(ts){
+  const d = new Date(ts);
+  let h = d.getHours();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12; if (h === 0) h = 12;
+  return h + ':' + d.getMinutes().toString().padStart(2,'0') + ' ' + ampm;
+}
+
+function computeEtas(state){
+  const etas = new Array(checkpoints.length).fill(null);
+  for (let i=0;i<=state.currentIndex;i++){
+    etas[i] = (state.arrivals && state.arrivals[String(i)]) || null;
+  }
+  let anchorTime, anchorIndex;
+  if (state.status === 'moving'){
+    anchorTime = state.segmentStart + state.segmentDuration;
+    anchorIndex = state.targetIndex;
+    etas[anchorIndex] = anchorTime;
+  } else if (
+    state.currentIndex === 0 &&
+    (!state.arrivals || state.arrivals['0'] == null) &&
+    currentPlannedStartTime
+  ) {
+    // Encara no s'ha premut "Iniciar" per a aquesta etapa: mentre no
+    // hi hagi cap sortida real registrada, fem servir l'hora d'inici
+    // prevista (configurada a config-admin) en comptes de l'hora
+    // actual — així les estimacions no van canviant cada segon abans
+    // que la cursa hagi començat de veritat.
+    anchorTime = currentPlannedStartTime;
+    anchorIndex = 0;
+    etas[0] = anchorTime;
+  } else {
+    anchorTime = Date.now();
+    anchorIndex = state.currentIndex;
+  }
+  for (let i=anchorIndex+1; i<checkpoints.length; i++){
+    // Si el punt de partida d'aquest tram (i-1) és posterior a
+    // l'àncora (és a dir, encara no és un lloc on realment estiguem
+    // parats ara mateix, sinó una parada futura projectada), hi
+    // sumem la pausa prevista abans de continuar cap al següent.
+    if (i - 1 > anchorIndex) {
+      const pauseMin = Number(checkpoints[i-1].pauseMin) || 0;
+      anchorTime += pauseMin * 60000;
+    }
+    const pace = (state.paces && state.paces[String(i)]) || Number(checkpoints[i].paceMinKm) || 7.5;
+    const distKm = cumKm[i]-cumKm[i-1];
+    anchorTime += distKm * pace * 60000;
+    etas[i] = anchorTime;
+  }
+  return etas;
+}
+
+function renderEtaLabels(state){
+  const etas = computeEtas(state);
+  checkpoints.forEach((c, i) => {
+    const el = window.__cpEtaEls[i];
+    if (!el) return;
+    const isDone = !!(state.arrivals && state.arrivals[String(i)] != null);
+    const isCurrentTarget = state.status === 'moving' && state.targetIndex === i;
+    el.classList.toggle('done', isDone);
+    el.classList.toggle('current', isCurrentTarget && !isDone);
+    if (etas[i] == null) el.textContent = '—';
+    else if (isDone) el.textContent = (i === 0 ? '🏁 ' : '✓ ') + fmtHM(etas[i]);
+    else el.textContent = fmtHM(etas[i]);
+  });
+}
+
+function renderStatusLine(state){
+  if (state.status === 'finished'){ statusLine.textContent = '🏁 Repte completat!'; return; }
+  if (state.status === 'moving'){
+    const target = checkpoints[state.targetIndex];
+    const eta = state.segmentStart + state.segmentDuration;
+    const remaining = Math.max(0, Math.round((eta - Date.now())/60000));
+    statusLine.textContent = `En marxa cap a ${target.name} · ETA ${fmtHM(eta)} (~${remaining} min)`;
+  } else {
+    statusLine.textContent = `Aturat a ${checkpoints[state.currentIndex].name}`;
+  }
+}
+
+function currentKmFromState(state){
+  if (!state || checkpoints.length===0) return 0;
+  if (state.status === 'moving'){
+    const elapsed = Date.now() - state.segmentStart;
+    const frac = Math.min(1, Math.max(0, elapsed / state.segmentDuration));
+    return cumKm[state.currentIndex] + frac * (cumKm[state.targetIndex] - cumKm[state.currentIndex]);
+  }
+  if (state.status === 'finished') return totalKm;
+  return cumKm[state.currentIndex];
+}
+
+let serverState = null;
+
+function updateRunnerSprite(state){
+  const img = document.getElementById('runnerImg');
+  if (!img) return;
+  let src;
+  if (state.sleeping) src = runnerSprites.sleeping || runnerSprites.idle || runnerSprites.moving;
+  else if (state.status === 'moving') src = runnerSprites.moving || runnerSprites.idle;
+  else src = runnerSprites.idle || runnerSprites.moving;
+  if (src && img.getAttribute('src') !== src) img.setAttribute('src', src);
+}
+
+async function poll(){
+  try {
+    const res = await fetch(`${FUNCTIONS_BASE}/get-position`, { cache: 'no-store' });
+    const state = await res.json();
+    serverState = state;
+
+    // Si ha canviat l'etapa activa (l'ha canviat l'admin des
+    // d'admin-live) o si hem passat de dia a nit (o al revés, lligat
+    // al botó de "dormint"), recarreguem el mapa i els punts abans de
+    // renderitzar res més.
+    const fallbackStageId = rawConfig && rawConfig.stages && rawConfig.stages[0] ? rawConfig.stages[0].id : null;
+    const wantStageId = state.activeStageId || fallbackStageId;
+    const wantNight = !!state.sleeping;
+    if (wantStageId && (wantStageId !== currentStageId || wantNight !== currentIsNight)) {
+      applyStage(wantStageId, wantNight);
+    }
+
+    render(currentKmFromState(state));
+    renderEtaLabels(state);
+    renderStatusLine(state);
+    updateRunnerSprite(state);
+  } catch (e) {
+    statusLine.textContent = '⚠ Sense connexió amb el servidor';
+  }
+}
+
+setInterval(() => {
+  if (!serverState) return;
+  render(currentKmFromState(serverState));
+  if (serverState.status === 'moving') renderStatusLine(serverState);
+}, 1000);
+
+/* =========================================================
+   MODE GPS (satèl·lit real) — es carrega Leaflet només quan
+   cal, i es consulta el traçat rebut directament del mòbil
+   del corredor via OwnTracks (get-gps-live). Ja no depèn de
+   cap web externa (Garmin bloquejava aquest tipus de petició
+   amb la seva protecció anti-bots).
+   ========================================================= */
+let gpsMode = false;
+let gpsMap = null, gpsPolyline = null, gpsMarker = null;
+let lastGpsPosition = null; // últim punt conegut del corredor, per al botó de centrar
+let leafletLoaded = false;
+let runnerSpriteUrl = '';
+let runnerSprites = {};
+
+function loadLeaflet(){
+  if (leafletLoaded) return Promise.resolve();
+
+  // Fem servir la còpia pròpia de Leaflet (a vendor/leaflet/), penjada
+  // al mateix domini, en comptes de dependre d'una CDN externa: així
+  // no depenem de si algun bloquejador d'anuncis, tallafocs de xarxa
+  // o CSP bloqueja cdnjs.cloudflare.com (que és exactament el que
+  // estava passant). Si per algun motiu la còpia pròpia no hi és
+  // (per exemple perquè encara no s'ha pujat la carpeta vendor/),
+  // ho intentem per la CDN com a últim recurs.
+  function tryLoad(cssHref, jsSrc, isLastAttempt){
+    return new Promise((resolve, reject) => {
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = cssHref;
+      document.head.appendChild(css);
+      const script = document.createElement('script');
+      script.src = jsSrc;
+      const timeoutId = setTimeout(() => {
+        reject(new Error(`Leaflet no ha carregat a temps (10s) des de ${jsSrc}`));
+      }, 10000);
+      script.onload = () => { clearTimeout(timeoutId); leafletLoaded = true; resolve(); };
+      script.onerror = () => { clearTimeout(timeoutId); reject(new Error(`No s'ha pogut carregar Leaflet des de ${jsSrc}`)); };
+      document.head.appendChild(script);
+    });
+  }
+
+  return tryLoad('vendor/leaflet/leaflet.css', 'vendor/leaflet/leaflet.js')
+    .catch((err) => {
+      console.warn('Còpia pròpia de Leaflet no disponible, provant CDN de reserva:', err.message);
+      return tryLoad(
+        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js',
+        true
+      );
+    });
+}
+
+let gpsCheckpointLabels = [];
+
+// Nom -> {lat, lng} dels municipis del recorregut, carregat d'un
+// fitxer JSON a part (municipis-gps.json, al mateix directori que
+// aquest cliente.html). Es manté separat de la configuració de
+// checkpoints perquè és una simple capa de referència geogràfica:
+// mostra el nom de tots els municipis del Llobregat sobre el mapa
+// real, independentment de quina etapa estigui activa.
+let allMunicipisGps = {};
+
+async function loadMunicipisGps(){
+  try {
+    const res = await fetch(`municipis-gps.json?t=${Date.now()}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('no trobat');
+    allMunicipisGps = await res.json();
+  } catch (e) {
+    allMunicipisGps = {};
+    console.warn('No s\'ha pogut carregar municipis-gps.json:', e.message);
+  }
+}
+
+// Mostra el nom de cada municipi sobre el mapa GPS real, a la seva
+// posició GPS de veritat (no la del mapa il·lustrat). És només text,
+// sense cap icona, perquè no es confongui amb la posició del corredor.
+function renderGpsCheckpointLabels(){
+  if (!gpsMap) return;
+  gpsCheckpointLabels.forEach(m => gpsMap.removeLayer(m));
+  gpsCheckpointLabels = Object.entries(allMunicipisGps)
+    .filter(([name, pos]) => pos && pos.lat != null && pos.lng != null)
+    .map(([name, pos]) => {
+      const icon = L.divIcon({
+        className: '',
+        html: `<div class="gps-cp-label">${name}</div>`,
+        iconSize: null,
+      });
+      const marker = L.marker([pos.lat, pos.lng], { icon, interactive: true }).addTo(gpsMap);
+      marker.on('click', () => {
+        const cp = checkpoints.find(c => c.name === name);
+        openTownInfo(cp || { name });
+      });
+      return marker;
+    });
+}
+
+async function initGpsMap(){
+  await loadLeaflet();
+  if (Object.keys(allMunicipisGps).length === 0) await loadMunicipisGps();
+  if (gpsMap) { renderGpsCheckpointLabels(); return; }
+  gpsMap = L.map('gpsmap', { zoomControl: true }).setView(lastGpsPosition || [41.68, 1.87], lastGpsPosition ? 14 : 12);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Esri World Imagery',
+    maxZoom: 18,
+  }).addTo(gpsMap);
+  gpsPolyline = L.polyline([], { color: '#FF6B47', weight: 4, opacity: 0.9 }).addTo(gpsMap);
+  renderGpsCheckpointLabels();
+}
+
+document.getElementById('gpsRecenterBtn').addEventListener('click', () => {
+  if (!gpsMap || !lastGpsPosition) return;
+  gpsMap.setView(lastGpsPosition, gpsMap.getZoom() < 13 ? 15 : gpsMap.getZoom(), { animate: true });
+});
+
+async function refreshGpsTrack(){
+  try {
+    const res = await fetch(`${FUNCTIONS_BASE}/get-gps-live?t=${Date.now()}`, { cache: 'no-store' });
+    const data = await res.json();
+    const empty = document.getElementById('gpsempty');
+
+    // Diagnòstic sempre visible, igual que fem amb la configuració:
+    // què ha respost realment get-gps-live en aquesta consulta.
+    let dbg = document.getElementById('gpsDebug');
+    if (!dbg) {
+      dbg = document.createElement('div');
+      dbg.id = 'gpsDebug';
+      dbg.style.cssText = 'position:absolute; bottom:4px; left:4px; right:4px; font-size:9px; color:var(--gris); background:rgba(0,0,0,0.5); padding:4px; border-radius:6px; z-index:20;';
+      document.getElementById('gpsview').appendChild(dbg);
+    }
+    dbg.textContent = `GPS debug: available=${data.available} · numPoints=${data.numPoints ?? (data.points ? data.points.length : 0)} · ${data.reason || ''}`;
+
+    if (!data.available || !data.points || data.points.length === 0){
+      empty.style.display = 'flex';
+      empty.style.whiteSpace = 'pre-wrap';
+      empty.style.fontSize = '10px';
+      empty.textContent = '📡 ' + (data.reason || 'Encara no hi ha senyal GPS.');
+      return;
+    }
+    empty.style.display = 'none';
+
+    const latlngs = data.points.map(p => [p.lat, p.lng]);
+    gpsPolyline.setLatLngs(latlngs);
+
+    const last = latlngs[latlngs.length - 1];
+    if (!gpsMarker){
+      const icon = L.divIcon({
+        className: '',
+        html: `<div class="runner-gps-icon">${runnerSpriteUrl ? `<img src="${runnerSpriteUrl}">` : ''}</div>`,
+        iconSize: [88,88], iconAnchor: [44,74]
+      });
+      gpsMarker = L.marker(last, { icon }).addTo(gpsMap);
+    } else {
+      gpsMarker.setLatLng(last);
+    }
+    // Ja no recentrem sols el mapa a cada consulta — l'usuari pot
+    // explorar el mapa lliurement sense que li "robem" la vista.
+    // Guardem la posició per si vol tornar-hi amb el botó 🎯.
+    lastGpsPosition = last;
+  } catch (e) {
+    document.getElementById('gpsempty').style.display = 'flex';
+    document.getElementById('gpsempty').textContent = '⚠ Error consultant el GPS: ' + e.message;
+  }
+}
+
+let gpsInterval = null;
+async function setGpsMode(on){
+  gpsMode = on;
+  document.getElementById('gpsview').style.display = on ? 'block' : 'none';
+  document.getElementById('mapinner').style.display = on ? 'none' : 'block';
+  document.getElementById('modetoggle').textContent = on ? '🗺️ Mode Fantasy' : '🛰️ Mode GPS';
+
+  if (on){
+    const empty = document.getElementById('gpsempty');
+    empty.style.display = 'flex';
+    empty.textContent = '📡 Carregant el mapa...';
+    try {
+      await initGpsMap();
+      setTimeout(() => gpsMap.invalidateSize(), 150);
+      refreshGpsTrack();
+      if (gpsInterval) clearInterval(gpsInterval);
+      gpsInterval = setInterval(refreshGpsTrack, 20000);
+    } catch (e) {
+      // Abans, si initGpsMap() fallava (per exemple perquè Leaflet no
+      // carregava), aquí es tallava tot en silenci i no es veia res.
+      empty.style.display = 'flex';
+      empty.style.whiteSpace = 'pre-wrap';
+      empty.style.fontSize = '10px';
+      empty.textContent = '⚠ No s\'ha pogut carregar el mapa GPS: ' + e.message;
+    }
+  } else if (gpsInterval){
+    clearInterval(gpsInterval);
+    gpsInterval = null;
+  }
+}
+
+document.getElementById('modetoggle').addEventListener('click', () => setGpsMode(!gpsMode));
+
+(async () => {
+  await fetchConfig();
+  if (!rawConfig.stages || rawConfig.stages.length === 0) {
+    document.getElementById('loading').textContent = '⚠ Encara no hi ha cap etapa configurada al servidor';
+    document.getElementById('status-line').textContent = '⚠ Sense configuració al servidor';
+    return;
+  }
+  await poll();
+  setInterval(poll, 8000);
+})();
+</script>
+</body>
+</html>
