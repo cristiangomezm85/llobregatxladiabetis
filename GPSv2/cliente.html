@@ -39,6 +39,15 @@
     border-radius:20px; padding:8px 14px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.4);
   }
 
+  #mapGoldPill{
+    position:absolute; top:54px; left:8px; z-index:30;
+    display:flex; align-items:center; gap:5px;
+    background:var(--llobregat); border:1px solid rgba(255,210,76,0.5); border-radius:20px;
+    padding:6px 12px 6px 6px; box-shadow:0 2px 8px rgba(0,0,0,0.4);
+  }
+  #mapGoldPill img{ width:20px; height:20px; object-fit:contain; }
+  #mapGoldAmount{ font-family:'Manrope',sans-serif; font-weight:800; font-size:11px; color:#FFD24C; white-space:nowrap; }
+
   #inventoryTray{
     position:absolute; top:8px; left:8px; z-index:30; display:flex; gap:8px;
   }
@@ -222,6 +231,7 @@
 
   <div id="mapwrap">
     <button id="modetoggle">🛰️ Mode GPS</button>
+    <div id="mapGoldPill"><img src="assets/gold-coins.png" alt=""><span id="mapGoldAmount">0 €</span></div>
     <div id="inventoryTray">
       <button id="bookBtn" title="Llibre de la Solidaritat">📖</button>
       <button id="bottleBtn" title="Ampolla de l'Esperança"><img src="assets/water-icon.png" alt="Ampolla"></button>
@@ -233,7 +243,15 @@
     </div>
     <div id="gpsview">
       <div id="gpsmap"></div>
-      <button id="gpsRecenterBtn" title="Centrar al corredor">🎯</button>
+      <button id="gpsRecenterBtn" title="Centrar al corredor">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <line x1="12" y1="2" x2="12" y2="6"></line>
+          <line x1="12" y1="18" x2="12" y2="22"></line>
+          <line x1="2" y1="12" x2="6" y2="12"></line>
+          <line x1="18" y1="12" x2="22" y2="12"></line>
+        </svg>
+      </button>
       <div id="gpsempty">📡 Encara no hi ha senyal GPS.<br>Prova el mode Fantasy mentrestant.</div>
     </div>
   </div>
@@ -656,13 +674,20 @@ function renderElapsedTime(){
     timelabel.textContent = '⏱ —';
     return;
   }
-  const elapsedMs = Date.now() - serverState.arrivals['0'];
+  // Un cop finalitzada l'etapa, el comptador es congela en el temps
+  // real fins a l'arribada — no ha de seguir avançant per sempre.
+  const lastIndex = checkpoints.length - 1;
+  const endTime = (serverState.status === 'finished' && serverState.arrivals[String(lastIndex)] != null)
+    ? serverState.arrivals[String(lastIndex)]
+    : Date.now();
+  const elapsedMs = endTime - serverState.arrivals['0'];
   const totalSec = Math.max(0, Math.floor(elapsedMs / 1000));
   const hh = Math.floor(totalSec / 3600);
   const mm = Math.floor((totalSec % 3600) / 60);
   const ss = totalSec % 60;
   const pad = n => String(n).padStart(2,'0');
-  timelabel.textContent = `⏱ ${pad(hh)}:${pad(mm)}:${pad(ss)}`;
+  const prefix = serverState.status === 'finished' ? '🏁' : '⏱';
+  timelabel.textContent = `${prefix} ${pad(hh)}:${pad(mm)}:${pad(ss)}`;
 }
 
 function render(km){
@@ -677,6 +702,8 @@ function render(km){
   const reachedIdx = bookAvailablePages();
   const goldTotal = reachedIdx.reduce((sum, i) => sum + (Number(checkpoints[i].moneyRaised) || 0), 0);
   goldlabel.textContent = `🪙 ${goldTotal.toLocaleString('ca-ES')} €`;
+  const mapGoldEl = document.getElementById('mapGoldAmount');
+  if (mapGoldEl) mapGoldEl.textContent = goldTotal.toLocaleString('ca-ES') + ' €';
 
   renderElapsedTime();
 
@@ -979,9 +1006,17 @@ async function refreshGpsTrack(){
       empty.style.whiteSpace = 'pre-wrap';
       empty.style.fontSize = '10px';
       empty.textContent = '📡 ' + (data.reason || 'Encara no hi ha senyal GPS.');
+      // Abans, si es feia "Esborrar traçat GPS", aquesta posició
+      // vella es quedava en memòria i el botó de centrar hi seguia
+      // apuntant com si res. Ara la traiem de veritat.
+      lastGpsPosition = null;
+      if (gpsPolyline) gpsPolyline.setLatLngs([]);
+      if (gpsMarker) { gpsMap.removeLayer(gpsMarker); gpsMarker = null; }
+      document.getElementById('gpsRecenterBtn').style.display = 'none';
       return;
     }
     empty.style.display = 'none';
+    document.getElementById('gpsRecenterBtn').style.display = 'flex';
 
     const latlngs = data.points.map(p => [p.lat, p.lng]);
     gpsPolyline.setLatLngs(latlngs);
