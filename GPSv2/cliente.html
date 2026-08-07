@@ -21,8 +21,9 @@
   .xpbar-wrap{flex:1; height:12px; background:rgba(255,255,255,0.12); border:2px solid rgba(90,192,230,0.4); border-radius:8px; overflow:hidden; position:relative;}
   .xpbar-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--diabetis), var(--aigua)); transition:width 0.4s ease;}
   .xptick{ position:absolute; top:0; bottom:0; width:2px; background:rgba(14,27,54,0.6); z-index:2; }
-  #levellabel{font-family:'Press Start 2P', monospace; font-size:8px; color:var(--aigua); white-space:nowrap;}
+  #goldlabel{font-family:'Press Start 2P', monospace; font-size:8px; color:#FFD24C; white-space:nowrap;}
   #kmlabel{font-family:'Press Start 2P', monospace; font-size:8px; color:var(--coral); white-space:nowrap;}
+  #timelabel{font-family:'Press Start 2P', monospace; font-size:8px; color:var(--aigua); text-align:center; margin:4px 0;}
   #nextcp{font-size:11px; margin-top:6px; color:var(--paper); opacity:0.9;}
   #nextcp b{color:var(--aigua);}
 
@@ -45,7 +46,9 @@
     width:38px; height:38px; border-radius:50%; border:1px solid var(--aigua);
     background:var(--llobregat); font-size:18px; cursor:pointer;
     box-shadow:0 2px 8px rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center;
+    padding:0; overflow:hidden;
   }
+  #inventoryTray button img{ width:22px; height:22px; object-fit:contain; }
 
   .modal-overlay{
     display:none; position:fixed; inset:0; z-index:200;
@@ -83,13 +86,23 @@
   #bookPageCounter{ font-family:'Manrope',sans-serif; font-size:11px; color:var(--gris); white-space:nowrap; }
 
   #bottleVisual{
-    width:90px; height:200px; margin:10px auto 14px; position:relative;
-    background:rgba(255,255,255,0.06); border:2px solid var(--aigua); border-radius:14px 14px 30px 30px;
-    overflow:hidden;
+    width:130px; aspect-ratio:400/600; margin:10px auto 14px; position:relative;
+  }
+  #bottlePhoto{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:contain; z-index:1; pointer-events:none;
+  }
+  /* Zona recta del cos de l'ampolla (mesurada sobre la foto real):
+     comença sota el coll/tap i acaba abans que comenci a corbar la
+     base — així "l'aigua" només ompla la part recta, com es va
+     demanar, sense envair el tap ni la corba de sota. */
+  #bottleFillClip{
+    position:absolute; left:33%; right:32%; top:26%; bottom:9%;
+    overflow:hidden; z-index:2; border-radius:2px;
   }
   #bottleFill{
     position:absolute; left:0; right:0; bottom:0; height:0%;
     background:linear-gradient(180deg, var(--aigua), var(--diabetis));
+    opacity:0.68; mix-blend-mode:multiply;
     transition:height 1s ease;
   }
   #bottleCaption{ font-family:'Manrope',sans-serif; font-size:12px; color:var(--paper); text-align:center; opacity:0.9; }
@@ -166,10 +179,11 @@
     <div class="title">Llobregat <span style="color:var(--aigua); font-style:italic;">x la</span> Diabetis</div>
     <div class="subtitle">En directe</div>
     <div class="xpbar-row">
-      <div id="levellabel">LV.1</div>
+      <div id="goldlabel">🪙 0 €</div>
       <div class="xpbar-wrap" id="xpwrap"><div class="xpbar-fill" id="xpfill"></div></div>
       <div id="kmlabel">0.0 / 0.0 KM</div>
     </div>
+    <div id="timelabel">⏱ —</div>
     <div id="nextcp">Proper punt: <b>—</b></div>
   </div>
 
@@ -177,7 +191,7 @@
     <button id="modetoggle">🛰️ Mode GPS</button>
     <div id="inventoryTray">
       <button id="bookBtn" title="Llibre de la Solidaritat">📖</button>
-      <button id="bottleBtn" title="Ampolla de l'Esperança">🍾</button>
+      <button id="bottleBtn" title="Ampolla de l'Esperança"><img src="assets/water-icon.png" alt="Ampolla"></button>
     </div>
     <div id="mapinner">
       <div id="loading">Carregant mapa...</div>
@@ -227,7 +241,10 @@
   <div class="modal-box">
     <button class="modal-close" data-close="bottleModal">✕</button>
     <h3>🍾 Ampolla de l'Esperança</h3>
-    <div id="bottleVisual"><div id="bottleFill"></div></div>
+    <div id="bottleVisual">
+      <img id="bottlePhoto" src="assets/bottle-photo.png" alt="">
+      <div id="bottleFillClip"><div id="bottleFill"></div></div>
+    </div>
     <div id="bottleCaption"></div>
   </div>
 </div>
@@ -458,7 +475,8 @@ function applyStage(stageId, isNight){
    ========================================================= */
 const xpfill = document.getElementById('xpfill');
 const kmlabel = document.getElementById('kmlabel');
-const levellabel = document.getElementById('levellabel');
+const goldlabel = document.getElementById('goldlabel');
+const timelabel = document.getElementById('timelabel');
 const nextcp = document.getElementById('nextcp');
 const toast = document.getElementById('toast');
 const statusLine = document.getElementById('status-line');
@@ -571,12 +589,34 @@ document.getElementById('bottleBtn').addEventListener('click', () => {
   openModal('bottleModal');
 });
 
+function renderElapsedTime(){
+  if (!serverState || !serverState.arrivals || serverState.arrivals['0'] == null) {
+    timelabel.textContent = '⏱ —';
+    return;
+  }
+  const elapsedMs = Date.now() - serverState.arrivals['0'];
+  const totalSec = Math.max(0, Math.floor(elapsedMs / 1000));
+  const hh = Math.floor(totalSec / 3600);
+  const mm = Math.floor((totalSec % 3600) / 60);
+  const ss = totalSec % 60;
+  const pad = n => String(n).padStart(2,'0');
+  timelabel.textContent = `⏱ ${pad(hh)}:${pad(mm)}:${pad(ss)}`;
+}
+
 function render(km){
   if (checkpoints.length === 0) return;
   const currentKm = Math.min(Math.max(km,0), totalKm);
   xpfill.style.width = (currentKm/totalKm*100) + '%';
   kmlabel.textContent = currentKm.toFixed(1) + ' / ' + totalKm.toFixed(1) + ' KM';
-  levellabel.textContent = 'LV.' + (Math.floor(currentKm/totalKm*checkpoints.length)+1);
+
+  // Or acumulat: suma els diners recaptats només dels pobles amb
+  // arribada REAL confirmada (no estimacions futures) — mateix
+  // criteri que fem servir per al llibre i l'ampolla.
+  const reachedIdx = bookAvailablePages();
+  const goldTotal = reachedIdx.reduce((sum, i) => sum + (Number(checkpoints[i].moneyRaised) || 0), 0);
+  goldlabel.textContent = `🪙 ${goldTotal.toLocaleString('ca-ES')} €`;
+
+  renderElapsedTime();
 
   const arcFrac = arcFracAtKm(currentKm);
   const pos = pointOnPath(arcFrac);

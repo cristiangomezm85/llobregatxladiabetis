@@ -161,6 +161,10 @@
             <label>Pausa prevista aquí (min)</label>
             <input type="number" id="cpPause" step="1" min="0" value="0">
           </div>
+          <div>
+            <label>💰 Diners recaptats aquí (€)</label>
+            <input type="number" id="cpMoney" step="1" min="0" value="0">
+          </div>
         </div>
         <div class="row">
           <div>
@@ -297,11 +301,29 @@ async function apiSaveConfig(cfg){
   return data;
 }
 
-function fileToDataUri(file){
+// Redimensionem/recomprimim al navegador abans d'enviar, per no
+// arriscar-nos a superar el límit de 6MB de les Netlify Functions
+// amb fotos o mapes massa pesats (és el mateix problema que ja vam
+// patir amb l'error 413).
+function fileToDataUri(file, maxDim = 1600, quality = 0.85, format = 'image/jpeg'){
   return new Promise((resolve, reject) => {
+    const img = new Image();
     const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
+    reader.onload = () => { img.src = reader.result; };
     reader.onerror = reject;
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > maxDim || height > maxDim) {
+        const scale = maxDim / Math.max(width, height);
+        width = Math.round(width * scale);
+        height = Math.round(height * scale);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL(format, quality));
+    };
+    img.onerror = reject;
     reader.readAsDataURL(file);
   });
 }
@@ -474,6 +496,7 @@ function selectPoint(i){
   document.getElementById('cpEtaX').value = p.checkpoint ? (p.checkpoint.etaOffsetX ?? 0) : 0;
   document.getElementById('cpEtaY').value = p.checkpoint ? (p.checkpoint.etaOffsetY ?? 3) : 3;
   document.getElementById('cpPause').value = p.checkpoint ? (p.checkpoint.pauseMin || 0) : 0;
+  document.getElementById('cpMoney').value = p.checkpoint ? (p.checkpoint.moneyRaised || 0) : 0;
   editbox.classList.add('show');
   renderPoints();
 }
@@ -497,6 +520,7 @@ function saveEditFromForm(){
       etaOffsetX: parseFloat(document.getElementById('cpEtaX').value) || 0,
       etaOffsetY: parseFloat(document.getElementById('cpEtaY').value) || 0,
       pauseMin: parseFloat(document.getElementById('cpPause').value) || 0,
+      moneyRaised: parseFloat(document.getElementById('cpMoney').value) || 0,
     };
   } else {
     delete p.checkpoint;
@@ -510,7 +534,7 @@ document.getElementById('applyPaceAll').addEventListener('click', () => {
   renderTable();
 });
 
-['cpName','cpDesc','cpDist','cpPace','cpEtaX','cpEtaY','cpPause'].forEach(id => {
+['cpName','cpDesc','cpDist','cpPace','cpEtaX','cpEtaY','cpPause','cpMoney'].forEach(id => {
   document.getElementById(id).addEventListener('input', () => { saveEditFromForm(); renderPoints(); renderTable(); });
 });
 document.getElementById('isCp').addEventListener('change', () => { saveEditFromForm(); renderPoints(); renderTable(); });
@@ -650,7 +674,7 @@ function renderSpritePreviews(){
     if (!file) return;
     const kb = Math.round(file.size / 1024);
     fullConfig.runnerSprites = fullConfig.runnerSprites || { moving:null, idle:null, sleeping:null };
-    fullConfig.runnerSprites[key] = await fileToDataUri(file);
+    fullConfig.runnerSprites[key] = await fileToDataUri(file, 800, 0.9, 'image/png');
     renderSpritePreviews();
     if (kb > 1500) {
       savestatus.textContent = `⚠ Sprite "${key}" pesa ${kb} KB — és força gran, podria fer fallar el desat. Ideal per sota de 500 KB. Recorda desar igualment per provar.`;

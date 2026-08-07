@@ -374,11 +374,29 @@ document.getElementById('sleepbtn').addEventListener('click', async () => {
   } catch (e) { showError(e.message); }
 });
 
-function fileToDataUri(file){
+// Les fotos fetes amb el mòbil poden pesar diversos MB — massa per
+// una petició (límit de 6MB de les Netlify Functions). Les redimensionem
+// i recomprimim al navegador abans d'enviar-les, sense necessitat de
+// tocar res al servidor.
+function fileToDataUri(file, maxDim = 1280, quality = 0.8){
   return new Promise((resolve, reject) => {
+    const img = new Image();
     const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
+    reader.onload = () => { img.src = reader.result; };
     reader.onerror = reject;
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > maxDim || height > maxDim) {
+        const scale = maxDim / Math.max(width, height);
+        width = Math.round(width * scale);
+        height = Math.round(height * scale);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = reject;
     reader.readAsDataURL(file);
   });
 }
