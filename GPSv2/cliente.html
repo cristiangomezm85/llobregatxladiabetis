@@ -63,12 +63,27 @@
   .modal-box-wide{ max-width:460px; }
   .modal-box h3{
     font-family:'Bricolage Grotesque',sans-serif; font-size:16px; margin-bottom:10px; color:var(--paper);
+    display:flex; align-items:center; gap:8px;
   }
+  .modal-icon{ width:22px; height:22px; object-fit:contain; }
   .modal-box p{ font-family:'Manrope',sans-serif; font-size:13px; color:var(--paper); opacity:0.9; line-height:1.5; }
   .modal-close{
     position:absolute; top:10px; right:10px; width:28px; height:28px; border-radius:50%;
     background:rgba(255,255,255,0.1); border:none; color:var(--paper); font-size:14px; cursor:pointer;
   }
+
+  .donateBtn{
+    display:block; text-align:center; margin-top:10px; padding:11px; border-radius:10px;
+    background:linear-gradient(90deg, #FFD24C, #FFB020); color:var(--tinta);
+    font-family:'Manrope',sans-serif; font-weight:800; font-size:13px; text-decoration:none;
+  }
+
+  #townModalGold{
+    display:flex; align-items:center; gap:8px; margin-top:12px; padding:10px;
+    background:rgba(255,210,76,0.08); border:1px solid rgba(255,210,76,0.3); border-radius:10px;
+  }
+  .coin-icon{ width:34px; height:auto; object-fit:contain; }
+  #townModalGoldAmount{ font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:16px; color:#FFD24C; }
 
   #bookPageWrap{
     background:var(--tinta); border-radius:10px; aspect-ratio:4/3; display:flex;
@@ -85,18 +100,23 @@
   .book-nav button:disabled{ opacity:0.35; cursor:default; }
   #bookPageCounter{ font-family:'Manrope',sans-serif; font-size:11px; color:var(--gris); white-space:nowrap; }
 
+  #bottleRow{ display:flex; align-items:center; justify-content:center; gap:10px; }
+  .bottleSideStat{ flex:1; text-align:center; }
+  .bottleSideLabel{ font-family:'Manrope',sans-serif; font-size:10px; color:var(--gris); margin-bottom:4px; }
+  .bottleSideValue{ font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:15px; color:#FFD24C; }
   #bottleVisual{
-    width:130px; aspect-ratio:400/600; margin:10px auto 14px; position:relative;
+    width:110px; flex-shrink:0; aspect-ratio:400/600; margin:10px 0; position:relative;
   }
   #bottlePhoto{
     position:absolute; inset:0; width:100%; height:100%; object-fit:contain; z-index:1; pointer-events:none;
   }
   /* Zona recta del cos de l'ampolla (mesurada sobre la foto real):
      comença sota el coll/tap i acaba abans que comenci a corbar la
-     base — així "l'aigua" només ompla la part recta, com es va
-     demanar, sense envair el tap ni la corba de sota. */
+     base — així "l'aigua" només ompla la part recta, sense envair
+     el tap ni la corba de sota (al 100% pujem una mica més amunt,
+     fins tocar gairebé la corba del coll). */
   #bottleFillClip{
-    position:absolute; left:33%; right:32%; top:26%; bottom:9%;
+    position:absolute; left:33%; right:32%; top:20%; bottom:9%;
     overflow:hidden; z-index:2; border-radius:2px;
   }
   #bottleFill{
@@ -105,7 +125,8 @@
     opacity:0.68; mix-blend-mode:multiply;
     transition:height 1s ease;
   }
-  #bottleCaption{ font-family:'Manrope',sans-serif; font-size:12px; color:var(--paper); text-align:center; opacity:0.9; }
+  #bottleCaption{ font-family:'Manrope',sans-serif; font-size:12px; color:var(--paper); text-align:center; opacity:0.9; margin-top:6px; }
+  #bottleCta{ font-family:'Manrope',sans-serif; font-size:12px; color:var(--paper); text-align:center; margin-top:10px; opacity:0.85; }
 
   #gpsview{ display:none; position:absolute; inset:0; z-index:1; }
   #gpsmap{ width:100%; height:100%; }
@@ -131,7 +152,7 @@
     font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:11px;
     color:var(--paper); background:rgba(14,27,54,0.75); white-space:nowrap;
     padding:3px 8px; border-radius:6px; border:1px solid rgba(90,192,230,0.5);
-    transform:translate(-50%, -50%); pointer-events:none;
+    transform:translate(-50%, -50%); cursor:pointer;
   }
 
   #runner{
@@ -147,8 +168,19 @@
     position:absolute; width:16px; height:16px; margin:-8px 0 0 -8px;
     background:var(--tinta); border:2px solid var(--gris); border-radius:50%;
     z-index:10;
+    animation: cpPulse 1.8s ease-in-out infinite;
   }
   .cp-marker.reached{ background:var(--diabetis); border-color:var(--aigua); box-shadow:0 0 8px rgba(90,192,230,0.8); }
+  @keyframes cpPulse{
+    0%, 100% { transform:scale(1); }
+    50% { transform:scale(1.35); }
+  }
+
+  .gps-cp-label{ animation: cpPulseSubtle 1.8s ease-in-out infinite; }
+  @keyframes cpPulseSubtle{
+    0%, 100% { transform:translate(-50%, -50%) scale(1); }
+    50% { transform:translate(-50%, -50%) scale(1.08); }
+  }
 
   .cp-eta{
     position:absolute; transform:translate(-50%, 6px);
@@ -184,6 +216,7 @@
       <div id="kmlabel">0.0 / 0.0 KM</div>
     </div>
     <div id="timelabel">⏱ —</div>
+    <a id="hudDonateBtn" class="donateBtn" href="https://www.migranodearena.org/" target="_blank" rel="noopener">🪙 Dona a Mi Grano de Arena</a>
     <div id="nextcp">Proper punt: <b>—</b></div>
   </div>
 
@@ -217,6 +250,11 @@
     <button class="modal-close" data-close="townModal">✕</button>
     <h3 id="townModalName"></h3>
     <p id="townModalDesc"></p>
+    <div id="townModalGold">
+      <img src="assets/gold-coins.png" class="coin-icon" alt="">
+      <span id="townModalGoldAmount">0 €</span>
+    </div>
+    <a id="townModalDonateBtn" class="donateBtn" href="https://www.migranodearena.org/" target="_blank" rel="noopener">Dona per aquest municipi</a>
   </div>
 </div>
 
@@ -240,12 +278,24 @@
 <div id="bottleModal" class="modal-overlay">
   <div class="modal-box">
     <button class="modal-close" data-close="bottleModal">✕</button>
-    <h3>🍾 Ampolla de l'Esperança</h3>
-    <div id="bottleVisual">
-      <img id="bottlePhoto" src="assets/bottle-photo.png" alt="">
-      <div id="bottleFillClip"><div id="bottleFill"></div></div>
+    <h3><img src="assets/water-icon.png" class="modal-icon" alt=""> Ampolla de l'Esperança</h3>
+    <div id="bottleRow">
+      <div class="bottleSideStat">
+        <div class="bottleSideLabel">Recaptat fins ara</div>
+        <div class="bottleSideValue" id="bottleRaisedValue">0 €</div>
+      </div>
+      <div id="bottleVisual">
+        <img id="bottlePhoto" src="assets/bottle-photo.png" alt="">
+        <div id="bottleFillClip"><div id="bottleFill"></div></div>
+      </div>
+      <div class="bottleSideStat">
+        <div class="bottleSideLabel">Queda pel camí</div>
+        <div class="bottleSideValue" id="bottleRemainingValue">0 €</div>
+      </div>
     </div>
     <div id="bottleCaption"></div>
+    <div id="bottleCta">💧 Ajuda'ns a omplir l'ampolla</div>
+    <a id="bottleDonateBtn" class="donateBtn" href="https://www.migranodearena.org/" target="_blank" rel="noopener">🪙 Dona a Mi Grano de Arena</a>
   </div>
 </div>
 
@@ -524,6 +574,13 @@ function openTownInfo(c){
   document.getElementById('townModalDesc').textContent = c.description && c.description.trim()
     ? c.description
     : 'Encara no hi ha descripció d\'aquest poble.';
+  const money = Number(c.moneyRaised) || 0;
+  document.getElementById('townModalGoldAmount').textContent = money.toLocaleString('ca-ES') + ' €';
+  // TODO: quan cada municipi tingui el seu propi subrepte a Mi Grano
+  // de Arena, canviar aquest href per l'URL específica de c (per ara
+  // tots apunten a la pàgina principal).
+  document.getElementById('townModalDonateBtn').href = 'https://www.migranodearena.org/';
+  document.getElementById('townModalDonateBtn').textContent = `Dona per ${c.name || 'aquest municipi'}`;
   openModal('townModal');
 }
 
@@ -583,6 +640,11 @@ function renderBottle(){
   const pct = Math.min(100, Math.round((pages.length / total) * 100));
   document.getElementById('bottleFill').style.height = pct + '%';
   document.getElementById('bottleCaption').textContent = `${pages.length} / ${checkpoints.length} pobles · ${pct}% plena`;
+
+  const raised = pages.reduce((sum, i) => sum + (Number(checkpoints[i].moneyRaised) || 0), 0);
+  const remaining = checkpoints.reduce((sum, c, i) => pages.includes(i) ? sum : sum + (Number(c.moneyRaised) || 0), 0);
+  document.getElementById('bottleRaisedValue').textContent = raised.toLocaleString('ca-ES') + ' €';
+  document.getElementById('bottleRemainingValue').textContent = remaining.toLocaleString('ca-ES') + ' €';
 }
 document.getElementById('bottleBtn').addEventListener('click', () => {
   renderBottle();
