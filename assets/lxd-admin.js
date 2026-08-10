@@ -253,15 +253,17 @@
     const pagats = pagades();
     const totalRecaptat = pagats.reduce((sum, o) => sum + (o.import_centims || 0), 0) / 100;
     const totalDonacions = pagats.reduce((sum, o) => sum + (o.donacio_centims || 0), 0) / 100;
-    const perSexe = { home: 0, dona: 0, sense: 0 };
+    const perSexe = { home: 0, dona: 0, altre: 0, sense: 0 };
     const perModalitat = { dorsal0: 0, animar: 0, caminant: 0, corrent: 0, bici: 0 };
     let totalMenors = 0;
     let totalSamarretes = 0;
+    let cloendaSi = 0;
+    let cloendaNo = 0;
     const municipis = {};
 
     pagats.forEach(o => {
       const p = o.payload || {};
-      if (p.sexe === 'home' || p.sexe === 'dona') perSexe[p.sexe]++;
+      if (p.sexe === 'home' || p.sexe === 'dona' || p.sexe === 'altre') perSexe[p.sexe]++;
       else perSexe.sense++;
       if (perModalitat[o.modalitat] !== undefined) perModalitat[o.modalitat]++;
       if (p.es_menor) totalMenors++;
@@ -269,6 +271,9 @@
         totalSamarretes += p.samarretes.reduce((s, x) => s + (Number(x.quantitat) || 0), 0);
       } else if (['caminant', 'corrent', 'bici'].includes(o.modalitat)) {
         totalSamarretes += 1;
+      }
+      if (typeof p.assisteix_cloenda === 'boolean') {
+        if (p.assisteix_cloenda) cloendaSi++; else cloendaNo++;
       }
       const m = o.recollida_text || p.recollida_municipi_nom;
       if (m) municipis[m] = (municipis[m] || 0) + 1;
@@ -286,6 +291,7 @@
       ['Donaciones extra', totalDonacions.toFixed(2) + ' €'],
       ['Hombres', perSexe.home],
       ['Mujeres', perSexe.dona],
+      ['Otro', perSexe.altre],
       ['Sin especificar', perSexe.sense],
       ['Corriendo', perModalitat.corrent],
       ['Caminando', perModalitat.caminant],
@@ -294,6 +300,8 @@
       ['Dorsal 0', perModalitat.dorsal0],
       ['Menores de edad', totalMenors],
       ['Camisetas vendidas', totalSamarretes],
+      ['Van a la cloenda', cloendaSi],
+      ['No van a la cloenda', cloendaNo],
       ['Pueblo con más recogidas', municipiTop + (municipiTopCount ? ` (${municipiTopCount})` : '')],
       ['Incompletos (no cuentan)', pendents().length],
     ];
@@ -366,11 +374,13 @@
       ? `${p.tram_inici_nom} → ${p.tram_final_nom} (${p.tram_km != null ? p.tram_km : '?'} km)`
       : '—';
     const estatClasse = o.estat === 'pagat' ? 'estat-pill' : 'estat-pill pendent';
+    const cloendaText = typeof p.assisteix_cloenda === 'boolean' ? (p.assisteix_cloenda ? 'Sí' : 'No') : '—';
     resum.innerHTML = `
       <div><strong>Estado:</strong> <span class="${estatClasse}">${escapeHtml(o.estat || 'desconocido')}</span></div>
       <div><strong>Modalidad:</strong> ${escapeHtml(MODALITAT_LABEL[o.modalitat] || o.modalitat || '—')}</div>
       <div><strong>Tramo:</strong> ${escapeHtml(tram)}</div>
       <div><strong>Importe:</strong> ${o.import_centims != null ? (o.import_centims / 100).toFixed(2) + ' €' : '—'}</div>
+      <div><strong>Va a la cloenda:</strong> ${escapeHtml(cloendaText)}</div>
       <div><strong>Nº comanda:</strong> ${escapeHtml(o.order_id || '')}</div>
       <div><strong>Fecha:</strong> ${escapeHtml(o.data_pagament || o.data_creacio || '—')}</div>
     `;
