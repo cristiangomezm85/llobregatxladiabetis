@@ -90,7 +90,6 @@ async function validarDorsal0(payload, donacioCentims) {
   if (!emailValid(payload.email_contacte)) throw new Error("Falta un email vàlid");
   if (!payload.telefon) throw new Error("Falta el telèfon");
   if (!telefonValid(payload.telefon)) throw new Error("El telèfon no és vàlid");
-  if (!["home", "dona"].includes(payload.sexe)) throw new Error("Falta indicar el sexe");
   if (donacioCentims <= 0) {
     throw new Error("El Dorsal 0 requereix una donació superior a 0 €");
   }
@@ -103,7 +102,6 @@ async function validarAnimar(payload) {
   if (!payload.telefon) throw new Error("Falta el telèfon");
   if (!telefonValid(payload.telefon)) throw new Error("El telèfon no és vàlid");
   if (!payload.relacio) throw new Error("Falta la relació amb la diabetis tipus 1");
-  if (!["home", "dona"].includes(payload.sexe)) throw new Error("Falta indicar el sexe");
   if (!Array.isArray(payload.samarretes) || payload.samarretes.length === 0) {
     throw new Error("Cal afegir almenys una samarreta (talla i quantitat)");
   }
