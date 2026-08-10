@@ -6,6 +6,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 const crypto = require('crypto');
+const { llistarOrdres } = require('./lib/store');
 
 const ROOT = process.env.LXD_CONTENT_ROOT || process.cwd();
 const TODAY = () => new Date().toISOString().slice(0, 10);
@@ -42,6 +43,10 @@ const TYPES = {
     private: true,
     sort: (a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')),
     empty: () => ({ actualitzat: TODAY(), solicitudes: [] }),
+  },
+  inscripcions: {
+    private: true,
+    empty: () => ({ ordres: [] }),
   },
 };
 
@@ -353,6 +358,11 @@ async function deleteGitHub(type, id) {
 
 async function readContent(type) {
   const def = TYPES[type];
+  if (type === 'inscripcions') {
+    const ordres = await llistarOrdres();
+    ordres.sort((a, b) => String(b.data_creacio || '').localeCompare(String(a.data_creacio || '')));
+    return { ordres };
+  }
   if (backendMode() === 'github' && !def.private) {
     return (await readGitHubFile(def.file, def)).data;
   }
