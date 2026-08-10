@@ -220,6 +220,18 @@
     padding:9px 12px; margin-bottom:4px; display:none;
   }
   .tram-error.visible{ display:block; }
+  .tram-avis-bici{
+    font-size:12.5px; color:#7A4A00; background:#FFF3D6; border-radius:8px;
+    padding:9px 12px; margin-bottom:4px; display:none; line-height:1.5;
+  }
+  .tram-avis-bici.visible{ display:block; }
+  .tram-avis-bici strong{ color:#7A4A00; }
+  .link-info-cloenda{
+    display:inline-block; background:none; border:none; padding:0; margin:6px 0 14px;
+    color:var(--blau-diabetis); font-size:12.5px; font-weight:700; text-decoration:underline;
+    cursor:pointer; font-family:'Manrope',sans-serif;
+  }
+  .cloenda-info{ font-size:12.5px; color:var(--gris); margin:0 0 8px; }
 
   .federat-opcions{ display:flex; gap:16px; margin-bottom:10px; }
   .federat-opcions label{
@@ -548,6 +560,10 @@
       <summary data-i18n="faq_q19">Com sabré on i quan recollir la samarreta i la bossa de participant?</summary>
       <div data-i18n-html="faq_a19">T'ho confirmarem per email i també ho publicarem a la web i a Instagram (@llobregatxladiabetis) a mesura que tanquem els detalls amb cada municipi.</div>
     </details>
+    <details class="faq-item">
+      <summary data-i18n="faq_q20">Què és la Caminada de Cloenda?</summary>
+      <div data-i18n-html="faq_a20">És una caminada d'anada i tornada des d'un mateix punt: primer camines fins al lloc on acaba oficialment el repte (2 km) i després tornes caminant, tots junts, fins al lloc on es farà l'acte de cloenda (2 km). En total, 4 km. És l'opció pensada per a qui vol viure el moment d'arribada sense fer tot el recorregut.</div>
+    </details>
   </div>
 
   <div id="error-banner" class="error-banner"></div>
@@ -597,14 +613,6 @@
         <div class="camp"><label data-i18n="lbl_email">Email *</label><input type="email" class="d0-email" required></div>
         <div class="camp"><label data-i18n="lbl_telefon">Telèfon *</label><input type="tel" class="d0-telefon" inputmode="numeric" pattern="[0-9]*" required></div>
       </div>
-      <div class="camp">
-        <label data-i18n="lbl_sexe">Sexe *</label>
-        <select class="d0-sexe" required>
-          <option value="" data-i18n="opt_sexe_placeholder">Tria una opció</option>
-          <option value="home" data-i18n="opt_sexe_home">Home</option>
-          <option value="dona" data-i18n="opt_sexe_dona">Dona</option>
-        </select>
-      </div>
       <div class="camp" style="margin-bottom:0;">
         <label data-i18n="lbl_relacio_diabetis">Quina és la teva relació amb la diabetis tipus 1? *</label>
         <select class="d0-relacio" required>
@@ -633,14 +641,6 @@
         <div class="camp"><label data-i18n="lbl_telefon">Telèfon *</label><input type="tel" class="an-telefon" inputmode="numeric" pattern="[0-9]*" required></div>
       </div>
       <div class="camp">
-        <label data-i18n="lbl_sexe">Sexe *</label>
-        <select class="an-sexe" required>
-          <option value="" data-i18n="opt_sexe_placeholder">Tria una opció</option>
-          <option value="home" data-i18n="opt_sexe_home">Home</option>
-          <option value="dona" data-i18n="opt_sexe_dona">Dona</option>
-        </select>
-      </div>
-      <div class="camp">
         <label data-i18n="lbl_relacio_diabetis">Quina és la teva relació amb la diabetis tipus 1? *</label>
         <select class="an-relacio" required>
           <option value="" data-i18n="opt_relacio_placeholder">Tria una opció</option>
@@ -662,6 +662,15 @@
         </div>
       </div>
 
+      <div class="camp">
+        <label style="margin-bottom:6px;" data-i18n="lbl_cloenda">Vindràs a l'acte de cloenda? *</label>
+        <p class="cloenda-info" data-i18n-html="cloenda_info_data">Diumenge 18 d'octubre, de 17.00 h a 19.30 h, al Parking Cal Tet (El Prat de Llobregat).</p>
+        <div class="federat-opcions">
+          <label><input type="radio" class="an-cloenda" name="an-cloenda" value="si" checked> <span data-i18n="opt_si">Sí</span></label>
+          <label><input type="radio" class="an-cloenda" name="an-cloenda" value="no"> <span data-i18n="opt_no">No</span></label>
+        </div>
+      </div>
+
       <h3 class="subseccio" data-i18n="sec_samarretes">Samarretes</h3>
       <div id="an-samarretes-llista"></div>
       <button type="button" class="afegir-btn" id="afegir-an-samarreta" data-i18n="btn_afegir_talla">+ Afegir una altra talla</button>
@@ -679,7 +688,7 @@
       <h3 class="subseccio" style="margin-top:0;" id="fisic-titol">Les teves dades</h3>
 
       <div class="incloso" data-i18n-html="fi_incloso">
-        La inscripció inclou <strong>assegurança de responsabilitat civil</strong>.
+        La inscripció inclou <strong>assegurança de responsabilitat civil</strong> i <strong>assegurança d'accidents</strong>.
         El transport fins al punt d'inici no hi és inclòs.
       </div>
 
@@ -711,6 +720,7 @@
           <option value="" data-i18n="opt_sexe_placeholder">Tria una opció</option>
           <option value="home" data-i18n="opt_sexe_home">Home</option>
           <option value="dona" data-i18n="opt_sexe_dona">Dona</option>
+          <option value="altre" data-i18n="opt_sexe_altre">Altre</option>
         </select>
       </div>
 
@@ -739,6 +749,9 @@
           <span data-i18n="tram_tipus_cloenda_sub">El Prat · ~4 km</span>
         </button>
       </div>
+      <button type="button" class="link-info-cloenda" onclick="window.obrirPopupCloenda()">
+        <span data-i18n="info_cloenda_link">Què és la Caminada de Cloenda?</span>
+      </button>
 
       <div class="tram-fila" id="tram-fila-personalitzat" hidden>
         <div class="camp" style="margin-bottom:0;">
@@ -755,6 +768,11 @@
         </div>
       </div>
       <div class="tram-km-display" data-tram-km><span data-i18n="lbl_distancia_estimada">Distància estimada:</span> <strong data-tram-km-value>—</strong></div>
+      <div class="tram-avis-bici" data-tram-avis-bici data-i18n-html="avis_bici_dia1">
+        <strong>⚠ Avís:</strong> el tram del primer dia (Berguedà) no és apte per a bicicleta: hi ha trams de muntanya
+        i camins tècnics no aptes per rodar. Es recomana fer una ruta alternativa a l'oficial per aquest tram.
+        Més informació a <a href="mailto:info@llobregat.org">info@llobregat.org</a>.
+      </div>
       <div class="tram-error" data-tram-error data-i18n="err_tram_ordre">El municipi final ha de ser posterior al d'inici dins el recorregut.</div>
       <div class="incloso" style="margin-top:10px;margin-bottom:0;" data-i18n-html="nota_cebllob">
         Si fas el tram <strong>Martorell - El Prat</strong>, el <a href="https://cebllob.cat/esport-popular/la-travessa-de-la-comarca/" target="_blank" rel="noopener">Consell Esportiu del Baix Llobregat</a> et donarà un obsequi a la cloenda per completar la seva Travessa de la Comarca.
@@ -781,6 +799,15 @@
         <div class="camp club-camp" data-club-camp style="margin-bottom:0;">
           <label data-i18n="lbl_club_nom">Nom del club</label>
           <input type="text" class="fi-club-nom">
+        </div>
+      </div>
+
+      <div class="camp">
+        <label style="margin-bottom:6px;" data-i18n="lbl_cloenda">Vindràs a l'acte de cloenda? *</label>
+        <p class="cloenda-info" data-i18n-html="cloenda_info_data">Diumenge 18 d'octubre, de 17.00 h a 19.30 h, al Parking Cal Tet (El Prat de Llobregat).</p>
+        <div class="federat-opcions">
+          <label><input type="radio" class="fi-cloenda" name="fi-cloenda" value="si" checked> <span data-i18n="opt_si">Sí</span></label>
+          <label><input type="radio" class="fi-cloenda" name="fi-cloenda" value="no"> <span data-i18n="opt_no">No</span></label>
         </div>
       </div>
 
@@ -962,6 +989,15 @@
   </div>
 </div>
 
+<div class="preu-popup-overlay" id="cloenda-popup-overlay">
+  <div class="preu-popup">
+    <button type="button" class="preu-popup-tancar" onclick="window.tancarPopupCloenda()" aria-label="Tancar">&times;</button>
+    <h3 data-i18n="cloenda_popup_titol">Què és la Caminada de Cloenda?</h3>
+    <p data-i18n="cloenda_popup_text1">És una caminada d'anada i tornada des d'un mateix punt: primer camines fins al lloc on acaba oficialment el repte (2 km) i després tornes caminant, tots junts, fins al lloc on es farà l'acte de cloenda (2 km). En total, 4 km.</p>
+    <p data-i18n-html="cloenda_popup_text2">És l'opció pensada per a qui vol viure el moment d'arribada sense fer tot el recorregut. Més informació a <a href="mailto:info@llobregat.org">info@llobregat.org</a>.</p>
+  </div>
+</div>
+
 <script>
 (async function(){
   "use strict";
@@ -1050,9 +1086,15 @@
     btn_eliminar: { ca:"Eliminar", es:"Eliminar", en:"Remove" },
 
     fi_incloso: {
-      ca:"El preu depèn del nombre d'etapes i de la tarifa vigent (vegeu la taula de preus més amunt). Cada etapa inclou <strong>1 samarreta oficial</strong> (si fas 2 etapes, reps 2 samarretes; si fas les 3, reps 3). També inclou <strong>assegurança de responsabilitat civil</strong> i <strong>avituallament</strong>. L'allotjament no hi és inclòs. El transport fins al punt d'inici tampoc hi és inclòs.",
-      es:"El precio depende del número de etapas y de la tarifa vigente (ver la tabla de precios más arriba). Cada etapa incluye <strong>1 camiseta oficial</strong> (si haces 2 etapas, recibes 2 camisetas; si haces las 3, recibes 3). También incluye <strong>seguro de responsabilidad civil</strong> y <strong>avituallamiento</strong>. El alojamiento no está incluido. El transporte hasta el punto de inicio tampoco está incluido.",
-      en:"The price depends on the number of stages and the current rate (see the pricing table above). Each stage includes <strong>1 official t-shirt</strong> (2 stages = 2 t-shirts, 3 stages = 3 t-shirts). It also includes <strong>civil liability insurance</strong> and <strong>refreshment stations</strong>. Accommodation is not included. Transport to the starting point is not included either."
+      ca:"El preu depèn del nombre d'etapes i de la tarifa vigent (vegeu la taula de preus més amunt). Cada etapa inclou <strong>1 samarreta oficial</strong> (si fas 2 etapes, reps 2 samarretes; si fas les 3, reps 3). També inclou <strong>assegurança de responsabilitat civil</strong>, <strong>assegurança d'accidents</strong> i <strong>avituallament</strong>. L'allotjament no hi és inclòs. El transport fins al punt d'inici tampoc hi és inclòs.",
+      es:"El precio depende del número de etapas y de la tarifa vigente (ver la tabla de precios más arriba). Cada etapa incluye <strong>1 camiseta oficial</strong> (si haces 2 etapas, recibes 2 camisetas; si haces las 3, recibes 3). También incluye <strong>seguro de responsabilidad civil</strong>, <strong>seguro de accidentes</strong> y <strong>avituallamiento</strong>. El alojamiento no está incluido. El transporte hasta el punto de inicio tampoco está incluido.",
+      en:"The price depends on the number of stages and the current rate (see the pricing table above). Each stage includes <strong>1 official t-shirt</strong> (2 stages = 2 t-shirts, 3 stages = 3 t-shirts). It also includes <strong>civil liability insurance</strong>, <strong>accident insurance</strong> and <strong>refreshment stations</strong>. Accommodation is not included. Transport to the starting point is not included either."
+    },
+
+    avis_bici_dia1: {
+      ca:"<strong>⚠ Avís:</strong> el tram del primer dia (Berguedà) no és apte per a bicicleta: hi ha trams de muntanya i camins tècnics no aptes per rodar. Es recomana fer una ruta alternativa a l'oficial per aquest tram. Més informació a <a href=\"mailto:info@llobregat.org\">info@llobregat.org</a>.",
+      es:"<strong>⚠ Aviso:</strong> el tramo del primer día (Berguedà) no es apto para bicicleta: hay tramos de montaña y caminos técnicos no aptos para rodar. Se recomienda hacer una ruta alternativa a la oficial en este tramo. Más información en <a href=\"mailto:info@llobregat.org\">info@llobregat.org</a>.",
+      en:"<strong>⚠ Warning:</strong> the first day's stretch (Berguedà) is not suitable for bikes: it includes mountain sections and technical trails not rideable. We recommend taking an alternative route to the official one for this stretch. More info at <a href=\"mailto:info@llobregat.org\">info@llobregat.org</a>."
     },
 
     lbl_nom: { ca:"Nom *", es:"Nombre *", en:"First name *" },
@@ -1067,6 +1109,7 @@
     opt_sexe_placeholder: { ca:"Tria una opció", es:"Elige una opción", en:"Choose an option" },
     opt_sexe_home: { ca:"Home", es:"Hombre", en:"Male" },
     opt_sexe_dona: { ca:"Dona", es:"Mujer", en:"Female" },
+    opt_sexe_altre: { ca:"Altre", es:"Otro", en:"Other" },
     falta_sexe: { ca:"Cal indicar el sexe.", es:"Debes indicar el sexo.", en:"Please select your sex." },
     lbl_municipi_inici: { ca:"Municipi d'inici *", es:"Municipio de inicio *", en:"Starting town *" },
     lbl_municipi_final: { ca:"Municipi final *", es:"Municipio final *", en:"Finishing town *" },
@@ -1074,6 +1117,12 @@
     lbl_federat: { ca:"Estàs federat/da? *", es:"¿Estás federado/a? *", en:"Are you federated? *" },
     lbl_club: { ca:"Tens club? *", es:"¿Tienes club? *", en:"Do you have a club? *" },
     lbl_club_nom: { ca:"Nom del club", es:"Nombre del club", en:"Club name" },
+    lbl_cloenda: { ca:"Vindràs a l'acte de cloenda? *", es:"¿Vendrás al acto de clausura? *", en:"Will you attend the closing ceremony? *" },
+    cloenda_info_data: {
+      ca:"Diumenge 18 d'octubre, de 17.00 h a 19.30 h, al Parking Cal Tet (El Prat de Llobregat).",
+      es:"Domingo 18 de octubre, de 17.00 h a 19.30 h, en el Parking Cal Tet (El Prat de Llobregat).",
+      en:"Sunday 18 October, from 5.00 pm to 7.30 pm, at the Cal Tet car park (El Prat de Llobregat)."
+    },
     lbl_llicencia: { ca:"Número de llicència federativa *", es:"Número de licencia federativa *", en:"Federation licence number *" },
     lbl_recollida: { ca:"M'aniria millor recollir la samarreta al municipi més proper a... *", es:"Me iría mejor recoger la camiseta en el municipio más cercano a... *", en:"It would suit me best to collect the t-shirt in the town closest to... *" },
     lbl_talla: { ca:"Talla de samarreta *", es:"Talla de camiseta *", en:"T-shirt size *" },
@@ -1113,6 +1162,18 @@
     tram_tipus_personalitzat_sub: { ca:"Tu tries inici i final", es:"Tú eliges inicio y final", en:"You choose start and finish" },
     tram_tipus_cloenda: { ca:"Caminada de Cloenda", es:"Caminata de Clausura", en:"Closing Walk" },
     tram_tipus_cloenda_sub: { ca:"El Prat · ~4 km", es:"El Prat · ~4 km", en:"El Prat · ~4 km" },
+    info_cloenda_link: { ca:"Què és la Caminada de Cloenda?", es:"¿Qué es la Caminata de Clausura?", en:"What is the Closing Walk?" },
+    cloenda_popup_titol: { ca:"Què és la Caminada de Cloenda?", es:"¿Qué es la Caminata de Clausura?", en:"What is the Closing Walk?" },
+    cloenda_popup_text1: {
+      ca:"És una caminada d'anada i tornada des d'un mateix punt: primer camines fins al lloc on acaba oficialment el repte (2 km) i després tornes caminant, tots junts, fins al lloc on es farà l'acte de cloenda (2 km). En total, 4 km.",
+      es:"Es una caminata de ida y vuelta desde un mismo punto: primero caminas hasta el lugar donde acaba oficialmente el reto (2 km) y después vuelves caminando, todos juntos, hasta el lugar donde se hará el acto de clausura (2 km). En total, 4 km.",
+      en:"It's an out-and-back walk from a single point: first you walk to the place where the challenge officially finishes (2 km), then you walk back together to the place where the closing ceremony takes place (2 km). 4 km in total."
+    },
+    cloenda_popup_text2: {
+      ca:"És l'opció pensada per a qui vol viure el moment d'arribada sense fer tot el recorregut. Més informació a <a href=\"mailto:info@llobregat.org\">info@llobregat.org</a>.",
+      es:"Es la opción pensada para quien quiere vivir el momento de llegada sin hacer todo el recorrido. Más información en <a href=\"mailto:info@llobregat.org\">info@llobregat.org</a>.",
+      en:"It's designed for those who want to experience the arrival moment without doing the whole route. More info at <a href=\"mailto:info@llobregat.org\">info@llobregat.org</a>."
+    },
 
     opt_relacio_placeholder: { ca:"Tria una opció", es:"Elige una opción", en:"Choose an option" },
     opt_relacio_tinc: { ca:"Tinc diabetis tipus 1", es:"Tengo diabetes tipo 1", en:"I have type 1 diabetes" },
@@ -1211,9 +1272,9 @@
     faq_a_preus: { ca:"Tots els preus varien segons la tarifa vigent (early bird, estàndard o last call).", es:"Todos los precios varían según la tarifa vigente (early bird, estándar o last call).", en:"All prices vary depending on the current rate (early bird, standard or last call)." },
     btn_veure_taula: { ca:"Veure taula de preus", es:"Ver tabla de precios", en:"View pricing table" },
     faq_a1: {
-      ca:"Depèn de la modalitat. El <strong>Dorsal 0</strong> no inclou res més que la donació. La <strong>Samarreta solidària</strong> inclou la samarreta oficial, per unitat i talla. <strong>Caminant, Corrent i Bici</strong> inclouen l'assegurança de responsabilitat civil, l'avituallament i una samarreta per etapa. En cap cas s'inclou l'allotjament ni el transport.",
-      es:"Depende de la modalidad. El <strong>Dorsal 0</strong> no incluye nada más que la donación. La <strong>Camiseta solidaria</strong> incluye la camiseta oficial, por unidad y talla. <strong>Caminando, Corriendo y Bici</strong> incluyen el seguro de responsabilidad civil, el avituallamiento y una camiseta por etapa. En ningún caso se incluye el alojamiento ni el transporte.",
-      en:"It depends on the category. <strong>Bib 0</strong> includes nothing beyond the donation. The <strong>Solidarity t-shirt</strong> includes the official t-shirt, per unit and size. <strong>Walking, Running and Bike</strong> include civil liability insurance, refreshment stations and one t-shirt per stage. Accommodation and transport are never included."
+      ca:"Depèn de la modalitat. El <strong>Dorsal 0</strong> no inclou res més que la donació. La <strong>Samarreta solidària</strong> inclou la samarreta oficial, per unitat i talla. <strong>Caminant, Corrent i Bici</strong> inclouen l'assegurança de responsabilitat civil, l'assegurança d'accidents, l'avituallament i una samarreta per etapa. En cap cas s'inclou l'allotjament ni el transport.",
+      es:"Depende de la modalidad. El <strong>Dorsal 0</strong> no incluye nada más que la donación. La <strong>Camiseta solidaria</strong> incluye la camiseta oficial, por unidad y talla. <strong>Caminando, Corriendo y Bici</strong> incluyen el seguro de responsabilidad civil, el seguro de accidentes, el avituallamiento y una camiseta por etapa. En ningún caso se incluye el alojamiento ni el transporte.",
+      en:"It depends on the category. <strong>Bib 0</strong> includes nothing beyond the donation. The <strong>Solidarity t-shirt</strong> includes the official t-shirt, per unit and size. <strong>Walking, Running and Bike</strong> include civil liability insurance, accident insurance, refreshment stations and one t-shirt per stage. Accommodation and transport are never included."
     },
     faq_q2: { ca:"Puc triar qualsevol tram del recorregut?", es:"¿Puedo elegir cualquier tramo del recorrido?", en:"Can I choose any segment of the route?" },
     faq_a2: {
@@ -1323,6 +1384,12 @@
       es:"Te lo confirmaremos por email y también lo publicaremos en la web y en Instagram (@llobregatxladiabetis) a medida que cerremos los detalles con cada municipio.",
       en:"We'll confirm it by email and also publish it on the website and on Instagram (@llobregatxladiabetis) as we finalise the details with each town."
     },
+    faq_q20: { ca:"Què és la Caminada de Cloenda?", es:"¿Qué es la Caminata de Clausura?", en:"What is the Closing Walk?" },
+    faq_a20: {
+      ca:"És una caminada d'anada i tornada des d'un mateix punt: primer camines fins al lloc on acaba oficialment el repte (2 km) i després tornes caminant, tots junts, fins al lloc on es farà l'acte de cloenda (2 km). En total, 4 km. És l'opció pensada per a qui vol viure el moment d'arribada sense fer tot el recorregut.",
+      es:"Es una caminata de ida y vuelta desde un mismo punto: primero caminas hasta el lugar donde acaba oficialmente el reto (2 km) y después vuelves caminando, todos juntos, hasta el lugar donde se hará el acto de clausura (2 km). En total, 4 km. Es la opción pensada para quien quiere vivir el momento de llegada sin hacer todo el recorrido.",
+      en:"It's an out-and-back walk from a single point: first you walk to the place where the challenge officially finishes (2 km), then you walk back together to the place where the closing ceremony takes place (2 km). 4 km in total. It's designed for those who want to experience the arrival moment without doing the whole route."
+    },
   };
 
   let currentLang = "ca";
@@ -1424,7 +1491,7 @@
     if (e.target === preuPopupOverlay) window.tancarPopupPreus();
   });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") { window.tancarPopupPreus(); window.tancarPopupHerois(); }
+    if (e.key === "Escape") { window.tancarPopupPreus(); window.tancarPopupHerois(); window.tancarPopupCloenda(); }
   });
 
   // ---------- Popup informatiu sobre el codi de descompte d'Heroi ----------
@@ -1437,6 +1504,18 @@
   };
   heroiPopupOverlay.addEventListener("click", (e) => {
     if (e.target === heroiPopupOverlay) window.tancarPopupHerois();
+  });
+
+  // ---------- Popup informatiu sobre la Caminada de Cloenda ----------
+  const cloendaPopupOverlay = document.getElementById("cloenda-popup-overlay");
+  window.obrirPopupCloenda = function () {
+    cloendaPopupOverlay.classList.add("visible");
+  };
+  window.tancarPopupCloenda = function () {
+    cloendaPopupOverlay.classList.remove("visible");
+  };
+  cloendaPopupOverlay.addEventListener("click", (e) => {
+    if (e.target === cloendaPopupOverlay) window.tancarPopupCloenda();
   });
 
   const faqToggleBtn = document.getElementById("faq-toggle-btn");
@@ -1787,6 +1866,7 @@
   const kmBlock = blocFisic.querySelector("[data-tram-km]");
   const kmVal = blocFisic.querySelector("[data-tram-km-value]");
   const errBlock = blocFisic.querySelector("[data-tram-error]");
+  const avisBiciBlock = blocFisic.querySelector("[data-tram-avis-bici]");
 
   function recomputeTramFisic() {
     const iniciOpt = iniciSel.selectedOptions[0];
@@ -1794,6 +1874,7 @@
     if (!iniciOpt || !iniciOpt.value || !finalOpt || !finalOpt.value) {
       kmBlock.classList.remove("visible");
       errBlock.classList.remove("visible");
+      avisBiciBlock.classList.remove("visible");
       actualitzarTotal();
       return;
     }
@@ -1801,8 +1882,14 @@
     if (resultat.error) {
       kmBlock.classList.remove("visible");
       errBlock.classList.add("visible");
+      avisBiciBlock.classList.remove("visible");
     } else {
       errBlock.classList.remove("visible");
+      // El primer dia (Berguedà) té trams de muntanya no aptes per a
+      // bicicleta: avisem si el tram triat el toca, encara que sigui
+      // parcialment (dIni === 1, independentment d'on acabi).
+      const dIniNum = Number(iniciOpt.dataset.dia);
+      avisBiciBlock.classList.toggle("visible", modalitatActiva === "bici" && dIniNum === 1);
       const etapaWord = { ca: "etapa", es: "etapa", en: "stage" }[currentLang];
       const etapesWord = { ca: "etapes", es: "etapas", en: "stages" }[currentLang];
       const samarretaWord = { ca: "samarreta", es: "camiseta", en: "t-shirt" }[currentLang];
@@ -1870,6 +1957,7 @@
     tramFilaPersonalitzat.hidden = true;
     kmBlock.classList.remove("visible");
     errBlock.classList.remove("visible");
+    avisBiciBlock.classList.remove("visible");
     omplirSelectMunicipis(iniciSel, [], "");
     omplirSelectMunicipis(finalSel, [], "");
     finalSel.disabled = true;
@@ -2087,15 +2175,13 @@
         const telefon = val(".d0-telefon", blocDorsal0);
         const relacio = val(".d0-relacio", blocDorsal0);
         const relacioText = selectText(".d0-relacio", blocDorsal0);
-        const sexe = val(".d0-sexe", blocDorsal0);
         if (!nom || !cognoms) throw new Error(msg("falta_nom_cognoms"));
         if (!email || !emailValid(email)) throw new Error(msg("email_invalid"));
         if (!telefon) throw new Error(msg("falta_telefon"));
         if (!telefonValid(telefon)) throw new Error(msg("telefon_invalid"));
         if (!relacio) throw new Error(msg("falta_relacio"));
-        if (!sexe) throw new Error(msg("falta_sexe"));
         dades = { ...dades, nom, cognoms, email, telefon, relacioText };
-        payloadAPI = { modalitat: "dorsal0", email_contacte: email, nom, cognoms, telefon, sexe };
+        payloadAPI = { modalitat: "dorsal0", email_contacte: email, nom, cognoms, telefon };
       }
 
       if (modalitatActiva === "animar") {
@@ -2105,7 +2191,6 @@
         const telefon = val(".an-telefon", blocAnimar);
         const relacio = val(".an-relacio", blocAnimar);
         const relacioText = selectText(".an-relacio", blocAnimar);
-        const sexe = val(".an-sexe", blocAnimar);
         const recollidaSel = blocAnimar.querySelector(".an-recollida");
         const recollidaText = recollidaSel.selectedOptions[0] ? recollidaSel.selectedOptions[0].textContent : "";
 
@@ -2127,19 +2212,20 @@
         if (!telefon) throw new Error(msg("falta_telefon"));
         if (!telefonValid(telefon)) throw new Error(msg("telefon_invalid"));
         if (!relacio) throw new Error(msg("falta_relacio"));
-        if (!sexe) throw new Error(msg("falta_sexe"));
         if (!recollidaSel.value) throw new Error(msg("falta_recollida"));
 
         const teClub = checked('.an-club[value="si"]', blocAnimar);
         const clubNom = teClub ? val(".an-club-nom", blocAnimar) : "";
+        const assisteixCloenda = checked('.an-cloenda[value="si"]', blocAnimar);
 
         dades = { ...dades, nom, cognoms, email, telefon, relacioText, samarretes, recollida: recollidaText, clubNom };
         payloadAPI = {
-          modalitat: "animar", email_contacte: email, nom, cognoms, telefon, relacio, sexe,
+          modalitat: "animar", email_contacte: email, nom, cognoms, telefon, relacio,
           samarretes: samarretes.map((s) => ({ talla: s.talla, quantitat: s.quantitat })),
           recollida_municipi: recollidaSel.value,
           recollida_municipi_nom: recollidaText,
           club_nom: clubNom,
+          assisteix_cloenda: assisteixCloenda,
         };
       }
 
@@ -2162,6 +2248,7 @@
         const llicencia = val(".fi-llicencia", blocFisic);
         const teClub = checked('.fi-club[value="si"]', blocFisic);
         const clubNom = teClub ? val(".fi-club-nom", blocFisic) : "";
+        const assisteixCloenda = checked('.fi-cloenda[value="si"]', blocFisic);
         const recollidaSel = blocFisic.querySelector(".fi-recollida");
         const recollidaText = recollidaSel.selectedOptions[0] ? recollidaSel.selectedOptions[0].textContent : "";
         const tutorNom = val(".fi-tutor-nom", blocFisic);
@@ -2217,6 +2304,7 @@
           acceptacio_reglament: reglament, consentiment_dades: rgpd, cessio_imatge: imatge,
           recollida_municipi: recollidaSel.value,
           recollida_municipi_nom: recollidaText,
+          assisteix_cloenda: assisteixCloenda,
         };
       }
     } catch (err) {
