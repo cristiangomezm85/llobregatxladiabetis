@@ -6,6 +6,31 @@
   <meta name="robots" content="noindex,nofollow">
   <title>LxD · Admin de contenidos</title>
   <link rel="stylesheet" href="../assets/lxd-admin.css">
+
+<style id="lxd-admin-insights-css">
+.admin-insights{margin:1.25rem 0 2rem;padding:1.25rem;border:1px solid var(--linia,#e6e9ef);border-radius:18px;background:#fff}
+.insights-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+.insights-head h3{margin:.15rem 0 0}
+.insights-cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.75rem;margin-bottom:1rem}
+.insight-kpi{border:1px solid var(--linia,#e6e9ef);border-radius:14px;padding:.9rem 1rem;background:#fafbfc}
+.insight-kpi strong{display:block;font-size:1.55rem;line-height:1.1;color:var(--blau-llobregat,#15315f)}
+.insight-kpi span{display:block;margin-top:.3rem;color:var(--gris,#697386);font-size:.78rem}
+.insights-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.insight-card{border:1px solid var(--linia,#e6e9ef);border-radius:14px;padding:1rem;min-width:0}
+.insight-card-wide{grid-column:1/-1}
+.insight-card-head h4{margin:0;font-size:1rem}
+.insight-card-head p{margin:.3rem 0 .9rem;color:var(--gris,#697386);font-size:.78rem;line-height:1.45}
+.bar-chart{display:grid;gap:.5rem;max-height:330px;overflow:auto;padding-right:.25rem}
+.bar-row{display:grid;grid-template-columns:minmax(120px,1.1fr) 3fr auto;align-items:center;gap:.6rem;font-size:.78rem}
+.bar-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{height:10px;border-radius:99px;background:#edf1f5;overflow:hidden}
+.bar-fill{height:100%;border-radius:99px;background:var(--blau-diabetis,#1e72d4);min-width:2px}
+.bar-value{font-weight:700;min-width:2.2rem;text-align:right}
+.insight-empty{padding:1.2rem;border:1px dashed #d7dce5;border-radius:10px;color:var(--gris,#697386);font-size:.82rem}
+.insight-note{margin:.9rem 0 0;color:var(--gris,#697386);font-size:.76rem;line-height:1.5}
+@media(max-width:1050px){.insights-cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.insights-head{align-items:flex-start;flex-direction:column}.insights-grid{grid-template-columns:1fr}.insight-card-wide{grid-column:auto}.insights-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.bar-row{grid-template-columns:minmax(90px,1fr) 2fr auto}}
+</style>
 </head>
 <body>
   <header class="admin-topbar">
@@ -129,6 +154,40 @@
         </div>
 
         <div class="stats-grid" id="statsGrid"></div>
+
+        <section class="admin-insights" id="adminInsights" aria-label="Estadísticas de inscripciones">
+          <div class="insights-head">
+            <div>
+              <p class="eyebrow">Operativa</p>
+              <h3>Resumen para organización</h3>
+            </div>
+            <button class="btn btn-ghost" id="reloadInsightsBtn" type="button">Actualizar gráficos</button>
+          </div>
+          <div class="insights-cards" id="insightsCards"></div>
+          <div class="insights-grid">
+            <article class="insight-card insight-card-wide">
+              <div class="insight-card-head"><div><h4>Participantes por municipio</h4><p>Estimación de participantes que pasan por cada municipio del recorrido, según los tramos contratados.</p></div></div>
+              <div id="municipiosChart" class="bar-chart" aria-live="polite"></div>
+            </article>
+            <article class="insight-card">
+              <div class="insight-card-head"><div><h4>Participantes por etapa</h4><p>Útil para dimensionar avituallamientos y logística.</p></div></div>
+              <div id="diasChart" class="bar-chart"></div>
+            </article>
+            <article class="insight-card">
+              <div class="insight-card-head"><div><h4>Camisetas por talla</h4><p>Incluye registros antiguos usando <code>unitats</code> y los nuevos usando el detalle de camisetas.</p></div></div>
+              <div id="tallasChart" class="bar-chart"></div>
+            </article>
+            <article class="insight-card">
+              <div class="insight-card-head"><div><h4>Participantes por modalidad</h4></div></div>
+              <div id="modalitatsChart" class="bar-chart"></div>
+            </article>
+            <article class="insight-card">
+              <div class="insight-card-head"><div><h4>Municipio de recogida</h4><p>Para logística de recogidas, no confundir con municipio de paso del recorrido.</p></div></div>
+              <div id="recollidaChart" class="bar-chart"></div>
+            </article>
+          </div>
+          <p class="insight-note" id="insightsNote"></p>
+        </section>
 
         <div class="split">
           <div class="list-card">
@@ -357,5 +416,5 @@ ADMIN_TOKEN=...</code></pre>
   </main>
 
   <script src="../assets/lxd-admin.js" defer></script>
-</body>
+\n<script id="lxd-admin-insights-js">\n(function(){\n  'use strict';\n  const apiCandidates=['/api/admin-content?type=inscripcions','/.netlify/functions/admin-content?type=inscripcions'];\n  const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));\n  const token=()=>{\n    const input=document.getElementById('adminTokenInput');\n    if(input&&input.value.trim()) return input.value.trim();\n    const keys=['lxd-admin-token','adminToken','admin_token','ADMIN_TOKEN'];\n    for(const storage of [sessionStorage,localStorage]){\n      for(const k of keys){try{const v=storage.getItem(k);if(v)return v}catch(e){}}\n      try{for(let i=0;i<storage.length;i++){const k=storage.key(i)||'';if(/admin.*token|token.*admin/i.test(k)){const v=storage.getItem(k);if(v)return v}}}catch(e){}\n    }\n    return '';\n  };\n  async function getJSON(){\n    let last;\n    for(const url of apiCandidates){\n      try{\n        const headers={}; const t=token(); if(t) headers.Authorization='Bearer '+t;\n        const r=await fetch(url,{headers,cache:'no-store'});\n        if(r.ok) return await r.json();\n        last=new Error('HTTP '+r.status);\n        if(r.status===401) break;\n      }catch(e){last=e}\n    }\n    throw last||new Error('No se pudo cargar las inscripciones');\n  }\n  async function getPobles(){\n    try{const r=await fetch('/pobles.json',{cache:'no-store'});if(!r.ok)return [];const d=await r.json();return Array.isArray(d.pobles)?d.pobles:[]}catch(e){return []}\n  }\n  function paid(o){return String(o.estat||'').toLowerCase()==='pagat'}\n  function payload(o){return o&&o.payload&&typeof o.payload==='object'?o.payload:{}}\n  function daysOf(p){\n    if(Array.isArray(p.tram_dies)&&p.tram_dies.length)return p.tram_dies.map(Number).filter(n=>n>=1&&n<=3);\n    const a=Number(p.tram_dia_inici),b=Number(p.tram_dia_final);\n    if(a&&b&&b>=a){const out=[];for(let i=a;i<=b;i++)out.push(i);return out}\n    const m=String(p.tram_tipus||'').match(/^dia-(\d)$/); if(m)return [Number(m[1])];\n    return []\n  }\n  function shirtEntries(o){\n    const p=payload(o), out=[];\n    if(Array.isArray(p.samarretes)){\n      p.samarretes.forEach(x=>{const q=Number(x&&x.quantitat||0);if(q>0)out.push({talla:String(x.talla||p.talla_samarreta||'Sense talla'),q})});\n    }\n    if(!out.length){\n      const q=Number(o.unitats||0); const talla=p.talla_samarreta;\n      if(q>0&&talla) out.push({talla,q});\n    }\n    return out;\n  }\n  function normalizeSize(s){return String(s||'').replace(/^home[-_]/i,'Hombre ').replace(/^dona[-_]/i,'Mujer ').replace(/^unisex[-_]/i,'Unisex ').replace(/-/g,' ').trim()||'Sin talla'}\n  function aggregateShirts(ordres){const m={};let total=0;ordres.filter(paid).forEach(o=>shirtEntries(o).forEach(x=>{const k=normalizeSize(x.talla);m[k]=(m[k]||0)+x.q;total+=x.q}));return {m,total}}\n  function aggregate(list,keyFn){const m={};list.forEach(x=>{const k=keyFn(x)||'Sin dato';m[k]=(m[k]||0)+1});return m}\n  function renderBars(id,data,limit=40){\n    const el=document.getElementById(id);if(!el)return;const entries=Object.entries(data).sort((a,b)=>b[1]-a[1]).slice(0,limit);\n    if(!entries.length){el.innerHTML='<div class="insight-empty">No hay datos todavía.</div>';return}\n    const max=Math.max(...entries.map(x=>x[1]),1);\n    el.innerHTML=entries.map(([label,v])=>`<div class="bar-row"><span class="bar-label" title="${esc(label)}">${esc(label)}</span><span class="bar-track"><span class="bar-fill" style="width:${(v/max*100).toFixed(1)}%"></span></span><span class="bar-value">${v}</span></div>`).join('');\n  }\n  function routeMunicipalities(ordres,pobles){\n    const municipis=pobles.filter(p=>p&&p.tipus==='municipi');\n    const byDay={1:[],2:[],3:[]}; municipis.forEach(p=>{const d=Number(p.dia);if(byDay[d])byDay[d].push(p)});\n    Object.values(byDay).forEach(a=>a.sort((x,y)=>Number(x.km||0)-Number(y.km||0)));\n    const out={};\n    ordres.filter(paid).forEach(o=>{\n      const p=payload(o), days=daysOf(p), tipus=String(p.tram_tipus||'');\n      if(!days.length)return;\n      let startDay=Number(p.tram_dia_inici)||null, endDay=Number(p.tram_dia_final)||null;\n      if(!startDay||!endDay){startDay=Math.min(...days);endDay=Math.max(...days)}\n      days.forEach(day=>{\n        let minKm=-Infinity,maxKm=Infinity;\n        const isFirst=day===startDay,isLast=day===endDay;\n        if(isFirst&&p.tram_inici){const a=municipis.find(x=>String(x.id)===String(p.tram_inici));if(a)minKm=Number(a.km)}\n        if(isLast&&p.tram_final){const b=municipis.find(x=>String(x.id)===String(p.tram_final));if(b)maxKm=Number(b.km)}\n        if(tipus==='tot'||/^dia-\d$/.test(tipus)){minKm=-Infinity;maxKm=Infinity}\n        (byDay[day]||[]).forEach(m=>{const km=Number(m.km);if(km>=minKm&&km<=maxKm){const name=m.municipi_principal||m.nom;out[name]=(out[name]||0)+1}});\n      });\n    });\n    return out;\n  }\n  async function render(){\n    const note=document.getElementById('insightsNote');\n    try{\n      const data=await getJSON(), ordres=Array.isArray(data.ordres)?data.ordres:[], pagats=ordres.filter(paid), pendents=ordres.filter(o=>!paid(o));\n      const shirts=aggregateShirts(ordres);\n      document.getElementById('insightsCards').innerHTML=[\n        ['Participantes',pagats.length],['Camisetas',shirts.total],['Pendientes',pendents.length],['Día 1',pagats.filter(o=>daysOf(payload(o)).includes(1)).length],['Día 2',pagats.filter(o=>daysOf(payload(o)).includes(2)).length]\n      ].map(x=>`<div class="insight-kpi"><strong>${x[1]}</strong><span>${x[0]}</span></div>`).join('');\n      const dias={1:0,2:0,3:0};pagats.forEach(o=>daysOf(payload(o)).forEach(d=>dias[d]=(dias[d]||0)+1));\n      renderBars('diasChart',{'Día 1':dias[1]||0,'Día 2':dias[2]||0,'Día 3':dias[3]||0});\n      renderBars('tallasChart',shirts.m);\n      renderBars('modalitatsChart',aggregate(pagats,o=>{const m=String(o.modalitat||'').toLowerCase();return m==='corrent'?'Correr':m==='caminant'?'Caminar':m==='bici'?'Bici':m==='animar'?'Samarreta solidària':m==='dorsal0'?'Dorsal 0':m||'Sin modalidad'}));\n      renderBars('recollidaChart',aggregate(pagats,o=>payload(o).recollida_municipi_nom||payload(o).recollida_municipi));\n      const pobles=await getPobles();\n      if(pobles.length){renderBars('municipiosChart',routeMunicipalities(pagats,pobles),80);note.textContent='El gráfico de municipios de paso se calcula a partir de los días/tramos inscritos y de pobles.json. Para logística es más útil que el municipio de recogida.'}\n      else{renderBars('municipiosChart',aggregate(pagats,o=>payload(o).recollida_municipi_nom||payload(o).recollida_municipi),80);note.textContent='No se ha podido cargar pobles.json; se muestra como alternativa el municipio de recogida.'}\n    }catch(e){\n      const ids=['municipiosChart','diasChart','tallasChart','modalitatsChart','recollidaChart'];ids.forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='<div class="insight-empty">No se han podido cargar las estadísticas. Revisa el token del admin.</div>'});\n      if(note)note.textContent=e.message||String(e);\n    }\n  }\n  function init(){\n    document.querySelectorAll('[data-tab="inscripcions"]').forEach(b=>b.addEventListener('click',()=>setTimeout(render,100)));\n    const r=document.getElementById('reloadInscripcionsBtn');if(r)r.addEventListener('click',()=>setTimeout(render,150));\n    const ri=document.getElementById('reloadInsightsBtn');if(ri)ri.addEventListener('click',render);\n  }\n  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();\n})();\n</script>\n</body>
 </html>
