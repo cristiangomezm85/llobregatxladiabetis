@@ -27,10 +27,10 @@ exports.handler = async (event) => {
   // samarretes) ni a "dorsal0" (donació simbòlica): cap dels dos és "una
   // inscripció de participant", així que la mateixa persona ha de poder
   // repetir amb el mateix email tants cops com vulgui.
-  const MODALITATS_SENSE_RESTRICCIO_EMAIL = ["animar", "dorsal0"];
+  const MODALITATS_SENSE_RESTRICCIO_EMAIL = new Set(["animar", "dorsal0"]);
   try {
     if (
-      !MODALITATS_SENSE_RESTRICCIO_EMAIL.includes(payload.modalitat) &&
+      !MODALITATS_SENSE_RESTRICCIO_EMAIL.has(payload.modalitat) &&
       (await emailJaRegistrat(payload.email_contacte))
     ) {
       return resposta(409, { error: "EMAIL_JA_REGISTRAT" });
@@ -95,7 +95,7 @@ exports.handler = async (event) => {
   }
 
   if (esGratuit) {
-    if (!MODALITATS_SENSE_RESTRICCIO_EMAIL.includes(dadesOrdre.modalitat)) {
+    if (!MODALITATS_SENSE_RESTRICCIO_EMAIL.has(dadesOrdre.modalitat)) {
       try {
         await marcarEmailPagat(dadesOrdre.email_contacte, orderId);
       } catch (e) {
