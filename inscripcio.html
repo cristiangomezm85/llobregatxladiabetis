@@ -237,7 +237,7 @@
     background:#F8FAFC; border:1px solid var(--linia,#E4E4DC);
     border-radius:14px; padding:10px 14px 8px; margin:10px 0 16px; text-align:center;
   }
-  .samarreta-preview img{ width:130px; max-width:48%; height:auto; border-radius:8px; flex-shrink:0; }
+  .samarreta-preview img{ width:90px; max-width:30%; height:auto; border-radius:8px; flex-shrink:0; }
   .samarreta-preview p{ margin:0; font-size:12px; color:var(--gris); line-height:1.35; }
   .samarreta-preview strong{ color:var(--blau-llobregat); }
 
@@ -729,7 +729,7 @@
       </div>
 
       <div class="camp">
-        <label data-i18n="lbl_sexe">Sexe *</label>
+        <label data-i18n="lbl_sexe">Sexe</label>
         <select class="fi-sexe">
           <option value="" data-i18n="opt_sexe_placeholder">Tria una opció</option>
           <option value="home" data-i18n="opt_sexe_home">Home</option>
@@ -2293,7 +2293,6 @@
         if (!emergenciaNom || !emergenciaTelefon) throw new Error(msg("falta_emergencia"));
         if (!telefonValid(emergenciaTelefon)) throw new Error(msg("emergencia_telefon_invalid"));
         if (!relacio) throw new Error(msg("falta_relacio"));
-        if (!sexe) throw new Error(msg("falta_sexe"));
         if (!tramTipusActiu) throw new Error(msg("falta_tram_tipus"));
         if (!iniciOpt || !iniciOpt.value || !finalOpt || !finalOpt.value) throw new Error(msg("falta_tram"));
         const tram = calcularTramClient(iniciOpt, finalOpt);
