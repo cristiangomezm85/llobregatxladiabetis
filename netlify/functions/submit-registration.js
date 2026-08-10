@@ -21,25 +21,29 @@ exports.handler = async (event) => {
     return resposta(400, { error: "JSON invàlid" });
   }
 
-  // Inscripció única per email: si ja hi ha una comanda pagada amb aquest
-  // mateix email, no deixem continuar (MailerLite no permet enviar-hi un
-  // altre correu igual el mateix dia). No aplica a "animar" (compra de
-  // samarretes) ni a "dorsal0" (donació simbòlica): cap dels dos és "una
-  // inscripció de participant", així que la mateixa persona ha de poder
-  // repetir amb el mateix email tants cops com vulgui.
-  const MODALITATS_SENSE_RESTRICCIO_EMAIL = ["animar", "dorsal0"];
-  try {
-    if (
-      !MODALITATS_SENSE_RESTRICCIO_EMAIL.includes(payload.modalitat) &&
-      (await emailJaRegistrat(payload.email_contacte))
-    ) {
-      return resposta(409, { error: "EMAIL_JA_REGISTRAT" });
+  // Una mateixa adreça només pot fer una inscripció de participant o un
+  // "Dorsal 0". La compra de samarretes ("animar") queda expressament fora
+  // d'aquesta restricció i es pot repetir amb el mateix email.
+  const MODALITATS_SENSE_RESTRICCIO_EMAIL = ["animar"];
+  const emailContacte = String(payload.email_contacte || "").trim().toLowerCase();
+
+  if (!emailContacte) {
+    return resposta(400, { error: "Falta l'email de contacte" });
+  }
+
+  if (!MODALITATS_SENSE_RESTRICCIO_EMAIL.includes(payload.modalitat)) {
+    try {
+      if (await emailJaRegistrat(emailContacte)) {
+        return resposta(409, { error: "EMAIL_JA_REGISTRAT" });
+      }
+    } catch (e) {
+      console.error("Error comprovant email duplicat:", e);
+      // Si no podem comprovar el duplicat, no continuem: així no es pot
+      // crear una inscripció duplicada per un error temporal de l'emmagatzematge.
+      return resposta(503, {
+        error: "No s'ha pogut comprovar l'email. Torna-ho a provar.",
+      });
     }
-  } catch (e) {
-    console.error("Error comprovant email duplicat:", e);
-    // Si la comprovació falla per error tècnic, deixem continuar: és
-    // preferible arriscar-se a un duplicat rar que bloquejar inscripcions
-    // legítimes per una caiguda temporal de l'emmagatzematge.
   }
 
   let calcul;
@@ -78,7 +82,7 @@ exports.handler = async (event) => {
     unitats: calcul.unitats,
     descompte_heroi: !!calcul.descompteHeroiAplicat,
     estat: esGratuit ? "pagat" : "pendent",
-    email_contacte: payload.email_contacte || "",
+    email_contacte: emailContacte,
     descripcio,
     data_creacio: new Date().toISOString(),
   };

@@ -52,11 +52,10 @@ exports.handler = async (event) => {
     data_pagament: new Date().toISOString(),
   });
 
-  // No marquem "animar" (compra de samarretes) ni "dorsal0" (donació
-  // simbòlica) a l'índex d'emails pagats: no són "inscripcions de
-  // participant", i la mateixa persona ha de poder repetir amb el mateix
-  // email tants cops com vulgui.
-  if (!["animar", "dorsal0"].includes(ordre.modalitat)) {
+  // No marquem "animar" (compra de samarretes) a l'índex d'emails
+  // pagats. Dorsal 0 sí queda registrat i, per tant, no se puede repetir
+  // con el mismo email.
+  if (!["animar"].includes(ordre.modalitat)) {
     try {
       await marcarEmailPagat(ordre.email_contacte, orderId);
     } catch (e) {
