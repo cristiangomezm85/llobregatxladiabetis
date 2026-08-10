@@ -130,14 +130,14 @@ async function validarFisic(payload) {
   if (!payload.telefon) throw new Error("Falta el telèfon mòbil");
   if (!telefonValid(payload.telefon)) throw new Error("El telèfon no és vàlid");
   if (!emailValid(payload.email_contacte)) throw new Error("Falta un email vàlid");
+  if (!payload.relacio) throw new Error("Falta la relació amb la diabetis tipus 1");
+  if (!["home", "dona"].includes(payload.sexe)) throw new Error("Falta indicar el sexe");
   if (!payload.contacte_emergencia_nom || !payload.contacte_emergencia_telefon) {
     throw new Error("Falta el contacte d'emergència");
   }
   if (!telefonValid(payload.contacte_emergencia_telefon)) {
     throw new Error("El telèfon d'emergència no és vàlid");
   }
-  if (!payload.relacio) throw new Error("Falta la relació amb la diabetis tipus 1");
-  if (!["home", "dona"].includes(payload.sexe)) throw new Error("Falta indicar el sexe");
   if (!TALLES_VALIDES.includes(payload.talla_samarreta)) {
     throw new Error("Talla de samarreta no vàlida");
   }
@@ -155,6 +155,14 @@ async function validarFisic(payload) {
   payload.tram_km = payload.tram_tipus === "cloenda" ? tram.kmTotal * 2 : tram.kmTotal;
   payload.tram_inici_nom = tram.iniciNom;
   payload.tram_final_nom = tram.finalNom;
+
+  // Cada etapa inclou una samarreta. Guardem també aquesta informació de
+  // manera explícita dins del payload perquè quedi visible al Blob i es
+  // pugui enviar a MailerLite igual que les samarretes de "animar".
+  payload.samarretes = [{
+    talla: payload.talla_samarreta,
+    quantitat: tram.dies.length,
+  }];
 
   if (payload.federat && !payload.num_llicencia_federativa) {
     throw new Error("Falta el número de llicència federativa");

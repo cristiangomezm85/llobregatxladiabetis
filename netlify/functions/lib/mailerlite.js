@@ -49,9 +49,9 @@ async function notificarMailerLite(ordre, orderId) {
     if (!isNaN(d)) dataInscripcio = d.toLocaleDateString("ca-ES", { day: "2-digit", month: "2-digit", year: "numeric" });
   }
 
-  // Resum de totes les samarretes comprades (només "animar" en pot tenir
-  // més d'una, amb tallа i quantitat cadascuna). Per a la resta de
-  // modalitats queda buit.
+  // Resum de les samarretes. Tant "animar" com les modalitats físiques
+  // arriben aquí amb payload.samarretes: en les físiques, pricing.js hi
+  // posa una entrada amb la talla i una quantitat igual al nombre d'etapes.
   let samarretesResum = "";
   if (Array.isArray(payload.samarretes) && payload.samarretes.length) {
     samarretesResum = payload.samarretes
