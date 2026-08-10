@@ -361,6 +361,26 @@ async function readContent(type) {
   if (type === 'inscripcions') {
     const ordres = await llistarOrdres();
     ordres.sort((a, b) => String(b.data_creacio || '').localeCompare(String(a.data_creacio || '')));
+
+    // Normalitzem les camisetes també per als registres antics.
+    // Abans del canvi, les inscripcions físiques només guardaven `unitats`
+    // i `talla_samarreta`; ara el frontend també pot guardar `samarretes`.
+    // Això permet que l'admin tracti tots dos formats igual.
+    for (const ordre of ordres) {
+      const payload = ordre && ordre.payload && typeof ordre.payload === 'object' ? ordre.payload : {};
+      let samarretes = Array.isArray(payload.samarretes) ? payload.samarretes : [];
+      if (!samarretes.length && Number(ordre.unitats) > 0 && payload.talla_samarreta) {
+        samarretes = [{
+          talla: payload.talla_samarreta,
+          quantitat: Number(ordre.unitats)
+        }];
+      }
+      const total = samarretes.reduce((sum, item) => sum + Math.max(0, Number(item && item.quantitat || 0)), 0);
+      ordre.payload = { ...payload, samarretes };
+      ordre.camisetes_total = total;
+      ordre.samarretes_total = total;
+    }
+
     return { ordres };
   }
   if (backendMode() === 'github' && !def.private) {
