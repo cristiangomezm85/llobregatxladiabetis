@@ -23,9 +23,11 @@ exports.handler = async (event) => {
 
   // Inscripció única per email: si ja hi ha una comanda pagada amb aquest
   // mateix email, no deixem continuar (MailerLite no permet enviar-hi un
-  // altre correu igual el mateix dia).
+  // altre correu igual el mateix dia). No aplica a "animar": qui compra
+  // samarretes ha de poder tornar a fer-ho amb el mateix email tants cops
+  // com vulgui (per exemple per encarregar-ne més).
   try {
-    if (await emailJaRegistrat(payload.email_contacte)) {
+    if (payload.modalitat !== "animar" && (await emailJaRegistrat(payload.email_contacte))) {
       return resposta(409, { error: "EMAIL_JA_REGISTRAT" });
     }
   } catch (e) {
@@ -88,10 +90,12 @@ exports.handler = async (event) => {
   }
 
   if (esGratuit) {
-    try {
-      await marcarEmailPagat(dadesOrdre.email_contacte, orderId);
-    } catch (e) {
-      console.error("Error marcant email com a pagat:", e);
+    if (dadesOrdre.modalitat !== "animar") {
+      try {
+        await marcarEmailPagat(dadesOrdre.email_contacte, orderId);
+      } catch (e) {
+        console.error("Error marcant email com a pagat:", e);
+      }
     }
     try {
       await notificarMailerLite(dadesOrdre, orderId);

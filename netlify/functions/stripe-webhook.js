@@ -52,10 +52,12 @@ exports.handler = async (event) => {
     data_pagament: new Date().toISOString(),
   });
 
-  try {
-    await marcarEmailPagat(ordre.email_contacte, orderId);
-  } catch (e) {
-    console.error("Error marcant email com a pagat:", e);
+  if (ordre.modalitat !== "animar") {
+    try {
+      await marcarEmailPagat(ordre.email_contacte, orderId);
+    } catch (e) {
+      console.error("Error marcant email com a pagat:", e);
+    }
   }
 
   try {
