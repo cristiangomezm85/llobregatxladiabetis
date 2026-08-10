@@ -416,5 +416,130 @@ ADMIN_TOKEN=...</code></pre>
   </main>
 
   <script src="../assets/lxd-admin.js" defer></script>
-\n<script id="lxd-admin-insights-js">\n(function(){\n  'use strict';\n  const apiCandidates=['/api/admin-content?type=inscripcions','/.netlify/functions/admin-content?type=inscripcions'];\n  const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));\n  const token=()=>{\n    const input=document.getElementById('adminTokenInput');\n    if(input&&input.value.trim()) return input.value.trim();\n    const keys=['lxd-admin-token','adminToken','admin_token','ADMIN_TOKEN'];\n    for(const storage of [sessionStorage,localStorage]){\n      for(const k of keys){try{const v=storage.getItem(k);if(v)return v}catch(e){}}\n      try{for(let i=0;i<storage.length;i++){const k=storage.key(i)||'';if(/admin.*token|token.*admin/i.test(k)){const v=storage.getItem(k);if(v)return v}}}catch(e){}\n    }\n    return '';\n  };\n  async function getJSON(){\n    let last;\n    for(const url of apiCandidates){\n      try{\n        const headers={}; const t=token(); if(t) headers.Authorization='Bearer '+t;\n        const r=await fetch(url,{headers,cache:'no-store'});\n        if(r.ok) return await r.json();\n        last=new Error('HTTP '+r.status);\n        if(r.status===401) break;\n      }catch(e){last=e}\n    }\n    throw last||new Error('No se pudo cargar las inscripciones');\n  }\n  async function getPobles(){\n    try{const r=await fetch('/pobles.json',{cache:'no-store'});if(!r.ok)return [];const d=await r.json();return Array.isArray(d.pobles)?d.pobles:[]}catch(e){return []}\n  }\n  function paid(o){return String(o.estat||'').toLowerCase()==='pagat'}\n  function payload(o){return o&&o.payload&&typeof o.payload==='object'?o.payload:{}}\n  function daysOf(p){\n    if(Array.isArray(p.tram_dies)&&p.tram_dies.length)return p.tram_dies.map(Number).filter(n=>n>=1&&n<=3);\n    const a=Number(p.tram_dia_inici),b=Number(p.tram_dia_final);\n    if(a&&b&&b>=a){const out=[];for(let i=a;i<=b;i++)out.push(i);return out}\n    const m=String(p.tram_tipus||'').match(/^dia-(\d)$/); if(m)return [Number(m[1])];\n    return []\n  }\n  function shirtEntries(o){\n    const p=payload(o), out=[];\n    if(Array.isArray(p.samarretes)){\n      p.samarretes.forEach(x=>{const q=Number(x&&x.quantitat||0);if(q>0)out.push({talla:String(x.talla||p.talla_samarreta||'Sense talla'),q})});\n    }\n    if(!out.length){\n      const q=Number(o.unitats||0); const talla=p.talla_samarreta;\n      if(q>0&&talla) out.push({talla,q});\n    }\n    return out;\n  }\n  function normalizeSize(s){return String(s||'').replace(/^home[-_]/i,'Hombre ').replace(/^dona[-_]/i,'Mujer ').replace(/^unisex[-_]/i,'Unisex ').replace(/-/g,' ').trim()||'Sin talla'}\n  function aggregateShirts(ordres){const m={};let total=0;ordres.filter(paid).forEach(o=>shirtEntries(o).forEach(x=>{const k=normalizeSize(x.talla);m[k]=(m[k]||0)+x.q;total+=x.q}));return {m,total}}\n  function aggregate(list,keyFn){const m={};list.forEach(x=>{const k=keyFn(x)||'Sin dato';m[k]=(m[k]||0)+1});return m}\n  function renderBars(id,data,limit=40){\n    const el=document.getElementById(id);if(!el)return;const entries=Object.entries(data).sort((a,b)=>b[1]-a[1]).slice(0,limit);\n    if(!entries.length){el.innerHTML='<div class="insight-empty">No hay datos todavía.</div>';return}\n    const max=Math.max(...entries.map(x=>x[1]),1);\n    el.innerHTML=entries.map(([label,v])=>`<div class="bar-row"><span class="bar-label" title="${esc(label)}">${esc(label)}</span><span class="bar-track"><span class="bar-fill" style="width:${(v/max*100).toFixed(1)}%"></span></span><span class="bar-value">${v}</span></div>`).join('');\n  }\n  function routeMunicipalities(ordres,pobles){\n    const municipis=pobles.filter(p=>p&&p.tipus==='municipi');\n    const byDay={1:[],2:[],3:[]}; municipis.forEach(p=>{const d=Number(p.dia);if(byDay[d])byDay[d].push(p)});\n    Object.values(byDay).forEach(a=>a.sort((x,y)=>Number(x.km||0)-Number(y.km||0)));\n    const out={};\n    ordres.filter(paid).forEach(o=>{\n      const p=payload(o), days=daysOf(p), tipus=String(p.tram_tipus||'');\n      if(!days.length)return;\n      let startDay=Number(p.tram_dia_inici)||null, endDay=Number(p.tram_dia_final)||null;\n      if(!startDay||!endDay){startDay=Math.min(...days);endDay=Math.max(...days)}\n      days.forEach(day=>{\n        let minKm=-Infinity,maxKm=Infinity;\n        const isFirst=day===startDay,isLast=day===endDay;\n        if(isFirst&&p.tram_inici){const a=municipis.find(x=>String(x.id)===String(p.tram_inici));if(a)minKm=Number(a.km)}\n        if(isLast&&p.tram_final){const b=municipis.find(x=>String(x.id)===String(p.tram_final));if(b)maxKm=Number(b.km)}\n        if(tipus==='tot'||/^dia-\d$/.test(tipus)){minKm=-Infinity;maxKm=Infinity}\n        (byDay[day]||[]).forEach(m=>{const km=Number(m.km);if(km>=minKm&&km<=maxKm){const name=m.municipi_principal||m.nom;out[name]=(out[name]||0)+1}});\n      });\n    });\n    return out;\n  }\n  async function render(){\n    const note=document.getElementById('insightsNote');\n    try{\n      const data=await getJSON(), ordres=Array.isArray(data.ordres)?data.ordres:[], pagats=ordres.filter(paid), pendents=ordres.filter(o=>!paid(o));\n      const shirts=aggregateShirts(ordres);\n      document.getElementById('insightsCards').innerHTML=[\n        ['Participantes',pagats.length],['Camisetas',shirts.total],['Pendientes',pendents.length],['Día 1',pagats.filter(o=>daysOf(payload(o)).includes(1)).length],['Día 2',pagats.filter(o=>daysOf(payload(o)).includes(2)).length]\n      ].map(x=>`<div class="insight-kpi"><strong>${x[1]}</strong><span>${x[0]}</span></div>`).join('');\n      const dias={1:0,2:0,3:0};pagats.forEach(o=>daysOf(payload(o)).forEach(d=>dias[d]=(dias[d]||0)+1));\n      renderBars('diasChart',{'Día 1':dias[1]||0,'Día 2':dias[2]||0,'Día 3':dias[3]||0});\n      renderBars('tallasChart',shirts.m);\n      renderBars('modalitatsChart',aggregate(pagats,o=>{const m=String(o.modalitat||'').toLowerCase();return m==='corrent'?'Correr':m==='caminant'?'Caminar':m==='bici'?'Bici':m==='animar'?'Samarreta solidària':m==='dorsal0'?'Dorsal 0':m||'Sin modalidad'}));\n      renderBars('recollidaChart',aggregate(pagats,o=>payload(o).recollida_municipi_nom||payload(o).recollida_municipi));\n      const pobles=await getPobles();\n      if(pobles.length){renderBars('municipiosChart',routeMunicipalities(pagats,pobles),80);note.textContent='El gráfico de municipios de paso se calcula a partir de los días/tramos inscritos y de pobles.json. Para logística es más útil que el municipio de recogida.'}\n      else{renderBars('municipiosChart',aggregate(pagats,o=>payload(o).recollida_municipi_nom||payload(o).recollida_municipi),80);note.textContent='No se ha podido cargar pobles.json; se muestra como alternativa el municipio de recogida.'}\n    }catch(e){\n      const ids=['municipiosChart','diasChart','tallasChart','modalitatsChart','recollidaChart'];ids.forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='<div class="insight-empty">No se han podido cargar las estadísticas. Revisa el token del admin.</div>'});\n      if(note)note.textContent=e.message||String(e);\n    }\n  }\n  function init(){\n    document.querySelectorAll('[data-tab="inscripcions"]').forEach(b=>b.addEventListener('click',()=>setTimeout(render,100)));\n    const r=document.getElementById('reloadInscripcionsBtn');if(r)r.addEventListener('click',()=>setTimeout(render,150));\n    const ri=document.getElementById('reloadInsightsBtn');if(ri)ri.addEventListener('click',render);\n  }\n  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();\n})();\n</script>\n</body>
+\n<script id="lxd-admin-insights-js">
+(function(){
+  'use strict';
+  const apiCandidates=['/api/admin-content?type=inscripcions','/.netlify/functions/admin-content?type=inscripcions'];
+  const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  const token=()=>{
+    const input=document.getElementById('adminTokenInput');
+    if(input&&input.value.trim()) return input.value.trim();
+    for(const storage of [sessionStorage,localStorage]){
+      try{for(let i=0;i<storage.length;i++){const k=storage.key(i)||'';if(/admin.*token|token.*admin/i.test(k)){const v=storage.getItem(k);if(v)return v}}}catch(e){}
+    }
+    return '';
+  };
+  async function getJSON(){
+    let last;
+    for(const url of apiCandidates){
+      try{
+        const headers={}; const t=token(); if(t) headers.Authorization='Bearer '+t;
+        const r=await fetch(url,{headers,cache:'no-store'});
+        if(r.ok) return await r.json();
+        last=new Error('HTTP '+r.status);
+        if(r.status===401) break;
+      }catch(e){last=e}
+    }
+    throw last||new Error('No se pudo cargar las inscripciones');
+  }
+  async function getPobles(){
+    try{const r=await fetch('/pobles.json',{cache:'no-store'});if(!r.ok)return [];const d=await r.json();return Array.isArray(d.pobles)?d.pobles:[]}catch(e){return []}
+  }
+  function payload(o){return o&&o.payload&&typeof o.payload==='object'?o.payload:{}}
+  function status(o){return String(o&&o.estat||'').toLowerCase()}
+  function active(o){return !['cancelat','cancelado','cancelled','fallit','failed','refunded','retornat'].includes(status(o))}
+  function paid(o){return status(o)==='pagat'}
+  function daysOf(p){
+    if(Array.isArray(p.tram_dies)&&p.tram_dies.length)return p.tram_dies.map(Number).filter(n=>n>=1&&n<=3);
+    const a=Number(p.tram_dia_inici),b=Number(p.tram_dia_final);
+    if(a&&b&&b>=a){const out=[];for(let i=a;i<=b;i++)out.push(i);return out}
+    const m=String(p.tram_tipus||'').match(/^dia-(\d)$/); if(m)return [Number(m[1])];
+    if(String(p.tram_tipus||'').toLowerCase()==='tot')return [1,2,3];
+    return []
+  }
+  function shirtEntries(o){
+    const p=payload(o), out=[];
+    if(Array.isArray(p.samarretes)){
+      p.samarretes.forEach(x=>{const q=Number(x&&x.quantitat||0);if(q>0)out.push({talla:String(x.talla||p.talla_samarreta||'Sense talla'),q})});
+    }
+    if(!out.length){
+      const q=Number(o.camisetes_total||o.samarretes_total||o.unitats||0), talla=p.talla_samarreta;
+      if(q>0&&talla) out.push({talla,q});
+    }
+    return out;
+  }
+  function normalizeSize(s){return String(s||'').replace(/^home[-_]/i,'Hombre ').replace(/^dona[-_]/i,'Mujer ').replace(/^unisex[-_]/i,'Unisex ').replace(/[-_]/g,' ').trim()||'Sin talla'}
+  function aggregateShirts(ordres){const m={};let total=0;ordres.filter(active).forEach(o=>shirtEntries(o).forEach(x=>{const k=normalizeSize(x.talla);m[k]=(m[k]||0)+x.q;total+=x.q}));return {m,total}}
+  function aggregate(list,keyFn){const m={};list.forEach(x=>{const k=keyFn(x)||'Sin dato';m[k]=(m[k]||0)+1});return m}
+  function renderBars(id,data,limit=80){
+    const el=document.getElementById(id);if(!el)return;
+    const entries=Object.entries(data).sort((a,b)=>b[1]-a[1]).slice(0,limit);
+    if(!entries.length){el.innerHTML='<div class="insight-empty">No hay datos todavía.</div>';return}
+    const max=Math.max(...entries.map(x=>x[1]),1);
+    el.innerHTML=entries.map(([label,v])=>`<div class="bar-row"><span class="bar-label" title="${esc(label)}">${esc(label)}</span><span class="bar-track"><span class="bar-fill" style="width:${(v/max*100).toFixed(1)}%"></span></span><span class="bar-value">${v}</span></div>`).join('');
+  }
+  function routeMunicipalities(ordres,pobles){
+    const municipis=pobles.filter(p=>p&&p.tipus==='municipi');
+    const byDay={1:[],2:[],3:[]};
+    municipis.forEach(p=>{const d=Number(p.dia);if(byDay[d])byDay[d].push(p)});
+    Object.values(byDay).forEach(a=>a.sort((x,y)=>Number(x.km||0)-Number(y.km||0)));
+    const out={};
+    ordres.filter(active).forEach(o=>{
+      const p=payload(o), days=daysOf(p), tipus=String(p.tram_tipus||'').toLowerCase();
+      if(!days.length)return;
+      let startDay=Number(p.tram_dia_inici)||Math.min(...days), endDay=Number(p.tram_dia_final)||Math.max(...days);
+      const seen=new Set();
+      days.forEach(day=>{
+        let minKm=-Infinity,maxKm=Infinity;
+        if(day===startDay&&p.tram_inici){const a=municipis.find(x=>String(x.id)===String(p.tram_inici));if(a)minKm=Number(a.km)}
+        if(day===endDay&&p.tram_final){const b=municipis.find(x=>String(x.id)===String(p.tram_final));if(b)maxKm=Number(b.km)}
+        // "tot" i "dia-X" ja representen un recorregut complet del dia.
+        if(tipus==='tot'||/^dia-\d$/.test(tipus)){minKm=-Infinity;maxKm=Infinity}
+        (byDay[day]||[]).forEach(m=>{
+          const km=Number(m.km); const name=String(m.municipi_principal||m.nom||'').trim();
+          if(name&&km>=minKm&&km<=maxKm&&!seen.has(name)){seen.add(name);out[name]=(out[name]||0)+1;}
+        });
+      });
+    });
+    return out;
+  }
+  async function render(){
+    const note=document.getElementById('insightsNote');
+    try{
+      const response=await getJSON();
+      // admin-content retorna { ok, type, data: { ordres } }.
+      // També acceptem { ordres } per compatibilitat amb l'endpoint antic.
+      const ordres=Array.isArray(response?.data?.ordres)?response.data.ordres:(Array.isArray(response?.ordres)?response.ordres:[]);
+      const actius=ordres.filter(active), pagats=ordres.filter(paid), pendents=actius.filter(o=>!paid(o));
+      const shirts=aggregateShirts(ordres);
+      document.getElementById('insightsCards').innerHTML=[
+        ['Inscritos activos',actius.length],['Pagados',pagats.length],['Camisetas',shirts.total],['Pendientes',pendents.length],
+        ['Día 1',actius.filter(o=>daysOf(payload(o)).includes(1)).length],['Día 2',actius.filter(o=>daysOf(payload(o)).includes(2)).length],['Día 3',actius.filter(o=>daysOf(payload(o)).includes(3)).length]
+      ].map(x=>`<div class="insight-kpi"><strong>${x[1]}</strong><span>${x[0]}</span></div>`).join('');
+      const dias={1:0,2:0,3:0};actius.forEach(o=>daysOf(payload(o)).forEach(d=>dias[d]=(dias[d]||0)+1));
+      renderBars('diasChart',{'Día 1':dias[1]||0,'Día 2':dias[2]||0,'Día 3':dias[3]||0});
+      renderBars('tallasChart',shirts.m);
+      renderBars('modalitatsChart',aggregate(actius,o=>{const m=String(o.modalitat||'').toLowerCase();return m==='corrent'?'Correr':m==='caminant'?'Caminar':m==='bici'?'Bici':m==='animar'?'Samarreta solidària':m==='dorsal0'?'Dorsal 0':m||'Sin modalidad'}));
+      renderBars('recollidaChart',aggregate(actius,o=>payload(o).recollida_municipi_nom||payload(o).recollida_municipi));
+      const pobles=await getPobles();
+      const route=routeMunicipalities(actius,pobles);
+      renderBars('municipiosChart',route,80);
+      note.textContent=pobles.length
+        ? 'Participantes por municipio de paso. Cada inscripción cuenta una vez por municipio que atraviesa, según sus días/tramo. Se incluyen registros activos, aunque todavía estén pendientes de pago.'
+        : 'No se ha podido cargar pobles.json, por lo que no se puede calcular el reparto por municipios del recorrido.';
+    }catch(e){
+      const ids=['municipiosChart','diasChart','tallasChart','modalitatsChart','recollidaChart'];ids.forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='<div class="insight-empty">No se han podido cargar las estadísticas.</div>'});
+      if(note)note.textContent=e.message||String(e);
+      console.error('[admin-insights]',e);
+    }
+  }
+  function init(){
+    document.querySelectorAll('[data-tab="inscripcions"]').forEach(b=>b.addEventListener('click',()=>setTimeout(render,100)));
+    const r=document.getElementById('reloadInscripcionsBtn');if(r)r.addEventListener('click',()=>setTimeout(render,150));
+    const ri=document.getElementById('reloadInsightsBtn');if(ri)ri.addEventListener('click',render);
+    setTimeout(render,300);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>\n</body>
 </html>
