@@ -70,7 +70,7 @@
     display:flex; align-items:center; gap:8px;
   }
   .modal-icon{ width:22px; height:22px; object-fit:contain; }
-  .modal-box p{ font-family:'Manrope',sans-serif; font-size:13px; color:var(--paper); opacity:0.9; line-height:1.5; }
+  .modal-box p{ font-family:'Manrope',sans-serif; font-size:13px; color:var(--paper); opacity:0.9; line-height:1.5; margin-top:12px; }
   .modal-close{
     position:absolute; top:10px; right:10px; width:28px; height:28px; border-radius:50%;
     background:rgba(255,255,255,0.1); border:none; color:var(--paper); font-size:14px; cursor:pointer;
@@ -169,15 +169,16 @@
   @keyframes pulse{0%,100%{transform:scale(1);} 50%{transform:scale(1.08);}}
 
   .cp-marker{
-    position:absolute; width:16px; height:16px; margin:-8px 0 0 -8px;
-    background:var(--tinta); border:2px solid var(--gris); border-radius:50%;
-    z-index:10;
+    position:absolute; width:26px; height:26px; margin:-13px 0 0 -13px;
+    background-image:url("assets/gold-coins.png");
+    background-size:contain; background-repeat:no-repeat; background-position:center;
+    z-index:10; filter:drop-shadow(0 1px 3px rgba(0,0,0,0.6));
     animation: cpPulse 1.8s ease-in-out infinite;
   }
-  .cp-marker.reached{ background:var(--diabetis); border-color:var(--aigua); box-shadow:0 0 8px rgba(90,192,230,0.8); }
+  .cp-marker.reached{ filter:drop-shadow(0 0 6px rgba(90,192,230,0.9)) drop-shadow(0 1px 3px rgba(0,0,0,0.6)); }
   @keyframes cpPulse{
     0%, 100% { transform:scale(1); }
-    50% { transform:scale(1.35); }
+    50% { transform:scale(1.22); }
   }
 
   .gps-cp-label{ animation: cpPulseSubtle 1.8s ease-in-out infinite; }
@@ -200,7 +201,8 @@
     z-index:50; background:var(--coral); color:var(--tinta);
     font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:13px;
     padding:10px 16px; border-radius:6px; box-shadow:0 4px 14px rgba(0,0,0,0.4);
-    white-space:nowrap; transition:transform 0.4s cubic-bezier(.2,1.4,.4,1); pointer-events:none;
+    max-width:88%; text-align:center; white-space:normal;
+    transition:transform 0.4s cubic-bezier(.2,1.4,.4,1); pointer-events:none;
   }
   #toast.show{ transform:translate(-50%, 0); }
 
@@ -263,12 +265,12 @@
   <div class="modal-box">
     <button class="modal-close" data-close="townModal">✕</button>
     <h3 id="townModalName"></h3>
-    <p id="townModalDesc"></p>
     <div id="townModalGold">
       <img src="assets/gold-coins.png" class="coin-icon" alt="">
       <span id="townModalGoldAmount">0 €</span>
     </div>
     <a id="townModalDonateBtn" class="donateBtn" href="https://www.migranodearena.org/" target="_blank" rel="noopener">Dona per aquest municipi</a>
+    <p id="townModalDesc"></p>
   </div>
 </div>
 
@@ -561,10 +563,10 @@ function userScrolledRecently(){
 
 let lastReachedIndex = -1;
 
-function showToast(text){
+function showToast(text, durationMs = 2200){
   toast.textContent = text;
   toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2200);
+  setTimeout(() => toast.classList.remove('show'), durationMs);
 }
 
 /* =========================================================
@@ -948,7 +950,7 @@ function renderGpsCheckpointLabels(){
     .map(([name, pos]) => {
       const icon = L.divIcon({
         className: '',
-        html: `<div class="gps-cp-label">${name}</div>`,
+        html: `<div class="gps-cp-label">🪙 ${name}</div>`,
         iconSize: null,
       });
       const marker = L.marker([pos.lat, pos.lng], { icon, interactive: true }).addTo(gpsMap);
@@ -1057,7 +1059,12 @@ async function setGpsMode(on){
     try {
       await initGpsMap();
       setTimeout(() => gpsMap.invalidateSize(), 150);
-      refreshGpsTrack();
+      await refreshGpsTrack();
+      // Cada vegada que s'entra en Mode GPS (no només la primera
+      // vegada que es crea el mapa) volem centrar sobre el corredor.
+      if (lastGpsPosition) {
+        gpsMap.setView(lastGpsPosition, gpsMap.getZoom() < 13 ? 15 : gpsMap.getZoom());
+      }
       if (gpsInterval) clearInterval(gpsInterval);
       gpsInterval = setInterval(refreshGpsTrack, 20000);
     } catch (e) {
@@ -1085,6 +1092,13 @@ document.getElementById('modetoggle').addEventListener('click', () => setGpsMode
   }
   await poll();
   setInterval(poll, 8000);
+
+  // Avís d'ajuda la primera vegada, perquè la gent s'adoni que els
+  // pobles del mapa es poden tocar (i que allà es pot donar).
+  if (!sessionStorage.getItem('lxd_hint_shown')) {
+    setTimeout(() => showToast('💡 Toca els pobles del mapa per conèixer-los i donar-hi!', 4500), 1200);
+    sessionStorage.setItem('lxd_hint_shown', '1');
+  }
 })();
 </script>
 </body>
