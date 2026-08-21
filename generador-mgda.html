@@ -173,6 +173,11 @@
 </div>
 
 <div class="field">
+  <label>¿Por qué lo haces? <span style="font-weight:400; text-transform:none; letter-spacing:0;">(opcional, se usa en el texto)</span></label>
+  <input type="text" id="heroMotivo" placeholder="Ej. Corro por mi hijo, que vive con diabetes tipo 1">
+</div>
+
+<div class="field">
   <label>Formato</label>
   <select id="heroFormato">
     <option value="run">Corriendo</option>
@@ -185,10 +190,10 @@
   <label>¿Qué tramo hace?</label>
   <select id="heroTram">
     <option value="">— Selecciona —</option>
-    <option value="complet">Reto completo (180 km, 3 días)</option>
-    <option value="dia1">Etapa 1 · Castellar de n'Hug → Gironella (~65 km)</option>
-    <option value="dia2">Etapa 2 · Gironella → Olesa de Montserrat (~60 km)</option>
-    <option value="dia3">Etapa 3 · Olesa de Montserrat → Desembocadura (~55 km)</option>
+    <option value="complet">Reto completo (recorrido íntegro, 3 días)</option>
+    <option value="dia1">Etapa 1 · Castellar de n'Hug → Gironella (~60 km)</option>
+    <option value="dia2">Etapa 2 · Gironella → Monistrol de Montserrat (~75 km)</option>
+    <option value="dia3">Etapa 3 · Monistrol de Montserrat → Desembocadura (~60 km)</option>
     <option value="concret">Tramo concreto (elegir municipios)</option>
   </select>
 </div>
@@ -202,7 +207,7 @@
     <label>Municipio final</label>
     <select id="tramFinal" disabled><option value="">Elige antes el inicio</option></select>
   </div>
-  <p class="hint" id="tramFallbackHint" hidden>No se ha podido cargar pobles.json (normal si abres el archivo en local sin servidor). Escribe los municipios a mano:</p>
+  <p class="hint" id="tramFallbackHint" hidden>No se ha podido cargar /pobles.json (normal si abres el archivo en local o fuera de llobregat.org). Escribe los municipios a mano:</p>
 </div>
 
 <div class="stage-wrap">
@@ -381,11 +386,11 @@ loadLanguage('es');
 // DADES DEL REPTE — nom, format, tram, text pel donatiu
 // ============================================
 
-// Etapes oficials (llobregat.org · document del projecte, maig 2026)
+// Etapes oficials — km reals extrets de pobles.json (mateixa font que inscripcio.html)
 const STAGE_INFO = {
-  dia1: { origin: "Castellar de n'Hug", dest: "Gironella", km: 65 },
-  dia2: { origin: "Gironella", dest: "Olesa de Montserrat", km: 60 },
-  dia3: { origin: "Olesa de Montserrat", dest: "la desembocadura (El Prat de Llobregat)", km: 55 }
+  dia1: { origin: "Castellar de n'Hug", dest: "Gironella", km: 60 },
+  dia2: { origin: "Gironella", dest: "Monistrol de Montserrat", km: 75 },
+  dia3: { origin: "Monistrol de Montserrat", dest: "la desembocadura (El Prat de Llobregat)", km: 60 }
 };
 const STAGE_TOTALS = { 1: STAGE_INFO.dia1.km, 2: STAGE_INFO.dia2.km, 3: STAGE_INFO.dia3.km };
 const TOTAL_KM = STAGE_TOTALS[1] + STAGE_TOTALS[2] + STAGE_TOTALS[3];
@@ -408,14 +413,14 @@ const copiedNote = document.getElementById('copiedNote');
 
 let poblesUsable = false; // si false, tramInici/tramFinal es converteixen en text lliure
 
-// --- Carrega pobles.json (mateix patró que inscripcio.html) ---
+// --- Carrega pobles.json (mateix patró que inscripcio.html: /pobles.json, filtre exclos_recorregut) ---
 function loadPobles() {
-  return fetch('pobles.json')
+  return fetch('/pobles.json')
     .then(r => { if (!r.ok) throw new Error('no ok'); return r.json(); })
     .then(d => {
       const pobles = (d.pobles || [])
-        .filter(p => p.tipus === 'municipi' || p.tipus === 'nucli')
-        .slice()
+        .filter(p => !p.exclos_recorregut)
+        .map(p => ({ id: p.id, nom: p.nom, dia: p.dia, km: p.km }))
         .sort((a, b) => (a.dia - b.dia) || (a.km - b.km));
       if (!pobles.length) throw new Error('buit');
       if (d.etapes) {
@@ -426,6 +431,13 @@ function loadPobles() {
       }
       return pobles;
     });
+}
+
+function etiquetaMunicipi(p) {
+  let sufix = '';
+  if (p.km === 0 && p.dia > 1) sufix = ' · inicio etapa';
+  else if (STAGE_TOTALS[p.dia] === p.km) sufix = ' · final etapa';
+  return `${p.nom} (Día ${p.dia} · km ${p.km}${sufix})`;
 }
 
 function fillMuniSelect(sel, pobles, placeholder) {
@@ -440,7 +452,7 @@ function fillMuniSelect(sel, pobles, placeholder) {
     o.dataset.km = p.km;
     o.dataset.dia = p.dia;
     o.dataset.nom = p.nom;
-    o.textContent = `${p.nom} · Dia ${p.dia} · km ${p.km}`;
+    o.textContent = etiquetaMunicipi(p);
     sel.appendChild(o);
   });
 }
@@ -538,6 +550,7 @@ function tramNames() {
 // --- Plantilles del text pel donatiu, per idioma ---
 function buildDonationText(lang) {
   const nom = (heroNombre.value || '').trim();
+  const motivo = (document.getElementById('heroMotivo').value || '').trim();
   const formatWord = FORMAT_WORDS[lang][heroFormato.value] || FORMAT_WORDS[lang].run;
   const tramMode = heroTram.value;
 
@@ -571,28 +584,43 @@ function buildDonationText(lang) {
     tramSentenceEn = `I'm joining the challenge ${formatWord} along the Llobregat river.`;
   }
 
+  // Frase del motiu personal (només si l'usuari l'ha escrit) — sense estadístiques
+  // geogràfiques, perquè qui doni pot ser de qualsevol lloc.
+  const motiuCa = motivo ? `Ho faig per una raó ben concreta: ${motivo}.` :
+    `Ho faig per una raó ben concreta: ajudar a fer real la cura de la diabetis tipus 1.`;
+  const motiuEs = motivo ? `Lo hago por una razón muy concreta: ${motivo}.` :
+    `Lo hago por una razón muy concreta: ayudar a hacer realidad la cura de la diabetes tipo 1.`;
+  const motiuEn = motivo ? `I'm doing this for a very concrete reason: ${motivo}.` :
+    `I'm doing this for a very concrete reason: to help make a cure for type 1 diabetes a reality.`;
+
   const bodies = {
     ca: [
       `Sóc ${nom || '...'} i em sumo al repte Llobregat x la Diabetis 💙`,
       tramSentenceCa,
-      `Ho faig per una raó ben concreta: ajudar a trobar la cura de la diabetis tipus 1. És una malaltia autoimmune crònica —a Catalunya en viuen unes 30.000 persones— i qui la té necessita insulina cada dia, per sempre.`,
+      motiuCa,
+      `La diabetis tipus 1 és una malaltia autoimmune crònica: qui la té necessita insulina cada dia, per sempre. Encara no té cura.`,
       `Cada euro que doni va 100% a AREDI (Associació Ajuda a la Recerca en Diabetis), directament a finançar la recerca científica. Cap euro es queda pel camí.`,
+      `El riu sempre troba el camí fins al mar. Jo trobaré el camí fins a la desembocadura, i la ciència trobarà el camí fins a la cura.`,
       `Cada quilòmetre suma. Ens hi sumes?`,
       `#LlobregatXLaDiabetis · #LxD2026`
     ],
     es: [
       `Soy ${nom || '...'} y me sumo al reto Llobregat x la Diabetis 💙`,
       tramSentenceEs,
-      `Lo hago por una razón muy concreta: ayudar a encontrar la cura de la diabetes tipo 1. Es una enfermedad autoinmune crónica —en Catalunya la viven unas 30.000 personas— y quien la tiene necesita insulina cada día, para siempre.`,
+      motiuEs,
+      `La diabetes tipo 1 es una enfermedad autoinmune crónica: quien la tiene necesita insulina cada día, para siempre. Todavía no tiene cura.`,
       `Cada euro donado va 100% a AREDI (Associació Ajuda a la Recerca en Diabetis), directamente a financiar la investigación científica. Ningún euro se queda por el camino.`,
+      `El río siempre encuentra el camino hasta el mar. Yo encontraré el camino hasta la desembocadura, y la ciencia encontrará el camino hasta la cura.`,
       `Cada kilómetro suma. ¿Te sumas?`,
       `#LlobregatXLaDiabetis · #LxD2026`
     ],
     en: [
       `I'm ${nom || '...'} and I'm joining the Llobregat x la Diabetis challenge 💙`,
       tramSentenceEn,
-      `I'm doing this for a very concrete reason: to help find a cure for type 1 diabetes. It's a chronic autoimmune disease — around 30,000 people live with it in Catalonia — and those who have it need insulin every day, for life.`,
+      motiuEn,
+      `Type 1 diabetes is a chronic autoimmune disease: those who have it need insulin every day, for life. There's still no cure.`,
       `Every euro donated goes 100% to AREDI (Associació Ajuda a la Recerca en Diabetis), directly funding scientific research. Not a single euro is lost along the way.`,
+      `The river always finds its way to the sea. I'll find the way to the river mouth, and science will find the way to the cure.`,
       `Every kilometre counts. Will you join us?`,
       `#LlobregatXLaDiabetis · #LxD2026`
     ]
