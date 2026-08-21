@@ -355,18 +355,22 @@ stage.addEventListener('pointercancel', ()=> dragging=false);
 
 document.getElementById('photoFile').addEventListener('change', e=>{
   const f = e.target.files[0]; if(!f) return;
-  const img = new Image();
-  img.onload = ()=>{
-    photo = img; scaleMult = 1;
-    fitPhoto(); centerPhoto(); draw();
-    document.getElementById('downloadCover').disabled = false;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    const img = new Image();
+    img.onload = ()=>{
+      photo = img; scaleMult = 1;
+      fitPhoto(); centerPhoto(); draw();
+      document.getElementById('downloadCover').disabled = false;
+    };
+    img.src = reader.result; // data: URL — permès pel CSP img-src 'self' data: https:
   };
-  img.src = URL.createObjectURL(f);
+  reader.readAsDataURL(f);
 });
 
 document.getElementById('zoom').addEventListener('input', e=>{
   scaleMult = e.target.value/100;
-  clampOffsets(); draw();
+  if (photo) { clampOffsets(); draw(); }
 });
 
 document.getElementById('langSelect').addEventListener('change', e=>{
