@@ -323,26 +323,41 @@
   var label = document.getElementById('modeLabel');
   var STORAGE_KEY = 'llobregat-mode';
 
-  function setImage(img, src){
+  var loadGeneration = 0; // bumped every time a new load sequence starts, invalidates older ones
+
+  function setImage(img, src, gen, done){
     var frame = img.closest('.map-frame');
+
     if(img.dataset.currentSrc === src && frame.dataset.loaded === '1'){
-      return; // already showing this image, nothing to do
+      done(); // already showing this image, move straight to the next one
+      return;
     }
+
     frame.classList.add('loading');
     frame.dataset.loaded = '0';
     img.dataset.currentSrc = src;
 
-    img.onload = function(){
-      if(img.dataset.currentSrc !== src) return; // a newer switch happened meanwhile
+    function finish(){
+      if(gen !== loadGeneration) return; // a newer toggle click superseded this sequence
+      if(img.dataset.currentSrc !== src) return; // this img moved on to another src meanwhile
       frame.classList.remove('loading');
       frame.dataset.loaded = '1';
-    };
-    img.onerror = function(){
-      if(img.dataset.currentSrc !== src) return;
-      frame.classList.remove('loading');
-      frame.dataset.loaded = '1';
-    };
+      done();
+    }
+
+    img.onload = finish;
+    img.onerror = finish;
     img.src = src;
+  }
+
+  function loadSequential(imgs, index, mode, gen){
+    if(gen !== loadGeneration) return; // superseded by a later toggle click, stop this chain
+    if(index >= imgs.length) return;
+    var img = imgs[index];
+    var src = mode === 'night' ? img.getAttribute('data-night') : img.getAttribute('data-day');
+    setImage(img, src, gen, function(){
+      loadSequential(imgs, index + 1, mode, gen);
+    });
   }
 
   function applyMode(mode){
@@ -350,10 +365,10 @@
     btn.setAttribute('aria-pressed', mode === 'night' ? 'true' : 'false');
     knob.textContent = mode === 'night' ? '🌙' : '☀️';
     label.textContent = mode === 'night' ? 'Nit' : 'Dia';
-    document.querySelectorAll('.map-img').forEach(function(img){
-      var src = mode === 'night' ? img.getAttribute('data-night') : img.getAttribute('data-day');
-      setImage(img, src);
-    });
+
+    var gen = ++loadGeneration;
+    var imgs = Array.prototype.slice.call(document.querySelectorAll('.map-img')); // etapa 1, 2, 3 in order
+    loadSequential(imgs, 0, mode, gen);
   }
 
   var saved = null;
