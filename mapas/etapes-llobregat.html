@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Etapes del Llobregat</title>
+<style>
+  :root{
+    --bg-day: #eef1e6;
+    --panel-day: #ffffff;
+    --text-day: #2b2b1f;
+    --sub-day: #5c5c4a;
+    --accent-day: #7a8f4a;
+    --border-day: #d8d8c4;
+
+    --bg-night: #0b0e18;
+    --panel-night: #12172a;
+    --text-night: #e7e9f5;
+    --sub-night: #9aa0c2;
+    --accent-night: #4d6ee0;
+    --border-night: #232a45;
+
+    --bg: var(--bg-day);
+    --panel: var(--panel-day);
+    --text: var(--text-day);
+    --sub: var(--sub-day);
+    --accent: var(--accent-day);
+    --border: var(--border-day);
+  }
+
+  html[data-mode="night"]{
+    --bg: var(--bg-night);
+    --panel: var(--panel-night);
+    --text: var(--text-night);
+    --sub: var(--sub-night);
+    --accent: var(--accent-night);
+    --border: var(--border-night);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100%;
+  }
+
+  body{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    transition: background-color .35s ease, color .35s ease;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 3rem;
+  }
+
+  header.top{
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    padding: .9rem 1rem;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    transition: background-color .35s ease, border-color .35s ease;
+  }
+
+  header.top h1{
+    font-size: clamp(1rem, 4vw, 1.35rem);
+    margin: 0;
+    letter-spacing: .01em;
+    font-weight: 700;
+  }
+
+  header.top .subtitle{
+    display: block;
+    font-size: .75rem;
+    font-weight: 400;
+    color: var(--sub);
+    margin-top: .15rem;
+  }
+
+  .toggle-wrap{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-shrink: 0;
+  }
+
+  .toggle-label{
+    font-size: .7rem;
+    color: var(--sub);
+    min-width: 2.6em;
+    text-align: center;
+  }
+
+  .switch{
+    position: relative;
+    width: 56px;
+    height: 30px;
+    border-radius: 999px;
+    background: var(--border);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    transition: background-color .3s ease;
+  }
+
+  .switch .knob{
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    transition: transform .3s ease, background-color .3s ease;
+  }
+
+  html[data-mode="night"] .switch .knob{
+    transform: translateX(26px);
+  }
+
+  main{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 0.75rem;
+  }
+
+  section.stage{
+    padding-top: 1.5rem;
+    margin-bottom: 2.25rem;
+  }
+
+  section.stage:first-of-type{
+    padding-top: 1rem;
+  }
+
+  .stage-header{
+    margin-bottom: .75rem;
+    padding: 0 .25rem;
+  }
+
+  .stage-badge{
+    display: inline-block;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    padding: .2rem .55rem;
+    border-radius: 999px;
+    margin-bottom: .4rem;
+  }
+
+  .stage-title{
+    font-size: clamp(1.05rem, 4.5vw, 1.5rem);
+    font-weight: 700;
+    margin: 0 0 .2rem 0;
+    line-height: 1.25;
+  }
+
+  .stage-meta{
+    font-size: .85rem;
+    color: var(--sub);
+    margin: 0;
+  }
+
+  .map-frame{
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    transition: background-color .35s ease, border-color .35s ease;
+  }
+
+  .map-frame img{
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  footer.credits{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem 1rem 2rem;
+    font-size: .75rem;
+    color: var(--sub);
+    text-align: center;
+  }
+
+  @media (min-width: 700px){
+    header.top{ padding: 1rem 1.5rem; }
+    main{ padding: 0 1.25rem; }
+    section.stage{ margin-bottom: 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>Les etapes del riu Llobregat
+    <span class="subtitle">De Castellar de N'Hug a la desembocadura</span>
+  </h1>
+  <div class="toggle-wrap">
+    <span class="toggle-label" id="modeLabel">Dia</span>
+    <button class="switch" id="modeToggle" aria-label="Canvia entre mode dia i mode nit" aria-pressed="false">
+      <span class="knob">☀️</span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <section class="stage" id="etapa1">
+    <div class="stage-header">
+      <span class="stage-badge">Etapa 1</span>
+      <h2 class="stage-title">Castellar de N'Hug → Gironella</h2>
+      <p class="stage-meta">60 km</p>
+    </div>
+    <div class="map-frame">
+      <img class="map-img" data-day="etapa1-dia.png" data-night="etapa1-nit.png" src="etapa1-dia.png" alt="Mapa de l'etapa 1: Castellar de N'Hug a Gironella">
+    </div>
+  </section>
+
+  <section class="stage" id="etapa2">
+    <div class="stage-header">
+      <span class="stage-badge">Etapa 2</span>
+      <h2 class="stage-title">Gironella → Monistrol de Montserrat</h2>
+      <p class="stage-meta">75 km</p>
+    </div>
+    <div class="map-frame">
+      <img class="map-img" data-day="etapa2-dia.png" data-night="etapa2-nit.png" src="etapa2-dia.png" alt="Mapa de l'etapa 2: Gironella a Monistrol de Montserrat">
+    </div>
+  </section>
+
+  <section class="stage" id="etapa3">
+    <div class="stage-header">
+      <span class="stage-badge">Etapa 3</span>
+      <h2 class="stage-title">Monistrol de Montserrat → Desembocadura</h2>
+      <p class="stage-meta">60 km</p>
+    </div>
+    <div class="map-frame">
+      <img class="map-img" data-day="etapa3-dia.png" data-night="etapa3-nit.png" src="etapa3-dia.png" alt="Mapa de l'etapa 3: Monistrol de Montserrat a la desembocadura">
+    </div>
+  </section>
+
+</main>
+
+<footer class="credits">Recorregut del Llobregat — Castellar de N'Hug · Gironella · Monistrol de Montserrat · Desembocadura</footer>
+
+<script>
+(function(){
+  var html = document.documentElement;
+  var btn = document.getElementById('modeToggle');
+  var knob = btn.querySelector('.knob');
+  var label = document.getElementById('modeLabel');
+  var STORAGE_KEY = 'llobregat-mode';
+
+  function applyMode(mode){
+    html.setAttribute('data-mode', mode);
+    btn.setAttribute('aria-pressed', mode === 'night' ? 'true' : 'false');
+    knob.textContent = mode === 'night' ? '🌙' : '☀️';
+    label.textContent = mode === 'night' ? 'Nit' : 'Dia';
+    document.querySelectorAll('.map-img').forEach(function(img){
+      var src = mode === 'night' ? img.getAttribute('data-night') : img.getAttribute('data-day');
+      if(img.getAttribute('src') !== src){
+        img.setAttribute('src', src);
+      }
+    });
+  }
+
+  var saved = null;
+  try { saved = localStorage.getItem(STORAGE_KEY); } catch(e) {}
+
+  var prefersNight = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var initial = saved || (prefersNight ? 'night' : 'day');
+  applyMode(initial);
+
+  btn.addEventListener('click', function(){
+    var current = html.getAttribute('data-mode');
+    var next = current === 'night' ? 'day' : 'night';
+    applyMode(next);
+    try { localStorage.setItem(STORAGE_KEY, next); } catch(e) {}
+  });
+})();
+</script>
+
+</body>
+</html>
