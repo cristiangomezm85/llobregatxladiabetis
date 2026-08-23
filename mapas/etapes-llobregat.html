@@ -176,6 +176,7 @@
   }
 
   .map-frame{
+    position: relative;
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 14px;
@@ -187,7 +188,50 @@
   .map-frame img{
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    opacity: 1;
+    transition: opacity .25s ease;
+  }
+
+  .map-frame.loading img{
+    opacity: 0;
+  }
+
+  .loading-overlay{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .7rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+  }
+
+  .map-frame.loading .loading-overlay{
+    opacity: 1;
+  }
+
+  .spinner{
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    animation: spin .8s linear infinite;
+  }
+
+  .loading-text{
+    font-size: .8rem;
+    color: var(--sub);
+  }
+
+  @keyframes spin{
+    to{ transform: rotate(360deg); }
   }
 
   footer.credits{
@@ -228,8 +272,12 @@
       <h2 class="stage-title">Castellar de N'Hug → Gironella</h2>
       <p class="stage-meta">60 km</p>
     </div>
-    <div class="map-frame">
-      <img class="map-img" data-day="etapa1-dia.png" data-night="etapa1-nit.png" src="etapa1-dia.png" alt="Mapa de l'etapa 1: Castellar de N'Hug a Gironella">
+    <div class="map-frame loading" style="aspect-ratio: 768 / 2048;">
+      <img class="map-img" data-day="etapa1-dia.png" data-night="etapa1-nit.png" alt="Mapa de l'etapa 1: Castellar de N'Hug a Gironella">
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+        <span class="loading-text">Carregant el mapa…</span>
+      </div>
     </div>
   </section>
 
@@ -239,8 +287,12 @@
       <h2 class="stage-title">Gironella → Monistrol de Montserrat</h2>
       <p class="stage-meta">75 km</p>
     </div>
-    <div class="map-frame">
-      <img class="map-img" data-day="etapa2-dia.png" data-night="etapa2-nit.png" src="etapa2-dia.png" alt="Mapa de l'etapa 2: Gironella a Monistrol de Montserrat">
+    <div class="map-frame loading" style="aspect-ratio: 724 / 2172;">
+      <img class="map-img" data-day="etapa2-dia.png" data-night="etapa2-nit.png" alt="Mapa de l'etapa 2: Gironella a Monistrol de Montserrat">
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+        <span class="loading-text">Carregant el mapa…</span>
+      </div>
     </div>
   </section>
 
@@ -250,8 +302,12 @@
       <h2 class="stage-title">Monistrol de Montserrat → Desembocadura</h2>
       <p class="stage-meta">60 km</p>
     </div>
-    <div class="map-frame">
-      <img class="map-img" data-day="etapa3-dia.png" data-night="etapa3-nit.png" src="etapa3-dia.png" alt="Mapa de l'etapa 3: Monistrol de Montserrat a la desembocadura">
+    <div class="map-frame loading" style="aspect-ratio: 724 / 2172;">
+      <img class="map-img" data-day="etapa3-dia.png" data-night="etapa3-nit.png" alt="Mapa de l'etapa 3: Monistrol de Montserrat a la desembocadura">
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+        <span class="loading-text">Carregant el mapa…</span>
+      </div>
     </div>
   </section>
 
@@ -267,6 +323,28 @@
   var label = document.getElementById('modeLabel');
   var STORAGE_KEY = 'llobregat-mode';
 
+  function setImage(img, src){
+    var frame = img.closest('.map-frame');
+    if(img.dataset.currentSrc === src && frame.dataset.loaded === '1'){
+      return; // already showing this image, nothing to do
+    }
+    frame.classList.add('loading');
+    frame.dataset.loaded = '0';
+    img.dataset.currentSrc = src;
+
+    img.onload = function(){
+      if(img.dataset.currentSrc !== src) return; // a newer switch happened meanwhile
+      frame.classList.remove('loading');
+      frame.dataset.loaded = '1';
+    };
+    img.onerror = function(){
+      if(img.dataset.currentSrc !== src) return;
+      frame.classList.remove('loading');
+      frame.dataset.loaded = '1';
+    };
+    img.src = src;
+  }
+
   function applyMode(mode){
     html.setAttribute('data-mode', mode);
     btn.setAttribute('aria-pressed', mode === 'night' ? 'true' : 'false');
@@ -274,9 +352,7 @@
     label.textContent = mode === 'night' ? 'Nit' : 'Dia';
     document.querySelectorAll('.map-img').forEach(function(img){
       var src = mode === 'night' ? img.getAttribute('data-night') : img.getAttribute('data-day');
-      if(img.getAttribute('src') !== src){
-        img.setAttribute('src', src);
-      }
+      setImage(img, src);
     });
   }
 
