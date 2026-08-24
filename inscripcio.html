@@ -851,21 +851,13 @@
       </div>
       <div class="camp" style="margin-top:14px;">
         <label data-i18n="lbl_talla">Talla de samarreta *</label>
-        <select class="fi-talla" required>
-          <option value="" data-i18n="opt_talla_placeholder">Tria talla</option>
-          <optgroup label="Home" data-i18n-label="grup_talla_home">
-            <option value="home-XS">XS</option><option value="home-S">S</option><option value="home-M">M</option>
-            <option value="home-L">L</option><option value="home-XL">XL</option><option value="home-XXL">XXL</option><option value="home-XXXL">XXXL</option>
-          </optgroup>
-          <optgroup label="Dona" data-i18n-label="grup_talla_dona">
-            <option value="dona-XS">XS</option><option value="dona-S">S</option><option value="dona-M">M</option>
-            <option value="dona-L">L</option><option value="dona-XL">XL</option><option value="dona-XXL">XXL</option><option value="dona-XXXL">XXXL</option>
-          </optgroup>
-          <optgroup label="Infantils" data-i18n-label="grup_talla_infantil">
-            <option value="infantil-4">4</option><option value="infantil-6">6</option><option value="infantil-8">8</option>
-            <option value="infantil-10">10</option><option value="infantil-12">12</option><option value="infantil-14">14</option>
-          </optgroup>
-        </select>
+        <!-- Opcions omplertes per JS (opcionsTallaHTML) perquè el text de cada
+             opció inclogui sempre la categoria (Home/Dona/Infantil): abans
+             el text visible ("XS", "M"...) es repetia idèntic entre grups i
+             només canviava el value ocult, cosa que en alguns navegadors/
+             lectors de pantalla feia que es confirmés l'opció equivocada
+             (sempre cap a "Home", el primer grup). Veure refreshTallaSelects(). -->
+        <select class="fi-talla" required></select>
         <p class="nota-talla" data-i18n="nota_talla_multiple" style="font-size:11.5px;color:var(--gris);margin:6px 0 0;">Si fas més d'una etapa, totes les samarretes que rebis seran d'aquesta talla.</p>
       </div>
 
@@ -1456,9 +1448,10 @@
       b.classList.toggle("active", b.dataset.setLang === lang);
     });
 
-    // Reomplim selects que depenen de l'idioma (etiquetes de municipi/recollida)
+    // Reomplim selects que depenen de l'idioma (etiquetes de municipi/recollida/talla)
     refreshMunicipiSelects();
     refreshPickupSelects();
+    refreshTallaSelects();
     marcarTarifaActiva();
     actualitzarTotal();
   }
@@ -1789,21 +1782,90 @@
   }
 
   // ---------- Samarreta solidària: files repetibles de talla + quantitat ----------
-  const OPCIONS_TALLA_HTML = `
-    <option value="" data-i18n="opt_talla_placeholder">Tria talla</option>
-    <optgroup label="Home" data-i18n-label="grup_talla_home">
-      <option value="home-XS">XS</option><option value="home-S">S</option><option value="home-M">M</option>
-      <option value="home-L">L</option><option value="home-XL">XL</option><option value="home-XXL">XXL</option><option value="home-XXXL">XXXL</option>
-    </optgroup>
-    <optgroup label="Dona" data-i18n-label="grup_talla_dona">
-      <option value="dona-XS">XS</option><option value="dona-S">S</option><option value="dona-M">M</option>
-      <option value="dona-L">L</option><option value="dona-XL">XL</option><option value="dona-XXL">XXL</option><option value="dona-XXXL">XXXL</option>
-    </optgroup>
-    <optgroup label="Infantils" data-i18n-label="grup_talla_infantil">
-      <option value="infantil-4">4</option><option value="infantil-6">6</option><option value="infantil-8">8</option>
-      <option value="infantil-10">10</option><option value="infantil-12">12</option><option value="infantil-14">14</option>
-    </optgroup>
-  `;
+  // Les mateixes tallades es fan servir aquí i al select .fi-talla (modalitats
+  // físiques): una sola llista perquè no se'ns tornin a desincronitzar.
+  const TALLES_ADULT = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+  const TALLES_INFANTIL = ["4", "6", "8", "10", "12", "14"];
+
+  // Genera les <option> de talla amb el text SEMPRE prefixat amb la
+  // categoria (p. ex. "Dona · M", "Infantil · 8"), no només la mida sola.
+  // Abans "M" es repetia idèntic al grup Home i al grup Dona (només
+  // canviava el value ocult), i alguns navegadors/lectors de pantalla
+  // confirmaven l'opció equivocada (sempre cap al primer grup, "Home") en
+  // comptes de la que l'usuari havia tocat realment. En fer el text visible
+  // únic per a cada opció, ja no hi ha dues files iguals entre les quals
+  // es pugui confondre.
+  const GRUPS_TALLA = {
+    home: { key: "grup_talla_home", prefix: "home", mides: TALLES_ADULT },
+    dona: { key: "grup_talla_dona", prefix: "dona", mides: TALLES_ADULT },
+    infantil: { key: "grup_talla_infantil", prefix: "infantil", mides: TALLES_INFANTIL },
+  };
+
+  // ordreGrups: array amb l'ordre dels grups a mostrar (p. ex. ["home"] o
+  // ["infantil","home","dona"]). Per defecte, els tres sencers en l'ordre
+  // habitual -- és el que fan servir les files de "animar" (samarreta
+  // solidària), on una mateixa persona pot comprar samarretes per a tota la
+  // família i per tant sempre ha de veure les tres categories.
+  function opcionsTallaHTML(ordreGrups) {
+    const grups = (ordreGrups || ["home", "dona", "infantil"]).map((k) => GRUPS_TALLA[k]);
+    let html = `<option value="" data-i18n="opt_talla_placeholder">${t("opt_talla_placeholder")}</option>`;
+    grups.forEach((g) => {
+      const etiqueta = t(g.key);
+      html += `<optgroup label="${etiqueta}" data-i18n-label="${g.key}">`;
+      g.mides.forEach((m) => {
+        html += `<option value="${g.prefix}-${m}">${etiqueta} · ${m}</option>`;
+      });
+      html += `</optgroup>`;
+    });
+    return html;
+  }
+
+  // Al select de les modalitats físiques (.fi-talla) filtrem les categories
+  // segons el sexe i si la persona és menor d'edat, perquè no calgui
+  // ensenyar-li opcions que no li toquen:
+  //  - Menor d'edat: totes les categories, però amb "Infantil" primer (és
+  //    la més probable, encara que un adolescent pugui necessitar talla
+  //    d'adult).
+  //  - Sexe "Home": només categoria Home.
+  //  - Sexe "Dona": només categoria Dona.
+  //  - Sexe buit o "Altre" (i no menor): totes dues categories d'adult,
+  //    sense la infantil.
+  function gruposTallaFisic() {
+    const dataNaixement = blocFisic.querySelector(".fi-data-naixement").value;
+    const esMenor = dataNaixement ? calcularEsMenor(dataNaixement) : null;
+    if (esMenor === true) return ["infantil", "home", "dona"];
+    const sexe = blocFisic.querySelector(".fi-sexe").value;
+    if (sexe === "home") return ["home"];
+    if (sexe === "dona") return ["dona"];
+    return ["home", "dona"];
+  }
+
+  function refreshTallaFisic() {
+    const sel = blocFisic.querySelector(".fi-talla");
+    if (!sel) return;
+    const valorActual = sel.value;
+    sel.innerHTML = opcionsTallaHTML(gruposTallaFisic());
+    // Si la talla que tenia triada ja no existeix a la llista filtrada
+    // (p. ex. tenia "home-M" i ha canviat el sexe a "Dona"), la deixem en
+    // blanc perquè la persona l'hagi de triar de nou -- no assumim cap
+    // conversió automàtica d'una categoria a una altra.
+    if (valorActual && sel.querySelector(`option[value="${valorActual}"]`)) {
+      sel.value = valorActual;
+    }
+  }
+
+  // Torna a omplir tots els selects de talla ja existents (el de les
+  // modalitats físiques, filtrat, i cada fila de "animar", sencer) amb el
+  // text de l'idioma actual, conservant la selecció que ja tinguessin.
+  function refreshTallaSelects() {
+    refreshTallaFisic();
+    const htmlAnimar = opcionsTallaHTML();
+    document.querySelectorAll(".talla-samarreta").forEach((sel) => {
+      const valorActual = sel.value;
+      sel.innerHTML = htmlAnimar;
+      if (valorActual) sel.value = valorActual;
+    });
+  }
 
   const llistaSamarretes = document.getElementById("an-samarretes-llista");
   let comptadorSamarretes = 0;
@@ -1817,7 +1879,7 @@
     div.innerHTML = `
       <div class="camp" style="margin-bottom:0;">
         <label data-i18n="lbl_talla">Talla de samarreta *</label>
-        <select class="talla-samarreta">${OPCIONS_TALLA_HTML}</select>
+        <select class="talla-samarreta">${opcionsTallaHTML()}</select>
       </div>
       <div class="camp" style="margin-bottom:0;">
         <label data-i18n="lbl_quantitat">Quantitat</label>
@@ -2038,7 +2100,14 @@
       blocFisic.querySelector(".fi-tutor-dni").value = "";
       blocFisic.querySelector(".fi-tutor-data-naixement").value = "";
     }
+    // La data de naixement determina si és menor, i si és menor mostrem
+    // totes les categories de talla (Infantil primer). Refem el select.
+    refreshTallaFisic();
   });
+
+  // El sexe filtra les categories de talla mostrades (Home -> només Home,
+  // Dona -> només Dona); veure gruposTallaFisic().
+  blocFisic.querySelector(".fi-sexe").addEventListener("change", refreshTallaFisic);
 
   blocFisic.querySelectorAll(".fi-federat").forEach((radio) => {
     radio.addEventListener("change", () => {
