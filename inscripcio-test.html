@@ -1795,12 +1795,19 @@
   // comptes de la que l'usuari havia tocat realment. En fer el text visible
   // únic per a cada opció, ja no hi ha dues files iguals entre les quals
   // es pugui confondre.
-  function opcionsTallaHTML() {
-    const grups = [
-      { key: "grup_talla_home", prefix: "home", mides: TALLES_ADULT },
-      { key: "grup_talla_dona", prefix: "dona", mides: TALLES_ADULT },
-      { key: "grup_talla_infantil", prefix: "infantil", mides: TALLES_INFANTIL },
-    ];
+  const GRUPS_TALLA = {
+    home: { key: "grup_talla_home", prefix: "home", mides: TALLES_ADULT },
+    dona: { key: "grup_talla_dona", prefix: "dona", mides: TALLES_ADULT },
+    infantil: { key: "grup_talla_infantil", prefix: "infantil", mides: TALLES_INFANTIL },
+  };
+
+  // ordreGrups: array amb l'ordre dels grups a mostrar (p. ex. ["home"] o
+  // ["infantil","home","dona"]). Per defecte, els tres sencers en l'ordre
+  // habitual -- és el que fan servir les files de "animar" (samarreta
+  // solidària), on una mateixa persona pot comprar samarretes per a tota la
+  // família i per tant sempre ha de veure les tres categories.
+  function opcionsTallaHTML(ordreGrups) {
+    const grups = (ordreGrups || ["home", "dona", "infantil"]).map((k) => GRUPS_TALLA[k]);
     let html = `<option value="" data-i18n="opt_talla_placeholder">${t("opt_talla_placeholder")}</option>`;
     grups.forEach((g) => {
       const etiqueta = t(g.key);
@@ -1813,14 +1820,49 @@
     return html;
   }
 
+  // Al select de les modalitats físiques (.fi-talla) filtrem les categories
+  // segons el sexe i si la persona és menor d'edat, perquè no calgui
+  // ensenyar-li opcions que no li toquen:
+  //  - Menor d'edat: totes les categories, però amb "Infantil" primer (és
+  //    la més probable, encara que un adolescent pugui necessitar talla
+  //    d'adult).
+  //  - Sexe "Home": només categoria Home.
+  //  - Sexe "Dona": només categoria Dona.
+  //  - Sexe buit o "Altre" (i no menor): totes dues categories d'adult,
+  //    sense la infantil.
+  function gruposTallaFisic() {
+    const dataNaixement = blocFisic.querySelector(".fi-data-naixement").value;
+    const esMenor = dataNaixement ? calcularEsMenor(dataNaixement) : null;
+    if (esMenor === true) return ["infantil", "home", "dona"];
+    const sexe = blocFisic.querySelector(".fi-sexe").value;
+    if (sexe === "home") return ["home"];
+    if (sexe === "dona") return ["dona"];
+    return ["home", "dona"];
+  }
+
+  function refreshTallaFisic() {
+    const sel = blocFisic.querySelector(".fi-talla");
+    if (!sel) return;
+    const valorActual = sel.value;
+    sel.innerHTML = opcionsTallaHTML(gruposTallaFisic());
+    // Si la talla que tenia triada ja no existeix a la llista filtrada
+    // (p. ex. tenia "home-M" i ha canviat el sexe a "Dona"), la deixem en
+    // blanc perquè la persona l'hagi de triar de nou -- no assumim cap
+    // conversió automàtica d'una categoria a una altra.
+    if (valorActual && sel.querySelector(`option[value="${valorActual}"]`)) {
+      sel.value = valorActual;
+    }
+  }
+
   // Torna a omplir tots els selects de talla ja existents (el de les
-  // modalitats físiques i cada fila de "animar") amb el text de l'idioma
-  // actual, conservant la selecció que ja tinguessin.
+  // modalitats físiques, filtrat, i cada fila de "animar", sencer) amb el
+  // text de l'idioma actual, conservant la selecció que ja tinguessin.
   function refreshTallaSelects() {
-    const html = opcionsTallaHTML();
-    document.querySelectorAll(".fi-talla, .talla-samarreta").forEach((sel) => {
+    refreshTallaFisic();
+    const htmlAnimar = opcionsTallaHTML();
+    document.querySelectorAll(".talla-samarreta").forEach((sel) => {
       const valorActual = sel.value;
-      sel.innerHTML = html;
+      sel.innerHTML = htmlAnimar;
       if (valorActual) sel.value = valorActual;
     });
   }
@@ -2058,7 +2100,14 @@
       blocFisic.querySelector(".fi-tutor-dni").value = "";
       blocFisic.querySelector(".fi-tutor-data-naixement").value = "";
     }
+    // La data de naixement determina si és menor, i si és menor mostrem
+    // totes les categories de talla (Infantil primer). Refem el select.
+    refreshTallaFisic();
   });
+
+  // El sexe filtra les categories de talla mostrades (Home -> només Home,
+  // Dona -> només Dona); veure gruposTallaFisic().
+  blocFisic.querySelector(".fi-sexe").addEventListener("change", refreshTallaFisic);
 
   blocFisic.querySelectorAll(".fi-federat").forEach((radio) => {
     radio.addEventListener("change", () => {
