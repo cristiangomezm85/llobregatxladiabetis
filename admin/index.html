@@ -28,18 +28,21 @@
 .bar-value{font-weight:700;min-width:2.2rem;text-align:right}
 .insight-empty{padding:1.2rem;border:1px dashed #d7dce5;border-radius:10px;color:var(--gris,#697386);font-size:.82rem}
 .insight-note{margin:.9rem 0 0;color:var(--gris,#697386);font-size:.76rem;line-height:1.5}
-.insight-trend{position:relative;height:152px;margin-bottom:.85rem}
-.insight-trend .trend-svg{width:100%;height:130px;display:block;overflow:visible}
-.insight-trend .trend-baseline{stroke:#e6e9ef;stroke-width:1}
-.insight-trend .trend-area{fill:var(--blau-diabetis,#1e72d4);fill-opacity:.12;stroke:none}
-.insight-trend .trend-line{fill:none;stroke:var(--blau-diabetis,#1e72d4);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
-.insight-trend .trend-dot{fill:var(--blau-diabetis,#1e72d4)}
-.insight-trend .trend-hit{fill:transparent;cursor:pointer}
-.insight-trend .trend-hit:focus{outline:2px solid var(--blau-diabetis,#1e72d4);outline-offset:2px}
-.insight-trend .trend-endlabel{font-size:9px;fill:var(--gris,#697386)}
-.insight-trend .trend-tooltip{position:absolute;transform:translate(-50%,-115%);background:var(--blau-llobregat,#15315f);color:#fff;padding:.35rem .55rem;border-radius:8px;font-size:.72rem;line-height:1.35;white-space:nowrap;pointer-events:none;box-shadow:0 6px 16px rgba(0,0,0,.18);z-index:2}
-.insight-trend .trend-tooltip strong{display:block}
-.insight-trend .trend-guide{position:absolute;top:0;height:130px;width:1px;background:#c7cfdb;pointer-events:none}
+.chartjs-wrap{position:relative;height:220px}
+.chartjs-wrap-wide{height:270px}
+.chartjs-wrap canvas{width:100%!important;height:100%!important}
+.chart-data-details{margin-top:.6rem}
+.chart-data-details summary{cursor:pointer;font-size:.78rem;color:var(--gris,#697386);font-weight:700}
+.chart-data-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:.5rem}
+.chart-data-table th,.chart-data-table td{padding:.35rem .5rem;border-bottom:1px solid var(--linia,#e6e9ef);text-align:left}
+.chart-data-table td{text-align:right;font-weight:700;color:var(--blau-llobregat,#15315f)}
+#statsGrid{display:flex;flex-direction:column;gap:1rem;margin-bottom:1.25rem}
+.stats-hero{background:var(--blau-llobregat,#15315f);color:#fff;border-radius:18px;padding:1.1rem 1.4rem;display:flex;align-items:baseline;gap:.6rem}
+.stats-hero .stat-value{font-size:2.1rem;font-weight:900;line-height:1;color:#fff}
+.stats-hero .stat-label{font-size:.82rem;opacity:.85;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#fff}
+.stats-group{background:#fff;border:1px solid var(--linia,#e6e9ef);border-radius:16px;padding:1rem 1.1rem}
+.stats-group h4{margin:0 0 .7rem;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--gris,#697386);font-weight:800}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.7rem}
 @media(max-width:1050px){.insights-cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:760px){.insights-head{align-items:flex-start;flex-direction:column}.insights-grid{grid-template-columns:1fr}.insight-card-wide{grid-column:auto}.insights-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.bar-row{grid-template-columns:minmax(90px,1fr) 2fr auto}}
 </style>
@@ -178,21 +181,32 @@
           <div class="insights-cards" id="insightsCards"></div>
           <div class="insights-grid">
             <article class="insight-card insight-card-wide">
-              <div class="insight-card-head"><div><h4>Participantes por municipio</h4><p>Orden del recorrido, de Castellar de n'Hug a El Prat. El gráfico muestra cómo crece y decrece el volumen; los números exactos están en la lista de abajo, en el mismo orden.</p></div></div>
-              <div id="municipiosTrend" class="insight-trend"></div>
-              <div id="municipiosChart" class="bar-chart" aria-live="polite"></div>
+              <div class="insight-card-head"><div><h4>Participantes por municipio</h4><p id="municipiosChartDesc">Orden del recorrido, de Castellar de n'Hug a El Prat — así se ve cómo crece y decrece el volumen a lo largo de la ruta.</p></div></div>
+              <div class="chartjs-wrap chartjs-wrap-wide">
+                <canvas id="municipiosChart" role="img" aria-label="Participantes por municipio, en el orden del recorrido"></canvas>
+                <div class="insight-empty" id="municipiosChartEmpty" hidden>No hay datos pagados todavía.</div>
+              </div>
+              <details class="chart-data-details"><summary>Ver datos exactos</summary><div id="municipiosChartTable"></div></details>
             </article>
             <article class="insight-card">
               <div class="insight-card-head"><div><h4>Participantes por etapa</h4><p>Útil para dimensionar avituallamientos y logística.</p></div></div>
-              <div id="diasChart" class="bar-chart"></div>
+              <div class="chartjs-wrap">
+                <canvas id="diasChart" role="img" aria-label="Participantes por etapa (día 1, 2 y 3)"></canvas>
+                <div class="insight-empty" id="diasChartEmpty" hidden>No hay datos pagados todavía.</div>
+              </div>
+              <details class="chart-data-details"><summary>Ver datos exactos</summary><div id="diasChartTable"></div></details>
             </article>
             <article class="insight-card">
               <div class="insight-card-head"><div><h4>Camisetas por talla</h4><p>Incluye registros antiguos usando <code>unitats</code> y los nuevos usando el detalle de camisetas.</p></div></div>
               <div id="tallasChart" class="bar-chart"></div>
             </article>
             <article class="insight-card">
-              <div class="insight-card-head"><div><h4>Participantes por modalidad</h4></div></div>
-              <div id="modalitatsChart" class="bar-chart"></div>
+              <div class="insight-card-head"><div><h4>Participantes por modalidad</h4><p id="modalitatsChartDesc"></p></div></div>
+              <div class="chartjs-wrap">
+                <canvas id="modalitatsChart" role="img" aria-label="Participantes por modalidad: caminando, corriendo, bici, animar y dorsal 0"></canvas>
+                <div class="insight-empty" id="modalitatsChartEmpty" hidden>No hay datos pagados todavía.</div>
+              </div>
+              <details class="chart-data-details"><summary>Ver datos exactos</summary><div id="modalitatsChartTable"></div></details>
             </article>
             <article class="insight-card">
               <div class="insight-card-head"><div><h4>Municipio de recogida</h4><p>Para logística de recogidas, no confundir con municipio de paso del recorrido.</p></div></div>
@@ -471,6 +485,7 @@ ADMIN_TOKEN=...</code></pre>
   </main>
 
   <script src="../assets/lxd-admin.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 \n<script id="lxd-admin-insights-js">
 (function(){
   'use strict';
@@ -588,48 +603,96 @@ ADMIN_TOKEN=...</code></pre>
     });
     return {counts:out,order};
   }
-  // Gráfico de línea/área ligero (SVG, sin librerías) que muestra cómo crece
-  // y decrece el volumen de participantes a lo largo del recorrido, en el
-  // mismo orden que la lista de barras de abajo.
-  function renderRouteTrend(id,points){
-    const el=document.getElementById(id);if(!el)return;
-    if(!points.length){el.innerHTML='<div class="insight-empty">No hay datos de recorrido todavía.</div>';el.removeAttribute('role');el.removeAttribute('aria-label');return;}
-    const max=Math.max(...points.map(p=>p.value),1);
-    const W=640,H=140,padX=10,padY=14,baseY=H-padY;
-    const n=points.length;
-    const stepX=n>1?(W-padX*2)/(n-1):0;
-    const coords=points.map((p,i)=>({...p,x:padX+stepX*i,y:baseY-(p.value/max)*(H-padY*2)}));
-    const lineD=coords.map((c,i)=>`${i===0?'M':'L'}${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ');
-    const areaD=`M${coords[0].x.toFixed(1)},${baseY} `+coords.map(c=>`L${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ')+` L${coords[coords.length-1].x.toFixed(1)},${baseY} Z`;
-    const dots=coords.map(c=>`<circle class="trend-dot" cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="2.6"></circle><circle class="trend-hit" tabindex="0" role="img" aria-label="${esc(c.name)}: ${c.value} participantes" data-name="${esc(c.name)}" data-value="${c.value}" cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="9"></circle>`).join('');
-    const firstLabel=`<text class="trend-endlabel" x="${coords[0].x.toFixed(1)}" y="${H-2}" text-anchor="start">${esc(coords[0].name)}</text>`;
-    const lastLabel=`<text class="trend-endlabel" x="${coords[coords.length-1].x.toFixed(1)}" y="${H-2}" text-anchor="end">${esc(coords[coords.length-1].name)}</text>`;
-    el.setAttribute('role','img');
-    el.setAttribute('aria-label',`Volumen estimado de participantes por municipio a lo largo del recorrido, de ${coords[0].name} a ${coords[coords.length-1].name}.`);
-    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" class="trend-svg" aria-hidden="true">
-      <line class="trend-baseline" x1="${padX}" y1="${baseY}" x2="${W-padX}" y2="${baseY}"></line>
-      <path class="trend-area" d="${areaD}"></path>
-      <path class="trend-line" d="${lineD}"></path>
-      ${dots}${firstLabel}${lastLabel}
-    </svg><div class="trend-tooltip" hidden></div><div class="trend-guide" hidden></div>`;
-    const svg=el.querySelector('.trend-svg'),tooltip=el.querySelector('.trend-tooltip'),guide=el.querySelector('.trend-guide');
-    function showFor(hit){
-      const rectBox=el.getBoundingClientRect(),svgBox=svg.getBoundingClientRect();
-      const scaleX=svgBox.width/W,scaleY=svgBox.height/H;
-      const cx=parseFloat(hit.getAttribute('cx')),cy=parseFloat(hit.getAttribute('cy'));
-      const px=svgBox.left-rectBox.left+cx*scaleX,py=svgBox.top-rectBox.top+cy*scaleY;
-      tooltip.hidden=false;guide.hidden=false;
-      tooltip.style.left=px+'px';tooltip.style.top=py+'px';
-      tooltip.innerHTML=`<strong>${esc(hit.dataset.name)}</strong><span>${esc(hit.dataset.value)} participantes</span>`;
-      guide.style.left=px+'px';
+  // ---- Gráficos "bonitos" con Chart.js (municipios, etapas, modalidad) ----
+  // Colores de marca de la web, verificados como paleta categórica accesible
+  // (ver dataviz/scripts/validate_palette.js: ALL CHECKS PASS en este orden).
+  const CHART_COLORS={blue:'#1e72d4',coral:'#ff6b47',purple:'#a05ad4',green:'#2fa66a',water:'#5ac0e6'};
+  const charts={};
+  function destroyChart(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+  function setChartVisible(canvasId,emptyId,visible,msg){
+    const c=document.getElementById(canvasId),e=document.getElementById(emptyId);
+    if(c)c.hidden=!visible;
+    if(e){e.hidden=visible;if(!visible&&msg)e.textContent=msg;}
+  }
+  function fillChartTable(tableId,labels,values){
+    const el=document.getElementById(tableId);if(!el)return;
+    if(!labels.length){el.innerHTML='';return;}
+    el.innerHTML='<table class="chart-data-table"><tbody>'+labels.map((l,i)=>`<tr><th scope="row">${esc(l)}</th><td>${esc(values[i])}</td></tr>`).join('')+'</tbody></table>';
+  }
+  function showChartError(canvasId,emptyId,tableId){
+    destroyChart(canvasId);
+    setChartVisible(canvasId,emptyId,false,'No se han podido cargar las estadísticas.');
+    fillChartTable(tableId,[],[]);
+  }
+  // Falla de forma clara (no en blanco) si el CDN de Chart.js no ha cargado
+  // (p.ej. sin conexión), y si no hay datos aún. Devuelve true si hay que
+  // seguir y dibujar el gráfico.
+  function readyToChart(canvasId,emptyId,tableId,labels,values){
+    const hasData=labels.length&&values.some(v=>v>0);
+    if(typeof Chart==='undefined'){
+      setChartVisible(canvasId,emptyId,false,'No se ha podido cargar la librería de gráficos (Chart.js). Comprueba la conexión a internet y recarga.');
+      fillChartTable(tableId,labels,values);
+      return false;
     }
-    function hideTip(){tooltip.hidden=true;guide.hidden=true;}
-    el.querySelectorAll('.trend-hit').forEach(hit=>{
-      hit.addEventListener('mouseenter',()=>showFor(hit));
-      hit.addEventListener('focus',()=>showFor(hit));
-      hit.addEventListener('blur',hideTip);
+    setChartVisible(canvasId,emptyId,hasData,'No hay datos pagados todavía.');
+    fillChartTable(tableId,labels,values);
+    return hasData;
+  }
+  function renderLineChartJS(canvasId,emptyId,tableId,labels,values){
+    const canvas=document.getElementById(canvasId);if(!canvas)return;
+    destroyChart(canvasId);
+    if(!readyToChart(canvasId,emptyId,tableId,labels,values))return;
+    charts[canvasId]=new Chart(canvas.getContext('2d'),{
+      type:'line',
+      data:{labels,datasets:[{label:'Participantes',data:values,borderColor:CHART_COLORS.blue,backgroundColor:'rgba(30,114,212,.12)',borderWidth:2,tension:.35,fill:true,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:CHART_COLORS.blue,pointBorderColor:'#fff',pointBorderWidth:2}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.parsed.y} participantes`}}},
+        scales:{
+          x:{grid:{display:false},ticks:{autoSkip:true,maxRotation:60,minRotation:0,color:'#5a6478',font:{size:10}}},
+          y:{beginAtZero:true,ticks:{precision:0,color:'#5a6478'},grid:{color:'rgba(21,49,95,.08)'}}
+        }}
     });
-    el.addEventListener('mouseleave',hideTip);
+  }
+  function renderBarChartJS(canvasId,emptyId,tableId,labels,values){
+    const canvas=document.getElementById(canvasId);if(!canvas)return;
+    destroyChart(canvasId);
+    if(!readyToChart(canvasId,emptyId,tableId,labels,values))return;
+    charts[canvasId]=new Chart(canvas.getContext('2d'),{
+      type:'bar',
+      data:{labels,datasets:[{label:'Participantes',data:values,backgroundColor:CHART_COLORS.blue,borderRadius:4,borderSkipped:'bottom',maxBarThickness:36}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.parsed.y} participantes`}}},
+        scales:{
+          x:{grid:{display:false},ticks:{color:'#5a6478'}},
+          y:{beginAtZero:true,ticks:{precision:0,color:'#5a6478'},grid:{color:'rgba(21,49,95,.08)'}}
+        }}
+    });
+  }
+  function renderDoughnutChartJS(canvasId,emptyId,tableId,labels,values){
+    const canvas=document.getElementById(canvasId);if(!canvas)return;
+    destroyChart(canvasId);
+    if(!readyToChart(canvasId,emptyId,tableId,labels,values))return;
+    const palette=[CHART_COLORS.blue,CHART_COLORS.coral,CHART_COLORS.purple,CHART_COLORS.green,CHART_COLORS.water];
+    const total=values.reduce((a,b)=>a+b,0);
+    charts[canvasId]=new Chart(canvas.getContext('2d'),{
+      type:'doughnut',
+      data:{labels,datasets:[{data:values,backgroundColor:palette.slice(0,labels.length),borderColor:'#fff',borderWidth:2}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+        plugins:{
+          legend:{position:'bottom',labels:{color:'#0e1b36',usePointStyle:true,generateLabels(chart){
+            const ds=chart.data.datasets[0];
+            return chart.data.labels.map((l,i)=>({text:`${l} · ${ds.data[i]}`,fillStyle:ds.backgroundColor[i],strokeStyle:'#fff',lineWidth:2,hidden:false,index:i}));
+          }}},
+          tooltip:{callbacks:{label:ctx=>{const v=ctx.parsed,pct=total?Math.round(v/total*100):0;return `${ctx.label}: ${v} (${pct}%)`;}}}
+        }}
+    });
+  }
+  // Cuenta por modalidad en un orden fijo (no por volumen), igual que el
+  // bloque de "Modalidad" del resumen de cabecera.
+  function aggregateModalitats(pagats){
+    const m={caminant:0,corrent:0,bici:0,animar:0,dorsal0:0};let otras=0;
+    pagats.forEach(o=>{const k=String(o.modalitat||payload(o).modalitat||'').toLowerCase();if(m[k]!==undefined)m[k]++;else if(k)otras++;});
+    return {m,otras};
   }
   // OJO: "#statsGrid" NO se toca desde aquí — ese bloque lo pinta
   // lxd-admin.js (renderStats, con el dinero recaudado y el resto del
@@ -655,19 +718,28 @@ ADMIN_TOKEN=...</code></pre>
         ['Día 1',dias[1]||0],['Día 2',dias[2]||0],['Día 3',dias[3]||0]
       ].map(x=>`<div class="insight-kpi"><strong>${x[1]}</strong><span>${x[0]}</span></div>`).join('');
 
-      renderBars('diasChart',{'Día 1':dias[1]||0,'Día 2':dias[2]||0,'Día 3':dias[3]||0},{order:['Día 1','Día 2','Día 3']});
+      renderBarChartJS('diasChart','diasChartEmpty','diasChartTable',['Día 1','Día 2','Día 3'],[dias[1]||0,dias[2]||0,dias[3]||0]);
       renderBars('tallasChart',shirts.m);
-      renderBars('modalitatsChart',aggregate(pagats,o=>{const m=String(o.modalitat||payload(o).modalitat||'').toLowerCase();return m==='corrent'?'Correr':m==='caminant'?'Caminar':m==='bici'?'Bici':m==='animar'?'Samarreta solidària':m==='dorsal0'?'Dorsal 0':m||'Sin modalidad';}));
       renderBars('recollidaChart',aggregate(pagats,o=>payload(o).recollida_municipi_nom||payload(o).recollida_municipi));
+
+      const modalitats=aggregateModalitats(pagats);
+      renderDoughnutChartJS('modalitatsChart','modalitatsChartEmpty','modalitatsChartTable',
+        ['Caminando','Corriendo','Bici','Animar','Dorsal 0'],
+        [modalitats.m.caminant,modalitats.m.corrent,modalitats.m.bici,modalitats.m.animar,modalitats.m.dorsal0]);
+      const modalitatsDesc=document.getElementById('modalitatsChartDesc');
+      if(modalitatsDesc)modalitatsDesc.textContent=modalitats.otras>0?`${modalitats.otras} inscripción(es) con una modalidad no reconocida no se muestran en este gráfico (sí cuentan en "Inscritos").`:'';
+
       const pobles=await getPobles();
       const route=routeMunicipalities(pagats,pobles);
-      renderBars('municipiosChart',route.counts,{order:route.order});
-      renderRouteTrend('municipiosTrend',route.order.map(name=>({name,value:route.counts[name]||0})));
+      renderLineChartJS('municipiosChart','municipiosChartEmpty','municipiosChartTable',route.order,route.order.map(name=>route.counts[name]||0));
       note.textContent=pobles.length
         ? 'Operativa calculada exclusivamente con inscripciones en estado pagat. Los incompletos y pendientes quedan fuera.'
         : 'No se ha podido cargar pobles.json, por lo que no se puede calcular el reparto por municipios del recorrido.';
     }catch(e){
-      const ids=['municipiosChart','municipiosTrend','diasChart','tallasChart','modalitatsChart','recollidaChart'];ids.forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='<div class="insight-empty">No se han podido cargar las estadísticas.</div>';});
+      showChartError('municipiosChart','municipiosChartEmpty','municipiosChartTable');
+      showChartError('diasChart','diasChartEmpty','diasChartTable');
+      showChartError('modalitatsChart','modalitatsChartEmpty','modalitatsChartTable');
+      const ids=['tallasChart','recollidaChart'];ids.forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='<div class="insight-empty">No se han podido cargar las estadísticas.</div>';});
       if(note)note.textContent=e.message||String(e); console.error('[admin-insights]',e);
     }
   }
