@@ -226,6 +226,25 @@
     dorsal0: 'Dorsal 0', animar: 'Animar', caminant: 'Caminando', corrent: 'Corriendo', bici: 'Bici',
   };
 
+  // Campos de dinero: se guardan en céntimos (import_centims, donacio_centims)
+  // pero se muestran/editan en € en el formulario, en inputs "euro_<campo>"
+  // que no son un campo real del registro (se traducen a mano al leer/guardar).
+  const EURO_FIELDS = ['import_centims', 'donacio_centims'];
+
+  // Misma lógica que daysOf() del bloque de estadísticas (admin/index.html),
+  // duplicada aquí para poder pre-marcar los días del tramo aunque el
+  // registro use el formato antiguo (tram_dia_inici/final o tram_tipus) en
+  // vez del array tram_dies. Así no se pierden datos de tramo de registros
+  // antiguos solo por abrirlos y guardar otro cambio.
+  function computeTramDies(p) {
+    if (Array.isArray(p.tram_dies) && p.tram_dies.length) return p.tram_dies.map(Number).filter(n => n >= 1 && n <= 3);
+    const a = Number(p.tram_dia_inici), b = Number(p.tram_dia_final);
+    if (a && b && b >= a) { const out = []; for (let i = a; i <= b; i++) out.push(i); return out; }
+    const m = String(p.tram_tipus || '').match(/^dia-(\d)$/); if (m) return [Number(m[1])];
+    if (String(p.tram_tipus || '').toLowerCase() === 'tot') return [1, 2, 3];
+    return [];
+  }
+
   async function loadInscripcions(force) {
     if (state.inscripcions.loaded && !force) return;
     try {
@@ -366,24 +385,36 @@
     const combinat = { ...o, payload: p };
     $$('input, select', form).forEach(input => {
       if (!input.name || input.name === 'order_id') return;
+      if (input.type === 'checkbox') return; // es_menor y tram_dies se rellenan aparte
+      if (input.name.indexOf('euro_') === 0) return; // importe/donación en € se rellenan aparte
       const val = get(combinat, input.name);
       input.value = val !== undefined && val !== null ? val : '';
     });
+    const esMenor = $('input[name="payload.es_menor"]', form);
+    if (esMenor) esMenor.checked = !!p.es_menor;
+    const tramDies = new Set(computeTramDies(p).map(String));
+    $$('input[name="payload.tram_dies"]', form).forEach(cb => { cb.checked = tramDies.has(cb.value); });
+    EURO_FIELDS.forEach(key => {
+      const input = form.elements['euro_' + key];
+      if (!input) return;
+      const cents = combinat[key];
+      input.value = (cents === undefined || cents === null || cents === '') ? '' : (Number(cents) / 100).toFixed(2);
+    });
+
     const resum = $('#inscripcioResumNoEditable');
-    const tram = (p.tram_inici_nom && p.tram_final_nom)
-      ? `${p.tram_inici_nom} → ${p.tram_final_nom} (${p.tram_km != null ? p.tram_km : '?'} km)`
-      : '—';
     const estatClasse = o.estat === 'pagat' ? 'estat-pill' : 'estat-pill pendent';
-    const cloendaText = typeof p.assisteix_cloenda === 'boolean' ? (p.assisteix_cloenda ? 'Sí' : 'No') : '—';
     resum.innerHTML = `
-      <div><strong>Estado:</strong> <span class="${estatClasse}">${escapeHtml(o.estat || 'desconocido')}</span></div>
-      <div><strong>Modalidad:</strong> ${escapeHtml(MODALITAT_LABEL[o.modalitat] || o.modalitat || '—')}</div>
-      <div><strong>Tramo:</strong> ${escapeHtml(tram)}</div>
-      <div><strong>Importe:</strong> ${o.import_centims != null ? (o.import_centims / 100).toFixed(2) + ' €' : '—'}</div>
-      <div><strong>Va a la cloenda:</strong> ${escapeHtml(cloendaText)}</div>
+      <div><strong>Estado actual:</strong> <span class="${estatClasse}">${escapeHtml(o.estat || 'desconocido')}</span></div>
       <div><strong>Nº comanda:</strong> ${escapeHtml(o.order_id || '')}</div>
       <div><strong>Fecha:</strong> ${escapeHtml(o.data_pagament || o.data_creacio || '—')}</div>
     `;
+    const tramInfo = $('#inscripcioTramInfo');
+    if (tramInfo) {
+      const tram = (p.tram_inici_nom && p.tram_final_nom)
+        ? `${p.tram_inici_nom} → ${p.tram_final_nom} (${p.tram_km != null ? p.tram_km : '?'} km)`
+        : 'sin municipio de inicio/fin concreto guardado (cuenta el día completo)';
+      tramInfo.textContent = 'Recorrido guardado ahora mismo: ' + tram + '. El municipio exacto de inicio/fin no se puede editar aquí, solo los días marcados arriba.';
+    }
   }
 
   async function saveInscripcio(e) {
@@ -394,8 +425,23 @@
     const patch = {};
     $$('input, select', form).forEach(input => {
       if (!input.name || input.name === 'order_id') return;
+      if (input.name.indexOf('euro_') === 0) return; // se procesan aparte (€ -> céntimos)
+      if (input.name === 'payload.tram_dies') return; // varios checkboxes comparten name, aparte
+      if (input.type === 'checkbox') { set(patch, input.name, input.checked); return; }
+      if (input.name === 'payload.assisteix_cloenda') {
+        set(patch, input.name, input.value === '' ? null : input.value === 'true');
+        return;
+      }
       set(patch, input.name, input.value.trim());
     });
+    EURO_FIELDS.forEach(key => {
+      const input = form.elements['euro_' + key];
+      if (!input) return;
+      const raw = input.value.trim();
+      patch[key] = raw === '' ? null : Math.round(Number(raw) * 100);
+    });
+    const tramDiesChecked = $$('input[name="payload.tram_dies"]:checked', form).map(cb => Number(cb.value));
+    set(patch, 'payload.tram_dies', tramDiesChecked);
     form.querySelectorAll('button').forEach(b => b.disabled = true);
     try {
       const res = await fetch(INSCRIPCIONS_API, {
