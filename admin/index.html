@@ -485,7 +485,7 @@ ADMIN_TOKEN=...</code></pre>
   </main>
 
   <script src="../assets/lxd-admin.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="../assets/vendor/chart.umd.min.js"></script>
 \n<script id="lxd-admin-insights-js">
 (function(){
   'use strict';
@@ -624,13 +624,13 @@ ADMIN_TOKEN=...</code></pre>
     setChartVisible(canvasId,emptyId,false,'No se han podido cargar las estadísticas.');
     fillChartTable(tableId,[],[]);
   }
-  // Falla de forma clara (no en blanco) si el CDN de Chart.js no ha cargado
-  // (p.ej. sin conexión), y si no hay datos aún. Devuelve true si hay que
-  // seguir y dibujar el gráfico.
+  // Falla de forma clara (no en blanco) si assets/vendor/chart.umd.min.js no
+  // se ha desplegado o no ha cargado, y si no hay datos aún. Devuelve true si
+  // hay que seguir y dibujar el gráfico.
   function readyToChart(canvasId,emptyId,tableId,labels,values){
     const hasData=labels.length&&values.some(v=>v>0);
     if(typeof Chart==='undefined'){
-      setChartVisible(canvasId,emptyId,false,'No se ha podido cargar la librería de gráficos (Chart.js). Comprueba la conexión a internet y recarga.');
+      setChartVisible(canvasId,emptyId,false,'No se ha podido cargar la librería de gráficos. Comprueba que existe assets/vendor/chart.umd.min.js y recarga la página.');
       fillChartTable(tableId,labels,values);
       return false;
     }
