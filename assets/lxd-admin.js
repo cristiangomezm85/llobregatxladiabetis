@@ -272,61 +272,65 @@
     const pagats = pagades();
     const totalRecaptat = pagats.reduce((sum, o) => sum + (o.import_centims || 0), 0) / 100;
     const totalDonacions = pagats.reduce((sum, o) => sum + (o.donacio_centims || 0), 0) / 100;
-    const perSexe = { home: 0, dona: 0, altre: 0, sense: 0 };
+    // "Otros" agrupa "altre" y "sin especificar": de cara a organización no hace
+    // falta distinguir por qué no consta el sexo, solo cuántos no son hombre/mujer.
+    const perSexe = { home: 0, dona: 0, otros: 0 };
     const perModalitat = { dorsal0: 0, animar: 0, caminant: 0, corrent: 0, bici: 0 };
     let totalMenors = 0;
-    let totalSamarretes = 0;
     let cloendaSi = 0;
     let cloendaNo = 0;
-    const municipis = {};
 
     pagats.forEach(o => {
       const p = o.payload || {};
-      if (p.sexe === 'home' || p.sexe === 'dona' || p.sexe === 'altre') perSexe[p.sexe]++;
-      else perSexe.sense++;
+      if (p.sexe === 'home' || p.sexe === 'dona') perSexe[p.sexe]++;
+      else perSexe.otros++;
       if (perModalitat[o.modalitat] !== undefined) perModalitat[o.modalitat]++;
       if (p.es_menor) totalMenors++;
-      if (Array.isArray(p.samarretes) && p.samarretes.length) {
-        totalSamarretes += p.samarretes.reduce((s, x) => s + (Number(x.quantitat) || 0), 0);
-      } else if (['caminant', 'corrent', 'bici'].includes(o.modalitat)) {
-        totalSamarretes += 1;
-      }
       if (typeof p.assisteix_cloenda === 'boolean') {
         if (p.assisteix_cloenda) cloendaSi++; else cloendaNo++;
       }
-      const m = o.recollida_text || p.recollida_municipi_nom;
-      if (m) municipis[m] = (municipis[m] || 0) + 1;
     });
 
-    let municipiTop = '—';
-    let municipiTopCount = 0;
-    Object.entries(municipis).forEach(([nom, count]) => {
-      if (count > municipiTopCount) { municipiTop = nom; municipiTopCount = count; }
-    });
-
-    const cards = [
-      ['Inscritos', pagats.length],
-      ['Total recaudado', totalRecaptat.toFixed(2) + ' €'],
-      ['Donaciones extra', totalDonacions.toFixed(2) + ' €'],
-      ['Hombres', perSexe.home],
-      ['Mujeres', perSexe.dona],
-      ['Otro', perSexe.altre],
-      ['Sin especificar', perSexe.sense],
-      ['Corriendo', perModalitat.corrent],
-      ['Caminando', perModalitat.caminant],
-      ['Bici', perModalitat.bici],
-      ['Animar', perModalitat.animar],
-      ['Dorsal 0', perModalitat.dorsal0],
-      ['Menores de edad', totalMenors],
-      ['Camisetas vendidas', totalSamarretes],
-      ['Van a la cloenda', cloendaSi],
-      ['No van a la cloenda', cloendaNo],
-      ['Pueblo con más recogidas', municipiTop + (municipiTopCount ? ` (${municipiTopCount})` : '')],
-      ['Incompletos (no cuentan)', pendents().length],
-    ];
-    grid.innerHTML = cards.map(([label, value]) => `
-      <div class="stat-card"><span class="stat-value">${escapeHtml(String(value))}</span><span class="stat-label">${escapeHtml(label)}</span></div>
-    `).join('');
+    const card = (label, value) => `<div class="stat-card"><span class="stat-value">${escapeHtml(String(value))}</span><span class="stat-label">${escapeHtml(label)}</span></div>`;
+    // Camisetas vendidas, pueblo con más recogidas e incompletos ya se ven en
+    // otros sitios (gráfico de tallas, gráfico de recogida, lista de
+    // "Incompletos"), así que no hace falta repetirlos en esta cabecera.
+    grid.innerHTML = `
+      <div class="stats-hero"><span class="stat-value">${pagats.length}</span><span class="stat-label">Inscritos</span></div>
+      <div class="stats-group">
+        <h4>Recaudación</h4>
+        <div class="stats-row">
+          ${card('Total recaudado', totalRecaptat.toFixed(2) + ' €')}
+          ${card('Donaciones extra', totalDonacions.toFixed(2) + ' €')}
+        </div>
+      </div>
+      <div class="stats-group">
+        <h4>Participantes</h4>
+        <div class="stats-row">
+          ${card('Hombres', perSexe.home)}
+          ${card('Mujeres', perSexe.dona)}
+          ${card('Otros', perSexe.otros)}
+          ${card('Menores de edad', totalMenors)}
+        </div>
+      </div>
+      <div class="stats-group">
+        <h4>Modalidad</h4>
+        <div class="stats-row">
+          ${card('Caminando', perModalitat.caminant)}
+          ${card('Corriendo', perModalitat.corrent)}
+          ${card('Bici', perModalitat.bici)}
+          ${card('Animar', perModalitat.animar)}
+          ${card('Dorsal 0', perModalitat.dorsal0)}
+        </div>
+      </div>
+      <div class="stats-group">
+        <h4>Clausura</h4>
+        <div class="stats-row">
+          ${card('Van a la cloenda', cloendaSi)}
+          ${card('No van a la cloenda', cloendaNo)}
+        </div>
+      </div>
+    `;
   }
 
   function inscripcioTitle(o) {
