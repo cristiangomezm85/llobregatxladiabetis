@@ -43,8 +43,37 @@
 .stats-group{background:#fff;border:1px solid var(--linia,#e6e9ef);border-radius:16px;padding:1rem 1.1rem}
 .stats-group h4{margin:0 0 .7rem;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--gris,#697386);font-weight:800}
 .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.7rem}
+.panel-head-actions{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.print-report-header{display:none}
 @media(max-width:1050px){.insights-cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:760px){.insights-head{align-items:flex-start;flex-direction:column}.insights-grid{grid-template-columns:1fr}.insight-card-wide{grid-column:auto}.insights-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.bar-row{grid-template-columns:minmax(90px,1fr) 2fr auto}}
+
+/* ---- Exportar informe a PDF: imprime solo el resumen de Inscripciones
+   (cabecera de estadísticas + gráficos), sin menú ni formularios, cuando
+   se pulsa "Exportar informe (PDF)". El usuario elige "Guardar como PDF"
+   en el diálogo de impresión del navegador — sin librerías nuevas. ---- */
+@media print{
+  body.is-exporting-report .admin-topbar,
+  body.is-exporting-report .admin-sidebar,
+  body.is-exporting-report #adminNotice,
+  body.is-exporting-report #exportReportBtn,
+  body.is-exporting-report #reloadInscripcionsBtn,
+  body.is-exporting-report #reloadInsightsBtn,
+  body.is-exporting-report .split,
+  body.is-exporting-report .panel:not([data-panel="inscripcions"]){display:none!important}
+  body.is-exporting-report .admin-shell{display:block}
+  body.is-exporting-report .admin-workspace{padding:0}
+  body.is-exporting-report .panel[data-panel="inscripcions"]{display:block!important}
+  body.is-exporting-report .print-report-header{display:block!important;margin:0 0 1.1rem;padding-bottom:.7rem;border-bottom:2px solid var(--blau-llobregat,#15315f);color:var(--blau-llobregat,#15315f);font-weight:800;font-size:1rem}
+  body.is-exporting-report .admin-insights{border:0;padding:0;margin:0}
+  body.is-exporting-report .insights-grid{display:block}
+  body.is-exporting-report .insight-card,
+  body.is-exporting-report .stats-group,
+  body.is-exporting-report .stats-hero{break-inside:avoid;page-break-inside:avoid;margin-bottom:14px}
+  body.is-exporting-report .chart-data-details{display:block!important}
+  body.is-exporting-report .chart-data-details summary{display:none}
+  @page{margin:14mm}
+}
 </style>
 </head>
 <body>
@@ -165,8 +194,13 @@
             <p class="eyebrow">Participants</p>
             <h2>Inscripcions</h2>
           </div>
-          <button class="btn btn-ghost" id="reloadInscripcionsBtn" type="button">Recargar</button>
+          <div class="panel-head-actions">
+            <button class="btn" id="exportReportBtn" type="button">Exportar informe (PDF)</button>
+            <button class="btn btn-ghost" id="reloadInscripcionsBtn" type="button">Recargar</button>
+          </div>
         </div>
+
+        <div class="print-report-header" id="printReportHeader" hidden></div>
 
         <div class="stats-grid" id="statsGrid"></div>
 
@@ -743,10 +777,33 @@ ADMIN_TOKEN=...</code></pre>
       if(note)note.textContent=e.message||String(e); console.error('[admin-insights]',e);
     }
   }
+  // Exportar informe (PDF): prepara la página para que solo se vea el
+  // resumen de Inscripciones (cabecera de estadísticas + gráficos, tal
+  // cual se ve en la web) y abre el diálogo de impresión del navegador,
+  // donde se elige "Guardar como PDF". No añade ninguna librería nueva.
+  function exportReport(){
+    const detailsEls=document.querySelectorAll('#adminInsights .chart-data-details');
+    const prevOpen=new Map();
+    // Los datos exactos de cada gráfico están dentro de un desplegable
+    // colapsado; en papel no hay "hover", así que se fuerzan abiertos
+    // solo mientras dura la exportación.
+    detailsEls.forEach(d=>{prevOpen.set(d,d.open);d.open=true;});
+    const stamp=document.getElementById('printReportHeader');
+    if(stamp)stamp.textContent='Llobregat x la Diabetis · Informe de inscripciones · generado el '+new Date().toLocaleString('es-ES',{dateStyle:'long',timeStyle:'short'});
+    document.body.classList.add('is-exporting-report');
+    function cleanup(){
+      document.body.classList.remove('is-exporting-report');
+      detailsEls.forEach(d=>{d.open=prevOpen.get(d);});
+      window.removeEventListener('afterprint',cleanup);
+    }
+    window.addEventListener('afterprint',cleanup);
+    window.print();
+  }
   function init(){
     document.querySelectorAll('[data-tab="inscripcions"]').forEach(b=>b.addEventListener('click',()=>setTimeout(render,100)));
     const r=document.getElementById('reloadInscripcionsBtn');if(r)r.addEventListener('click',()=>setTimeout(render,150));
     const ri=document.getElementById('reloadInsightsBtn');if(ri)ri.addEventListener('click',render);
+    const exportBtn=document.getElementById('exportReportBtn');if(exportBtn)exportBtn.addEventListener('click',exportReport);
     setTimeout(render,500);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
