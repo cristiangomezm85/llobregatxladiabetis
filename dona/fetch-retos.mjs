@@ -1,26 +1,24 @@
-// fetch-retos.mjs
+// scripts/fetch-retos.mjs
 //
-// Actualiza retos.json leyendo la página del evento en Mi Grano de Arena.
-// Mi Grano de Arena no tiene API pública, así que esto hace "screen scraping"
-// de la página del evento (que lista todos los retos con su importe y días
+// Actualiza dona/retos.json leyendo la página del evento en Mi Grano de
+// Arena. MGA no tiene API pública, así que esto hace "screen scraping" de
+// la página del evento (que lista todos los retos con su importe y días
 // restantes) en una sola petición.
 //
-// USO:
-//   npm install cheerio
-//   node fetch-retos.mjs
+// Pensado para ejecutarse vía GitHub Actions (ver
+// .github/workflows/actualizar-retos.yml) — gratis, sin depender de
+// Netlify Functions. Cada ejecución hace commit del JSON actualizado, lo
+// que dispara automáticamente un nuevo deploy en Netlify.
 //
-// Pensado para ejecutarse periódicamente: como Netlify Scheduled Function,
-// GitHub Action con cron, o a mano antes de un despliegue. Nunca borra ni
-// sobreescribe el campo "tipo" de un reto ya existente en el JSON — ese
-// campo lo decides tú a mano (poble / heroe), porque MGA no lo expone.
-//
-// Si aparece un reto nuevo en MGA que no está todavía en retos.json, se
-// añade con tipo:"pendiente" y se avisa por consola para que lo clasifiques.
+// Nunca sobreescribe "tipo" ni "foto" de un reto ya existente — esos los
+// decides tú a mano en dona/retos.json, porque MGA no los expone.
+// Si aparece un reto nuevo, se añade con tipo:"pendiente" y foto:null,
+// y se avisa por consola para que lo completes.
 
 import { readFile, writeFile } from 'node:fs/promises';
 import * as cheerio from 'cheerio';
 
-const JSON_PATH = new URL('./retos.json', import.meta.url);
+const JSON_PATH = new URL('../dona/retos.json', import.meta.url);
 
 async function main() {
   const current = JSON.parse(await readFile(JSON_PATH, 'utf8'));
@@ -84,16 +82,15 @@ async function main() {
       if (diasMatch) diasRestantes = parseInt(diasMatch[1], 10);
     }
 
-    // Nombre: preferimos el que ya tenemos guardado (más limpio); si es
-    // nuevo, usamos el texto del propio enlace como mejor esfuerzo.
     const nombre = knownBySlug.get(slug)?.nombre || $(el).text().trim() || slug;
     const tipo = knownBySlug.get(slug)?.tipo || 'pendiente';
+    const foto = knownBySlug.get(slug)?.foto ?? null;
 
     if (tipo === 'pendiente') {
-      console.warn(`⚠️  Reto nuevo sin clasificar: "${nombre}" (${slug}) — añádele "tipo": "poble" o "heroe" en retos.json`);
+      console.warn(`⚠️  Reto nuevo sin clasificar: "${nombre}" (${slug}) — añádele "tipo" y "foto" en dona/retos.json`);
     }
 
-    retos.push({ slug, nombre, tipo, url, recaudado, diasRestantes });
+    retos.push({ slug, nombre, tipo, foto, url, recaudado, diasRestantes });
   });
 
   const updated = {
@@ -108,7 +105,6 @@ async function main() {
 }
 
 function parseImporte(s) {
-  // "1.234,56" -> 1234.56  /  "1234" -> 1234
   const normalized = s.replace(/\./g, '').replace(',', '.');
   const n = parseFloat(normalized);
   return Number.isFinite(n) ? n : 0;

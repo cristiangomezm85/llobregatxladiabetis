@@ -24,7 +24,6 @@
   }
   .wrap{max-width:960px;margin:0 auto;padding:28px 20px 60px;}
 
-  /* --- Cabecera con el total --- */
   .hero{
     background:linear-gradient(135deg, var(--blue-deep), var(--blue-mid) 70%, var(--blue-light));
     border-radius:18px;
@@ -33,142 +32,58 @@
     text-align:center;
     margin-bottom:28px;
   }
-  .hero .eyebrow{
-    font-size:12px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    opacity:.85;
-    margin:0 0 6px;
-  }
-  .hero .total{
-    font-family:'Bricolage Grotesque',sans-serif;
-    font-weight:800;
-    font-size:44px;
-    margin:0 0 4px;
-  }
-  .hero .total-label{
-    font-size:13px;
-    opacity:.9;
-    margin:0 0 22px;
-  }
-  .cta{
-    display:inline-block;
-    background:var(--coral);
-    color:white;
-    text-decoration:none;
-    font-weight:800;
-    font-size:16px;
-    padding:14px 34px;
-    border-radius:999px;
-  }
-  .cta-sub{
-    font-size:12px;
-    opacity:.8;
-    margin-top:10px;
-  }
+  .hero .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin:0 0 6px;}
+  .hero .total{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:44px;margin:0 0 4px;}
+  .hero .total-label{font-size:13px;opacity:.9;margin:0 0 22px;}
+  .cta{display:inline-block;background:var(--coral);color:white;text-decoration:none;font-weight:800;font-size:16px;padding:14px 34px;border-radius:999px;}
+  .cta-sub{font-size:12px;opacity:.8;margin-top:10px;}
 
-  /* --- Selector poble / heroe --- */
-  h2{
-    font-family:'Bricolage Grotesque',sans-serif;
-    font-weight:800;
-    font-size:19px;
-    color:var(--blue-deep);
-    margin:0 0 4px;
-  }
-  .section-sub{
-    font-size:13px;
-    color:#4b6478;
-    margin:0 0 16px;
-  }
-  .tabs{
-    display:flex;
-    gap:8px;
-    margin-bottom:20px;
-  }
-  .tab{
-    flex:1;
-    text-align:center;
-    padding:11px 8px;
-    border-radius:10px;
-    background:#e7eef3;
-    color:var(--blue-deep);
-    font-weight:700;
-    font-size:13.5px;
-    cursor:pointer;
-    border:none;
-    font-family:'Manrope',sans-serif;
-  }
+  h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:19px;color:var(--blue-deep);margin:0 0 4px;}
+  .section-sub{font-size:13px;color:#4b6478;margin:0 0 16px;}
+  .tabs{display:flex;gap:8px;margin-bottom:20px;}
+  .tab{flex:1;text-align:center;padding:11px 8px;border-radius:10px;background:#e7eef3;color:var(--blue-deep);font-weight:700;font-size:13.5px;cursor:pointer;border:none;font-family:'Manrope',sans-serif;}
   .tab.active{background:var(--blue-deep);color:white;}
 
-  /* --- Grid de retos --- */
-  .grid{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:12px;
-  }
-  @media (min-width:640px){
-    .grid{grid-template-columns:1fr 1fr;}
-  }
+  .grid{display:grid;grid-template-columns:1fr;gap:12px;}
+  @media (min-width:640px){.grid{grid-template-columns:1fr 1fr;}}
   .card{
     background:white;
     border:1.5px solid #e2eaef;
     border-radius:14px;
     padding:16px 18px;
     display:flex;
-    flex-direction:column;
-    gap:8px;
+    gap:14px;
+    align-items:flex-start;
   }
-  .card .nombre{
-    font-weight:800;
-    font-size:15px;
-    color:var(--ink);
+  .card .foto{
+    width:64px;height:64px;
+    border-radius:50%;
+    object-fit:cover;
+    flex-shrink:0;
+    background:#e7eef3;
+    border:2px solid var(--blue-light);
   }
-  .card .badge{
-    display:inline-block;
-    font-size:10.5px;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:.04em;
-    padding:3px 8px;
-    border-radius:999px;
-    width:fit-content;
-  }
+  .card .info{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0;}
+  .card .badge{display:inline-block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 8px;border-radius:999px;width:fit-content;}
   .badge.poble{background:#e3f0fa;color:var(--blue-mid);}
   .badge.heroe{background:#ffe6de;color:var(--coral);}
-  .card .amount{
-    font-family:'Bricolage Grotesque',sans-serif;
-    font-weight:800;
-    font-size:22px;
-    color:var(--blue-deep);
-  }
-  .card .dias{
-    font-size:12px;
-    color:#6b8296;
-  }
+  .card .nombre{font-weight:800;font-size:15px;color:var(--ink);}
+  .card .amount{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:20px;color:var(--blue-deep);}
+  .card .dias{font-size:12px;color:#6b8296;}
   .card a.donar{
-    margin-top:4px;
+    margin-top:2px;
     text-align:center;
     background:var(--blue-deep);
     color:white;
     text-decoration:none;
     font-weight:700;
-    font-size:13.5px;
-    padding:10px;
+    font-size:13px;
+    padding:9px;
     border-radius:8px;
   }
 
-  .empty, .error{
-    font-size:13px;
-    color:#6b8296;
-    padding:20px;
-    text-align:center;
-  }
-  .updated-note{
-    font-size:11px;
-    color:#9db0bf;
-    text-align:center;
-    margin-top:28px;
-  }
+  .empty, .error{font-size:13px;color:#6b8296;padding:20px;text-align:center;}
+  .updated-note{font-size:11px;color:#9db0bf;text-align:center;margin-top:28px;}
 </style>
 </head>
 <body>
@@ -198,6 +113,7 @@
 </div>
 
 <script>
+const FOTO_PLACEHOLDER = 'fotos/placeholder.jpg';
 let DATA = null;
 let currentTipo = 'poble';
 
@@ -236,11 +152,16 @@ function render(){
 
   grid.innerHTML = filtered.map(r => `
     <div class="card">
-      <span class="badge ${r.tipo}">${r.tipo === 'poble' ? 'Municipio' : 'Héroe'}</span>
-      <div class="nombre">${escapeHtml(r.nombre)}</div>
-      <div class="amount">${formatEuros(r.recaudado || 0)}</div>
-      ${r.diasRestantes != null ? `<div class="dias">Faltan ${r.diasRestantes} días</div>` : ''}
-      <a class="donar" href="${r.url}" target="_blank" rel="noopener">Donar</a>
+      <img class="foto" src="fotos/${r.foto ? escapeAttr(r.foto) : 'placeholder.jpg'}"
+           alt="${escapeAttr(r.nombre)}"
+           onerror="this.src='${FOTO_PLACEHOLDER}'">
+      <div class="info">
+        <span class="badge ${r.tipo}">${r.tipo === 'poble' ? 'Municipio' : 'Héroe'}</span>
+        <div class="nombre">${escapeHtml(r.nombre)}</div>
+        <div class="amount">${formatEuros(r.recaudado || 0)}</div>
+        ${r.diasRestantes != null ? `<div class="dias">Faltan ${r.diasRestantes} días</div>` : ''}
+        <a class="donar" href="${r.url}" target="_blank" rel="noopener">Donar</a>
+      </div>
     </div>
   `).join('');
 }
@@ -248,6 +169,7 @@ function render(){
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+function escapeAttr(s){ return escapeHtml(s); }
 
 document.querySelectorAll('.tab').forEach(btn => {
   btn.addEventListener('click', () => {
