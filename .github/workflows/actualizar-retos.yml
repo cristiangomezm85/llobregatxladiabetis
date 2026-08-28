@@ -2,7 +2,7 @@ name: Actualizar retos MGA
 
 on:
   schedule:
-    - cron: '0 * * * *'   # cada hora, en punto (hora UTC)
+    - cron: '*/15 * * * *'  # cada 15 minutos
   workflow_dispatch:        # además, botón "Run workflow" manual en GitHub
 
 jobs:
