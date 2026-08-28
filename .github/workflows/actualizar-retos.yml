@@ -1,0 +1,32 @@
+name: Actualizar retos MGA
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # cada hora, en punto (hora UTC)
+  workflow_dispatch:        # además, botón "Run workflow" manual en GitHub
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependencias
+        run: npm install cheerio
+
+      - name: Ejecutar scraper
+        run: node scripts/fetch-retos.mjs
+
+      - name: Commit si hay cambios
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dona/retos.json
+          git diff --staged --quiet || git commit -m "Actualiza retos.json [automático]"
+          git push
