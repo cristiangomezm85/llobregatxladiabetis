@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dona · Llobregat x la Diabetis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue-deep:#0B3D62;
+    --blue-mid:#1D6FA5;
+    --blue-light:#7FB7DE;
+    --coral:#FF6B4A;
+    --paper:#F5F8FA;
+    --ink:#0B2036;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Manrope',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:28px 20px 60px;}
+
+  /* --- Cabecera con el total --- */
+  .hero{
+    background:linear-gradient(135deg, var(--blue-deep), var(--blue-mid) 70%, var(--blue-light));
+    border-radius:18px;
+    padding:32px 24px;
+    color:white;
+    text-align:center;
+    margin-bottom:28px;
+  }
+  .hero .eyebrow{
+    font-size:12px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin:0 0 6px;
+  }
+  .hero .total{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:44px;
+    margin:0 0 4px;
+  }
+  .hero .total-label{
+    font-size:13px;
+    opacity:.9;
+    margin:0 0 22px;
+  }
+  .cta{
+    display:inline-block;
+    background:var(--coral);
+    color:white;
+    text-decoration:none;
+    font-weight:800;
+    font-size:16px;
+    padding:14px 34px;
+    border-radius:999px;
+  }
+  .cta-sub{
+    font-size:12px;
+    opacity:.8;
+    margin-top:10px;
+  }
+
+  /* --- Selector poble / heroe --- */
+  h2{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:19px;
+    color:var(--blue-deep);
+    margin:0 0 4px;
+  }
+  .section-sub{
+    font-size:13px;
+    color:#4b6478;
+    margin:0 0 16px;
+  }
+  .tabs{
+    display:flex;
+    gap:8px;
+    margin-bottom:20px;
+  }
+  .tab{
+    flex:1;
+    text-align:center;
+    padding:11px 8px;
+    border-radius:10px;
+    background:#e7eef3;
+    color:var(--blue-deep);
+    font-weight:700;
+    font-size:13.5px;
+    cursor:pointer;
+    border:none;
+    font-family:'Manrope',sans-serif;
+  }
+  .tab.active{background:var(--blue-deep);color:white;}
+
+  /* --- Grid de retos --- */
+  .grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+  @media (min-width:640px){
+    .grid{grid-template-columns:1fr 1fr;}
+  }
+  .card{
+    background:white;
+    border:1.5px solid #e2eaef;
+    border-radius:14px;
+    padding:16px 18px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .card .nombre{
+    font-weight:800;
+    font-size:15px;
+    color:var(--ink);
+  }
+  .card .badge{
+    display:inline-block;
+    font-size:10.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    padding:3px 8px;
+    border-radius:999px;
+    width:fit-content;
+  }
+  .badge.poble{background:#e3f0fa;color:var(--blue-mid);}
+  .badge.heroe{background:#ffe6de;color:var(--coral);}
+  .card .amount{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:22px;
+    color:var(--blue-deep);
+  }
+  .card .dias{
+    font-size:12px;
+    color:#6b8296;
+  }
+  .card a.donar{
+    margin-top:4px;
+    text-align:center;
+    background:var(--blue-deep);
+    color:white;
+    text-decoration:none;
+    font-weight:700;
+    font-size:13.5px;
+    padding:10px;
+    border-radius:8px;
+  }
+
+  .empty, .error{
+    font-size:13px;
+    color:#6b8296;
+    padding:20px;
+    text-align:center;
+  }
+  .updated-note{
+    font-size:11px;
+    color:#9db0bf;
+    text-align:center;
+    margin-top:28px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <p class="eyebrow">Llobregat x la Diabetis 2026</p>
+    <p class="total" id="totalRecaudado">—</p>
+    <p class="total-label">recaudados entre todos los retos</p>
+    <a class="cta" id="ctaGeneral" href="#" target="_blank" rel="noopener">Dona ahora a la causa</a>
+    <p class="cta-sub">Va directo al proyecto de investigación en diabetes tipo 1 de AREDI</p>
+  </div>
+
+  <h2>O elige a quién apoyar</h2>
+  <p class="section-sub">Cada municipio y cada héroe tiene su propio reto — el importe de todos suma al total del evento.</p>
+
+  <div class="tabs">
+    <button class="tab active" data-tipo="poble">Municipios</button>
+    <button class="tab" data-tipo="heroe">Héroes</button>
+  </div>
+
+  <div class="grid" id="grid">
+    <p class="empty">Cargando retos…</p>
+  </div>
+
+  <p class="updated-note" id="updatedNote"></p>
+</div>
+
+<script>
+let DATA = null;
+let currentTipo = 'poble';
+
+async function load(){
+  try{
+    const res = await fetch('retos.json', {cache:'no-store'});
+    DATA = await res.json();
+    render();
+  }catch(err){
+    document.getElementById('grid').innerHTML = '<p class="error">No se ha podido cargar el listado de retos ahora mismo.</p>';
+    console.error(err);
+  }
+}
+
+function formatEuros(n){
+  return new Intl.NumberFormat('es-ES', {maximumFractionDigits:0}).format(n) + '€';
+}
+
+function render(){
+  if(!DATA) return;
+
+  document.getElementById('totalRecaudado').textContent = formatEuros(DATA.totalRecaudado || 0);
+  document.getElementById('ctaGeneral').href = DATA.retoGeneralUrl;
+  if(DATA.actualizado){
+    const d = new Date(DATA.actualizado);
+    document.getElementById('updatedNote').textContent = 'Actualizado ' + d.toLocaleDateString('es-ES', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+  }
+
+  const grid = document.getElementById('grid');
+  const filtered = (DATA.retos || []).filter(r => r.tipo === currentTipo);
+
+  if(filtered.length === 0){
+    grid.innerHTML = '<p class="empty">Todavía no hay retos publicados en esta categoría.</p>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(r => `
+    <div class="card">
+      <span class="badge ${r.tipo}">${r.tipo === 'poble' ? 'Municipio' : 'Héroe'}</span>
+      <div class="nombre">${escapeHtml(r.nombre)}</div>
+      <div class="amount">${formatEuros(r.recaudado || 0)}</div>
+      ${r.diasRestantes != null ? `<div class="dias">Faltan ${r.diasRestantes} días</div>` : ''}
+      <a class="donar" href="${r.url}" target="_blank" rel="noopener">Donar</a>
+    </div>
+  `).join('');
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTipo = btn.dataset.tipo;
+    render();
+  });
+});
+
+load();
+</script>
+</body>
+</html>
