@@ -47,31 +47,77 @@
   .grid{display:grid;grid-template-columns:1fr;gap:16px;}
   @media (min-width:640px){.grid{grid-template-columns:1fr 1fr;}}
   .card{
-    background:white;
-    border:1.5px solid #e2eaef;
-    border-radius:14px;
+    position:relative;
+    aspect-ratio:4/5;
+    border-radius:16px;
     overflow:hidden;
+    background:#e7eef3;
     display:flex;
     flex-direction:column;
+    isolation:isolate;
   }
   .card .foto{
+    position:absolute;
+    inset:0;
     width:100%;
-    aspect-ratio:1/1;
+    height:100%;
     object-fit:cover;
-    display:block;
-    background:#e7eef3;
+    z-index:0;
   }
-  .card .info{flex:1;display:flex;flex-direction:column;gap:6px;padding:14px 16px 16px;}
-  .card .badge{display:inline-block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 8px;border-radius:999px;width:fit-content;}
-  .badge.poble{background:#e3f0fa;color:var(--blue-mid);}
-  .badge.heroe{background:#ffe6de;color:var(--coral);}
-  .card .nombre{font-weight:800;font-size:16px;color:var(--ink);}
-  .card .amount{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:22px;color:var(--blue-deep);}
-  .card .dias{font-size:12px;color:#6b8296;}
+  .card .scrim{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to bottom, rgba(11,32,54,.55) 0%, rgba(11,32,54,0) 32%, rgba(11,32,54,0) 55%, rgba(11,32,54,.9) 100%);
+    z-index:1;
+  }
+  .card .badge{
+    position:relative;
+    z-index:2;
+    align-self:flex-start;
+    margin:12px 0 0 12px;
+    display:inline-block;
+    font-size:10.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    padding:4px 10px;
+    border-radius:999px;
+  }
+  .badge.poble{background:var(--blue-mid);color:white;}
+  .badge.heroe{background:var(--coral);color:white;}
+  .card .info{
+    position:relative;
+    z-index:2;
+    margin-top:auto;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    padding:16px;
+  }
+  .card .nombre{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:17px;
+    color:white;
+    line-height:1.2;
+    text-shadow:0 1px 6px rgba(0,0,0,.55), 0 1px 2px rgba(0,0,0,.7);
+  }
+  .card .amount{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:24px;
+    color:white;
+    text-shadow:0 1px 6px rgba(0,0,0,.55), 0 1px 2px rgba(0,0,0,.7);
+  }
+  .card .dias{
+    font-size:12px;
+    color:#e4edf3;
+    text-shadow:0 1px 4px rgba(0,0,0,.6);
+  }
   .card a.donar{
-    margin-top:4px;
+    margin-top:6px;
     text-align:center;
-    background:var(--blue-deep);
+    background:var(--coral);
     color:white;
     text-decoration:none;
     font-weight:700;
@@ -172,8 +218,9 @@ function render(){
       <img class="foto" src="${escapeAttr(resolveFotoUrl(r.foto))}"
            alt="${escapeAttr(r.nombre)}"
            onerror="this.onerror=null; this.src='${FOTO_PLACEHOLDER}';">
+      <div class="scrim"></div>
+      <span class="badge ${r.tipo}">${r.tipo === 'poble' ? 'Municipio' : 'Héroe'}</span>
       <div class="info">
-        <span class="badge ${r.tipo}">${r.tipo === 'poble' ? 'Municipio' : 'Héroe'}</span>
         <div class="nombre">${escapeHtml(r.nombre)}</div>
         <div class="amount">${formatEuros(r.recaudado || 0)}</div>
         ${r.diasRestantes != null ? `<div class="dias">Faltan ${r.diasRestantes} días</div>` : ''}
