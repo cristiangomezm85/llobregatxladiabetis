@@ -71,10 +71,15 @@
   }
   .modal-icon{ width:22px; height:22px; object-fit:contain; }
   #townModalTop{ display:flex; gap:12px; align-items:flex-start; }
-  #townModalAvatar{
-    display:block; width:110px; aspect-ratio:4/5; object-fit:cover;
-    border-radius:10px; flex-shrink:0;
+  #townModalAvatarWrap{
+    position:relative; width:110px; aspect-ratio:4/5; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
   }
+  #townModalAvatar{
+    display:block; width:100%; height:100%; object-fit:cover;
+    border-radius:10px;
+  }
+  #townModalAvatarWrap .img-spinner{ position:absolute; }
   #townModalTopText{ flex:1; min-width:0; }
   #townModalTopText h3{ margin-bottom:6px; }
   .modal-box p{ font-family:'Manrope',sans-serif; font-size:13px; color:var(--paper); opacity:0.9; line-height:1.5; }
@@ -99,9 +104,17 @@
   #bookPageWrap{
     background:var(--tinta); border-radius:10px; aspect-ratio:4/3; display:flex;
     align-items:center; justify-content:center; overflow:hidden; margin-bottom:8px;
+    position:relative;
   }
   #bookPageWrap img{ width:100%; height:100%; object-fit:contain; display:none; }
   #bookEmptyMsg{ font-family:'Manrope',sans-serif; font-size:12px; color:var(--gris); text-align:center; padding:20px; }
+
+  .img-spinner{
+    display:none; width:28px; height:28px; border-radius:50%;
+    border:3px solid rgba(255,255,255,0.2); border-top-color:var(--aigua);
+    animation:imgSpin 0.8s linear infinite;
+  }
+  @keyframes imgSpin{ to{ transform:rotate(360deg); } }
   #bookPageLabel{ font-family:'Manrope',sans-serif; font-weight:800; font-size:12px; color:var(--aigua); text-align:center; margin-bottom:10px; }
   .book-nav{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
   .book-nav button{
@@ -283,7 +296,10 @@
   <div class="modal-box">
     <button class="modal-close" data-close="townModal">✕</button>
     <div id="townModalTop">
-      <img id="townModalAvatar" alt="" style="display:none;">
+      <div id="townModalAvatarWrap">
+        <img id="townModalAvatar" alt="" style="display:none;">
+        <div id="townModalAvatarSpinner" class="img-spinner"></div>
+      </div>
       <div id="townModalTopText">
         <h3 id="townModalName"></h3>
         <p id="townModalDesc"></p>
@@ -303,6 +319,7 @@
     <h3>📖 Llibre Oficial de Solidaritat</h3>
     <div id="bookPageWrap">
       <img id="bookPageImg" src="" alt="">
+      <div id="bookPageSpinner" class="img-spinner"></div>
       <div id="bookEmptyMsg">Encara no hi ha cap firma escanejada per a aquest tram.</div>
     </div>
     <div id="bookPageLabel"></div>
@@ -641,14 +658,20 @@ function openTownInfo(c){
   // carrega (URL trencada), simplement no es mostra res — mai un
   // icona d'imatge trencada.
   const avatarImg = document.getElementById('townModalAvatar');
+  const avatarWrap = document.getElementById('townModalAvatarWrap');
+  const avatarSpinner = document.getElementById('townModalAvatarSpinner');
   const info = allMunicipisGps[c.name];
   avatarImg.style.display = 'none';
   if (info && info.photo) {
-    avatarImg.onload = () => { avatarImg.style.display = 'block'; };
-    avatarImg.onerror = () => { avatarImg.style.display = 'none'; };
+    avatarWrap.style.display = 'flex';
+    avatarSpinner.style.display = 'block';
+    avatarImg.onload = () => { avatarImg.style.display = 'block'; avatarSpinner.style.display = 'none'; };
+    avatarImg.onerror = () => { avatarImg.style.display = 'none'; avatarSpinner.style.display = 'none'; avatarWrap.style.display = 'none'; };
     avatarImg.src = info.photo;
   } else {
     avatarImg.removeAttribute('src');
+    avatarSpinner.style.display = 'none';
+    avatarWrap.style.display = 'none';
   }
 
   openModal('townModal');
@@ -671,6 +694,7 @@ function renderBookPage(){
   const pages = bookAvailablePages();
   const img = document.getElementById('bookPageImg');
   const empty = document.getElementById('bookEmptyMsg');
+  const spinner = document.getElementById('bookPageSpinner');
   const label = document.getElementById('bookPageLabel');
   const counter = document.getElementById('bookPageCounter');
   document.getElementById('bookPrevBtn').disabled = bookPageIndex <= 0;
@@ -678,6 +702,7 @@ function renderBookPage(){
 
   if (pages.length === 0){
     img.style.display = 'none';
+    spinner.style.display = 'none';
     empty.style.display = 'block';
     label.textContent = '';
     counter.textContent = '';
@@ -688,8 +713,11 @@ function renderBookPage(){
   label.textContent = cpName;
   counter.textContent = `${bookPageIndex+1} / ${pages.length}`;
   const key = `sig_${currentStageId}_${cpIndex}`;
-  img.onload = () => { img.style.display = 'block'; empty.style.display = 'none'; };
-  img.onerror = () => { img.style.display = 'none'; empty.style.display = 'block'; empty.textContent = `Encara no hi ha foto de la firma a ${cpName}.`; };
+  img.style.display = 'none';
+  empty.style.display = 'none';
+  spinner.style.display = 'block';
+  img.onload = () => { img.style.display = 'block'; spinner.style.display = 'none'; empty.style.display = 'none'; };
+  img.onerror = () => { img.style.display = 'none'; spinner.style.display = 'none'; empty.style.display = 'block'; empty.textContent = `Encara no hi ha foto de la firma a ${cpName}.`; };
   img.src = `${FUNCTIONS_BASE}/get-map-image?key=${encodeURIComponent(key)}&t=${Date.now()}`;
 }
 document.getElementById('bookBtn').addEventListener('click', () => {
