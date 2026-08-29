@@ -143,7 +143,14 @@
       <label><input type="checkbox" id="isCp"> És una parada (poble)</label>
       <div id="cpFields" style="display:none;">
         <label>Nom del municipi</label>
-        <input type="text" id="cpName" placeholder="ex: Sant Vicenç de Castellet">
+        <select id="cpName" style="width:100%; background:rgba(255,255,255,0.08); border:1px solid var(--gris); color:var(--paper); border-radius:8px; padding:10px; font-size:13px;">
+          <option value="">— Selecciona un municipi —</option>
+          <option value="__custom__">✏️ Altre (escriu-lo a mà)</option>
+        </select>
+        <input type="text" id="cpNameCustom" placeholder="Escriu el nom exacte" style="display:none; margin-top:6px;">
+        <div style="font-size:10px; color:var(--gris); margin-top:4px;">
+          La llista ve de municipis-gps.json — si el nom no coincideix exactament amb una entrada d'allà, aquest poble no tindrà ni foto ni posició real al mode GPS.
+        </div>
         <label>Descripció breu (surt en clicar el poble al mapa)</label>
         <textarea id="cpDesc" rows="2" placeholder="ex: Poble industrial vora el riu, conegut per..." style="width:100%; background:rgba(255,255,255,0.08); border:1px solid var(--gris); color:var(--paper); border-radius:8px; padding:10px; font-size:13px; font-family:inherit; resize:vertical;"></textarea>
         <div class="row">
@@ -489,7 +496,24 @@ function selectPoint(i){
   document.getElementById('editTitle').textContent = `Punt ${i+1}`;
   document.getElementById('isCp').checked = !!p.checkpoint;
   document.getElementById('cpFields').style.display = p.checkpoint ? 'block' : 'none';
-  document.getElementById('cpName').value = p.checkpoint ? p.checkpoint.name : '';
+  {
+    const nm = p.checkpoint ? p.checkpoint.name : '';
+    const sel = document.getElementById('cpName');
+    const customInput = document.getElementById('cpNameCustom');
+    if (nm && knownMunicipisNames.includes(nm)) {
+      sel.value = nm;
+      customInput.style.display = 'none';
+      customInput.value = '';
+    } else if (nm) {
+      sel.value = '__custom__';
+      customInput.style.display = 'block';
+      customInput.value = nm;
+    } else {
+      sel.value = '';
+      customInput.style.display = 'none';
+      customInput.value = '';
+    }
+  }
   document.getElementById('cpDesc').value = p.checkpoint ? (p.checkpoint.description || '') : '';
   document.getElementById('cpDist').value = p.checkpoint ? p.checkpoint.distFromPrevKm : '';
   document.getElementById('cpPace').value = p.checkpoint ? (p.checkpoint.paceMinKm || 7.5) : 7.5;
@@ -505,6 +529,36 @@ document.getElementById('isCp').addEventListener('change', (e) => {
   document.getElementById('cpFields').style.display = e.target.checked ? 'block' : 'none';
 });
 
+let knownMunicipisNames = [];
+
+async function loadKnownMunicipis(){
+  const sel = document.getElementById('cpName');
+  try {
+    const res = await fetch(`municipis-gps.json?t=${Date.now()}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('no trobat');
+    const data = await res.json();
+    knownMunicipisNames = Object.keys(data);
+  } catch (e) {
+    knownMunicipisNames = [];
+    console.warn('No s\'ha pogut carregar municipis-gps.json:', e.message);
+  }
+  // Reconstruïm les opcions mantenint les dues fixes (buit i "altre")
+  sel.querySelectorAll('option[data-municipi]').forEach(o => o.remove());
+  knownMunicipisNames.forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    opt.dataset.municipi = '1';
+    sel.appendChild(opt);
+  });
+}
+
+document.getElementById('cpName').addEventListener('change', (e) => {
+  const customInput = document.getElementById('cpNameCustom');
+  customInput.style.display = e.target.value === '__custom__' ? 'block' : 'none';
+  if (e.target.value === '__custom__') customInput.focus();
+});
+
 function saveEditFromForm(){
   if (selectedIndex === null) return;
   const p = config.points[selectedIndex];
@@ -512,8 +566,12 @@ function saveEditFromForm(){
   if (isCp){
     const allCps = config.points.filter(pt => pt.checkpoint || pt === p);
     const isFirstCheckpoint = allCps.length && allCps[0] === p;
+    const selVal = document.getElementById('cpName').value;
+    const resolvedName = selVal === '__custom__'
+      ? document.getElementById('cpNameCustom').value.trim()
+      : selVal;
     p.checkpoint = {
-      name: document.getElementById('cpName').value.trim() || `Punt ${selectedIndex+1}`,
+      name: resolvedName || `Punt ${selectedIndex+1}`,
       description: document.getElementById('cpDesc').value.trim(),
       distFromPrevKm: isFirstCheckpoint ? 0 : (parseFloat(document.getElementById('cpDist').value) || 0),
       paceMinKm: parseFloat(document.getElementById('cpPace').value) || 7.5,
@@ -534,7 +592,7 @@ document.getElementById('applyPaceAll').addEventListener('click', () => {
   renderTable();
 });
 
-['cpName','cpDesc','cpDist','cpPace','cpEtaX','cpEtaY','cpPause','cpMoney'].forEach(id => {
+['cpName','cpNameCustom','cpDesc','cpDist','cpPace','cpEtaX','cpEtaY','cpPause','cpMoney'].forEach(id => {
   document.getElementById(id).addEventListener('input', () => { saveEditFromForm(); renderPoints(); renderTable(); });
 });
 document.getElementById('isCp').addEventListener('change', () => { saveEditFromForm(); renderPoints(); renderTable(); });
@@ -884,6 +942,7 @@ async function startPanel(){
   if (!fullConfig.runnerSprites || (!fullConfig.runnerSprites.moving && !fullConfig.runnerSprites.idle)) {
     fullConfig.runnerSprites = { moving: null, idle: null, sleeping: null };
   }
+  await loadKnownMunicipis();
   setActiveStageIndex(0);
   renderAll();
 }
