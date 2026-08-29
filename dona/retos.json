@@ -2,7 +2,7 @@
   "eventoUrl": "https://www.migranodearena.org/evento/llobregat-x-la-diabetis-2026",
   "retoGeneralUrl": "https://www.migranodearena.org/usuario/associacio-aredi-ajuda-a-la-recerca-en-diabetis",
   "totalRecaudado": 0,
-  "actualizado": "2026-08-29T18:28:06.494Z",
+  "actualizado": "2026-08-29T23:18:44.897Z",
   "retos": [
     {
       "slug": "hospitalet-x-la-diabetes",
@@ -11,7 +11,7 @@
       "foto": "fotos/Hospitalet de Llobregat.png",
       "url": "https://www.migranodearena.org/reto/hospitalet-x-la-diabetes",
       "recaudado": 0,
-      "diasRestantes": 63
+      "diasRestantes": 62
     },
     {
       "slug": "sant-boi-x-la-diabetes",
@@ -20,7 +20,7 @@
       "foto": "fotos/Sant Boi de Llobregat.png",
       "url": "https://www.migranodearena.org/reto/sant-boi-x-la-diabetes",
       "recaudado": 0,
-      "diasRestantes": 63
+      "diasRestantes": 62
     },
     {
       "slug": "sant-joan-x-la-diabetes",
@@ -29,7 +29,7 @@
       "foto": "fotos/Sant Joan Despí.png",
       "url": "https://www.migranodearena.org/reto/sant-joan-x-la-diabetes",
       "recaudado": 0,
-      "diasRestantes": 63
+      "diasRestantes": 62
     },
     {
       "slug": "el-prat-x-la-diabetes",
@@ -38,7 +38,7 @@
       "foto": "fotos/El Prat de Llobregat.png",
       "url": "https://www.migranodearena.org/reto/el-prat-x-la-diabetes",
       "recaudado": 0,
-      "diasRestantes": 63
+      "diasRestantes": 62
     },
     {
       "slug": "cornella-x-la-diabetes",
@@ -47,7 +47,7 @@
       "foto": "fotos/Cornellà de Llobregat.png",
       "url": "https://www.migranodearena.org/reto/cornella-x-la-diabetes",
       "recaudado": 0,
-      "diasRestantes": 63
+      "diasRestantes": 62
     }
   ]
 }
