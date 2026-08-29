@@ -70,11 +70,14 @@
     display:flex; align-items:center; gap:8px;
   }
   .modal-icon{ width:22px; height:22px; object-fit:contain; }
+  #townModalTop{ display:flex; gap:12px; align-items:flex-start; }
   #townModalAvatar{
-    display:block; width:100%; max-height:160px; object-fit:cover;
-    border-radius:10px; margin-bottom:12px;
+    display:block; width:110px; aspect-ratio:4/5; object-fit:cover;
+    border-radius:10px; flex-shrink:0;
   }
-  .modal-box p{ font-family:'Manrope',sans-serif; font-size:13px; color:var(--paper); opacity:0.9; line-height:1.5; margin-top:12px; }
+  #townModalTopText{ flex:1; min-width:0; }
+  #townModalTopText h3{ margin-bottom:6px; }
+  .modal-box p{ font-family:'Manrope',sans-serif; font-size:13px; color:var(--paper); opacity:0.9; line-height:1.5; }
   .modal-close{
     position:absolute; top:10px; right:10px; width:28px; height:28px; border-radius:50%;
     background:rgba(255,255,255,0.1); border:none; color:var(--paper); font-size:14px; cursor:pointer;
@@ -190,6 +193,9 @@
     0%, 100% { transform:translate(-50%, -50%) scale(1); }
     50% { transform:translate(-50%, -50%) scale(1.08); }
   }
+  .gps-cp-label-finish{
+    cursor:default; animation:none; background:rgba(255,107,71,0.85); border-color:var(--coral);
+  }
 
   .cp-eta{
     position:absolute; transform:translate(-50%, 6px);
@@ -201,7 +207,7 @@
   .cp-eta.current{ color:var(--coral); border-color:var(--coral); }
 
   .cp-viewbtn{
-    position:absolute; transform:translate(-50%, 16px);
+    position:absolute; transform:translate(16px, -50%);
     font-family:'Manrope',sans-serif; font-weight:800; font-size:9px; color:var(--tinta);
     background:#FFD24C; border:1px solid #B8860B; border-radius:20px;
     padding:3px 8px; white-space:nowrap; z-index:12; cursor:pointer;
@@ -276,14 +282,18 @@
 <div id="townModal" class="modal-overlay">
   <div class="modal-box">
     <button class="modal-close" data-close="townModal">✕</button>
-    <img id="townModalAvatar" alt="" style="display:none;">
-    <h3 id="townModalName"></h3>
+    <div id="townModalTop">
+      <img id="townModalAvatar" alt="" style="display:none;">
+      <div id="townModalTopText">
+        <h3 id="townModalName"></h3>
+        <p id="townModalDesc"></p>
+      </div>
+    </div>
     <div id="townModalGold">
       <img src="assets/gold-coins.png" class="coin-icon" alt="">
       <span id="townModalGoldAmount">0 €</span>
     </div>
     <a id="townModalDonateBtn" class="donateBtn" href="https://www.migranodearena.org/" target="_blank" rel="noopener">Dona per aquest municipi</a>
-    <p id="townModalDesc"></p>
   </div>
 </div>
 
@@ -542,7 +552,7 @@ function applyStage(stageId, isNight){
     el.className = 'cp-viewbtn';
     el.style.left = pos.x + '%';
     el.style.top = pos.y + '%';
-    el.textContent = `👁 Veure ${c.name}`;
+    el.textContent = `👁 Veure`;
     el.addEventListener('click', () => openTownInfo(c));
     document.getElementById('mapinner').appendChild(el);
     return el;
@@ -992,16 +1002,23 @@ function renderGpsCheckpointLabels(){
   gpsCheckpointLabels = Object.entries(allMunicipisGps)
     .filter(([name, pos]) => pos && pos.lat != null && pos.lng != null)
     .map(([name, pos]) => {
+      // Punts especials (com la Desembocadura): es marquen com a meta
+      // i no tenen clic ni popup — són purament decoratius/informatius.
+      const isSpecial = pos.isFinish || pos.noClick;
       const icon = L.divIcon({
         className: '',
-        html: `<div class="gps-cp-label">🪙 ${name}</div>`,
+        html: isSpecial
+          ? `<div class="gps-cp-label gps-cp-label-finish">🏁 ${name}</div>`
+          : `<div class="gps-cp-label">🪙 ${name}</div>`,
         iconSize: null,
       });
-      const marker = L.marker([pos.lat, pos.lng], { icon, interactive: true }).addTo(gpsMap);
-      marker.on('click', () => {
-        const cp = checkpoints.find(c => c.name === name);
-        openTownInfo(cp || { name });
-      });
+      const marker = L.marker([pos.lat, pos.lng], { icon, interactive: !pos.noClick }).addTo(gpsMap);
+      if (!pos.noClick) {
+        marker.on('click', () => {
+          const cp = checkpoints.find(c => c.name === name);
+          openTownInfo(cp || { name });
+        });
+      }
       return marker;
     });
 }
@@ -1010,7 +1027,11 @@ async function initGpsMap(){
   await loadLeaflet();
   if (Object.keys(allMunicipisGps).length === 0) await loadMunicipisGps();
   if (gpsMap) { renderGpsCheckpointLabels(); return; }
-  gpsMap = L.map('gpsmap', { zoomControl: true }).setView(lastGpsPosition || [41.68, 1.87], lastGpsPosition ? 14 : 12);
+  gpsMap = L.map('gpsmap', { zoomControl: false }).setView(lastGpsPosition || [41.68, 1.87], lastGpsPosition ? 14 : 12);
+  // El control de zoom per defecte surt a dalt a l'esquerra, just on
+  // hi ha els botons del llibre i l'ampolla — el posem a baix a
+  // l'esquerra perquè no es trepitgin.
+  L.control.zoom({ position: 'bottomleft' }).addTo(gpsMap);
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     attribution: 'Esri World Imagery',
     maxZoom: 18,
