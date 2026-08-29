@@ -66,7 +66,8 @@
   },
   "Sant Joan Despí": {
     "lat": 41.365,
-    "lng": 2.048
+    "lng": 2.048,
+    "photo": "../dona/fotos/Sant Joan Despí.png"
   },
   "Cornellà de Llobregat": {
     "lat": 41.3517,
