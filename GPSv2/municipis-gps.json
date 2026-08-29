@@ -1,13 +1,83 @@
 {
-  "Castellar de n'Hug": { "lat": 42.2825, "lng": 2.0169 },
-  "La Pobla de Lillet": { "lat": 42.2444, "lng": 1.9751 },
-  "Guardiola de Berguedà": { "lat": 42.2317, "lng": 1.8788 },
-  "Cercs": { "lat": 42.1486, "lng": 1.8605 },
-  "Berga": { "lat": 42.1013, "lng": 1.8440 },
-  "Gironella": { "lat": 42.0333, "lng": 1.8833 },
-  "Navarcles": { "lat": 41.7536, "lng": 1.9063 },
-  "El Pont de Vilomara i Rocafort": { "lat": 41.7009, "lng": 1.8708 },
-  "Sant Vicenç de Castellet": { "lat": 41.6682, "lng": 1.8646 },
-  "Castellbell i el Vilar": { "lat": 41.6291, "lng": 1.8642 },
-  "Monistrol de Montserrat": { "lat": 41.6108, "lng": 1.8434 }
+  "Castellar de n'Hug": {
+    "lat": 42.2456,
+    "lng": 1.9797,
+    "photo": "assets/pobles/castellar-de-nhug.jpg"
+  },
+  "La Pobla de Lillet": {
+    "lat": 42.2419,
+    "lng": 1.9722
+  },
+  "Guardiola de Berguedà": {
+    "lat": 42.2333,
+    "lng": 1.8969
+  },
+  "Cercs": {
+    "lat": 42.1907,
+    "lng": 1.8503
+  },
+  "Berga": {
+    "lat": 42.1057,
+    "lng": 1.8447
+  },
+  "Gironella": {
+    "lat": 42.0333,
+    "lng": 1.8833
+  },
+  "Navarcles": {
+    "lat": 41.7536,
+    "lng": 1.9063
+  },
+  "El Pont de Vilomara i Rocafort": {
+    "lat": 41.7009,
+    "lng": 1.8708
+  },
+  "Sant Vicenç de Castellet": {
+    "lat": 41.6682,
+    "lng": 1.8646
+  },
+  "Castellbell i el Vilar": {
+    "lat": 41.6291,
+    "lng": 1.8642
+  },
+  "Monistrol de Montserrat": {
+    "lat": 41.6108,
+    "lng": 1.8434
+  },
+  "Martorell": {
+    "lat": 41.4747,
+    "lng": 1.9319
+  },
+  "Sant Andreu de la Barca": {
+    "lat": 41.4642,
+    "lng": 1.9756
+  },
+  "Pallejà": {
+    "lat": 41.4283,
+    "lng": 2.0058
+  },
+  "Sant Vicenç dels Horts": {
+    "lat": 41.3961,
+    "lng": 2.0089
+  },
+  "Sant Boi de Llobregat": {
+    "lat": 41.3459,
+    "lng": 2.0351
+  },
+  "Sant Joan Despí": {
+    "lat": 41.3679,
+    "lng": 2.0522
+  },
+  "Cornellà de Llobregat": {
+    "lat": 41.3517,
+    "lng": 2.0687
+  },
+  "L'Hospitalet de Llobregat": {
+    "lat": 41.3598,
+    "lng": 2.0993
+  },
+  "El Prat de Llobregat": {
+    "lat": 41.3253,
+    "lng": 2.0958
+  }
 }
