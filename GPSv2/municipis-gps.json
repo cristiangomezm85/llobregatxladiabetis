@@ -65,8 +65,8 @@
     "lng": 2.0351
   },
   "Sant Joan Despí": {
-    "lat": 41.365,
-    "lng": 2.048,
+    "lat": 41.3525,
+    "lng": 2.0508,
     "photo": "../dona/fotos/Sant Joan Despí.png"
   },
   "Cornellà de Llobregat": {
@@ -82,8 +82,8 @@
     "lng": 2.0958
   },
   "Desembocadura": {
-    "lat": 41.2965,
-    "lng": 2.107,
+    "lat": 41.2937,
+    "lng": 2.1194,
     "isFinish": true,
     "noClick": true
   }
