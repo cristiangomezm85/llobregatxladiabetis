@@ -46,15 +46,17 @@
   },
   "Martorell": {
     "lat": 41.4747,
-    "lng": 1.9319
+    "lng": 1.9319,
+    "photo": "../dona/fotos/Martorell.png"
   },
   "Sant Andreu de la Barca": {
     "lat": 41.4642,
-    "lng": 1.9756
+    "lng": 1.9756    
   },
   "Pallejà": {
     "lat": 41.4283,
-    "lng": 2.0058
+    "lng": 2.0058,
+    "photo": "../dona/fotos/Pallejà.png"
   },
   "Sant Vicenç dels Horts": {
     "lat": 41.3961,
@@ -62,7 +64,8 @@
   },
   "Sant Boi de Llobregat": {
     "lat": 41.3459,
-    "lng": 2.0351
+    "lng": 2.0351,
+    "photo": "../dona/fotos/Sant Boi de Llobregat.png"
   },
   "Sant Joan Despí": {
     "lat": 41.3525,
@@ -71,15 +74,18 @@
   },
   "Cornellà de Llobregat": {
     "lat": 41.3517,
-    "lng": 2.0687
+    "lng": 2.0687,
+    "photo": "../dona/fotos/Cornellà de Llobregat.png"
   },
   "L'Hospitalet de Llobregat": {
     "lat": 41.3449,
-    "lng": 2.1042
+    "lng": 2.1042,
+    "photo": "../dona/fotos/Hospitalet de Llobregat.png"
   },
   "El Prat de Llobregat": {
     "lat": 41.3253,
-    "lng": 2.0958
+    "lng": 2.0958,
+    "photo": "../dona/fotos/El Prat de Llobregat.png"
   },
   "Desembocadura": {
     "lat": 41.2937,
