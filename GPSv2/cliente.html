@@ -70,6 +70,10 @@
     display:flex; align-items:center; gap:8px;
   }
   .modal-icon{ width:22px; height:22px; object-fit:contain; }
+  #townModalAvatar{
+    display:block; width:100%; max-height:160px; object-fit:cover;
+    border-radius:10px; margin-bottom:12px;
+  }
   .modal-box p{ font-family:'Manrope',sans-serif; font-size:13px; color:var(--paper); opacity:0.9; line-height:1.5; margin-top:12px; }
   .modal-close{
     position:absolute; top:10px; right:10px; width:28px; height:28px; border-radius:50%;
@@ -191,10 +195,18 @@
     position:absolute; transform:translate(-50%, 6px);
     font-family:'Press Start 2P', monospace; font-size:6.5px; color:var(--paper);
     background:rgba(14,27,54,0.85); border:1px solid var(--gris); border-radius:4px;
-    padding:3px 5px; white-space:nowrap; z-index:11; pointer-events:none;
+    padding:3px 5px; white-space:nowrap; z-index:11; cursor:pointer;
   }
   .cp-eta.done{ color:var(--aigua); border-color:var(--aigua); }
   .cp-eta.current{ color:var(--coral); border-color:var(--coral); }
+
+  .cp-viewbtn{
+    position:absolute; transform:translate(-50%, 16px);
+    font-family:'Manrope',sans-serif; font-weight:800; font-size:9px; color:var(--tinta);
+    background:#FFD24C; border:1px solid #B8860B; border-radius:20px;
+    padding:3px 8px; white-space:nowrap; z-index:12; cursor:pointer;
+    box-shadow:0 2px 5px rgba(0,0,0,0.4);
+  }
 
   #toast{
     position:absolute; left:50%; top:14px; transform:translate(-50%,-140%);
@@ -264,6 +276,7 @@
 <div id="townModal" class="modal-overlay">
   <div class="modal-box">
     <button class="modal-close" data-close="townModal">✕</button>
+    <img id="townModalAvatar" alt="" style="display:none;">
     <h3 id="townModalName"></h3>
     <div id="townModalGold">
       <img src="assets/gold-coins.png" class="coin-icon" alt="">
@@ -492,6 +505,7 @@ function applyStage(stageId, isNight){
   // tots abans de tornar-los a crear.
   (window.__cpMarkerEls || []).forEach(el => el.remove());
   (window.__cpEtaEls || []).forEach(el => el.remove());
+  (window.__cpViewBtnEls || []).forEach(el => el.remove());
   document.querySelectorAll('.xptick').forEach(el => el.remove());
 
   window.__cpMarkerEls = checkpoints.map((c, i) => {
@@ -515,6 +529,20 @@ function applyStage(stageId, isNight){
     el.style.top = (pos.y + offY) + '%';
     el.style.transform = 'translate(-50%, 0)';
     el.style.cursor = 'pointer';
+    el.addEventListener('click', () => openTownInfo(c));
+    document.getElementById('mapinner').appendChild(el);
+    return el;
+  });
+  // Botó de text "Veure [nom]" just sota la moneda de cada poble —
+  // perquè quedi clar, sense haver-ho de deduir, que allà es pot
+  // clicar. Obre el mateix popup que el punt i que l'hora.
+  window.__cpViewBtnEls = checkpoints.map((c, i) => {
+    const pos = pointOnPath(checkpointArc[i]);
+    const el = document.createElement('div');
+    el.className = 'cp-viewbtn';
+    el.style.left = pos.x + '%';
+    el.style.top = pos.y + '%';
+    el.textContent = `👁 Veure ${c.name}`;
     el.addEventListener('click', () => openTownInfo(c));
     document.getElementById('mapinner').appendChild(el);
     return el;
@@ -597,6 +625,22 @@ function openTownInfo(c){
   // tots apunten a la pàgina principal).
   document.getElementById('townModalDonateBtn').href = 'https://www.migranodearena.org/';
   document.getElementById('townModalDonateBtn').textContent = `Dona per ${c.name || 'aquest municipi'}`;
+
+  // Avatar del poble: opcional, ve del mateix municipis-gps.json
+  // (camp "photo"). Si no hi ha entrada, no té foto, o la imatge no
+  // carrega (URL trencada), simplement no es mostra res — mai un
+  // icona d'imatge trencada.
+  const avatarImg = document.getElementById('townModalAvatar');
+  const info = allMunicipisGps[c.name];
+  avatarImg.style.display = 'none';
+  if (info && info.photo) {
+    avatarImg.onload = () => { avatarImg.style.display = 'block'; };
+    avatarImg.onerror = () => { avatarImg.style.display = 'none'; };
+    avatarImg.src = info.photo;
+  } else {
+    avatarImg.removeAttribute('src');
+  }
+
   openModal('townModal');
 }
 
@@ -1085,6 +1129,7 @@ document.getElementById('modetoggle').addEventListener('click', () => setGpsMode
 
 (async () => {
   await fetchConfig();
+  await loadMunicipisGps();
   if (!rawConfig.stages || rawConfig.stages.length === 0) {
     document.getElementById('loading').textContent = '⚠ Encara no hi ha cap etapa configurada al servidor';
     document.getElementById('status-line').textContent = '⚠ Sense configuració al servidor';
