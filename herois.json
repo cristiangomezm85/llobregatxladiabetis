@@ -443,6 +443,36 @@
       }
     },
     {
+      "id": "ruben",
+      "nom": "Ruben",
+      "poble": "Barcelona",
+      "modalitat": "corrent",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Heroi",
+        "es": "Héroe",
+        "en": "Hero"
+      },
+      "tram": {
+        "ca": "Tot - 180 kms",
+        "es": "Todo - 180 kms",
+        "en": "All - 180 kms"
+      },
+      "motiu": {
+        "ca": "Convisc amb la diabetes en familiars i amics i tot esforç es poc per donar visibilitat i col-laborar.",
+        "es": "Convivo con la diabetes en familiares y amigos y todo esfuerzo es poco por dar visibilidad y colaborar.",
+        "en": "I live with diabetes through family and friends, and no effort is too great when it comes to raising awareness and lending a hand."
+      },
+      "repte": {
+        "ca": "Realitzar les tres etapes corrent.",
+        "es": "Realizar las tres estapas corriendo.",
+        "en": "Do the three stages running."
+      },
+      "instagram": "@rmonmany",
+      "foto": "img/herois/ruben.webp",
+      "destacat": false
+    },
+    {
       "id": "uri",
       "nom": "Uri",
       "poble": "Torrelles de Llobregat",
