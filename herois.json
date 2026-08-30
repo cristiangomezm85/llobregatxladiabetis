@@ -298,6 +298,36 @@
       "destacat": false
     },
     {
+      "id": "nerea",
+      "nom": "Nerea",
+      "poble": "Esplugues de Llobregat",
+      "modalitat": "corrent",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Heroïna",
+        "es": "Heroína",
+        "en": "Heroine"
+      },
+      "tram": {
+        "ca": "Dia 3 tram final",
+        "es": "Dia 3 tramo final",
+        "en": "Dia 3 final stage"
+      },
+      "motiu": {
+        "ca": "Tinc diabetis desde els 11 anys. Tinc 28 anys, tota la vida he fet esport. Estic plenament involucrada en aquesta causa.",
+        "es": "Tengo diabetes desde los 11 años. Tengo 28 años, toda mi vida he hecho deporte. Estoy plenamente involucrada en esa causa.",
+        "en": "I have had diabetes since I was 11. I am 28 years old and have played sports my whole life. I am fully committed to this cause."
+      },
+      "repte": {
+        "ca": "Aportar per la cura de la diabetis. Donar suport.",
+        "es": "Aportar por el cuidado de la diabetes. Apoyar.",
+        "en": "Contribute to diabetes care. Provide support."
+      },
+      "instagram": "@Nnerealopez10",
+      "foto": "img/herois/nerea.webp",
+      "destacat": false
+    },
+    {
       "id": "o",
       "nom": "Olivia Rodriguez",
       "poble": "Sant Joan Despí",
