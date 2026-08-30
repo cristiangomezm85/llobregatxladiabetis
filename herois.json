@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-07-16",
+  "actualitzat": "2026-08-30",
   "estat": "obert",
   "herois": [
     {
@@ -63,6 +63,36 @@
       "estat_publicacio": "publicat"
     },
     {
+      "id": "d",
+      "nom": "Daniel Sánchez",
+      "poble": "Aranjuez, Madrid",
+      "modalitat": "corrent",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Heroi",
+        "es": "Héroe",
+        "en": "Hero"
+      },
+      "tram": {
+        "ca": "Tot - 180 kms",
+        "es": "Todo - 180 kms",
+        "en": "All - 180 kms"
+      },
+      "motiu": {
+        "ca": "Vull ajudar a donar visibilitat a tot el que suposa enfrontar-se cada dia durant 24 hores a la diabetis tipus 1.",
+        "es": "Quiero ayudar a dar visibilidad a todo lo que supone enfrentarse cada día durante 24 horas a la diabetes tipo 1.",
+        "en": "I want to help raise awareness about everything that facing type 1 diabetes"
+      },
+      "repte": {
+        "ca": "El meu repte és demostrar-me a mi mateix que puc enfrontar reptes difícils i sobreposar-me a les adversitats. Suposa una teràpia per a mi i un bon entrenament mental per superar els moments difícils de la vida. La llarga distància exemplifica per a mi el que és la vida, amb moments bons i dolents.",
+        "es": "Mi reto es demostrarme a mi mismo que puedo enfrentar retos difíciles y sobreponerme a las adversidades. Supone una terapia para mi y un buen entrenamiento mental para superar los momentos dificiles de la vida. La ultra distancia ejemplifica para mi lo que es la vida, con buenos y malos momentos.",
+        "en": "My challenge is to prove to myself that I can face difficult challenges and overcome adversity. It serves as a therapy for me and good mental train.ing to get through life's hard times. Ultra-distance running exemplifies what life is to me, with its ups and downs"
+      },
+      "instagram": "dannysan_p",
+      "foto": "img/herois/d.webp",
+      "destacat": false
+    },
+    {
       "id": "david",
       "nom": "David Moseguí",
       "poble": "Ginestar",
@@ -122,36 +152,6 @@
       "foto": "img/herois/dp.webp",
       "destacat": false
     },
-    {
-      "id": "d",
-      "nom": "Daniel Sánchez",
-      "poble": "Aranjuez, Madrid",
-      "modalitat": "corrent",
-      "estat_publicacio": "publicat",
-      "rol": {
-        "ca": "Heroi",
-        "es": "Héroe",
-        "en": "Hero"
-      },
-      "tram": {
-        "ca": "Tot - 180 kms",
-        "es": "Todo - 180 kms",
-        "en": "All - 180 kms"
-      },
-      "motiu": {
-        "ca": "Vull ajudar a donar visibilitat a tot el que suposa enfrontar-se cada dia durant 24 hores a la diabetis tipus 1.",
-        "es": "Quiero ayudar a dar visibilidad a todo lo que supone enfrentarse cada día durante 24 horas a la diabetes tipo 1.",
-        "en": "I want to help raise awareness about everything that facing type 1 diabetes"
-      },
-      "repte": {
-        "ca": "El meu repte és demostrar-me a mi mateix que puc enfrontar reptes difícils i sobreposar-me a les adversitats. Suposa una teràpia per a mi i un bon entrenament mental per superar els moments difícils de la vida. La llarga distància exemplifica per a mi el que és la vida, amb moments bons i dolents.",
-        "es": "Mi reto es demostrarme a mi mismo que puedo enfrentar retos difíciles y sobreponerme a las adversidades. Supone una terapia para mi y un buen entrenamiento mental para superar los momentos dificiles de la vida. La ultra distancia ejemplifica para mi lo que es la vida, con buenos y malos momentos.",
-        "en": "My challenge is to prove to myself that I can face difficult challenges and overcome adversity. It serves as a therapy for me and good mental train.ing to get through life's hard times. Ultra-distance running exemplifies what life is to me, with its ups and downs"
-      },
-      "instagram": "dannysan_p",
-      "foto": "img/herois/d.webp",
-      "destacat": false
-    },    
     {
       "id": "desiree",
       "nom": "Desiree Cerdán",
@@ -301,6 +301,31 @@
         "es": "Por una buena causa, y porque me apetece estar ahí para los demás. Quiero acompañar el reto de principio a fin, echar una mano a quien se deja la piel en el camino y aportar mi granito para acercar la cura de la diabetes tipo 1.",
         "en": "For a good cause, and because I want to be there for others. I want to accompany the challenge from start to finish, lend a hand to those leaving it all out on the trail, and do my part to bring us closer to a cure for type 1 diabetes."
       }
+    },
+    {
+      "id": "pk-s-team",
+      "nom": "PK's TEAM",
+      "poble": "Castellar del Vallès",
+      "modalitat": "caminant",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Colla",
+        "es": "Colla",
+        "en": "Group"
+      },
+      "tram": {
+        "ca": "Etapa 2 - Gironella -> Monistrol",
+        "es": "Etapa 2 - Gironella -> Monistrol",
+        "en": "Stage 2 - Gironella -> Monistrol"
+      },
+      "motiu": {
+        "ca": "Som un grup d'una vintena de persones que partocipem en caminades solidàries des de el 2024 (oncotrail, oncodines, magic line, som vallès, i també inxividuals)",
+        "es": "Somos un grupo de una veintena de personas que participamos en caminatas solidarias desde 2024 (oncotrail, oncodinas, magic line, somos vallès, y también inxividuales)",
+        "en": "We are a group of about twenty people who have been participating in charity walks since 2024 (Oncotrail, Oncodines, Magic Line, Som Vallès, as well as individual walks)."
+      },
+      "instagram": "@pksteam2024",
+      "foto": "img/herois/pk-s-team.webp",
+      "destacat": false
     },
     {
       "id": "p",
