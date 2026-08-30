@@ -33,36 +33,6 @@
       }
     },
     {
-      "id": "cristian-gomez",
-      "nom": "Cristian Gómez",
-      "rol": {
-        "ca": "Impulsor del repte",
-        "es": "Impulsor del reto",
-        "en": "Founder"
-      },
-      "poble": "Sant Joan Despí",
-      "foto": "img/cristian.jpg",
-      "modalitat": "corrent",
-      "tram": {
-        "ca": "Tot el tram · 180 km",
-        "es": "Todo el recorrido · 180 km",
-        "en": "Whole route · 180 km"
-      },
-      "motiu": {
-        "ca": "Pare d'un nen amb diabetis tipus 1. Corro perquè cada quilòmetre sumi un pas cap a la cura.",
-        "es": "Padre de un niño con diabetes tipo 1. Corro para que cada kilómetro sume un paso hacia la cura.",
-        "en": "Father of a child with type 1 diabetes. I run so every kilometre adds a step towards the cure."
-      },
-      "repte": {
-        "ca": "Completar les 3 etapes, de Castellar de n'Hug a la desembocadura.",
-        "es": "Completar las 3 etapas, de Castellar de n'Hug a la desembocadura.",
-        "en": "Complete the 3 stages, from Castellar de n'Hug to the river mouth."
-      },
-      "instagram": "@kmxladiabetes",
-      "destacat": true,
-      "estat_publicacio": "publicat"
-    },
-    {
       "id": "astolfo",
       "nom": "Astolfo",
       "poble": "Cornellà de Llobregat",
@@ -91,6 +61,36 @@
       "instagram": "@astolfo_alberto",
       "foto": "img/herois/astolfo.webp",
       "destacat": false
+    },
+    {
+      "id": "cristian-gomez",
+      "nom": "Cristian Gómez",
+      "rol": {
+        "ca": "Impulsor del repte",
+        "es": "Impulsor del reto",
+        "en": "Founder"
+      },
+      "poble": "Sant Joan Despí",
+      "foto": "img/cristian.jpg",
+      "modalitat": "corrent",
+      "tram": {
+        "ca": "Tot el tram · 180 km",
+        "es": "Todo el recorrido · 180 km",
+        "en": "Whole route · 180 km"
+      },
+      "motiu": {
+        "ca": "Pare d'un nen amb diabetis tipus 1. Corro perquè cada quilòmetre sumi un pas cap a la cura.",
+        "es": "Padre de un niño con diabetes tipo 1. Corro para que cada kilómetro sume un paso hacia la cura.",
+        "en": "Father of a child with type 1 diabetes. I run so every kilometre adds a step towards the cure."
+      },
+      "repte": {
+        "ca": "Completar les 3 etapes, de Castellar de n'Hug a la desembocadura.",
+        "es": "Completar las 3 etapas, de Castellar de n'Hug a la desembocadura.",
+        "en": "Complete the 3 stages, from Castellar de n'Hug to the river mouth."
+      },
+      "instagram": "@kmxladiabetes",
+      "destacat": false,
+      "estat_publicacio": "publicat"
     },
     {
       "id": "d",
