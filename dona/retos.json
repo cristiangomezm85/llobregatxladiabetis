@@ -2,7 +2,7 @@
   "eventoUrl": "https://www.migranodearena.org/evento/llobregat-x-la-diabetis-2026",
   "retoGeneralUrl": "https://www.migranodearena.org/usuario/associacio-aredi-ajuda-a-la-recerca-en-diabetis",
   "totalRecaudado": 0,
-  "actualizado": "2026-08-30T17:11:22.073Z",
+  "actualizado": "2026-08-30T19:50:22.437Z",
   "retos": [
     {
       "slug": "hospitalet-x-la-diabetes",
@@ -19,6 +19,15 @@
       "tipo": "poble",
       "foto": "fotos/Sant Boi de Llobregat.png",
       "url": "https://www.migranodearena.org/reto/sant-boi-x-la-diabetes",
+      "recaudado": 0,
+      "diasRestantes": 62
+    },
+    {
+      "slug": "palleja-x-la-diabetes",
+      "nombre": "palleja-x-la-diabetes",
+      "tipo": "pendiente",
+      "foto": null,
+      "url": "https://www.migranodearena.org/reto/palleja-x-la-diabetes",
       "recaudado": 0,
       "diasRestantes": 62
     },
