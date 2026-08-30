@@ -153,6 +153,31 @@
       "destacat": false
     },
     {
+      "id": "david-ramirez",
+      "nom": "David Ramirez",
+      "poble": "Palleja",
+      "modalitat": "corrent",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Heroi o Heroïna",
+        "es": "Héroe o Heroína",
+        "en": "Hero or Heroine"
+      },
+      "tram": {
+        "ca": "Pallejà -> Sant Boi",
+        "es": "Pallejà -> Sant Boi",
+        "en": "Pallejà -> Sant Boi"
+      },
+      "motiu": {
+        "ca": "Donar suport i ajudar la causa!",
+        "es": "Apoyar y ayudar a la causa!",
+        "en": "Support and help the cause!"
+      },
+      "instagram": "@davidramiireez",
+      "foto": "img/herois/david-ramirez.webp",
+      "destacat": false
+    },
+    {
       "id": "desiree",
       "nom": "Desiree Cerdán",
       "poble": "Castellet i la Gornal",
