@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-08-30",
+  "actualitzat": "2026-08-31",
   "estat": "obert",
   "herois": [
     {
@@ -404,13 +404,18 @@
         "en": "Stage 2 - Gironella -> Monistrol"
       },
       "motiu": {
-        "ca": "Som un grup d'una vintena de persones que partocipem en caminades solidàries des de el 2024 (oncotrail, oncodines, magic line, som vallès, i també inxividuals)",
-        "es": "Somos un grupo de una veintena de personas que participamos en caminatas solidarias desde 2024 (oncotrail, oncodinas, magic line, somos vallès, y también inxividuales)",
+        "ca": "Som un grup d'una vintena de persones que participem en caminades solidàries des de el 2024 (oncotrail, oncodines, magic line, som vallès, i també individuals)",
+        "es": "Somos un grupo de una veintena de personas que participamos en caminatas solidarias desde 2024 (oncotrail, oncodinas, magic line, somos vallès, y también individuales)",
         "en": "We are a group of about twenty people who have been participating in charity walks since 2024 (Oncotrail, Oncodines, Magic Line, Som Vallès, as well as individual walks)."
       },
       "instagram": "@pksteam2024",
       "foto": "img/herois/pk-s-team.webp",
-      "destacat": false
+      "destacat": false,
+      "repte": {
+        "ca": "Caminar junts per trobar la cura de la diabetis",
+        "es": "Caminar juntos para encontrar la cura de la diabetes",
+        "en": "Walking together to find a cure for diabetes"
+      }
     },
     {
       "id": "p",
