@@ -958,8 +958,8 @@
         <thead>
           <tr>
             <th data-i18n="taula_col_modalitat">Modalitat</th>
-            <th id="col-earlybird" data-i18n-html="taula_col_earlybird">Early bird<br><span style="font-weight:400;">fins 31/8</span></th>
-            <th id="col-standard" data-i18n-html="taula_col_standard">Preu estàndard<br><span style="font-weight:400;">fins 20/9</span></th>
+            <th id="col-earlybird" data-i18n-html="taula_col_earlybird">Early bird<br><span style="font-weight:400;">fins 10/9</span></th>
+            <th id="col-standard" data-i18n-html="taula_col_standard">Preu estàndard<br><span style="font-weight:400;">fins 27/9</span></th>
             <th id="col-lastcall" data-i18n-html="taula_col_lastcall">Last call<br><span style="font-weight:400;">fins 4/10</span></th>
           </tr>
         </thead>
@@ -1035,8 +1035,8 @@
   // fila (animar, 1/2/3 etapes) són valors fixos per tarifa, no una fórmula
   // per etapa: es defineixen tal qual per a cada casella.
   const TARIFES = [
-    { id: "earlybird", cutoff: "2026-08-31", preus: { animar: 1000, 1: 1500, 2: 3000, 3: 4500 } },
-    { id: "standard",  cutoff: "2026-09-20", preus: { animar: 1200, 1: 2000, 2: 3500, 3: 5000 } },
+    { id: "earlybird", cutoff: "2026-09-10", preus: { animar: 1000, 1: 1500, 2: 3000, 3: 4500 } },
+    { id: "standard",  cutoff: "2026-09-27", preus: { animar: 1200, 1: 2000, 2: 3500, 3: 5000 } },
     { id: "lastcall",  cutoff: "2026-10-04", preus: { animar: 1500, 1: 2500, 2: 4500, 3: 6000 } },
   ];
 
@@ -1272,14 +1272,14 @@
 
     taula_col_modalitat: { ca:"Modalitat", es:"Modalidad", en:"Category" },
     taula_col_earlybird: {
-      ca:'Early bird<br><span style="font-weight:400;">fins 31/8</span>',
-      es:'Early bird<br><span style="font-weight:400;">hasta 31/8</span>',
-      en:'Early bird<br><span style="font-weight:400;">until 8/31</span>'
+      ca:'Early bird<br><span style="font-weight:400;">fins 10/9</span>',
+      es:'Early bird<br><span style="font-weight:400;">hasta 10/9</span>',
+      en:'Early bird<br><span style="font-weight:400;">until 9/10</span>'
     },
     taula_col_standard: {
-      ca:'Preu estàndard<br><span style="font-weight:400;">fins 20/9</span>',
-      es:'Precio estándar<br><span style="font-weight:400;">hasta 20/9</span>',
-      en:'Standard price<br><span style="font-weight:400;">until 9/20</span>'
+      ca:'Preu estàndard<br><span style="font-weight:400;">fins 27/9</span>',
+      es:'Precio estándar<br><span style="font-weight:400;">hasta 27/9</span>',
+      en:'Standard price<br><span style="font-weight:400;">until 9/27</span>'
     },
     taula_col_lastcall: {
       ca:'Last call<br><span style="font-weight:400;">fins 4/10</span>',
