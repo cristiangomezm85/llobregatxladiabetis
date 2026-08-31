@@ -118,28 +118,42 @@
      HERO — resum de donatius + lema
      ============================================ */
   .wrap{max-width:960px;margin:0 auto;padding:2.5rem var(--pad-x) 60px;}
-  .hero-banner{
-    border-radius:18px;
-    overflow:hidden;
-    margin-bottom:1.5rem;
-    box-shadow:0 30px 60px -30px rgba(14,27,54,.35);
-  }
-  .hero-banner img{width:100%;height:100%;object-fit:cover;aspect-ratio:1774/887;}
   .hero{
-    background:linear-gradient(135deg, var(--blau-llobregat), var(--blau-diabetis) 70%, var(--blau-aigua));
+    position:relative;
+    isolation:isolate;
+    overflow:hidden;
     border-radius:18px;
-    padding:2.75rem 1.5rem;
+    margin-bottom:2rem;
+    box-shadow:0 30px 60px -30px rgba(14,27,54,.35);
+    min-height:clamp(420px, 48vw, 560px);
+    display:flex;
+    align-items:flex-end;
     color:white;
     text-align:center;
-    margin-bottom:2rem;
   }
-  .hero .eyebrow{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;opacity:.8;margin:0 0 14px;font-weight:600;}
-  .hero .lema{font-family:var(--display);font-weight:600;font-style:italic;font-size:clamp(1.05rem, 2.6vw, 1.35rem);line-height:1.4;max-width:36ch;margin:0 auto 22px;color:var(--blau-aigua);}
-  .hero .total{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem, 6vw, 3rem);margin:0 0 4px;letter-spacing:-0.02em;}
-  .hero .total-label{font-size:.9rem;opacity:.9;margin:0 0 22px;}
-  .cta{display:inline-block;background:var(--coral);color:white;text-decoration:none;font-weight:700;font-size:1rem;padding:14px 34px;border-radius:999px;box-shadow:0 6px 20px rgba(255,107,71,.32);transition:transform .15s, box-shadow .2s;}
-  .cta:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,107,71,.45);}
-  .cta-sub{font-size:.8rem;opacity:.85;margin-top:14px;max-width:40ch;margin-left:auto;margin-right:auto;}
+  .hero .hero-photo{
+    position:absolute;inset:0;z-index:-2;
+    width:100%;height:100%;object-fit:cover;object-position:center 58%;
+    filter:saturate(1.08) contrast(1.03);
+  }
+  .hero .hero-scrim{
+    position:absolute;inset:0;z-index:-1;
+    background:
+      linear-gradient(180deg, rgba(14,27,54,.08) 0%, rgba(14,27,54,.1) 32%, rgba(14,27,54,.72) 68%, rgba(14,27,54,.93) 100%),
+      linear-gradient(90deg, rgba(21,49,95,.3) 0%, rgba(21,49,95,0) 50%);
+  }
+  .hero .hero-content{
+    position:relative;
+    width:100%;
+    padding:1.75rem 1.5rem 2.25rem;
+  }
+  .hero .eyebrow{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;opacity:.85;margin:0 0 14px;font-weight:600;text-shadow:0 1px 4px rgba(0,0,0,.4);}
+  .hero .lema{font-family:var(--display);font-weight:600;font-style:italic;font-size:clamp(1.05rem, 2.6vw, 1.35rem);line-height:1.4;max-width:36ch;margin:0 auto 22px;color:var(--blau-aigua);text-shadow:0 1px 6px rgba(0,0,0,.45);}
+  .hero .total{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem, 6vw, 3rem);margin:0 0 4px;letter-spacing:-0.02em;text-shadow:0 2px 10px rgba(0,0,0,.4);}
+  .hero .total-label{font-size:.9rem;opacity:.92;margin:0 0 22px;text-shadow:0 1px 4px rgba(0,0,0,.4);}
+  .cta{display:inline-block;background:var(--coral);color:white;text-decoration:none;font-weight:700;font-size:1rem;padding:14px 34px;border-radius:999px;box-shadow:0 6px 20px rgba(255,107,71,.4);transition:transform .15s, box-shadow .2s;}
+  .cta:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,107,71,.5);}
+  .cta-sub{font-size:.8rem;opacity:.9;margin-top:14px;max-width:40ch;margin-left:auto;margin-right:auto;text-shadow:0 1px 4px rgba(0,0,0,.4);}
 
   h2{font-family:var(--display);font-weight:800;font-size:1.35rem;color:var(--blau-llobregat);margin:0 0 4px;letter-spacing:-0.01em;}
   .section-head{margin-bottom:1.75rem;}
@@ -241,36 +255,36 @@
 
 <div class="wrap" id="donaTop">
 
-  <div class="hero-banner">
-    <img src="../img/hero-dona.jpg" alt="Llobregat x la Diabetis — del riu a la cura">
-  </div>
-
   <!-- ============================================
-       HERO — el lema que lliga riu i cura
+       HERO — la foto i el lema, en un sol bloc
        ============================================ -->
   <div class="hero">
-    <p class="eyebrow">Llobregat x la Diabetis 2026</p>
-    <p class="lema">
-      <span lang="ca">El riu sempre arriba al mar.<br>La ciència trobarà la cura.</span>
-      <span lang="es">El río siempre llega al mar.<br>La ciencia encontrará la cura.</span>
-      <span lang="en">The river always reaches the sea.<br>Science will find a cure.</span>
-    </p>
-    <p class="total" id="totalRecaudado">—</p>
-    <p class="total-label">
-      <span lang="ca">recaptats entre tots els reptes</span>
-      <span lang="es">recaudados entre todos los retos</span>
-      <span lang="en">raised across all the challenges</span>
-    </p>
-    <a class="cta" id="ctaGeneral" href="#" target="_blank" rel="noopener">
-      <span lang="ca">Dona ara a la causa</span>
-      <span lang="es">Dona ahora a la causa</span>
-      <span lang="en">Donate now to the cause</span>
-    </a>
-    <p class="cta-sub">
-      <span lang="ca">Cada donatiu és una gota que arrossega el riu una mica més lluny — el 100% va directe a la recerca d'AREDI.</span>
-      <span lang="es">Cada donativo es una gota que arrastra el río un poco más lejos — el 100% va directo a la investigación de AREDI.</span>
-      <span lang="en">Every donation is a drop that carries the river a little further — 100% goes directly to AREDI's research.</span>
-    </p>
+    <img class="hero-photo" src="../img/hero-dona.jpg" alt="Llobregat x la Diabetis — del riu a la cura">
+    <div class="hero-scrim"></div>
+    <div class="hero-content">
+      <p class="eyebrow">Llobregat x la Diabetis 2026</p>
+      <p class="lema">
+        <span lang="ca">El riu sempre arriba al mar.<br>La ciència trobarà la cura.</span>
+        <span lang="es">El río siempre llega al mar.<br>La ciencia encontrará la cura.</span>
+        <span lang="en">The river always reaches the sea.<br>Science will find a cure.</span>
+      </p>
+      <p class="total" id="totalRecaudado">—</p>
+      <p class="total-label">
+        <span lang="ca">recaptats entre tots els reptes</span>
+        <span lang="es">recaudados entre todos los retos</span>
+        <span lang="en">raised across all the challenges</span>
+      </p>
+      <a class="cta" id="ctaGeneral" href="#" target="_blank" rel="noopener">
+        <span lang="ca">Dona ara a la causa</span>
+        <span lang="es">Dona ahora a la causa</span>
+        <span lang="en">Donate now to the cause</span>
+      </a>
+      <p class="cta-sub">
+        <span lang="ca">Cada donatiu és una gota que arrossega el riu una mica més lluny — el 100% va directe a la recerca d'AREDI.</span>
+        <span lang="es">Cada donativo es una gota que arrastra el río un poco más lejos — el 100% va directo a la investigación de AREDI.</span>
+        <span lang="en">Every donation is a drop that carries the river a little further — 100% goes directly to AREDI's research.</span>
+      </p>
+    </div>
   </div>
 
   <!-- ============================================
