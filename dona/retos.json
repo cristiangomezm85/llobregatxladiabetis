@@ -17,7 +17,6 @@
       "recaudado": 0,
       "diasRestantes": 61
     },
- 
     {
       "slug": "pksteam-x-la-diabetes",
       "nombre": "PK's TEAM x La Diabetes",
@@ -26,7 +25,7 @@
       "url": "https://www.migranodearena.org/reto/pk-s-team-x-la-diabetes",
       "recaudado": 0,
       "diasRestantes": 61
-    },    
+    },
     {
       "slug": "llobregat-x-la-diabetes",
       "nombre": "llobregat-x-la-diabetes",
@@ -87,6 +86,279 @@
       "tipo": "poble",
       "foto": "fotos/Cornellà de Llobregat.png",
       "url": "https://www.migranodearena.org/reto/cornella-x-la-diabetes",
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "castellar-de-n-hug-x-la-diabetes",
+      "nombre": "Castellar de n'Hug x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Castellar de nHug.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/castellar-de-n-hug-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/castellar-de-n-hug-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "la-pobla-de-lillet-x-la-diabetes",
+      "nombre": "La Pobla de Lillet x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/La Poble de Lillet.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/la-pobla-de-lillet-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/la-pobla-de-lillet-x-la-diabetes"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "guardiola-de-bergueda-x-la-diabetes",
+      "nombre": "Guardiola de Berguedà x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Guardiola de Bergueda.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/guardiola-de-bergueda-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/guardiola-de-bergueda-x-la-diabetes"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "sant-jordi-de-cercs-x-la-diabetes",
+      "nombre": "Sant Jordi de Cercs x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Cercs.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/sant-jordi-de-cercs-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/sant-jordi-de-cercs-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "berga-x-la-diabetes",
+      "nombre": "Berga x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Berga.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/berga-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/berga-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "cal-rosal-olvan-x-la-diabetes",
+      "nombre": "Cal Rosal (Olvan) x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Cal Rosal.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/cal-rosal-olvan-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/cal-rosal-olvan-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "gironella-x-la-diabetes",
+      "nombre": "Gironella x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Gironella.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/gironella-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/gironella-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "puig-reig-x-la-diabetes",
+      "nombre": "Puig-reig x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Puig-Reig.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/puig-reig-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/puig-reig-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "navas-x-la-diabetes",
+      "nombre": "Navàs x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/navàs.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/navas-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/navas-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "balsareny-x-la-diabetes",
+      "nombre": "Balsareny x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Balsareny.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/balsareny-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/balsareny-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "sallent-x-la-diabetes",
+      "nombre": "Sallent x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Sallent.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/sallent-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/sallent-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "navarcles-x-la-diabetes",
+      "nombre": "Navarcles x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Navarcles.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/navarcles-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/navarcles-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "manresa-x-la-diabetes",
+      "nombre": "Manresa x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Manresa.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/manresa-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/manresa-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "sant-vicen-de-castellet-x-la-diabetes",
+      "nombre": "Sant Vicenç de Castellet x la Diabetes",
+      "tipo": "poble",
+      "foto": null,
+      "url": {
+        "es": "https://www.migranodearena.org/reto/sant-vicen-de-castellet-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/sant-vicen-de-castellet-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "castellbell-i-el-vilar-x-la-diabetes",
+      "nombre": "Castellbell i el Vilar x la Diabetes",
+      "tipo": "poble",
+      "foto": null,
+      "url": {
+        "es": "https://www.migranodearena.org/reto/castellbell-i-el-vilar-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/castellbell-i-el-vilar-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "monistrol-de-montserrat-x-la-diabetes",
+      "nombre": "Monistrol de Montserrat x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Monistrol.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/monistrol-de-montserrat-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/monistrol-de-montserrat-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "esparreguera-x-la-diabetes",
+      "nombre": "Esparreguera x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Esparraguera Op1.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/esparreguera-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/esparreguera-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "olesa-de-montserrat-x-la-diabetes",
+      "nombre": "Olesa de Montserrat x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Olesa.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/olesa-de-montserrat-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/olesa-de-montserrat-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "martorell-x-la-diabetes",
+      "nombre": "Martorell x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Martorell.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/martorell-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/martorell-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "castellbisbal-x-la-diabetes",
+      "nombre": "CastellBisbal x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/CastellBisbal.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/castellbisbal-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/castellbisbal-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "sant-andreu-de-la-barca-x-la-diabetes",
+      "nombre": "Sant Andreu de la Barca x la Diabetes",
+      "tipo": "poble",
+      "foto": null,
+      "url": {
+        "es": "https://www.migranodearena.org/reto/sant-andreu-de-la-barca-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/sant-andreu-de-la-barca-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "sant-vicen-dels-horts-x-la-diabetes",
+      "nombre": "Sant Vicenç dels Horts x la Diabetes",
+      "tipo": "poble",
+      "foto": null,
+      "url": {
+        "es": "https://www.migranodearena.org/reto/sant-vicen-dels-horts-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/sant-vicen-dels-horts-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "carlos-912runners-x-la-diabetes",
+      "nombre": "Carlos (912Runners) x La Diabetes",
+      "tipo": "heroe",
+      "foto": null,
+      "url": "https://www.migranodearena.org/reto/carlos-912runners-x-la-diabetes",
       "recaudado": 0,
       "diasRestantes": 61
     }
