@@ -132,28 +132,21 @@
     text-align:center;
   }
   .hero .hero-photo{
-    position:absolute;inset:0;z-index:-2;
+    position:absolute;inset:0;z-index:-1;
     width:100%;height:100%;object-fit:cover;object-position:center 58%;
     filter:saturate(1.08) contrast(1.03);
-  }
-  .hero .hero-scrim{
-    position:absolute;inset:0;z-index:-1;
-    background:
-      linear-gradient(180deg, rgba(14,27,54,.08) 0%, rgba(14,27,54,.1) 32%, rgba(14,27,54,.72) 68%, rgba(14,27,54,.93) 100%),
-      linear-gradient(90deg, rgba(21,49,95,.3) 0%, rgba(21,49,95,0) 50%);
   }
   .hero .hero-content{
     position:relative;
     width:100%;
     padding:1.75rem 1.5rem 2.25rem;
   }
-  .hero .eyebrow{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;opacity:.85;margin:0 0 14px;font-weight:600;text-shadow:0 1px 4px rgba(0,0,0,.4);}
-  .hero .lema{font-family:var(--display);font-weight:600;font-style:italic;font-size:clamp(1.05rem, 2.6vw, 1.35rem);line-height:1.4;max-width:36ch;margin:0 auto 22px;color:var(--blau-aigua);text-shadow:0 1px 6px rgba(0,0,0,.45);}
-  .hero .total{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem, 6vw, 3rem);margin:0 0 4px;letter-spacing:-0.02em;text-shadow:0 2px 10px rgba(0,0,0,.4);}
-  .hero .total-label{font-size:.9rem;opacity:.92;margin:0 0 22px;text-shadow:0 1px 4px rgba(0,0,0,.4);}
+  .hero .eyebrow{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;opacity:.9;margin:0 0 14px;font-weight:600;text-shadow:0 1px 5px rgba(0,0,0,.55);}
+  .hero .lema{font-family:var(--display);font-weight:600;font-style:italic;font-size:clamp(1.05rem, 2.6vw, 1.35rem);line-height:1.4;max-width:36ch;margin:0 auto 22px;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.6);}
+  .hero .total{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem, 6vw, 3rem);margin:0 0 22px;letter-spacing:-0.02em;text-shadow:0 2px 14px rgba(0,0,0,.6);}
   .cta{display:inline-block;background:var(--coral);color:white;text-decoration:none;font-weight:700;font-size:1rem;padding:14px 34px;border-radius:999px;box-shadow:0 6px 20px rgba(255,107,71,.4);transition:transform .15s, box-shadow .2s;}
   .cta:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,107,71,.5);}
-  .cta-sub{font-size:.8rem;opacity:.9;margin-top:14px;max-width:40ch;margin-left:auto;margin-right:auto;text-shadow:0 1px 4px rgba(0,0,0,.4);}
+  .total-breakdown{font-size:.82rem;color:var(--gris);text-align:center;margin:.9rem 0 0;}
 
   h2{font-family:var(--display);font-weight:800;font-size:1.35rem;color:var(--blau-llobregat);margin:0 0 4px;letter-spacing:-0.01em;}
   .section-head{margin-bottom:1.75rem;}
@@ -170,14 +163,27 @@
   }
   .causa img{width:64px;height:64px;object-fit:contain;flex-shrink:0;}
   .causa .causa-text small{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gris);font-weight:600;display:block;margin-bottom:.3rem;}
-  .causa .causa-text strong{font-family:var(--display);font-weight:700;color:var(--blau-llobregat);font-size:1.05rem;letter-spacing:-0.01em;display:block;margin-bottom:.4rem;}
-  .causa .causa-text p{margin:0;font-size:.88rem;color:var(--tinta);line-height:1.5;}
-  .causa .causa-text p strong{display:inline;font-size:inherit;color:inherit;}
-  @media (max-width:560px){ .causa{flex-direction:column;text-align:center;} }
+  .causa .causa-text strong{font-family:var(--display);font-weight:700;color:var(--blau-llobregat);font-size:1.05rem;letter-spacing:-0.01em;display:block;}
+  .causa-stats{display:flex;gap:1.5rem;margin-top:.75rem;}
+  .causa-stats .stat{display:flex;align-items:baseline;gap:.4rem;}
+  .causa-stats .stat strong{font-family:var(--display);font-weight:800;color:var(--blau-diabetis);font-size:1.3rem;letter-spacing:-0.01em;}
+  .causa-stats .stat span{font-size:.8rem;color:var(--gris);font-weight:600;}
+  @media (max-width:560px){ .causa{flex-direction:column;text-align:center;} .causa-stats{justify-content:center;} }
 
-  .tabs{display:flex;gap:8px;margin-bottom:20px;}
-  .tab{flex:1;text-align:center;padding:11px 8px;border-radius:10px;background:var(--linia);color:var(--blau-llobregat);font-weight:700;font-size:13.5px;cursor:pointer;border:none;font-family:var(--body);}
-  .tab.active{background:var(--blau-llobregat);color:white;}
+  .tabs{display:flex;gap:12px;margin-bottom:24px;}
+  .tab{
+    flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+    text-align:center;padding:16px 12px;border-radius:14px;
+    background:white;color:var(--blau-llobregat);
+    font-weight:800;font-size:15px;cursor:pointer;
+    border:2px solid var(--linia);font-family:var(--body);
+    transition:transform .15s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease, color .2s ease;
+  }
+  .tab .tab-icon{font-size:1.25em;line-height:1;}
+  .tab:hover{transform:translateY(-2px);border-color:var(--blau-diabetis);}
+  .tab.active{color:white;border-color:transparent;box-shadow:0 12px 26px -10px rgba(21,49,95,.5);}
+  .tab[data-tipo="poble"].active{background:var(--blau-diabetis);}
+  .tab[data-tipo="heroe"].active{background:var(--coral);}
 
   .grid{display:grid;grid-template-columns:1fr;gap:16px;}
   @media (min-width:640px){.grid{grid-template-columns:1fr 1fr;}}
@@ -260,7 +266,6 @@
        ============================================ -->
   <div class="hero">
     <img class="hero-photo" src="../img/hero-dona.jpg" alt="Llobregat x la Diabetis — del riu a la cura">
-    <div class="hero-scrim"></div>
     <div class="hero-content">
       <p class="eyebrow">Llobregat x la Diabetis 2026</p>
       <p class="lema">
@@ -269,23 +274,15 @@
         <span lang="en">The river always reaches the sea.<br>Science will find a cure.</span>
       </p>
       <p class="total" id="totalRecaudado">—</p>
-      <p class="total-label">
-        <span lang="ca">recaptats entre tots els reptes</span>
-        <span lang="es">recaudados entre todos los retos</span>
-        <span lang="en">raised across all the challenges</span>
-      </p>
       <a class="cta" id="ctaGeneral" href="#" target="_blank" rel="noopener">
-        <span lang="ca">Dona ara a la causa</span>
-        <span lang="es">Dona ahora a la causa</span>
-        <span lang="en">Donate now to the cause</span>
+        <span lang="ca">Dona ara</span>
+        <span lang="es">Dona ahora</span>
+        <span lang="en">Donate now</span>
       </a>
-      <p class="cta-sub">
-        <span lang="ca">Cada donatiu és una gota que arrossega el riu una mica més lluny — el 100% va directe a la recerca d'AREDI.</span>
-        <span lang="es">Cada donativo es una gota que arrastra el río un poco más lejos — el 100% va directo a la investigación de AREDI.</span>
-        <span lang="en">Every donation is a drop that carries the river a little further — 100% goes directly to AREDI's research.</span>
-      </p>
     </div>
   </div>
+
+  <p class="total-breakdown" id="totalBreakdown" hidden></p>
 
   <!-- ============================================
        LA CAUSA — el recorregut del riu i el de la recerca
@@ -319,11 +316,13 @@
         <span lang="es">AREDI · Asociación Ayuda a la Investigación en Diabetes</span>
         <span lang="en">AREDI · Association for Research into Diabetes</span>
       </strong>
-      <p>
-        <span lang="ca">Entitat sense ànim de lucre que finança directament la recerca científica per trobar la cura de la diabetis tipus 1. <strong>Cap euro es queda pel camí:</strong> tant si dones suport a un poble com a un heroi, tot suma al mateix mar de recerca.</span>
-        <span lang="es">Entidad sin ánimo de lucro que financia directamente la investigación científica para encontrar la cura de la diabetes tipo 1. <strong>Ningún euro se queda por el camino:</strong> tanto si apoyas a un pueblo como a un héroe, todo suma al mismo mar de investigación.</span>
-        <span lang="en">A non-profit that directly funds scientific research to find a cure for type 1 diabetes. <strong>Not a single euro is lost along the way:</strong> whether you back a town or a hero, it all flows into the same sea of research.</span>
-      </p>
+      <div class="causa-stats">
+        <div class="stat"><strong>100%</strong><span>a AREDI</span></div>
+        <div class="stat">
+          <strong>100%</strong>
+          <span><span lang="ca">a recerca</span><span lang="es">a investigación</span><span lang="en">to research</span></span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -348,9 +347,11 @@
 
   <div class="tabs">
     <button class="tab active" data-tipo="poble">
+      <span class="tab-icon" aria-hidden="true">🏘️</span>
       <span lang="ca">Pobles</span><span lang="es">Municipios</span><span lang="en">Towns</span>
     </button>
     <button class="tab" data-tipo="heroe">
+      <span class="tab-icon" aria-hidden="true">🦸</span>
       <span lang="ca">Herois</span><span lang="es">Héroes</span><span lang="en">Heroes</span>
     </button>
   </div>
@@ -537,15 +538,18 @@
     ca: { poble:'Poble', heroe:'Heroi', dies:n=>`Falten ${n} dies`, donar:'Dona',
           empty:'Encara no hi ha reptes publicats en aquesta categoria.',
           error:"No s'ha pogut carregar el llistat de reptes ara mateix.",
-          actualitzat:'Actualitzat', locale:'ca-ES' },
+          actualitzat:'Actualitzat', locale:'ca-ES',
+          breakdown:amt=>`Inclou ${amt} donats directament a través de les inscripcions al repte.` },
     es: { poble:'Municipio', heroe:'Héroe', dies:n=>`Faltan ${n} días`, donar:'Donar',
           empty:'Todavía no hay retos publicados en esta categoría.',
           error:'No se ha podido cargar el listado de retos ahora mismo.',
-          actualitzat:'Actualizado', locale:'es-ES' },
+          actualitzat:'Actualizado', locale:'es-ES',
+          breakdown:amt=>`Incluye ${amt} donados directamente a través de las inscripciones al reto.` },
     en: { poble:'Town', heroe:'Hero', dies:n=>`${n} days left`, donar:'Donate',
           empty:'No challenges published in this category yet.',
           error:"Couldn't load the list of challenges right now.",
-          actualitzat:'Updated', locale:'en-GB' },
+          actualitzat:'Updated', locale:'en-GB',
+          breakdown:amt=>`Includes ${amt} donated directly through challenge registrations.` },
   };
 
   async function load(){
@@ -570,7 +574,22 @@
     if(!DATA) return;
     const s = STR[getLang()];
 
-    document.getElementById('totalRecaudado').textContent = formatEuros(DATA.totalRecaudado || 0);
+    // El total mostrat suma el que arriba de Mi Grano de Arena
+    // (DATA.totalRecaudado) més els donatius fets directament des del
+    // formulari d'inscripció (DATA.donatiusInscripcions, opcional — ve del
+    // camp "euro_donacio_centims" de cada inscripció pagada, visible a
+    // l'admin com a KPI "Donativos (inscripciones)"). Si no s'informa,
+    // es tracta com a 0 i no es mostra la línia addicional.
+    const donatiusInscripcions = Number(DATA.donatiusInscripcions) || 0;
+    const totalAmbInscripcions = (Number(DATA.totalRecaudado) || 0) + donatiusInscripcions;
+    document.getElementById('totalRecaudado').textContent = formatEuros(totalAmbInscripcions);
+    const breakdownEl = document.getElementById('totalBreakdown');
+    if (donatiusInscripcions > 0) {
+      breakdownEl.hidden = false;
+      breakdownEl.textContent = s.breakdown(formatEuros(donatiusInscripcions));
+    } else {
+      breakdownEl.hidden = true;
+    }
     const ctaUrls = (DATA.retoGeneralUrl && typeof DATA.retoGeneralUrl === 'object') ? DATA.retoGeneralUrl : DEFAULT_MGA_URLS;
     document.getElementById('ctaGeneral').href = pickLangUrl(ctaUrls, getLang());
     if(DATA.actualizado){
