@@ -564,30 +564,22 @@
 
   // Donatius fets directament des de les inscripcions (Dorsal 0 i similars).
   // NO es configura a mà a cap JSON: es calcula EN VIU cada vegada que es
-  // carrega la pàgina, exactament amb la mateixa lògica que la targeta
-  // "Donativos (inscripciones)" de l'admin — es demana el mateix endpoint
-  // d'inscripcions, es queden només les pagades (estat === 'pagat') i se
-  // suma "euro_donacio_centims" de cadascuna (aquest camp és la part de
-  // cada pagament que va ser donatiu en comptes de quota de participació;
-  // a Dorsal 0 la quota és 0, així que hi cau el 100% del pagament).
-  // OJO unitats: s'assumeix que "euro_donacio_centims" ve en CÈNTIMS
-  // (mateix criteri que baseCentims/donacioCentims a pricing.js), per això
-  // es divideix entre 100 — si l'API ja el retornés en euros, cal treure
-  // aquesta divisió (aquí i a l'admin).
-  // Si l'endpoint no respon (per exemple perquè requerís un token d'admin
-  // que aquesta pàgina pública no té), es tracta com a 0 en comptes de
-  // trencar la resta de la pàgina.
-  const INSCRIPCIONS_API_CANDIDATES = ['/api/admin-content?type=inscripcions', '/.netlify/functions/admin-content?type=inscripcions'];
+  // carrega la pàgina, demanant un endpoint PÚBLIC (public-stats, sense
+  // token) que fa exactament la mateixa suma que la targeta "Donativos
+  // (inscripciones)" de l'admin però només retorna l'agregat — mai les
+  // inscripcions una a una ni cap dada personal. (Abans es provava de
+  // llegir-ho de l'endpoint privat de l'admin, que requereix ADMIN_TOKEN i
+  // per això mai sumava res des d'aquí — d'aquí ve aquest endpoint nou.)
+  // Si l'endpoint no respon, es tracta com a 0 en comptes de trencar la
+  // resta de la pàgina.
+  const PUBLIC_STATS_API_CANDIDATES = ['/api/public-stats', '/.netlify/functions/public-stats'];
   async function fetchDonatiusInscripcions(){
-    for (const url of INSCRIPCIONS_API_CANDIDATES) {
+    for (const url of PUBLIC_STATS_API_CANDIDATES) {
       try {
         const res = await fetch(url, {cache:'no-store'});
         if (!res.ok) continue;
         const data = await res.json();
-        const ordres = Array.isArray(data && data.data && data.data.ordres) ? data.data.ordres
-                     : (Array.isArray(data && data.ordres) ? data.ordres : []);
-        const pagats = ordres.filter(o => String((o && o.estat) || '').trim().toLowerCase() === 'pagat');
-        return pagats.reduce((sum, o) => sum + (Number(o && o.euro_donacio_centims) || 0), 0) / 100;
+        return Number(data && data.donatiusInscripcionsEur) || 0;
       } catch (err) {
         // prova el següent candidat
       }
