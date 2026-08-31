@@ -112,12 +112,12 @@ exports.handler = async function handler(event) {
       if (nom) perMunicipi[nom] = (perMunicipi[nom] || 0) + 1;
     });
 
-    // OJO unidades: se asume que "euro_donacio_centims" llega en CÉNTIMOS
-    // (mismo criterio que baseCentims/donacioCentims en pricing.js), por
-    // eso se divide entre 100 — igual que en admin.html. Si la API ya
-    // devolviera euros, quitad esta división (aquí y en admin.html).
+    // El import de la donació es guarda a "payload.donacio_centims" — és el
+    // mateix camp que pricing.js llegeix a validarDonacio() per calcular
+    // donacioCentims/totalCentims. Ve en cèntims, per això es divideix
+    // entre 100.
     const donatiusInscripcionsEur =
-      pagats.reduce((sum, o) => sum + (Number(o.euro_donacio_centims) || 0), 0) / 100;
+      pagats.reduce((sum, o) => sum + (Number(payload(o).donacio_centims) || 0), 0) / 100;
 
     return json(200, {
       ok: true,
