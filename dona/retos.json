@@ -17,7 +17,16 @@
       "recaudado": 0,
       "diasRestantes": 61
     },
-    
+ 
+    {
+      "slug": "pksteam-x-la-diabetes",
+      "nombre": "PK's TEAM x La Diabetes",
+      "tipo": "heroe",
+      "foto": "fotos/PKsTEAM.jpeg",
+      "url": "https://www.migranodearena.org/reto/pk-s-team-x-la-diabetes",
+      "recaudado": 0,
+      "diasRestantes": 61
+    },    
     {
       "slug": "llobregat-x-la-diabetes",
       "nombre": "llobregat-x-la-diabetes",
