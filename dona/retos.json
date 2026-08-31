@@ -18,6 +18,33 @@
       "diasRestantes": 61
     },
     {
+      "slug": "carlos-912runners-x-la-diabetes",
+      "nombre": "Carlos (912Runners) x La Diabetes",
+      "tipo": "heroe",
+      "foto": "fotos/carlosluna.jpeg",
+      "url": "https://www.migranodearena.org/reto/carlos-912runners-x-la-diabetes",
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
+      "slug": "dani-x-la-diabetes",
+      "nombre": "Dani x la Diabetes",
+      "tipo": "heroe",
+      "foto": "fotos/Dani.jpeg",
+      "url": "https://www.migranodearena.org/reto/dani-x-la-diabetes",
+      "recaudado": 0,
+      "diasRestantes": 61
+    }    
+    {
+      "slug": "emi-x-la-diabetes",
+      "nombre": "Emi x la Diabetes",
+      "tipo": "heroe",
+      "foto": "fotos/Emi.jpg",
+      "url": "https://www.migranodearena.org/reto/emi-x-la-diabetes",
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
+    {
       "slug": "pksteam-x-la-diabetes",
       "nombre": "PK's TEAM x La Diabetes",
       "tipo": "heroe",
@@ -350,33 +377,6 @@
         "es": "https://www.migranodearena.org/reto/sant-vicen-dels-horts-x-la-diabetes",
         "ca": "https://www.migranodearena.org/ca/repte/sant-vicen-dels-horts-x-la-diabetis"
       },
-      "recaudado": 0,
-      "diasRestantes": 61
-    },
-    {
-      "slug": "carlos-912runners-x-la-diabetes",
-      "nombre": "Carlos (912Runners) x La Diabetes",
-      "tipo": "heroe",
-      "foto": "fotos/carlosluna.jpeg",
-      "url": "https://www.migranodearena.org/reto/carlos-912runners-x-la-diabetes",
-      "recaudado": 0,
-      "diasRestantes": 61
-    },
-    {
-      "slug": "emi-x-la-diabetes",
-      "nombre": "Emi x la Diabetes",
-      "tipo": "heroe",
-      "foto": "fotos/Emi.jpg",
-      "url": "https://www.migranodearena.org/reto/emi-x-la-diabetes",
-      "recaudado": 0,
-      "diasRestantes": 61
-    },
-    {
-      "slug": "dani-x-la-diabetes",
-      "nombre": "Dani x la Diabetes",
-      "tipo": "heroe",
-      "foto": "fotos/Dani.jpeg",
-      "url": "https://www.migranodearena.org/reto/dani-x-la-diabetes",
       "recaudado": 0,
       "diasRestantes": 61
     }
