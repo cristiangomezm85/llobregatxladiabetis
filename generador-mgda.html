@@ -830,8 +830,15 @@ document.getElementById('copyText').addEventListener('click', () => {
 // TEXTOS PER A LA CAMPANYA DEL MUNICIPI (Mi Grano de Arena)
 // ============================================
 
+function slugifyMunicipiHashtag(nom) {
+  return (nom || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // quita acentos
+    .replace(/[^a-zA-Z0-9]/g, ''); // quita espacios, apóstrofes, guiones...
+}
+
 function buildMunicipiTexts(nomRaw) {
   const nom = (nomRaw || '').trim() || '[Nom del municipi]';
+  const hashtagNom = slugifyMunicipiHashtag(nom) || '[Municipi]';
 
   const tituloES = `${nom} x la Diabetes`;
   const subtituloES = `El río pasa por ${nom}. Y con él, pasa una oportunidad.`;
@@ -844,7 +851,7 @@ function buildMunicipiTexts(nomRaw) {
     { bold: false, text: `No hace falta correr ni un solo metro para formar parte. Basta con una aportación, del importe que sea, para que tu nombre quede ligado a este tramo del río y a la gente que vive en él.` },
     { bold: true, text: `El río siempre encuentra el camino hacia el mar. Con tu ayuda, la ciencia encontrará el camino hacia la cura.` },
     { bold: false, text: `👉 Haz tu donación ahora y sé parte del kilómetro que pasa por tu pueblo.` },
-    { bold: false, text: `#LlobregatXLaDiabetes #SJDXLaDiabetes` }
+    { bold: false, text: `#LlobregatXLaDiabetes #${hashtagNom}XLaDiabetis` }
   ];
 
   const tituloCAT = `${nom} x la Diabetis`;
@@ -858,7 +865,7 @@ function buildMunicipiTexts(nomRaw) {
     { bold: false, text: `No cal córrer ni un sol metre per formar-ne part. N'hi ha prou amb una aportació, del import que sigui, perquè el teu nom quedi lligat a aquest tram del riu i a la gent que hi viu.` },
     { bold: true, text: `El riu sempre troba el camí fins al mar. Amb la teva ajuda, la ciència trobarà el camí fins a la cura.` },
     { bold: false, text: `👉 Fes la teva donació ara i sigues part del quilòmetre que passa pel teu poble.` },
-    { bold: false, text: `#LlobregatXLaDiabetis #SJDXLaDiabetis` }
+    { bold: false, text: `#LlobregatXLaDiabetis #${hashtagNom}XLaDiabetis` }
   ];
 
   return { tituloES, subtituloES, textoES, tituloCAT, subtituloCAT, textoCAT };
