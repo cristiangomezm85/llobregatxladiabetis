@@ -264,6 +264,29 @@
     box-shadow: 0 8px 22px rgba(255,107,71,0.32);
     color: white !important;
   }
+  .nav-links a.nav-cta-dona {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.63rem 1.3rem;
+    background: transparent;
+    color: var(--coral) !important;
+    border: 2px solid var(--coral);
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    line-height: 1;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .nav-cta-dona::after { display: none !important; }
+  .nav-links a.nav-cta-dona:hover {
+    background: var(--coral);
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(255,107,71,0.32);
+  }
   .lang-toggle {
     display: inline-flex;
     background: var(--linia);
@@ -298,7 +321,7 @@
     color: var(--blau-llobregat);
     cursor: pointer;
   }
-  @media (max-width: 880px) {
+  @media (max-width: 1220px) {
     .nav-links {
       position: absolute;
       top: 100%; left: 0; right: 0;
@@ -314,7 +337,7 @@
     }
     .nav-links.open { transform: translateY(0); }
     .nav-links a { padding: 0.5rem 0; font-size: 1rem; }
-    .nav-cta { text-align: center; margin-top: 0.5rem; }
+    .nav-cta, .nav-cta-dona { text-align: center; margin-top: 0.5rem; }
     .nav-burger { display: inline-flex; }
   }
 
@@ -3448,6 +3471,7 @@
         <button data-set-lang="en" type="button">EN</button>
       </div>
       <a href="inscripcio.html" class="nav-cta"><span lang="ca">Inscripcions</span><span lang="es">Inscripciones</span><span lang="en">Registration</span></a>
+      <a href="dona/dona.html" data-mga-link class="nav-cta-dona"><span lang="ca">Dona</span><span lang="es">Dona</span><span lang="en">Donate</span></a>
     </div>
     <button class="nav-burger" id="burger" aria-label="Menú">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
@@ -3489,6 +3513,11 @@
         <span lang="ca">Inscripcions</span>
         <span lang="es">Inscripciones</span>
         <span lang="en">Registration</span>
+      </a>
+      <a href="dona/dona.html" data-mga-link class="btn btn-ghost btn-arrow">
+        <span lang="ca">Dona</span>
+        <span lang="es">Dona</span>
+        <span lang="en">Donate</span>
       </a>
     </div>
   </div>
@@ -3539,44 +3568,6 @@
 <section class="countdown-section" id="countdown-section">
   <div class="container">
     <div class="countdown-stack">
-      <div class="countdown-banner" id="donationsCountdown" data-countdown-target="2026-09-01T00:00:00+02:00" data-countdown-kind="donations">
-        <div class="countdown-banner-text">
-          <span class="countdown-banner-tag">
-            <span lang="ca">Donatius</span>
-            <span lang="es">Donativos</span>
-            <span lang="en">Donations</span>
-          </span>
-          <span class="countdown-banner-label">
-            <span lang="ca">Les donacions s'obren l'1 de setembre</span>
-            <span lang="es">Las donaciones se abren el 1 de septiembre</span>
-            <span lang="en">Donations open on 1 September</span>
-          </span>
-          <span class="countdown-banner-sublabel">
-            <span lang="ca">Quan la campanya estigui activa, s'activaran tots els reptes personals i de grup a Mi Grano de Arena.</span>
-            <span lang="es">Cuando la campaña esté activa, se activarán todos los retos personales y de grupo en Mi Grano de Arena.</span>
-            <span lang="en">When the campaign is active, all personal and group challenges will be activated on Mi Grano de Arena.</span>
-          </span>
-        </div>
-        <div class="countdown" aria-live="polite" aria-atomic="true">
-          <div class="countdown-unit">
-            <span class="countdown-num" data-cd-part="days">--</span>
-            <span class="countdown-lab" lang="ca">dies</span><span class="countdown-lab" lang="es">días</span><span class="countdown-lab" lang="en">days</span>
-          </div>
-          <div class="countdown-unit">
-            <span class="countdown-num" data-cd-part="hours">--</span>
-            <span class="countdown-lab" lang="ca">hores</span><span class="countdown-lab" lang="es">horas</span><span class="countdown-lab" lang="en">hours</span>
-          </div>
-          <div class="countdown-unit">
-            <span class="countdown-num" data-cd-part="minutes">--</span>
-            <span class="countdown-lab" lang="ca">min</span><span class="countdown-lab" lang="es">min</span><span class="countdown-lab" lang="en">min</span>
-          </div>
-          <div class="countdown-unit">
-            <span class="countdown-num" data-cd-part="seconds">--</span>
-            <span class="countdown-lab" lang="ca">seg</span><span class="countdown-lab" lang="es">seg</span><span class="countdown-lab" lang="en">sec</span>
-          </div>
-        </div>
-      </div>
-
       <div class="countdown-banner countdown-banner--event" id="eventCountdown" data-countdown-target="2026-10-16T08:00:00+02:00" data-countdown-kind="event">
         <div class="countdown-banner-text">
           <span class="countdown-banner-tag">
@@ -5390,13 +5381,13 @@
   });
 
   // ============================================
-  // CONFIGURACIÓ — Mi Grano de Arena
+  // CONFIGURACIÓ — pàgina de donatius
   // Fins a l'1 de setembre 2026, els botons "Dona ara" porten al countdown del hero.
-  // A partir del setembre, automàticament passen a apuntar a Mi Grano de Arena.
-  // Quan tinguem l'URL real de la campanya, canvia aquesta línia:
-  // Exemple: 'https://www.migranodearena.org/reto/12345'
+  // A partir del setembre, automàticament passen a apuntar a la nostra pròpia
+  // pàgina de donatius (dona.html), que ja reparteix cap als reptes de Mi
+  // Grano de Arena de cada poble/heroi.
   // ============================================
-  const MGA_URL = 'https://www.migranodearena.org';
+  const MGA_URL = 'dona/dona.html';
   const DONATIONS_OPEN_AT = new Date('2026-09-01T00:00:00+02:00').getTime();
 
   function updateMgaLinks() {
@@ -5404,8 +5395,8 @@
     document.querySelectorAll('[data-mga-link]').forEach(a => {
       if (isOpen) {
         a.setAttribute('href', MGA_URL);
-        a.setAttribute('target', '_blank');
-        a.setAttribute('rel', 'noopener');
+        a.removeAttribute('target');
+        a.removeAttribute('rel');
       } else {
         // Encara no hi ha donacions obertes: porta a la newsletter
         // (l'usuari veurà el countdown del hero pel camí).
