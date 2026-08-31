@@ -6,8 +6,17 @@
     "en": "https://www.migranodearena.org/en/cause/llobregat-x-la-diabetes"
   },
   "totalRecaudado": 0,
-  "actualizado": "2026-08-31T14:15:31.874Z",
+  "actualizado": "2026-08-31T20:15:26.233Z",
   "retos": [
+    {
+      "slug": "llobregat-x-la-diabetes",
+      "nombre": "llobregat-x-la-diabetes",
+      "tipo": "pendiente",
+      "foto": null,
+      "url": "https://www.migranodearena.org/reto/llobregat-x-la-diabetes",
+      "recaudado": 0,
+      "diasRestantes": 61
+    },
     {
       "slug": "hospitalet-x-la-diabetes",
       "nombre": "Hospitalet x la Diabetes",
