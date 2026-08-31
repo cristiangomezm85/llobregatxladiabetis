@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ca" data-lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dona · Llobregat x la Diabetis</title>
+<meta name="description" content="Cada donatiu és una gota que arrossega el riu Llobregat una mica més lluny. El 100% va directe a la recerca d'AREDI per trobar la cura de la diabetis tipus 1.">
+<link rel="icon" type="image/png" href="../img/logo-small.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,600;12..96,700;12..96,800&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ============================================
+     LLOBREGAT x LA DIABETIS · BRAND CSS
+     Mateixa paleta, tipografies i bilingüisme que index.html
+     ============================================ */
+  :root{
+    --blau-llobregat:#15315F;
+    --blau-diabetis:#1E72D4;
+    --blau-aigua:#5AC0E6;
+    --coral:#FF6B47;
+    --paper:#FAFAF6;
+    --tinta:#0E1B36;
+    --gris:#5A6478;
+    --gris-clar:#C9CDD6;
+    --linia:rgba(21, 49, 95, 0.12);
+    --display:"Bricolage Grotesque", system-ui, sans-serif;
+    --body:"Manrope", system-ui, sans-serif;
+    --container:1280px;
+    --pad-x:clamp(1.25rem, 4vw, 3rem);
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    font-family:var(--body);
+    font-weight:400;
+    color:var(--tinta);
+    background:var(--paper);
+    line-height:1.55;
+    font-size:17px;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+  img{max-width:100%;height:auto;display:block;}
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--blau-diabetis);color:white;}
+
+  /* Bilingüisme — visibilitat per llengua activa (idèntic a index.html) */
+  [data-lang="ca"] [lang="es"],
+  [data-lang="ca"] [lang="en"],
+  [data-lang="es"] [lang="ca"],
+  [data-lang="es"] [lang="en"],
+  [data-lang="en"] [lang="ca"],
+  [data-lang="en"] [lang="es"] { display: none !important; }
+
+  h1,h2,h3,h4,.display{font-family:var(--display);font-weight:700;line-height:1.05;letter-spacing:-0.02em;color:var(--blau-llobregat);margin:0;}
+  .h-eyebrow{font-family:var(--body);font-weight:600;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blau-diabetis);display:inline-flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+  .h-eyebrow::before{content:"";width:32px;height:1.5px;background:var(--blau-aigua);}
+  .lead{font-family:var(--body);font-size:clamp(1rem, 1.4vw, 1.15rem);line-height:1.55;color:var(--tinta);max-width:60ch;font-weight:400;}
+  .lead-quiet{color:var(--gris);}
+
+  .container{max-width:var(--container);margin:0 auto;padding-left:var(--pad-x);padding-right:var(--pad-x);}
+
+  /* ============================================
+     NAV — còpia exacta d'index.html
+     ============================================ */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(250,250,246,0.92);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid transparent;
+    transition:border-color .2s ease;
+  }
+  .nav.scrolled{border-bottom-color:var(--linia);}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding-top:.9rem;padding-bottom:.9rem;}
+  .brand{display:flex;align-items:center;gap:.6rem;font-family:var(--display);font-weight:700;color:var(--blau-llobregat);font-size:1.05rem;letter-spacing:-0.02em;}
+  .brand img{width:36px;height:36px;border-radius:50%;object-fit:cover;}
+  .brand span em{color:var(--blau-diabetis);font-style:italic;font-weight:500;}
+  .nav-links{display:flex;align-items:center;gap:1.5rem;}
+  .nav-links a{position:relative;font-size:.95rem;font-weight:500;color:var(--gris);transition:color .2s ease;padding:.3rem 0;}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;height:2px;width:100%;background:var(--blau-diabetis);transform:scaleX(0);transform-origin:left;transition:transform .25s ease;}
+  .nav-links a:hover{color:var(--blau-llobregat);}
+  .nav-links a:hover::after{transform:scaleX(1);}
+  .nav-links a.is-current{color:var(--blau-llobregat);}
+  .nav-links a.is-current::after{transform:scaleX(1);}
+  .nav-links a.nav-cta{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:168px;min-height:48px;
+    background:var(--coral);color:white !important;
+    padding:.65rem 1.3rem;border:2px solid var(--coral);border-radius:999px;
+    font-weight:700;font-size:.92rem;line-height:1;text-align:center;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .nav-cta::after{display:none !important;}
+  .nav-links a.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(255,107,71,.32);color:white !important;}
+  .lang-toggle{display:inline-flex;background:var(--linia);border-radius:999px;padding:3px;gap:2px;overflow:visible;}
+  .lang-toggle button{appearance:none;border:none;background:transparent;padding:.3rem .7rem;border-radius:999px;font-family:var(--body);font-size:.78rem;font-weight:600;color:var(--gris);cursor:pointer;transition:all .2s ease;}
+  .lang-toggle button.active{background:white;color:var(--blau-llobregat);box-shadow:0 1px 3px rgba(21,49,95,.12);}
+  .nav-burger{display:none;appearance:none;border:none;background:transparent;color:var(--blau-llobregat);cursor:pointer;}
+  @media (max-width:880px){
+    .nav-links{
+      position:absolute;top:100%;left:0;right:0;
+      flex-direction:column;align-items:stretch;
+      background:var(--paper);padding:1.25rem var(--pad-x);
+      border-bottom:1px solid var(--linia);
+      transform:translateY(-120%);transition:transform .3s ease;
+      gap:.6rem;box-shadow:0 20px 40px -20px rgba(14,27,54,.15);
+    }
+    .nav-links.open{transform:translateY(0);}
+    .nav-links a{padding:.5rem 0;font-size:1rem;}
+    .nav-cta{text-align:center;margin-top:.5rem;}
+    .nav-burger{display:inline-flex;}
+  }
+
+  /* ============================================
+     HERO — resum de donatius + lema
+     ============================================ */
+  .wrap{max-width:960px;margin:0 auto;padding:2.5rem var(--pad-x) 60px;}
+  .hero-banner{
+    border-radius:18px;
+    overflow:hidden;
+    margin-bottom:1.5rem;
+    box-shadow:0 30px 60px -30px rgba(14,27,54,.35);
+  }
+  .hero-banner img{width:100%;height:100%;object-fit:cover;aspect-ratio:1774/887;}
+  .hero{
+    background:linear-gradient(135deg, var(--blau-llobregat), var(--blau-diabetis) 70%, var(--blau-aigua));
+    border-radius:18px;
+    padding:2.75rem 1.5rem;
+    color:white;
+    text-align:center;
+    margin-bottom:2rem;
+  }
+  .hero .eyebrow{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;opacity:.8;margin:0 0 14px;font-weight:600;}
+  .hero .lema{font-family:var(--display);font-weight:600;font-style:italic;font-size:clamp(1.05rem, 2.6vw, 1.35rem);line-height:1.4;max-width:36ch;margin:0 auto 22px;color:var(--blau-aigua);}
+  .hero .total{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem, 6vw, 3rem);margin:0 0 4px;letter-spacing:-0.02em;}
+  .hero .total-label{font-size:.9rem;opacity:.9;margin:0 0 22px;}
+  .cta{display:inline-block;background:var(--coral);color:white;text-decoration:none;font-weight:700;font-size:1rem;padding:14px 34px;border-radius:999px;box-shadow:0 6px 20px rgba(255,107,71,.32);transition:transform .15s, box-shadow .2s;}
+  .cta:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,107,71,.45);}
+  .cta-sub{font-size:.8rem;opacity:.85;margin-top:14px;max-width:40ch;margin-left:auto;margin-right:auto;}
+
+  h2{font-family:var(--display);font-weight:800;font-size:1.35rem;color:var(--blau-llobregat);margin:0 0 4px;letter-spacing:-0.01em;}
+  .section-head{margin-bottom:1.75rem;}
+  .section-sub{font-size:.9rem;color:var(--gris);margin:.4rem 0 0;max-width:56ch;}
+
+  /* ============================================
+     LA CAUSA — riu + cura, entrellaçats
+     ============================================ */
+  .causa-intro{margin-bottom:1.5rem;}
+  .causa{
+    display:flex;align-items:center;gap:1.25rem;
+    background:white;border:1px solid var(--linia);border-radius:16px;
+    padding:1.5rem;margin-bottom:3rem;
+  }
+  .causa img{width:64px;height:64px;object-fit:contain;flex-shrink:0;}
+  .causa .causa-text small{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gris);font-weight:600;display:block;margin-bottom:.3rem;}
+  .causa .causa-text strong{font-family:var(--display);font-weight:700;color:var(--blau-llobregat);font-size:1.05rem;letter-spacing:-0.01em;display:block;margin-bottom:.4rem;}
+  .causa .causa-text p{margin:0;font-size:.88rem;color:var(--tinta);line-height:1.5;}
+  .causa .causa-text p strong{display:inline;font-size:inherit;color:inherit;}
+  @media (max-width:560px){ .causa{flex-direction:column;text-align:center;} }
+
+  .tabs{display:flex;gap:8px;margin-bottom:20px;}
+  .tab{flex:1;text-align:center;padding:11px 8px;border-radius:10px;background:var(--linia);color:var(--blau-llobregat);font-weight:700;font-size:13.5px;cursor:pointer;border:none;font-family:var(--body);}
+  .tab.active{background:var(--blau-llobregat);color:white;}
+
+  .grid{display:grid;grid-template-columns:1fr;gap:16px;}
+  @media (min-width:640px){.grid{grid-template-columns:1fr 1fr;}}
+  .card{
+    position:relative;aspect-ratio:4/5;border-radius:16px;overflow:hidden;
+    background:#e7eef3;display:flex;flex-direction:column;isolation:isolate;
+  }
+  .card .foto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+  .card .scrim{position:absolute;inset:0;background:linear-gradient(to bottom, rgba(11,32,54,.55) 0%, rgba(11,32,54,0) 32%, rgba(11,32,54,0) 55%, rgba(11,32,54,.9) 100%);z-index:1;}
+  .card .badge{
+    position:relative;z-index:2;align-self:flex-start;margin:12px 0 0 12px;
+    display:inline-block;font-size:10.5px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.04em;padding:4px 10px;border-radius:999px;
+  }
+  .badge.poble{background:var(--blau-diabetis);color:white;}
+  .badge.heroe{background:var(--coral);color:white;}
+  .card .info{position:relative;z-index:2;margin-top:auto;display:flex;flex-direction:column;gap:5px;padding:16px;}
+  .card .nombre{font-family:var(--display);font-weight:800;font-size:17px;color:white;line-height:1.2;text-shadow:0 1px 6px rgba(0,0,0,.55), 0 1px 2px rgba(0,0,0,.7);}
+  .card .amount{font-family:var(--display);font-weight:800;font-size:24px;color:white;text-shadow:0 1px 6px rgba(0,0,0,.55), 0 1px 2px rgba(0,0,0,.7);}
+  .card .dias{font-size:12px;color:#e4edf3;text-shadow:0 1px 4px rgba(0,0,0,.6);}
+  .card a.donar{margin-top:6px;text-align:center;background:var(--coral);color:white;text-decoration:none;font-weight:700;font-size:14px;padding:11px;border-radius:8px;}
+
+  .empty,.error{font-size:13px;color:var(--gris);padding:20px;text-align:center;}
+  .updated-note{font-size:11px;color:var(--gris-clar);text-align:center;margin-top:28px;}
+
+  /* ============================================
+     FOOTER — còpia exacta d'index.html
+     ============================================ */
+  footer{background:var(--blau-llobregat);color:rgba(255,255,255,0.7);padding:4rem 0 2rem;font-size:.95rem;}
+  .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;}
+  @media (max-width:900px){ .footer-grid{grid-template-columns:1fr 1fr;gap:2.5rem;} }
+  @media (max-width:540px){ .footer-grid{grid-template-columns:1fr;} }
+  .footer-brand{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem;}
+  .footer-brand img{width:56px;height:56px;background:rgba(255,255,255,0.06);border-radius:12px;padding:6px;object-fit:contain;}
+  .footer-brand-text{font-family:var(--display);font-weight:700;color:white;font-size:1.1rem;letter-spacing:-0.01em;line-height:1.2;}
+  .footer-brand-text em{font-style:italic;color:var(--blau-aigua);font-weight:400;}
+  .footer-tagline{color:rgba(255,255,255,0.55);font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.4rem;display:block;}
+  footer h4{font-family:var(--display);color:white;font-size:.85rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;margin-bottom:1.25rem;}
+  footer ul{list-style:none;padding:0;margin:0;}
+  footer li{margin-bottom:.6rem;}
+  footer a{color:rgba(255,255,255,0.7);transition:color .15s;}
+  footer a:hover{color:var(--blau-aigua);}
+  .footer-bottom{border-top:1px solid rgba(255,255,255,0.12);padding-top:1.5rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;font-size:.85rem;color:rgba(255,255,255,.6);}
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     NAV — mateixos enllaços i idiomes que index.html
+     ============================================ -->
+<nav class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="brand">
+      <img src="../img/logo-small.png" alt="Llobregat x la Diabetis">
+      <span>Llobregat <em>x la</em> Diabetis</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="../index.html"><span lang="ca">Home</span><span lang="es">Inicio</span><span lang="en">Home</span></a>
+      <a href="../el-repte.html"><span lang="ca">El Repte</span><span lang="es">El Reto</span><span lang="en">The Challenge</span></a>
+      <a href="../persones.html"><span lang="ca">Persones</span><span lang="es">Personas</span><span lang="en">People</span></a>
+      <a href="../pobles.html"><span lang="ca">Pobles</span><span lang="es">Pueblos</span><span lang="en">Towns</span></a>
+      <a href="../patrocina.html"><span lang="ca">Patrocina</span><span lang="es">Patrocina</span><span lang="en">Sponsor</span></a>
+      <div class="lang-toggle" role="group" aria-label="Llengua">
+        <button data-set-lang="ca" class="active" type="button">CA</button>
+        <button data-set-lang="es" type="button">ES</button>
+        <button data-set-lang="en" type="button">EN</button>
+      </div>
+      <a href="../inscripcio.html" class="nav-cta"><span lang="ca">Inscripcions</span><span lang="es">Inscripciones</span><span lang="en">Registration</span></a>
+    </div>
+    <button class="nav-burger" id="burger" aria-label="Menú">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    </button>
+  </div>
+</nav>
+
+<div class="wrap" id="donaTop">
+
+  <div class="hero-banner">
+    <img src="../img/hero-dona.jpg" alt="Llobregat x la Diabetis — del riu a la cura">
+  </div>
+
+  <!-- ============================================
+       HERO — el lema que lliga riu i cura
+       ============================================ -->
+  <div class="hero">
+    <p class="eyebrow">Llobregat x la Diabetis 2026</p>
+    <p class="lema">
+      <span lang="ca">El riu sempre arriba al mar.<br>La ciència trobarà la cura.</span>
+      <span lang="es">El río siempre llega al mar.<br>La ciencia encontrará la cura.</span>
+      <span lang="en">The river always reaches the sea.<br>Science will find a cure.</span>
+    </p>
+    <p class="total" id="totalRecaudado">—</p>
+    <p class="total-label">
+      <span lang="ca">recaptats entre tots els reptes</span>
+      <span lang="es">recaudados entre todos los retos</span>
+      <span lang="en">raised across all the challenges</span>
+    </p>
+    <a class="cta" id="ctaGeneral" href="#" target="_blank" rel="noopener">
+      <span lang="ca">Dona ara a la causa</span>
+      <span lang="es">Dona ahora a la causa</span>
+      <span lang="en">Donate now to the cause</span>
+    </a>
+    <p class="cta-sub">
+      <span lang="ca">Cada donatiu és una gota que arrossega el riu una mica més lluny — el 100% va directe a la recerca d'AREDI.</span>
+      <span lang="es">Cada donativo es una gota que arrastra el río un poco más lejos — el 100% va directo a la investigación de AREDI.</span>
+      <span lang="en">Every donation is a drop that carries the river a little further — 100% goes directly to AREDI's research.</span>
+    </p>
+  </div>
+
+  <!-- ============================================
+       LA CAUSA — el recorregut del riu i el de la recerca
+       ============================================ -->
+  <div class="causa-intro section-head">
+    <span class="h-eyebrow">
+      <span lang="ca">La causa</span><span lang="es">La causa</span><span lang="en">The cause</span>
+    </span>
+    <h2>
+      <span lang="ca">Del naixement del riu… fins a la cura</span>
+      <span lang="es">Del nacimiento del río… hasta la cura</span>
+      <span lang="en">From the river's source… to the cure</span>
+    </h2>
+    <p class="lead lead-quiet section-sub">
+      <span lang="ca">El repte recorre 180 km del Llobregat, del Berguedà fins al mar. La recerca fa un camí semblant: comença amb una pregunta i no s'atura fins trobar la cura de la diabetis tipus 1. Cada donatiu hi impulsa el corrent.</span>
+      <span lang="es">El reto recorre 180 km del Llobregat, del Berguedà hasta el mar. La investigación hace un camino parecido: empieza con una pregunta y no se detiene hasta encontrar la cura de la diabetes tipo 1. Cada donativo impulsa esa corriente.</span>
+      <span lang="en">The challenge follows 180 km of the Llobregat, from the Berguedà to the sea. Research follows a similar course: it starts with a question and doesn't stop until it finds a cure for type 1 diabetes. Every donation pushes that current forward.</span>
+    </p>
+  </div>
+
+  <div class="causa">
+    <img src="../img/aredi-logo.png" alt="AREDI">
+    <div class="causa-text">
+      <small>
+        <span lang="ca">Beneficiari íntegre</span>
+        <span lang="es">Beneficiario íntegro</span>
+        <span lang="en">Sole beneficiary</span>
+      </small>
+      <strong>
+        <span lang="ca">AREDI · Associació Ajuda a la Recerca en Diabetis</span>
+        <span lang="es">AREDI · Asociación Ayuda a la Investigación en Diabetes</span>
+        <span lang="en">AREDI · Association for Research into Diabetes</span>
+      </strong>
+      <p>
+        <span lang="ca">Entitat sense ànim de lucre que finança directament la recerca científica per trobar la cura de la diabetis tipus 1. <strong>Cap euro es queda pel camí:</strong> tant si dones suport a un poble com a un heroi, tot suma al mateix mar de recerca.</span>
+        <span lang="es">Entidad sin ánimo de lucro que financia directamente la investigación científica para encontrar la cura de la diabetes tipo 1. <strong>Ningún euro se queda por el camino:</strong> tanto si apoyas a un pueblo como a un héroe, todo suma al mismo mar de investigación.</span>
+        <span lang="en">A non-profit that directly funds scientific research to find a cure for type 1 diabetes. <strong>Not a single euro is lost along the way:</strong> whether you back a town or a hero, it all flows into the same sea of research.</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================
+       TRIA UN TRAM DEL RIU
+       ============================================ -->
+  <div class="section-head">
+    <span class="h-eyebrow">
+      <span lang="ca">Suma-t'hi</span><span lang="es">Súmate</span><span lang="en">Join in</span>
+    </span>
+    <h2>
+      <span lang="ca">Tria el teu tram del riu</span>
+      <span lang="es">Elige tu tramo del río</span>
+      <span lang="en">Choose your stretch of the river</span>
+    </h2>
+    <p class="lead lead-quiet section-sub">
+      <span lang="ca">Cada poble i cada heroi és un tram del recorregut. Sumats, arriben al mar — i la recerca, un pas més a prop de la cura.</span>
+      <span lang="es">Cada pueblo y cada héroe es un tramo del recorrido. Sumados, llegan al mar — y la investigación, un paso más cerca de la cura.</span>
+      <span lang="en">Each town and each hero is a stretch of the route. Together they reach the sea — and research, one step closer to the cure.</span>
+    </p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tipo="poble">
+      <span lang="ca">Pobles</span><span lang="es">Municipios</span><span lang="en">Towns</span>
+    </button>
+    <button class="tab" data-tipo="heroe">
+      <span lang="ca">Herois</span><span lang="es">Héroes</span><span lang="en">Heroes</span>
+    </button>
+  </div>
+
+  <div class="grid" id="grid">
+    <p class="empty">
+      <span lang="ca">Carregant reptes…</span>
+      <span lang="es">Cargando retos…</span>
+      <span lang="en">Loading challenges…</span>
+    </p>
+  </div>
+
+  <p class="updated-note" id="updatedNote"></p>
+</div>
+
+<!-- ============================================
+     FOOTER — còpia exacta d'index.html
+     ============================================ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img src="../img/logo-footer-white.png" alt="Llobregat x la Diabetis">
+          <div>
+            <div class="footer-brand-text">Llobregat <em>x la</em> Diabetis</div>
+            <span class="footer-tagline">180 km · 3 <span lang="ca">dies</span><span lang="es">días</span><span lang="en">days</span> · <span lang="ca">un propòsit</span><span lang="es">un propósito</span><span lang="en">one purpose</span></span>
+          </div>
+        </div>
+        <p style="color: rgba(255,255,255,0.55); font-size: 0.92rem; max-width: 38ch; margin-top: 1rem;">
+          <span lang="ca">Repte solidari pel riu Llobregat per visibilitzar la diabetis tipus 1 i recaptar fons per a AREDI.</span>
+          <span lang="es">Reto solidario por el río Llobregat para visibilizar la diabetes tipo 1 y recaudar fondos para AREDI.</span>
+          <span lang="en">Charity challenge along the Llobregat river to raise awareness of type 1 diabetes and funds for AREDI.</span>
+        </p>
+      </div>
+      <div>
+        <h4><span lang="ca">El repte</span><span lang="es">El reto</span><span lang="en">The challenge</span></h4>
+        <ul>
+          <li><a href="../el-repte.html#repte"><span lang="ca">El repte</span><span lang="es">El reto</span><span lang="en">The challenge</span></a></li>
+          <li><a href="../el-repte.html#recorregut"><span lang="ca">Recorregut</span><span lang="es">Recorrido</span><span lang="en">Route</span></a></li>
+          <li><a href="../el-repte.html#corredor"><span lang="ca">Impulsor</span><span lang="es">Impulsor</span><span lang="en">Founder</span></a></li>
+          <li><a href="../el-repte.html#causa"><span lang="ca">La causa</span><span lang="es">La causa</span><span lang="en">The cause</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h4><span lang="ca">Suma-t'hi</span><span lang="es">Súmate</span><span lang="en">Join in</span></h4>
+        <ul>
+          <li><a href="../persones.html"><span lang="ca">Persones</span><span lang="es">Personas</span><span lang="en">People</span></a></li>
+          <li><a href="../pobles.html"><span lang="ca">Pobles</span><span lang="es">Pueblos</span><span lang="en">Towns</span></a></li>
+          <li><a href="../patrocina.html"><span lang="ca">Patrocina el repte</span><span lang="es">Patrocina el reto</span><span lang="en">Sponsor the challenge</span></a></li>
+          <li><a href="../patrocinadors.html"><span lang="ca">Patrocinadors</span><span lang="es">Patrocinadores</span><span lang="en">Sponsors</span></a></li>
+          <li><a href="../el-repte.html#participacio"><span lang="ca">Participa</span><span lang="es">Participa</span><span lang="en">Take part</span></a></li>
+          <li><a href="#donaTop"><span lang="ca">Dona ara</span><span lang="es">Dona ahora</span><span lang="en">Donate now</span></a></li>
+          <li><a href="../el-repte.html#seguiment"><span lang="ca">Seguiment</span><span lang="es">Seguimiento</span><span lang="en">Tracking</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h4><span lang="ca">Contacte</span><span lang="es">Contacto</span><span lang="en">Contact</span></h4>
+        <ul>
+          <li><a href="https://www.instagram.com/llobregatxladiabetis/" target="_blank" rel="noopener">@llobregatxladiabetis</a></li>
+          <li><a href="mailto:info@llobregat.org">info@llobregat.org</a></li>
+          <li><a href="https://www.arediabetis.org" target="_blank" rel="noopener">arediabetis.org</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Llobregat x la Diabetis · <span lang="ca">Tots els fons a AREDI</span><span lang="es">Todos los fondos a AREDI</span><span lang="en">All funds go to AREDI</span> · <a href="../privacitat.html"><span lang="ca">Política de privacitat</span><span lang="es">Política de privacidad</span><span lang="en">Privacy policy</span></a></span>
+      <span>#LlobregatXLaDiabetis · #LxD2026 · #UnPropòsit</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ============================================
+  // BILINGÜISME — mateix mecanisme que index.html:
+  // llegeix/desa l'idioma a localStorage("llxd-lang"), de manera que si
+  // l'usuari ja el va triar a la home, aquí es carrega automàticament.
+  // ============================================
+  const html = document.documentElement;
+  const langButtons = document.querySelectorAll('[data-set-lang]');
+
+  const TITLES = {
+    ca: 'Dona · Llobregat x la Diabetis',
+    es: 'Dona · Llobregat x la Diabetis',
+    en: 'Donate · Llobregat for Diabetes',
+  };
+
+  function setLang(lang) {
+    html.setAttribute('data-lang', lang);
+    html.setAttribute('lang', lang);
+    langButtons.forEach(b => b.classList.toggle('active', b.dataset.setLang === lang));
+    try { localStorage.setItem('llxd-lang', lang); } catch (e) {}
+    document.title = TITLES[lang] || TITLES.ca;
+    if (DATA) render();
+  }
+
+  langButtons.forEach(b => {
+    b.addEventListener('click', () => setLang(b.dataset.setLang));
+  });
+
+  let savedLang = null;
+  try { savedLang = localStorage.getItem('llxd-lang'); } catch (e) {}
+  if (savedLang === 'ca' || savedLang === 'es' || savedLang === 'en') {
+    setLang(savedLang);
+  }
+
+  function getLang() {
+    return html.getAttribute('data-lang') || 'ca';
+  }
+
+  // ============================================
+  // NAV — scroll state + mobile burger
+  // ============================================
+  const nav = document.getElementById('nav');
+  const navLinks = document.getElementById('navLinks');
+  const burger = document.getElementById('burger');
+  function onScroll(){ nav.classList.toggle('scrolled', window.scrollY > 30); }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+  burger.addEventListener('click', () => { navLinks.classList.toggle('open'); });
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => { navLinks.classList.remove('open'); });
+  });
+
+  // ============================================
+  // RETOS — placeholder generat al propi codi (SVG en base64) — mai pot
+  // donar 404, així que no hi ha risc de parpelleig si a algú encara no
+  // li hem pujat foto.
+  // ============================================
+  const FOTO_PLACEHOLDER = 'data:image/svg+xml;base64,' + btoa(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+      <rect width="400" height="400" fill="#e7eef3"/>
+      <circle cx="200" cy="160" r="70" fill="#c7d9e3"/>
+      <rect x="80" y="250" width="240" height="130" rx="65" fill="#c7d9e3"/>
+    </svg>
+  `);
+
+  // Enllaç general "Dona ara a la causa" — un per idioma perquè cadascun porta
+  // a la pàgina de Mi Grano de Arena en aquella llengua. Es pot sobreescriure
+  // des de retos.json posant "retoGeneralUrl" com a objecte {ca, es, en} (si
+  // hi falta algun idioma, o si retoGeneralUrl no existeix al JSON, s'usen
+  // aquests valors per defecte).
+  const DEFAULT_MGA_URLS = {
+    ca: 'https://www.migranodearena.org/ca/repte/llobregat-x-la-diabetes',
+    es: 'https://www.migranodearena.org/reto/llobregat-x-la-diabetes',
+    en: 'https://www.migranodearena.org/en/cause/llobregat-x-la-diabetes',
+  };
+
+  // Tria la URL de l'idioma actiu dins un valor que pot ser:
+  //  - un string (una sola URL per a tots els idiomes — format antic), o
+  //  - un objecte {ca, es, en} (una URL per idioma — format nou).
+  // Si l'idioma actiu no hi és configurat, mostra un altre idioma abans que
+  // trencar l'enllaç (es -> ca -> en -> el primer que hi hagi).
+  const LANG_FALLBACK_ORDER = ['es', 'ca', 'en'];
+  function pickLangUrl(value, lang){
+    if (!value) return null;
+    if (typeof value === 'string') return value;
+    if (value[lang]) return value[lang];
+    for (const l of LANG_FALLBACK_ORDER) {
+      if (value[l]) return value[l];
+    }
+    return Object.values(value).find(Boolean) || null;
+  }
+
+  function resolveFotoUrl(foto){
+    if(!foto) return FOTO_PLACEHOLDER;
+    // Accepta tant "nom.jpg" com "fotos/nom.jpg" al JSON — traiem un
+    // possible prefix "fotos/" i el tornem a afegir sempre, per no
+    // acabar amb "fotos/fotos/...".
+    const clean = foto.replace(/^fotos\//, '');
+    return 'fotos/' + encodeURI(clean);
+  }
+
+  // Textos que depenen de l'idioma actiu i que es generen des del JS
+  // (la resta de la pàgina fa servir spans [lang] estàtics).
+  const STR = {
+    ca: { poble:'Poble', heroe:'Heroi', dies:n=>`Falten ${n} dies`, donar:'Dona',
+          empty:'Encara no hi ha reptes publicats en aquesta categoria.',
+          error:"No s'ha pogut carregar el llistat de reptes ara mateix.",
+          actualitzat:'Actualitzat', locale:'ca-ES' },
+    es: { poble:'Municipio', heroe:'Héroe', dies:n=>`Faltan ${n} días`, donar:'Donar',
+          empty:'Todavía no hay retos publicados en esta categoría.',
+          error:'No se ha podido cargar el listado de retos ahora mismo.',
+          actualitzat:'Actualizado', locale:'es-ES' },
+    en: { poble:'Town', heroe:'Hero', dies:n=>`${n} days left`, donar:'Donate',
+          empty:'No challenges published in this category yet.',
+          error:"Couldn't load the list of challenges right now.",
+          actualitzat:'Updated', locale:'en-GB' },
+  };
+
+  let DATA = null;
+  let currentTipo = 'poble';
+
+  async function load(){
+    try{
+      const res = await fetch('retos.json', {cache:'no-store'});
+      DATA = await res.json();
+      render();
+    }catch(err){
+      const s = STR[getLang()];
+      document.getElementById('grid').innerHTML = `<p class="error">${escapeHtml(s.error)}</p>`;
+      console.error(err);
+    }
+  }
+
+  function formatEuros(n){
+    const lang = getLang();
+    const formatted = new Intl.NumberFormat(STR[lang].locale, {maximumFractionDigits:0}).format(n);
+    return lang === 'en' ? '€' + formatted : formatted + '€';
+  }
+
+  function render(){
+    if(!DATA) return;
+    const s = STR[getLang()];
+
+    document.getElementById('totalRecaudado').textContent = formatEuros(DATA.totalRecaudado || 0);
+    const ctaUrls = (DATA.retoGeneralUrl && typeof DATA.retoGeneralUrl === 'object') ? DATA.retoGeneralUrl : DEFAULT_MGA_URLS;
+    document.getElementById('ctaGeneral').href = pickLangUrl(ctaUrls, getLang());
+    if(DATA.actualizado){
+      const d = new Date(DATA.actualizado);
+      document.getElementById('updatedNote').textContent = s.actualitzat + ' ' +
+        d.toLocaleDateString(s.locale, {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+    }
+
+    const grid = document.getElementById('grid');
+    const filtered = (DATA.retos || []).filter(r => r.tipo === currentTipo);
+
+    if(filtered.length === 0){
+      grid.innerHTML = `<p class="empty">${escapeHtml(s.empty)}</p>`;
+      return;
+    }
+
+    grid.innerHTML = filtered.map(r => `
+      <div class="card">
+        <img class="foto" src="${escapeAttr(resolveFotoUrl(r.foto))}"
+             alt="${escapeAttr(r.nombre)}"
+             onerror="this.onerror=null; this.src='${FOTO_PLACEHOLDER}';">
+        <div class="scrim"></div>
+        <span class="badge ${r.tipo}">${r.tipo === 'poble' ? escapeHtml(s.poble) : escapeHtml(s.heroe)}</span>
+        <div class="info">
+          <div class="nombre">${escapeHtml(r.nombre)}</div>
+          <div class="amount">${formatEuros(r.recaudado || 0)}</div>
+          ${r.diasRestantes != null ? `<div class="dias">${escapeHtml(s.dies(r.diasRestantes))}</div>` : ''}
+          <a class="donar" href="${escapeAttr(pickLangUrl(r.url, getLang()) || '#')}" target="_blank" rel="noopener">${escapeHtml(s.donar)}</a>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function escapeAttr(s){ return escapeHtml(s); }
+
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentTipo = btn.dataset.tipo;
+      render();
+    });
+  });
+
+  load();
+</script>
+</body>
+</html>
