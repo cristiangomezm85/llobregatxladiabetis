@@ -432,6 +432,13 @@
   const html = document.documentElement;
   const langButtons = document.querySelectorAll('[data-set-lang]');
 
+  // Declarades aquí (i no més avall, on s'usaven abans) perquè setLang() ja
+  // hi fa referència just després, i amb "let" això llençava "Cannot access
+  // 'DATA' before initialization" quan hi havia un idioma desat a
+  // localStorage (setLang es crida abans que el codi arribi a declarar-les).
+  let DATA = null;
+  let currentTipo = 'poble';
+
   const TITLES = {
     ca: 'Dona · Llobregat x la Diabetis',
     es: 'Dona · Llobregat x la Diabetis',
@@ -540,9 +547,6 @@
           error:"Couldn't load the list of challenges right now.",
           actualitzat:'Updated', locale:'en-GB' },
   };
-
-  let DATA = null;
-  let currentTipo = 'poble';
 
   async function load(){
     try{
