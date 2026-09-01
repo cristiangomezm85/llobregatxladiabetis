@@ -1,50 +1,157 @@
 // scripts/fetch-retos.mjs
 //
-// Actualiza dona/retos.json leyendo la página del evento en Mi Grano de
-// Arena. MGA no tiene API pública, así que esto hace "screen scraping" de
-// la página del evento (que lista todos los retos con su importe y días
-// restantes) en una sola petición.
+// Actualiza dona/retos.json leyendo los retos del evento en Mi Grano de
+// Arena. MGA no tiene API pública, así que esto hace "screen scraping".
+//
+// La página del evento (una sola petición GET) solo trae renderizados en
+// el HTML los retos de la PRIMERA página del listado — el resto de
+// páginas las carga el navegador por JS al hacer clic en el paginador,
+// contra un endpoint interno:
+//
+//   GET /searcheventcauses?event=<uuid-del-evento>&page=<n>
+//   -> { "count": <total de retos>, "html": "<fragmento con las cards>" }
+//
+// Así que replicamos eso: sacamos el uuid del evento del propio HTML de
+// la página (aparece en la URL de la imagen de cabecera,
+// /uploads/event/<uuid>/...), y vamos pidiendo página a página ese
+// endpoint hasta reunir "count" retos.
 //
 // Pensado para ejecutarse vía GitHub Actions (ver
 // .github/workflows/actualizar-retos.yml) — gratis, sin depender de
 // Netlify Functions. Cada ejecución hace commit del JSON actualizado, lo
 // que dispara automáticamente un nuevo deploy en Netlify.
 //
-// Nunca sobreescribe "tipo" ni "foto" de un reto ya existente — esos los
-// decides tú a mano en dona/retos.json, porque MGA no los expone.
-// Si aparece un reto nuevo, se añade con tipo:"pendiente" y foto:null,
-// y se avisa por consola para que lo completes.
+// Nunca sobreescribe "tipo", "foto" ni "nombre" de un reto ya existente
+// — esos los decides tú a mano en dona/retos.json, porque MGA no los
+// expone. Tampoco reordena ni elimina retos ya existentes: solo
+// actualiza su "recaudado"/"diasRestantes" (y la parte "es" de su url,
+// por si MGA cambia el slug), y añade al FINAL, con tipo:"pendiente" y
+// foto:null, cualquier reto nuevo que no reconozca — para que lo
+// completes a mano.
 
 import { readFile, writeFile } from 'node:fs/promises';
 import * as cheerio from 'cheerio';
 
 const JSON_PATH = new URL('../dona/retos.json', import.meta.url);
+const MAX_PAGES = 15; // salvaguarda por si "count" viniera mal
 
 async function main() {
   const current = JSON.parse(await readFile(JSON_PATH, 'utf8'));
   const eventoUrl = current.eventoUrl;
 
   console.log(`Descargando ${eventoUrl} ...`);
-  const res = await fetch(eventoUrl, {
-    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; LlobregatDonaBot/1.0)' }
-  });
-  if (!res.ok) {
-    throw new Error(`No se pudo descargar el evento (HTTP ${res.status})`);
-  }
-  const html = await res.text();
-  const $ = cheerio.load(html);
+  const eventHtml = await fetchText(eventoUrl);
 
   // --- Total del evento ---------------------------------------------
-  const bodyText = $('body').text().replace(/\s+/g, ' ');
+  const $event = cheerio.load(eventHtml);
+  const bodyText = $event('body').text().replace(/\s+/g, ' ');
   const totalMatch = bodyText.match(/Total recaudado\s*:?\s*([\d.,]+)\s*€/i);
   const totalRecaudado = totalMatch
     ? parseImporte(totalMatch[1])
     : current.totalRecaudado;
 
-  // --- Cada reto individual -------------------------------------------
-  const knownBySlug = new Map(current.retos.map(r => [r.slug, r]));
-  const seenSlugs = new Set();
-  const retos = [];
+  // --- UUID del evento (para poder paginar el listado de retos) ------
+  const uuidMatch = eventHtml.match(
+    /\/uploads\/event\/([0-9a-f-]{36})\//i
+  );
+  if (!uuidMatch) {
+    throw new Error(
+      'No se pudo encontrar el UUID del evento en la página (¿cambió el HTML de MGA?)'
+    );
+  }
+  const eventUuid = uuidMatch[1];
+
+  // --- Recorremos TODAS las páginas del listado de retos --------------
+  const scrapedBySlug = new Map();
+  let page = 1;
+  let expectedCount = null;
+  while (page <= MAX_PAGES) {
+    const searchUrl = `https://www.migranodearena.org/searcheventcauses?event=${eventUuid}&page=${page}`;
+    const res = await fetch(searchUrl, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; LlobregatDonaBot/1.0)' }
+    });
+    if (!res.ok) {
+      throw new Error(`No se pudo descargar la página ${page} de retos (HTTP ${res.status})`);
+    }
+    const data = await res.json();
+    expectedCount = data.count ?? expectedCount;
+
+    const found = extractCausesFromHtml(data.html, eventoUrl);
+    if (found.size === 0) break; // no hay más páginas
+    for (const [slug, info] of found) scrapedBySlug.set(slug, info);
+
+    console.log(`  página ${page}: +${found.size} retos (acumulado ${scrapedBySlug.size}/${expectedCount ?? '?'})`);
+
+    if (expectedCount != null && scrapedBySlug.size >= expectedCount) break;
+    page++;
+  }
+
+  if (expectedCount != null && scrapedBySlug.size < expectedCount) {
+    console.warn(
+      `⚠️  Se esperaban ${expectedCount} retos pero solo se recogieron ${scrapedBySlug.size} — revisa el paginador de MGA.`
+    );
+  }
+
+  // --- Fusionamos con lo que ya teníamos, SIN perder nada -------------
+  // Cada reto existente se busca por el slug de su propia url (o su
+  // "slug" interno si la url no tiene uno reconocible) para que
+  // coincida aunque el "slug" interno no sea idéntico al de MGA (p.ej.
+  // "pksteam-x-la-diabetes" en el json vs "pk-s-team-x-la-diabetes" en
+  // MGA).
+  const consumed = new Set();
+  const retos = current.retos.map(reto => {
+    const mgaSlug = extractSlugFromUrl(reto.url) || reto.slug;
+    const scraped = scrapedBySlug.get(mgaSlug);
+    if (!scraped) return reto; // no lo hemos visto en este scrape: se deja tal cual
+
+    consumed.add(mgaSlug);
+    return {
+      ...reto,
+      url: mergeUrl(reto.url, scraped.url),
+      recaudado: scraped.recaudado ?? reto.recaudado,
+      diasRestantes: scraped.diasRestantes ?? reto.diasRestantes
+    };
+  });
+
+  // Retos nuevos que no reconocemos todavía: se añaden al final.
+  for (const [slug, scraped] of scrapedBySlug) {
+    if (consumed.has(slug)) continue;
+    console.warn(`⚠️  Reto nuevo sin clasificar: "${scraped.nombre}" (${slug}) — añádele "tipo" y "foto" en dona/retos.json`);
+    retos.push({
+      slug,
+      nombre: scraped.nombre,
+      tipo: 'pendiente',
+      foto: null,
+      url: scraped.url,
+      recaudado: scraped.recaudado ?? 0,
+      diasRestantes: scraped.diasRestantes ?? null
+    });
+  }
+
+  const updated = {
+    ...current,
+    totalRecaudado,
+    actualizado: new Date().toISOString(),
+    retos
+  };
+
+  await writeFile(JSON_PATH, JSON.stringify(updated, null, 2) + '\n', 'utf8');
+  console.log(`✅ retos.json actualizado — ${retos.length} retos, total ${totalRecaudado}€`);
+}
+
+async function fetchText(url) {
+  const res = await fetch(url, {
+    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; LlobregatDonaBot/1.0)' }
+  });
+  if (!res.ok) throw new Error(`No se pudo descargar ${url} (HTTP ${res.status})`);
+  return res.text();
+}
+
+// Extrae {slug -> {slug, nombre, url, recaudado, diasRestantes}} del
+// fragmento de HTML que devuelve /searcheventcauses para una página.
+function extractCausesFromHtml(html, eventoUrl) {
+  const $ = cheerio.load(html);
+  const out = new Map();
 
   $('a[href*="/reto/"]').each((_, el) => {
     const href = $(el).attr('href');
@@ -52,8 +159,7 @@ async function main() {
     const m = href.match(/\/reto\/([a-z0-9-]+)/i);
     if (!m) return;
     const slug = m[1];
-    if (seenSlugs.has(slug)) return;
-    seenSlugs.add(slug);
+    if (out.has(slug)) return;
 
     const url = href.startsWith('http')
       ? href
@@ -73,8 +179,8 @@ async function main() {
       node = node.parent();
     }
 
-    let recaudado = knownBySlug.get(slug)?.recaudado ?? 0;
-    let diasRestantes = knownBySlug.get(slug)?.diasRestantes ?? null;
+    let recaudado = null;
+    let diasRestantes = null;
     if (container) {
       const importeMatch = container.match(/([\d.,]+)\s*€/);
       const diasMatch = container.match(/Faltan\s*(\d+)\s*d/i);
@@ -82,26 +188,31 @@ async function main() {
       if (diasMatch) diasRestantes = parseInt(diasMatch[1], 10);
     }
 
-    const nombre = knownBySlug.get(slug)?.nombre || $(el).text().trim() || slug;
-    const tipo = knownBySlug.get(slug)?.tipo || 'pendiente';
-    const foto = knownBySlug.get(slug)?.foto ?? null;
+    const nombre = $(el).text().trim() || slug;
 
-    if (tipo === 'pendiente') {
-      console.warn(`⚠️  Reto nuevo sin clasificar: "${nombre}" (${slug}) — añádele "tipo" y "foto" en dona/retos.json`);
-    }
-
-    retos.push({ slug, nombre, tipo, foto, url, recaudado, diasRestantes });
+    out.set(slug, { slug, nombre, url, recaudado, diasRestantes });
   });
 
-  const updated = {
-    ...current,
-    totalRecaudado,
-    actualizado: new Date().toISOString(),
-    retos
-  };
+  return out;
+}
 
-  await writeFile(JSON_PATH, JSON.stringify(updated, null, 2) + '\n', 'utf8');
-  console.log(`✅ retos.json actualizado — ${retos.length} retos, total ${totalRecaudado}€`);
+// Saca el "slug" de MGA (el que usan en /reto/<slug>) a partir del campo
+// "url" de una entrada de retos.json, sea string o {es, ca}.
+function extractSlugFromUrl(url) {
+  if (!url) return null;
+  const s = typeof url === 'string' ? url : url.es;
+  if (!s) return null;
+  const m = s.match(/\/reto\/([a-z0-9-]+)/i);
+  return m ? m[1] : null;
+}
+
+// Actualiza la url "es" con la recién descargada sin tocar "ca"/"en" si
+// la entrada ya era un objeto multi-idioma.
+function mergeUrl(existingUrl, scrapedUrl) {
+  if (existingUrl && typeof existingUrl === 'object') {
+    return { ...existingUrl, es: scrapedUrl };
+  }
+  return scrapedUrl;
 }
 
 function parseImporte(s) {
