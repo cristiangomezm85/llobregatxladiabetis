@@ -54,6 +54,15 @@
       "diasRestantes": 59
     },
     {
+      "slug": "ricard-x-la-diabetes",
+      "nombre": "Ricard x La Diabetes",
+      "tipo": "heroe",
+      "foto": "fotos/ricard.png",
+      "url": "https://www.migranodearena.org/reto/correre-el-llobregat-x-la-diabetis",
+      "recaudado": 0,
+      "diasRestantes": 59
+    },
+    {
       "slug": "llobregat-x-la-diabetes",
       "nombre": "llobregat-x-la-diabetes",
       "tipo": "pendiente",
