@@ -2637,6 +2637,47 @@ var qrcode = function() {
     <p class="sub">Fes clic sobre qualsevol text del cartell per editar-lo. Des d'aquí controles la foto, el logotip, els QR, la insignia d'AREDI i els col·laboradors.</p>
 
     <div class="panel">
+      <p class="panel-title">Municipi</p>
+
+      <div class="field">
+        <label for="muniSelect">Municipi</label>
+        <select id="muniSelect">
+          <option value="">Llobregat x la Diabetis (general)</option>
+        </select>
+      </div>
+
+      <input type="file" id="jsonUpload" accept=".json,application/json" style="display:none;">
+      <button id="reloadJsonBtn" type="button" style="display:none;"></button>
+      <span id="jsonStatus" style="display:none;"></span>
+
+      <div class="toggle-row" style="border-top:none;padding-top:12px;margin-top:8px;border-top:1px solid rgba(255,255,255,0.07);">
+        <span>Títol "[Municipi] x la Diabetis"</span>
+        <label class="switch"><input type="checkbox" id="toggleMuniTitle" checked><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <span>"Punt de pas a [Municipi]"</span>
+        <label class="switch"><input type="checkbox" id="toggleMuniDesc" checked><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <span>Data</span>
+        <label class="switch"><input type="checkbox" id="toggleInfoData" checked><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <span>Hora</span>
+        <label class="switch"><input type="checkbox" id="toggleInfoHora" checked><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <span>Ubicació</span>
+        <label class="switch"><input type="checkbox" id="toggleInfoLloc" checked><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <span>Invertir colors del títol (nom/Diabetis ↔ "x la")</span>
+        <label class="switch"><input type="checkbox" id="toggleTitleInvert"><span class="slider"></span></label>
+      </div>
+      <p class="hint">Per defecte el cartell mostra "Llobregat x la Diabetis". Tria un municipi per substituir el títol i la resta de textos automàticament.</p>
+    </div>
+
+    <div class="panel">
       <p class="panel-title">Imatge de fons</p>
       <p class="hint" style="margin-top:0;margin-bottom:8px;">Tria una foto de la galeria, puja la teva, o carrega el retos.json per ampliar-la amb totes les fotos de pobles.</p>
       <div class="gallery-grid" id="galleryGrid"></div>
@@ -2723,47 +2764,6 @@ var qrcode = function() {
     </div>
 
     <div class="panel">
-      <p class="panel-title">Municipi</p>
-
-      <div class="field">
-        <label for="muniSelect">Municipi</label>
-        <select id="muniSelect">
-          <option value="">— Carregant... —</option>
-        </select>
-      </div>
-
-      <input type="file" id="jsonUpload" accept=".json,application/json" style="display:none;">
-      <button id="reloadJsonBtn" type="button" style="display:none;"></button>
-      <span id="jsonStatus" style="display:none;"></span>
-
-      <div class="toggle-row" style="border-top:none;padding-top:12px;margin-top:8px;border-top:1px solid rgba(255,255,255,0.07);">
-        <span>Títol "[Municipi] x la Diabetis"</span>
-        <label class="switch"><input type="checkbox" id="toggleMuniTitle" checked><span class="slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <span>"Punt de pas a [Municipi]"</span>
-        <label class="switch"><input type="checkbox" id="toggleMuniDesc" checked><span class="slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <span>Data</span>
-        <label class="switch"><input type="checkbox" id="toggleInfoData" checked><span class="slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <span>Hora</span>
-        <label class="switch"><input type="checkbox" id="toggleInfoHora" checked><span class="slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <span>Ubicació</span>
-        <label class="switch"><input type="checkbox" id="toggleInfoLloc" checked><span class="slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <span>Invertir colors del títol (nom/Diabetis ↔ "x la")</span>
-        <label class="switch"><input type="checkbox" id="toggleTitleInvert"><span class="slider"></span></label>
-      </div>
-      <p class="hint">Edita el títol, la descripció, la data, l'hora i la ubicació fent clic directament sobre el cartell. Per al cartell general (no municipal), amaga el títol i deixa el logotip com a protagonista.</p>
-    </div>
-
-    <div class="panel">
       <p class="panel-title">Color del text sobre la foto</p>
       <div class="swatches" id="overlaySwatches">
         <div class="swatch active" data-color="#FAFAF6" style="background:#FAFAF6;border:1px solid #ccc;" title="Blanc (Paper)"></div>
@@ -2836,7 +2836,7 @@ var qrcode = function() {
             <div class="top-stack">
               <div id="titleBlock">
                 <div class="title-rule"></div>
-                <div class="muni-title" id="muniTitle" contenteditable="true">Pallejà <span class="accent">x la</span> Diabetis</div>
+                <div class="muni-title" id="muniTitle" contenteditable="true">Llobregat <span class="accent">x la</span> Diabetis</div>
               </div>
 
               <div class="logo-mark" id="logoMark">
@@ -2845,7 +2845,7 @@ var qrcode = function() {
               <div class="kicker-chip" id="kickerChip" contenteditable="true">16 – 18 OCTUBRE 2026</div>
               <div class="claim-pill" id="claimPill" contenteditable="true">180 km · 3 dies · un propòsit</div>
 
-              <div class="muni-desc" id="muniDesc" contenteditable="true">Punt de pas a Pallejà</div>
+              <div class="muni-desc" id="muniDesc" contenteditable="true">De la muntanya al mar, per la diabetis tipus 1</div>
 
               <div class="muni-info" id="muniInfo">
                 <span class="info-item" id="infoData" contenteditable="true">16 octubre 2026</span>
@@ -2934,8 +2934,11 @@ var qrcode = function() {
 
   // ---------- Language (Català / Castellà) ----------
   let currentLang = 'ca';
+  let selectedMuniName = null; // null = general "Llobregat x la Diabetis" poster
   const CA_TEXT = {
     diabetisWord: 'Diabetis',
+    generalName: 'Llobregat',
+    generalTagline: 'De la muntanya al mar, per la diabetis tipus 1',
     puntDePas: 'Punt de pas a',
     claim: '180 km · 3 dies · un propòsit',
     inscriuTitle: 'Inscriu-te',
@@ -2949,6 +2952,8 @@ var qrcode = function() {
   };
   const ES_TEXT = {
     diabetisWord: 'Diabetes',
+    generalName: 'Llobregat',
+    generalTagline: 'De la montaña al mar, por la diabetes tipo 1',
     puntDePas: 'Punto de paso a',
     claim: '180 km · 3 días · un propósito',
     inscriuTitle: 'Inscríbete',
@@ -2960,16 +2965,12 @@ var qrcode = function() {
     arediLine1: '100% A AREDI',
     arediLine2: '100% INVESTIGACIÓN'
   };
-  function getCurrentMuniName(){
-    const firstNode = muniTitleEl.childNodes[0];
-    return firstNode ? firstNode.textContent.trim() : 'Pallejà';
-  }
   function applyLanguage(lang){
     currentLang = lang;
     const t = lang === 'es' ? ES_TEXT : CA_TEXT;
-    const name = getCurrentMuniName() || 'Pallejà';
+    const name = selectedMuniName || t.generalName;
     muniTitleEl.innerHTML = `${escapeHtml(name)} <span class="accent">x la</span> ${t.diabetisWord}`;
-    document.getElementById('muniDesc').textContent = `${t.puntDePas} ${name}`;
+    document.getElementById('muniDesc').textContent = selectedMuniName ? `${t.puntDePas} ${selectedMuniName}` : t.generalTagline;
     document.getElementById('claimPill').textContent = t.claim;
     document.getElementById('qrInscriuTitle').textContent = t.inscriuTitle;
     document.getElementById('qrInscriuSub').textContent = t.inscriuSub;
@@ -3127,7 +3128,7 @@ var qrcode = function() {
       return;
     }
     // Populate municipi dropdown
-    muniSelect.innerHTML = '<option value="">— Selecciona un municipi —</option>';
+    muniSelect.innerHTML = '<option value="">Llobregat x la Diabetis (general)</option>';
     pobleEntries.forEach((p,i)=>{
       const name = extractMuniName(p) || `Poble ${i+1}`;
       const opt = document.createElement('option');
@@ -3185,13 +3186,16 @@ var qrcode = function() {
   });
 
   muniSelect.addEventListener('change', ()=>{
-    if(muniSelect.value === '') return;
+    if(muniSelect.value === ''){
+      // Back to the general "Llobregat x la Diabetis" poster
+      selectedMuniName = null;
+      applyLanguage(currentLang);
+      return;
+    }
     const p = pobleEntries[+muniSelect.value];
     if(!p) return;
-    const name = extractMuniName(p);
-    const t = currentLang === 'es' ? ES_TEXT : CA_TEXT;
-    muniTitleEl.innerHTML = `${escapeHtml(name)} <span class="accent">x la</span> ${t.diabetisWord}`;
-    document.getElementById('muniDesc').textContent = `${t.puntDePas} ${name}`;
+    selectedMuniName = extractMuniName(p);
+    applyLanguage(currentLang);
     // Auto-fill the donation QR with this municipi's Mi Grano de Arena URL (still editable after)
     const donationUrl = extractDonationUrl(p);
     if(donationUrl){
@@ -3391,8 +3395,10 @@ var qrcode = function() {
     document.querySelectorAll('#logoSeg .seg-btn').forEach(b=>b.classList.remove('active'));
     document.querySelector('#logoSeg .seg-btn[data-variant="color"]').classList.add('active');
     logoImg.src = LOGO_COLOR;
-    document.getElementById('muniTitle').innerHTML = 'Pallejà <span class="accent">x la</span> Diabetis';
-    document.getElementById('muniDesc').textContent = "Punt de pas a Pallejà";
+    selectedMuniName = null;
+    muniSelect.value = '';
+    document.getElementById('muniTitle').innerHTML = 'Llobregat <span class="accent">x la</span> Diabetis';
+    document.getElementById('muniDesc').textContent = "De la muntanya al mar, per la diabetis tipus 1";
     document.getElementById('infoData').textContent = "16 octubre 2026";
     document.getElementById('infoHora').textContent = "10:00 h";
     document.getElementById('infoLloc').textContent = "Plaça de l'Ajuntament";
