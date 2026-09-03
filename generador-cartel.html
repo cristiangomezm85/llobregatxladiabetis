@@ -687,6 +687,7 @@
   const jsonStatus = document.getElementById('jsonStatus');
   const muniSelect = document.getElementById('muniSelect');
   let pobleEntries = [];
+  const FOTOS_BASE_URL = 'https://llobregat.org/dona/';
 
   function pickField(obj, keys){
     for(const k of keys){
@@ -694,15 +695,38 @@
     }
     return null;
   }
+  // Real schema uses "nombre": "Pallejà x la Diabetes" — strip the fixed suffix to get just the town name
+  function extractMuniName(obj){
+    let name = pickField(obj, ['nombre','nom','name','municipi','titol','title']) || '';
+    name = name.replace(/\s*x\s*la\s*diabetes\s*$/i, '').trim();
+    return name;
+  }
+  // "foto": "fotos/Pallejà.png" is relative to llobregat.org/dona/
+  function resolveFotoUrl(fotoPath){
+    if(!fotoPath) return null;
+    if(/^https?:\/\//i.test(fotoPath)) return fotoPath;
+    return FOTOS_BASE_URL + encodeURI(fotoPath);
+  }
   function extractImages(obj){
-    const raw = pickField(obj, ['imatges','images','fotos','imagenes','gallery','photos','foto','imatge']);
+    if(typeof obj.foto === 'string' && obj.foto){
+      return [resolveFotoUrl(obj.foto)];
+    }
+    const raw = pickField(obj, ['imatges','images','fotos','imagenes','gallery','photos','imatge']);
     if(!raw) return [];
     const arr = Array.isArray(raw) ? raw : [raw];
     return arr.map(it=>{
-      if(typeof it === 'string') return it;
+      if(typeof it === 'string') return resolveFotoUrl(it);
       if(it && typeof it === 'object') return it.url || it.src || it.imatge || it.foto || it.path || null;
       return null;
     }).filter(Boolean);
+  }
+  // "url" is either a plain string or {ca, es, en...} per-language object — prefer Catalan
+  function extractDonationUrl(obj){
+    const u = obj.url;
+    if(!u) return null;
+    if(typeof u === 'string') return u;
+    if(typeof u === 'object') return u.ca || u.es || u.en || Object.values(u)[0] || null;
+    return null;
   }
 
   document.getElementById('jsonUpload').addEventListener('change', e=>{
@@ -724,7 +748,7 @@
         // Populate municipi dropdown
         muniSelect.innerHTML = '<option value="">— Selecciona un municipi —</option>';
         pobleEntries.forEach((p,i)=>{
-          const name = pickField(p, ['nom','name','municipi','titol','title']) || `Poble ${i+1}`;
+          const name = extractMuniName(p) || `Poble ${i+1}`;
           const opt = document.createElement('option');
           opt.value = i;
           opt.textContent = name;
@@ -734,7 +758,7 @@
         const seen = new Set();
         jsonGallery = [];
         pobleEntries.forEach(p=>{
-          const name = pickField(p, ['nom','name','municipi','titol','title']) || '';
+          const name = extractMuniName(p);
           extractImages(p).forEach(url=>{
             if(!seen.has(url)){
               seen.add(url);
@@ -743,7 +767,7 @@
           });
         });
         renderGallery();
-        jsonStatus.textContent = `Carregat: ${pobleEntries.length} pobles, ${jsonGallery.length} fotos afegides a la galeria.`;
+        jsonStatus.textContent = `Carregat: ${pobleEntries.length} pobles, ${jsonGallery.length} fotos afegides a la galeria. En triar un municipi, la URL de donació (Mi Grano de Arena) també s'actualitza al QR "Dona ara".`;
       }catch(err){
         jsonStatus.textContent = 'No s\'ha pogut llegir el fitxer com a JSON vàlid.';
         console.error(err);
@@ -756,9 +780,15 @@
     if(muniSelect.value === '') return;
     const p = pobleEntries[+muniSelect.value];
     if(!p) return;
-    const name = pickField(p, ['nom','name','municipi','titol','title']) || '';
+    const name = extractMuniName(p);
     muniTitleEl.innerHTML = `${escapeHtml(name)} <span class="accent">x la</span> Diabetis`;
     document.getElementById('muniDesc').textContent = `Punt de pas a ${name}`;
+    // Auto-fill the donation QR with this municipi's Mi Grano de Arena URL (still editable after)
+    const donationUrl = extractDonationUrl(p);
+    if(donationUrl){
+      qrDonaUrl.value = donationUrl;
+      generateQr(qrDonaCanvas, donationUrl);
+    }
   });
 
   // ---------- Image upload (hero photo) ----------
