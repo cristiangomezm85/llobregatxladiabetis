@@ -2426,10 +2426,16 @@ var qrcode = function() {
 
   /* ---------- Stage ---------- */
   .stage{flex:1;display:flex;justify-content:center;align-items:flex-start;padding:48px 24px 100px;overflow:auto;}
-  .poster-wrap{box-shadow:0 30px 60px rgba(0,0,0,0.28);}
+  .poster-wrap{box-shadow:0 30px 60px rgba(0,0,0,0.28);position:relative;}
+  .page-frame{
+    position:relative;overflow:hidden;background:var(--paper);
+    width:210mm;height:297mm;
+    transform-origin:top center;
+  }
   .poster{
-    width:210mm;height:297mm;position:relative;overflow:hidden;
+    width:210mm;height:297mm;position:absolute;top:0;left:0;overflow:hidden;
     background:var(--paper);color:var(--tinta);display:flex;flex-direction:column;
+    transform-origin:top left;
     --scale:1;
     --overlay-color:var(--paper);
     --overlay-accent:var(--blau-aigua);
@@ -2598,15 +2604,6 @@ var qrcode = function() {
 
   .section-toggle-hidden{display:none !important;}
 
-  @page{size:A4 portrait;margin:0;}
-  @media print{
-    body{background:white;}
-    .sidebar{display:none !important;}
-    .stage{padding:0;margin:0;display:block;}
-    .poster-wrap{box-shadow:none;}
-    .poster{width:210mm;height:297mm;}
-    [contenteditable="true"]:hover, [contenteditable="true"]:focus{box-shadow:none;}
-  }
   @media (max-width:900px){
     .app{flex-direction:column;}
     .sidebar{
@@ -2630,7 +2627,6 @@ var qrcode = function() {
     }
     .close-drawer-btn{display:flex;}
     .stage{padding:70px 12px 60px;}
-    .poster{transform:scale(0.42);transform-origin:top center;margin-bottom:-165mm;}
   }
   @media (min-width:901px){
     .menu-toggle, .sidebar-overlay, .close-drawer-btn{display:none !important;}
@@ -2835,15 +2831,25 @@ var qrcode = function() {
       <p class="hint">La graella s'adapta sola: d'1 a 10+ logos, sempre centrada i sempre al peu del cartell, amb fins a 5 per fila.</p>
     </div>
 
+    <div class="panel">
+      <p class="panel-title">Mida del cartell</p>
+      <div class="seg-control" id="sizeSeg">
+        <button type="button" class="seg-btn active" data-size="A4">A4</button>
+        <button type="button" class="seg-btn" data-size="A3">A3</button>
+        <button type="button" class="seg-btn" data-size="A2">A2</button>
+      </div>
+      <p class="hint">A4 = 210×297 mm · A3 = 297×420 mm · A2 = 420×594 mm. Tot el disseny s'escala proporcionalment.</p>
+    </div>
+
     <button class="btn" id="downloadPngBtn" type="button">Descarregar imatge (PNG)</button>
-    <button class="btn secondary" id="printBtn" type="button" style="margin-top:8px;">Imprimir / desar com a PDF</button>
     <button class="btn secondary" id="resetBtn" type="button" style="margin-top:8px;">Restablir contingut</button>
-    <p class="hint">La descàrrega en PNG funciona bé en mòbil. Per a PDF a mida A4 exacta, fes servir "Imprimir" des d'un ordinador.</p>
+    <p class="hint">La imatge es descarrega a resolució alta, llesta per imprimir a la mida triada.</p>
   </aside>
 
   <!-- ===================== STAGE ===================== -->
   <div class="stage">
     <div class="poster-wrap">
+      <div class="page-frame" id="pageFrame">
       <div class="poster theme-paper no-image" id="poster">
 
         <div class="hero" id="heroSection">
@@ -2932,6 +2938,7 @@ var qrcode = function() {
           </div>
         </div>
 
+      </div>
       </div>
     </div>
   </div>
@@ -3448,34 +3455,89 @@ var qrcode = function() {
     reader.readAsDataURL(file);
   });
 
-  // ---------- Download as PNG (works well on mobile) ----------
+  // ---------- Page size (A4 / A3 / A2) ----------
+  const PAGE_SIZES = {
+    A4: {w:210, h:297, scale:1},
+    A3: {w:297, h:420, scale:297/210},
+    A2: {w:420, h:594, scale:420/210}
+  };
+  let currentSize = 'A4';
+  const pageFrame = document.getElementById('pageFrame');
+  const PX_PER_MM = 96/25.4; // CSS reference pixels per mm (fixed, browser-independent)
+
+  function applyPageSize(sizeKey){
+    currentSize = sizeKey;
+    const s = PAGE_SIZES[sizeKey];
+    pageFrame.style.width = s.w + 'mm';
+    pageFrame.style.height = s.h + 'mm';
+    poster.style.transform = `scale(${s.scale})`;
+    fitMobile();
+  }
+  document.querySelectorAll('#sizeSeg .seg-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('#sizeSeg .seg-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      applyPageSize(btn.dataset.size);
+    });
+  });
+
+  // ---------- Fit the page-frame to small screens without affecting export quality ----------
+  const posterWrap = document.querySelector('.poster-wrap');
+  function fitMobile(){
+    const s = PAGE_SIZES[currentSize];
+    const frameWidthPx = s.w * PX_PER_MM;
+    const frameHeightPx = s.h * PX_PER_MM;
+    if(window.innerWidth <= 900){
+      const available = Math.min(window.innerWidth - 24, 520);
+      const fitScale = Math.min(available / frameWidthPx, 1);
+      pageFrame.style.transform = `scale(${fitScale})`;
+      posterWrap.style.height = (frameHeightPx * fitScale) + 'px';
+      posterWrap.style.width = (frameWidthPx * fitScale) + 'px';
+    }else{
+      pageFrame.style.transform = '';
+      posterWrap.style.height = '';
+      posterWrap.style.width = '';
+    }
+  }
+  window.addEventListener('resize', fitMobile);
+  fitMobile();
+
+  // ---------- Download as PNG (captures the full page-frame at the chosen paper size) ----------
   const downloadBtn = document.getElementById('downloadPngBtn');
   downloadBtn.addEventListener('click', async ()=>{
     downloadBtn.textContent = 'Generant imatge…';
     downloadBtn.disabled = true;
+    const previousTransform = pageFrame.style.transform;
+    pageFrame.style.transform = ''; // always export at full quality, ignoring any mobile preview shrink
     try{
-      const canvas = await html2canvas(poster, {
-        scale: 3,
+      const s = PAGE_SIZES[currentSize];
+      const frameWidthPx = s.w * PX_PER_MM;
+      const frameHeightPx = s.h * PX_PER_MM;
+      const TARGET_LONG_EDGE = 3600; // px, good print resolution without excessive file size
+      const captureScale = Math.max(1.5, TARGET_LONG_EDGE / Math.max(frameWidthPx, frameHeightPx));
+      const canvas = await html2canvas(pageFrame, {
+        scale: captureScale,
         useCORS: true,
         backgroundColor: '#ffffff'
       });
       const link = document.createElement('a');
-      link.download = 'cartell-llobregat-x-la-diabetis.png';
+      link.download = `cartell-llobregat-x-la-diabetis-${currentSize}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     }catch(err){
-      alert('No s\'ha pogut generar la imatge. Prova d\'imprimir en PDF des d\'un ordinador.');
+      alert('No s\'ha pogut generar la imatge.');
       console.error(err);
     }
+    pageFrame.style.transform = previousTransform;
     downloadBtn.textContent = 'Descarregar imatge (PNG)';
     downloadBtn.disabled = false;
   });
 
-  // ---------- Print ----------
-  document.getElementById('printBtn').addEventListener('click', ()=>window.print());
-
   // ---------- Reset ----------
   document.getElementById('resetBtn').addEventListener('click', ()=>{
+    document.querySelectorAll('#sizeSeg .seg-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelector('#sizeSeg .seg-btn[data-size="A4"]').classList.add('active');
+    applyPageSize('A4');
     document.querySelectorAll('#tipusSeg .seg-btn').forEach(b=>b.classList.remove('active'));
     document.querySelector('#tipusSeg .seg-btn[data-tipus="municipi"]').classList.add('active');
     entityLogoSrc = null;
