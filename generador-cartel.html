@@ -2440,6 +2440,8 @@ var qrcode = function() {
     --overlay-color:var(--paper);
     --overlay-accent:var(--blau-aigua);
     --backdrop-rgb:14,27,54;
+    --logo-size:52mm;
+    --entity-logo-size:52mm;
   }
   .poster.theme-paper{background:var(--paper);}
   .poster.theme-aigua{background:var(--blau-aigua);}
@@ -2503,9 +2505,9 @@ var qrcode = function() {
     display:flex;align-items:center;justify-content:center;gap:4mm;
   }
   .logo-mark{
-    width:52mm;height:52mm;
+    width:var(--logo-size, 52mm);height:var(--logo-size, 52mm);
     display:flex;align-items:center;justify-content:center;
-    transition:width .2s, height .2s;
+    flex:0 0 auto;
   }
   .logo-mark img, .logo-mark svg{
     width:100%;height:100%;object-fit:contain;
@@ -2517,8 +2519,10 @@ var qrcode = function() {
     font-size:26pt;line-height:1;color:var(--overlay-color);
     text-shadow:0 1px 4px rgba(0,0,0,0.55), 0 0 2px rgba(0,0,0,0.5);
   }
-  .entity-logo-mark{display:none;}
-  .logo-row.show-entity .logo-mark{width:42mm;height:42mm;}
+  .entity-logo-mark{
+    display:none;
+    width:var(--entity-logo-size, 52mm);height:var(--entity-logo-size, 52mm);
+  }
   .logo-row.show-entity .logo-plus{display:block;}
   .logo-row.show-entity .entity-logo-mark{display:flex;}
 
@@ -2703,7 +2707,11 @@ var qrcode = function() {
         <input type="file" id="entityLogoUpload" accept="image/*">
       </div>
       <button class="btn small" id="removeEntityLogo" type="button">Treure logotip</button>
-      <p class="hint">El logotip de l'entitat es mostra al costat del de Llobregat x la Diabetis amb un "+" entremig. El QR "Dona ara" es fixa per defecte a llobregat.org/dona (també modificable).</p>
+      <div class="field" style="margin-top:12px;">
+        <label for="entityLogoSizeSlider">Mida del logotip de l'entitat: <span id="entityLogoSizeVal">52 mm</span></label>
+        <input type="range" id="entityLogoSizeSlider" min="25" max="80" step="1" value="52" style="width:100%;">
+      </div>
+      <p class="hint">Per defecte tots dos logotips surten a la mateixa mida. El logotip de l'entitat es mostra al costat del de Llobregat x la Diabetis amb un "+" entremig. El QR "Dona ara" es fixa per defecte a llobregat.org/dona (també modificable).</p>
     </div>
 
     <div class="panel">
@@ -2737,6 +2745,10 @@ var qrcode = function() {
       <div class="seg-control" id="logoSeg">
         <button type="button" class="seg-btn active" data-variant="color">Original</button>
         <button type="button" class="seg-btn" data-variant="white">Blanc</button>
+      </div>
+      <div class="field" style="margin-top:12px;">
+        <label for="logoSizeSlider">Mida del logotip: <span id="logoSizeVal">52 mm</span></label>
+        <input type="range" id="logoSizeSlider" min="25" max="80" step="1" value="52" style="width:100%;">
       </div>
       <p class="hint">El logotip sempre és visible; només tries quina de les dues versions oficials es mostra.</p>
     </div>
@@ -3293,6 +3305,20 @@ var qrcode = function() {
     });
   });
 
+  // ---------- Logo sizes (independent sliders, same default) ----------
+  const logoSizeSlider = document.getElementById('logoSizeSlider');
+  const logoSizeVal = document.getElementById('logoSizeVal');
+  logoSizeSlider.addEventListener('input', ()=>{
+    poster.style.setProperty('--logo-size', logoSizeSlider.value + 'mm');
+    logoSizeVal.textContent = logoSizeSlider.value + ' mm';
+  });
+  const entityLogoSizeSlider = document.getElementById('entityLogoSizeSlider');
+  const entityLogoSizeVal = document.getElementById('entityLogoSizeVal');
+  entityLogoSizeSlider.addEventListener('input', ()=>{
+    poster.style.setProperty('--entity-logo-size', entityLogoSizeSlider.value + 'mm');
+    entityLogoSizeVal.textContent = entityLogoSizeSlider.value + ' mm';
+  });
+
   // ---------- Tipus de cartell (Municipi / Entitat) + logotip de l'entitat ----------
   let currentTipus = 'municipi';
   let entityLogoSrc = null;
@@ -3535,6 +3561,12 @@ var qrcode = function() {
 
   // ---------- Reset ----------
   document.getElementById('resetBtn').addEventListener('click', ()=>{
+    logoSizeSlider.value = 52;
+    logoSizeVal.textContent = '52 mm';
+    poster.style.setProperty('--logo-size', '52mm');
+    entityLogoSizeSlider.value = 52;
+    entityLogoSizeVal.textContent = '52 mm';
+    poster.style.setProperty('--entity-logo-size', '52mm');
     document.querySelectorAll('#sizeSeg .seg-btn').forEach(b=>b.classList.remove('active'));
     document.querySelector('#sizeSeg .seg-btn[data-size="A4"]').classList.add('active');
     applyPageSize('A4');
