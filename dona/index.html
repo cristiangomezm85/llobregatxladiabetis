@@ -587,10 +587,17 @@
     return 0;
   }
 
+  // Servit per jsDelivr (CDN gratuïta sobre el repo públic de GitHub) en
+  // comptes del propi Netlify: així el bot que actualitza retos.json cada
+  // 15 min NO dispara cap build/deploy a Netlify (que cobra crèdits per
+  // cada un). jsDelivr es purga automàticament des del propi workflow de
+  // GitHub Actions just després de cada commit.
+  const RETOS_JSON_URL = 'https://cdn.jsdelivr.net/gh/cristiangomezm85/llobregatxladiabetis@main/dona/retos.json';
+
   async function load(){
     try{
       const [retosData, donatiusInscripcions] = await Promise.all([
-        fetch('retos.json', {cache:'no-store'}).then(r => r.json()),
+        fetch(RETOS_JSON_URL, {cache:'no-store'}).then(r => r.json()),
         fetchDonatiusInscripcions(),
       ]);
       DATA = retosData;
