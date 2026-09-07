@@ -1,3 +1,11 @@
+# Evita que Netlify lance un build/deploy nuevo (y gaste créditos) cuando lo
+# único que ha cambiado es dona/retos.json — ese archivo ya no lo sirve
+# Netlify (lo sirve jsDelivr), así que no hace falta redeploy cuando el bot
+# lo actualiza cada 15 min. Si cambia CUALQUIER otro archivo, el build sigue
+# lanzándose con normalidad.
+[build]
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':!dona/retos.json'"
+
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
