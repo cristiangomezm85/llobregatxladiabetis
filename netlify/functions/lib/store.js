@@ -55,13 +55,24 @@ async function actualitzarOrdre(orderId, patch) {
   return actualitzat;
 }
 
+// Llegeix com a molt aquestes claus alhora. Abans es llegia una comanda
+// darrera l'altra (una per una): amb desenes/centenars de comandes això
+// arribava a trigar 20-30 segons (i la pàgina pública de donatius es
+// quedava penjada esperant-ho). Llegint-les en paral·lel, per blocs, baixa
+// a 1-2 segons sense arribar a saturar Netlify Blobs amb centenars de
+// peticions simultànies de cop.
+const CONCURRENCIA_LECTURA = 25;
+
 async function llistarOrdres() {
   const store = ordresStore();
   const { blobs } = await store.list();
   const resultats = [];
-  for (const b of blobs) {
-    const val = await store.get(b.key, { type: "json" });
-    if (val) resultats.push({ order_id: b.key, ...val });
+  for (let i = 0; i < blobs.length; i += CONCURRENCIA_LECTURA) {
+    const bloc = blobs.slice(i, i + CONCURRENCIA_LECTURA);
+    const valors = await Promise.all(
+      bloc.map(b => store.get(b.key, { type: "json" }).then(val => (val ? { order_id: b.key, ...val } : null)))
+    );
+    for (const v of valors) if (v) resultats.push(v);
   }
   return resultats;
 }
