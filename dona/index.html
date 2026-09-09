@@ -573,15 +573,24 @@
   // Si l'endpoint no respon, es tracta com a 0 en comptes de trencar la
   // resta de la pàgina.
   const PUBLIC_STATS_API_CANDIDATES = ['/api/public-stats', '/.netlify/functions/public-stats'];
+  // Aquest endpoint pot trigar (llegeix totes les inscripcions una a una);
+  // li posem un límit de temps propi perquè mai bloquegi la resta de la
+  // pàgina — si no respon a temps, es tracta com a 0 (es reintentarà sol
+  // la propera vegada que algú carregui la pàgina).
+  const PUBLIC_STATS_TIMEOUT_MS = 8000;
   async function fetchDonatiusInscripcions(){
     for (const url of PUBLIC_STATS_API_CANDIDATES) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), PUBLIC_STATS_TIMEOUT_MS);
       try {
-        const res = await fetch(url, {cache:'no-store'});
+        const res = await fetch(url, {cache:'no-store', signal: controller.signal});
         if (!res.ok) continue;
         const data = await res.json();
         return Number(data && data.donatiusInscripcionsEur) || 0;
       } catch (err) {
         // prova el següent candidat
+      } finally {
+        clearTimeout(timeoutId);
       }
     }
     return 0;
@@ -596,13 +605,20 @@
 
   async function load(){
     try{
-      const [retosData, donatiusInscripcions] = await Promise.all([
-        fetch(RETOS_JSON_URL, {cache:'no-store'}).then(r => r.json()),
-        fetchDonatiusInscripcions(),
-      ]);
-      DATA = retosData;
-      DATA.donatiusInscripcions = donatiusInscripcions;
+      // Los retos (fotos, importes de MGA) vienen de jsDelivr y son rápidos:
+      // se pintan en cuanto llegan, sin esperar a nada más. Los donativos
+      // hechos desde el formulario de inscripción se piden aparte y, si
+      // tardan o fallan, se suman en cuanto lleguen (o se quedan en 0) sin
+      // dejar la página entera colgada mientras tanto.
+      DATA = await fetch(RETOS_JSON_URL, {cache:'no-store'}).then(r => r.json());
+      DATA.donatiusInscripcions = 0;
       render();
+
+      fetchDonatiusInscripcions().then(donatiusInscripcions => {
+        if (!DATA) return;
+        DATA.donatiusInscripcions = donatiusInscripcions;
+        render();
+      });
     }catch(err){
       const s = STR[getLang()];
       document.getElementById('grid').innerHTML = `<p class="error">${escapeHtml(s.error)}</p>`;
