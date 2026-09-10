@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-08-31",
+  "actualitzat": "2026-09-10",
   "estat": "obert",
   "herois": [
     {
@@ -446,6 +446,36 @@
         "es": "Salir de Sant Joan Despí hasta donde puedan las piernas.",
         "en": "Set out from Sant Joan Despí and go as far as your legs can take you."
       }
+    },
+    {
+      "id": "ricard",
+      "nom": "Ricard",
+      "poble": "Sant Just",
+      "modalitat": "corrent",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Heroi",
+        "es": "Héroe",
+        "en": "Hero"
+      },
+      "tram": {
+        "ca": "Tot - 180km",
+        "es": "Todo - 180km",
+        "en": "All - 180km"
+      },
+      "motiu": {
+        "ca": "La diabetis forma part del nostre dia a dia des de fa 4 anys, quan l'Eduard, el meu fill petit, va debutar amb 6 anys. Per totes les persones que hi conviuen correré, acompanyat d'altres herois i heroïnes, per ajudar a visibilitzar la malaltia i sumar quilòmetres per la investigació. I, sobretot, correré per ell.",
+        "es": "La diabetes forma parte de nuestro día a día desde hace 4 años, cuando Eduard, mi hijo pequeño, debutó con 6 años. Por todas las personas que conviven con ella correré, acompañado de otros héroes y heroínas, para ayudar a visibilizar la enfermedad y sumar kilómetros por la investigación. Y, sobre todo, correré por él.",
+        "en": "Diabetes has been part of our daily life for 4 years, since Eduard, my youngest son, was diagnosed at the age of 6. I'll run for everyone who lives with it, alongside other heroes, to help raise awareness and add kilometres for research. And, above all, I'll run for him."
+      },
+      "repte": {
+        "ca": "La diabetis forma part del nostre dia a dia des de fa 4 anys, quan l'Eduard, el meu fill petit, va debutar amb 6 anys. Per totes les persones que hi conviuen correré, acompanyat d'altres herois i heroïnes, per ajudar a visibilitzar la malaltia i sumar quilòmetres per la investigació. I, sobretot, correré per ell.",
+        "es": "La diabetes forma parte de nuestro día a día desde hace 4 años, cuando Eduard, mi hijo pequeño, debutó con 6 años. Por todas las personas que conviven con ella correré, acompañado de otros héroes y heroínas, para ayudar a visibilizar la enfermedad y sumar kilómetros por la investigación. Y, sobre todo, correré por él.",
+        "en": "To complete the route knowing that my effort will never compare to the long-distance race that Eduard, and so many others, run every single day, with no finish line."
+      },
+      "instagram": "@ricardanguera",
+      "foto": "img/herois/ricard.webp",
+      "destacat": false
     },
     {
       "id": "ruben",
