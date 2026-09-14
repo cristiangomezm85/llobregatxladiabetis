@@ -5,8 +5,8 @@
     "es": "https://www.migranodearena.org/reto/llobregat-x-la-diabetes",
     "en": "https://www.migranodearena.org/en/cause/llobregat-x-la-diabetes"
   },
-  "totalRecaudado": 490,
-  "actualizado": "2026-09-14T12:45:42.584Z",
+  "totalRecaudado": 540,
+  "actualizado": "2026-09-14T13:01:12.881Z",
   "retos": [
     {
       "slug": "astolfo-x-la-diabetes",
@@ -386,7 +386,7 @@
       "tipo": "poble",
       "foto": "fotos/Hospitalet de Llobregat.png",
       "url": "https://www.migranodearena.org/reto/hospitalet-x-la-diabetes",
-      "recaudado": 0,
+      "recaudado": 50,
       "diasRestantes": 47
     },
     {
