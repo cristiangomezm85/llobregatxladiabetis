@@ -2492,7 +2492,7 @@ var qrcode = function() {
     display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center;
     font-family:'Manrope',sans-serif;font-weight:700;font-size:calc(12.5pt * var(--scale));
     color:var(--overlay-color);text-shadow:0 1px 5px rgba(0,0,0,0.6), 0 0 2px rgba(0,0,0,0.55);
-    background:rgba(var(--backdrop-rgb),0.18);backdrop-filter:blur(3px);
+    background:rgba(var(--backdrop-rgb),0.28);
     padding:2mm 5mm;border-radius:20mm;
   }
   .muni-info .info-item.item-hidden{display:none;}
@@ -2505,12 +2505,12 @@ var qrcode = function() {
     display:flex;align-items:center;justify-content:center;gap:4mm;
   }
   .logo-mark{
-    width:var(--logo-size, 52mm);height:var(--logo-size, 52mm);
+    height:var(--logo-size, 52mm);width:auto;max-width:100mm;
     display:flex;align-items:center;justify-content:center;
     flex:0 0 auto;
   }
   .logo-mark img, .logo-mark svg{
-    width:100%;height:100%;object-fit:contain;
+    height:100%;width:auto;max-width:100%;display:block;
     filter:drop-shadow(0 1.5mm 2.5mm rgba(0,0,0,0.45)) drop-shadow(0 0 6mm rgba(0,0,0,0.25));
   }
   .logo-plus{
@@ -2521,22 +2521,20 @@ var qrcode = function() {
   }
   .entity-logo-mark{
     display:none;
-    width:var(--entity-logo-size, 52mm);height:var(--entity-logo-size, 52mm);
+    height:var(--entity-logo-size, 52mm);width:auto;max-width:100mm;
   }
   .logo-row.show-entity .logo-plus{display:block;}
   .logo-row.show-entity .entity-logo-mark{display:flex;}
 
   .kicker-chip{
-    background:rgba(var(--backdrop-rgb),0.16);
-    backdrop-filter:blur(3px);
+    background:rgba(var(--backdrop-rgb),0.26);
     color:var(--overlay-color);
     font-weight:700;font-size:calc(13pt * var(--scale));letter-spacing:.04em;
     padding:2.2mm 6mm;border-radius:20mm;
     text-shadow:0 1px 4px rgba(0,0,0,0.55), 0 0 2px rgba(0,0,0,0.5);
   }
   .claim-pill{
-    background:rgba(var(--backdrop-rgb),0.12);
-    backdrop-filter:blur(3px);
+    background:rgba(var(--backdrop-rgb),0.20);
     color:var(--overlay-color);
     font-weight:600;font-size:calc(12.5pt * var(--scale));
     padding:1.8mm 5mm;border-radius:20mm;
@@ -2564,8 +2562,7 @@ var qrcode = function() {
   /* AREDI stat badge (corner) */
   .aredi-badge{
     position:absolute;z-index:3;
-    background:rgba(var(--backdrop-rgb),0.32);
-    backdrop-filter:blur(4px) saturate(130%);
+    background:rgba(var(--backdrop-rgb),0.42);
     border-radius:8px;padding:1.8mm 2.8mm;
     display:flex;flex-direction:column;align-items:center;gap:0.8mm;
     width:max-content;max-width:26mm;
