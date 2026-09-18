@@ -1,32 +1,28 @@
 {
   "Castellar de n'Hug": {
-    "lat": 42.2456,
-    "lng": 1.9797,
+    "lat": 42.285,
+    "lng": 2.0189,
     "photo": "assets/pobles/castellar-de-nhug.jpg"
   },
   "La Pobla de Lillet": {
-    "lat": 42.2419,
-    "lng": 1.9722
+    "lat": 42.244,
+    "lng": 1.975
   },
   "Guardiola de Berguedà": {
-    "lat": 42.2333,
-    "lng": 1.8969
+    "lat": 42.235,
+    "lng": 1.8811
   },
   "Cercs": {
-    "lat": 42.1907,
-    "lng": 1.8503
+    "lat": 42.1481,
+    "lng": 1.8619
   },
   "Berga": {
-    "lat": 42.1057,
-    "lng": 1.8447
-  },
-  "Cal Rosal": {
-    "lat": 42.0732,
-    "lng": 1.8703
+    "lat": 42.1011,
+    "lng": 1.8439
   },
   "Gironella": {
-    "lat": 42.0333,
-    "lng": 1.8833
+    "lat": 42.033,
+    "lng": 1.883
   },
   "Navarcles": {
     "lat": 41.7536,
@@ -37,8 +33,8 @@
     "lng": 1.8708
   },
   "Sant Vicenç de Castellet": {
-    "lat": 41.6682,
-    "lng": 1.8646
+    "lat": 41.6678,
+    "lng": 1.8633
   },
   "Castellbell i el Vilar": {
     "lat": 41.6291,
@@ -49,52 +45,65 @@
     "lng": 1.8434
   },
   "Martorell": {
-    "lat": 41.4747,
-    "lng": 1.9319,
-    "photo": "../dona/fotos/Martorell.png"
+    "lat": 41.477,
+    "lng": 1.928
   },
   "Sant Andreu de la Barca": {
-    "lat": 41.4642,
-    "lng": 1.9756    
+    "lat": 41.4478,
+    "lng": 1.9769
   },
   "Pallejà": {
-    "lat": 41.4283,
-    "lng": 2.0058,
-    "photo": "../dona/fotos/Pallejà.png"
+    "lat": 41.4242,
+    "lng": 1.9978
   },
   "Sant Vicenç dels Horts": {
-    "lat": 41.3961,
-    "lng": 2.0089
+    "lat": 41.3953,
+    "lng": 2.0108
   },
   "Sant Boi de Llobregat": {
-    "lat": 41.3459,
-    "lng": 2.0351,
-    "photo": "../dona/fotos/Sant Boi de Llobregat.png"
+    "lat": 41.336,
+    "lng": 2.043
   },
   "Sant Joan Despí": {
-    "lat": 41.3525,
-    "lng": 2.0508,
-    "photo": "../dona/fotos/Sant Joan Despí.png"
+    "lat": 41.365,
+    "lng": 2.048
   },
   "Cornellà de Llobregat": {
-    "lat": 41.3517,
-    "lng": 2.0687,
-    "photo": "../dona/fotos/Cornellà de Llobregat.png"
+    "lat": 41.3574,
+    "lng": 2.07
   },
   "L'Hospitalet de Llobregat": {
     "lat": 41.3449,
-    "lng": 2.1042,
-    "photo": "../dona/fotos/Hospitalet de Llobregat.png"
+    "lng": 2.1042
   },
   "El Prat de Llobregat": {
-    "lat": 41.3253,
-    "lng": 2.0958,
-    "photo": "../dona/fotos/El Prat de Llobregat.png"
+    "lat": 41.333,
+    "lng": 2.1
   },
   "Desembocadura": {
-    "lat": 41.2937,
-    "lng": 2.1194,
+    "lat": 41.2981,
+    "lng": 2.1381,
     "isFinish": true,
     "noClick": true
+  },
+  "Cal Rosal": {
+    "lat": 42.0732,
+    "lng": 1.8703
+  },
+  "Puig-reig": {
+    "lat": 41.9742,
+    "lng": 1.8806
+  },
+  "Navàs": {
+    "lat": 41.9,
+    "lng": 1.8864
+  },
+  "Balsareny": {
+    "lat": 41.8658,
+    "lng": 1.8769
+  },
+  "Sallent": {
+    "lat": 41.8242,
+    "lng": 1.8945
   }
 }
