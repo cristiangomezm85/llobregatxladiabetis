@@ -82,6 +82,11 @@
   #townModalAvatarWrap .img-spinner{ position:absolute; }
   #townModalTopText{ flex:1; min-width:0; }
   #townModalTopText h3{ margin-bottom:6px; }
+  #townModalTime{
+    font-family:'Press Start 2P', monospace; font-size:9px; color:var(--aigua);
+    margin-bottom:6px; display:none;
+  }
+  #townModalTime.done{ color:var(--diabetis); }
   .modal-box p{ font-family:'Manrope',sans-serif; font-size:13px; color:var(--paper); opacity:0.9; line-height:1.5; }
   .modal-close{
     position:absolute; top:10px; right:10px; width:28px; height:28px; border-radius:50%;
@@ -188,17 +193,33 @@
   #runner img{ width:100%; height:100%; object-fit:contain; animation:pulse 1.2s ease-in-out infinite; }
   @keyframes pulse{0%,100%{transform:scale(1);} 50%{transform:scale(1.08);}}
 
-  .cp-marker{
-    position:absolute; width:26px; height:26px; margin:-13px 0 0 -13px;
-    background-image:url("assets/gold-coins.png");
-    background-size:contain; background-repeat:no-repeat; background-position:center;
-    z-index:10; filter:drop-shadow(0 1px 3px rgba(0,0,0,0.6));
-    animation: cpPulse 1.8s ease-in-out infinite;
+  /* Bloc unificat d'informació de poble — el mateix disseny tant al
+     mapa il·lustrat (Mode Fantasy) com al mapa real (Mode GPS):
+     monedes parpellejant + nom, salt de línia amb l'hora, i un
+     "Veure més" al final que obre el popup del municipi. */
+  .cp-info-card{
+    position:absolute; transform:translate(-50%, 6px);
+    z-index:11; cursor:pointer; text-align:center;
+    background:rgba(14,27,54,0.88); border:1px solid rgba(255,210,76,0.45);
+    border-radius:8px; padding:5px 8px; box-shadow:0 2px 6px rgba(0,0,0,0.5);
   }
-  .cp-marker.reached{ filter:drop-shadow(0 0 6px rgba(90,192,230,0.9)) drop-shadow(0 1px 3px rgba(0,0,0,0.6)); }
-  @keyframes cpPulse{
-    0%, 100% { transform:scale(1); }
-    50% { transform:scale(1.22); }
+  .cp-info-line1{
+    display:flex; align-items:center; justify-content:center; gap:4px;
+    font-family:'Manrope',sans-serif; font-weight:800; font-size:10px;
+    color:#FFD24C; white-space:nowrap;
+  }
+  .cp-info-coin{ width:13px; height:13px; object-fit:contain; animation:coinBlink 1.6s ease-in-out infinite; }
+  @keyframes coinBlink{ 0%,100%{ opacity:1; } 50%{ opacity:0.35; } }
+  .cp-info-name{ color:var(--paper); }
+  .cp-info-time{
+    font-family:'Press Start 2P', monospace; font-size:6.5px; color:var(--aigua);
+    margin-top:3px; white-space:nowrap;
+  }
+  .cp-info-card.done .cp-info-time{ color:var(--diabetis); }
+  .cp-info-card.current .cp-info-time{ color:var(--coral); }
+  .cp-info-veure{
+    font-family:'Manrope',sans-serif; font-weight:800; font-size:8.5px; color:var(--aigua);
+    margin-top:3px; white-space:nowrap;
   }
 
   .gps-cp-label{ animation: cpPulseSubtle 1.8s ease-in-out infinite; }
@@ -209,23 +230,10 @@
   .gps-cp-label-finish{
     cursor:default; animation:none; background:rgba(255,107,71,0.85); border-color:var(--coral);
   }
+  .gps-info-card{ transform:translate(-50%, -50%); }
 
-  .cp-eta{
-    position:absolute; transform:translate(-50%, 6px);
-    font-family:'Press Start 2P', monospace; font-size:6.5px; color:var(--paper);
-    background:rgba(14,27,54,0.85); border:1px solid var(--gris); border-radius:4px;
-    padding:3px 5px; white-space:nowrap; z-index:11; cursor:pointer;
-  }
-  .cp-eta.done{ color:var(--aigua); border-color:var(--aigua); }
-  .cp-eta.current{ color:var(--coral); border-color:var(--coral); }
-
-  .cp-viewbtn{
-    position:absolute; transform:translate(16px, -50%);
-    font-family:'Manrope',sans-serif; font-weight:800; font-size:9px; color:var(--tinta);
-    background:#FFD24C; border:1px solid #B8860B; border-radius:20px;
-    padding:3px 8px; white-space:nowrap; z-index:12; cursor:pointer;
-    box-shadow:0 2px 5px rgba(0,0,0,0.4);
-  }
+  .cp-info-card.reached{ border-color:var(--aigua); box-shadow:0 0 8px rgba(90,192,230,0.6); }
+  .cp-info-card.current{ border-color:var(--coral); }
 
   #toast{
     position:absolute; left:50%; top:14px; transform:translate(-50%,-140%);
@@ -302,6 +310,7 @@
       </div>
       <div id="townModalTopText">
         <h3 id="townModalName"></h3>
+        <div id="townModalTime"></div>
         <p id="townModalDesc"></p>
       </div>
     </div>
@@ -527,49 +536,21 @@ function applyStage(stageId, isNight){
     window.__runner = runner;
   }
 
-  // Els marcadors i etiquetes ETA sí que depenen de l'etapa (canvien
-  // els pobles), així que si veníem d'una etapa anterior els traiem
-  // tots abans de tornar-los a crear.
-  (window.__cpMarkerEls || []).forEach(el => el.remove());
-  (window.__cpEtaEls || []).forEach(el => el.remove());
-  (window.__cpViewBtnEls || []).forEach(el => el.remove());
+  // El bloc d'informació de cada poble depèn de l'etapa (canvien els
+  // pobles), així que si veníem d'una etapa anterior el traiem tot
+  // abans de tornar-lo a crear.
+  (window.__cpInfoCardEls || []).forEach(el => el.remove());
   document.querySelectorAll('.xptick').forEach(el => el.remove());
 
-  window.__cpMarkerEls = checkpoints.map((c, i) => {
-    const pos = pointOnPath(checkpointArc[i]);
-    const el = document.createElement('div');
-    el.className = 'cp-marker';
-    el.style.left = pos.x + '%';
-    el.style.top = pos.y + '%';
-    el.style.cursor = 'pointer';
-    el.addEventListener('click', () => openTownInfo(c));
-    document.getElementById('mapinner').appendChild(el);
-    return el;
-  });
-  window.__cpEtaEls = checkpoints.map((c, i) => {
+  window.__cpInfoCardEls = checkpoints.map((c, i) => {
     const pos = pointOnPath(checkpointArc[i]);
     const offX = Number(c.etaOffsetX) || 0;
     const offY = Number(c.etaOffsetY) || 3;
     const el = document.createElement('div');
-    el.className = 'cp-eta';
+    el.className = 'cp-info-card';
     el.style.left = (pos.x + offX) + '%';
     el.style.top = (pos.y + offY) + '%';
-    el.style.transform = 'translate(-50%, 0)';
-    el.style.cursor = 'pointer';
-    el.addEventListener('click', () => openTownInfo(c));
-    document.getElementById('mapinner').appendChild(el);
-    return el;
-  });
-  // Botó de text "Veure [nom]" just sota la moneda de cada poble —
-  // perquè quedi clar, sense haver-ho de deduir, que allà es pot
-  // clicar. Obre el mateix popup que el punt i que l'hora.
-  window.__cpViewBtnEls = checkpoints.map((c, i) => {
-    const pos = pointOnPath(checkpointArc[i]);
-    const el = document.createElement('div');
-    el.className = 'cp-viewbtn';
-    el.style.left = pos.x + '%';
-    el.style.top = pos.y + '%';
-    el.textContent = `👁 Veure`;
+    el.innerHTML = cpInfoCardHtml(c, i, null, null);
     el.addEventListener('click', () => openTownInfo(c));
     document.getElementById('mapinner').appendChild(el);
     return el;
@@ -647,6 +628,24 @@ function openTownInfo(c){
     : 'Encara no hi ha descripció d\'aquest poble.';
   const money = Number(c.moneyRaised) || 0;
   document.getElementById('townModalGoldAmount').textContent = money.toLocaleString('ca-ES') + ' €';
+
+  // Hora: si el poble és un checkpoint de l'etapa activa, mostrem la
+  // previsió (o l'hora real de pas, si ja s'ha confirmat l'arribada).
+  const timeEl = document.getElementById('townModalTime');
+  const idx = checkpoints.indexOf(c);
+  if (idx !== -1 && serverState) {
+    const etas = computeEtas(serverState);
+    const isDone = !!(serverState.arrivals && serverState.arrivals[String(idx)] != null);
+    if (etas[idx] != null) {
+      timeEl.style.display = 'block';
+      timeEl.classList.toggle('done', isDone);
+      timeEl.textContent = isDone ? `✓ Hora de pas: ${fmtHM(etas[idx])}` : `🕐 Previsió: ${fmtHM(etas[idx])}`;
+    } else {
+      timeEl.style.display = 'none';
+    }
+  } else {
+    timeEl.style.display = 'none';
+  }
   // TODO: quan cada municipi tingui el seu propi subrepte a Mi Grano
   // de Arena, canviar aquest href per l'URL específica de c (per ara
   // tots apunten a la pàgina principal).
@@ -799,7 +798,7 @@ function render(km){
   let reachedIndex = -1;
   checkpoints.forEach((c,i) => {
     const reached = currentKm >= cumKm[i]-0.05;
-    if (window.__cpMarkerEls[i]) window.__cpMarkerEls[i].classList.toggle('reached', reached);
+    if (window.__cpInfoCardEls[i]) window.__cpInfoCardEls[i].classList.toggle('reached', reached);
     if (reached) reachedIndex = i;
   });
 
@@ -820,6 +819,23 @@ function fmtHM(ts){
   const ampm = h >= 12 ? 'PM' : 'AM';
   h = h % 12; if (h === 0) h = 12;
   return h + ':' + d.getMinutes().toString().padStart(2,'0') + ' ' + ampm;
+}
+
+// Contingut del bloc unificat d'un poble: monedes+nom, hora, i
+// "Veure més". El fa servir tant el Mode Fantasy com el Mode GPS,
+// perquè es vegi exactament igual als dos.
+function cpInfoCardHtml(c, i, etas, state){
+  const money = Number(c.moneyRaised) || 0;
+  const isDone = !!(state && state.arrivals && state.arrivals[String(i)] != null);
+  let timeText;
+  if (!etas || etas[i] == null) timeText = '—';
+  else if (isDone) timeText = (i === 0 ? '🏁 ' : '✓ ') + fmtHM(etas[i]);
+  else timeText = fmtHM(etas[i]);
+  return `
+    <div class="cp-info-line1"><img class="cp-info-coin" src="assets/gold-coins.png" alt="">${money.toLocaleString('ca-ES')}€ <span class="cp-info-name">${c.name}</span></div>
+    <div class="cp-info-time">${timeText}</div>
+    <div class="cp-info-veure">Veure més →</div>
+  `;
 }
 
 function computeEtas(state){
@@ -869,16 +885,15 @@ function computeEtas(state){
 function renderEtaLabels(state){
   const etas = computeEtas(state);
   checkpoints.forEach((c, i) => {
-    const el = window.__cpEtaEls[i];
+    const el = window.__cpInfoCardEls[i];
     if (!el) return;
     const isDone = !!(state.arrivals && state.arrivals[String(i)] != null);
     const isCurrentTarget = state.status === 'moving' && state.targetIndex === i;
     el.classList.toggle('done', isDone);
     el.classList.toggle('current', isCurrentTarget && !isDone);
-    if (etas[i] == null) el.textContent = '—';
-    else if (isDone) el.textContent = (i === 0 ? '🏁 ' : '✓ ') + fmtHM(etas[i]);
-    else el.textContent = fmtHM(etas[i]);
+    el.innerHTML = cpInfoCardHtml(c, i, etas, state);
   });
+  refreshGpsInfoCards(etas, state);
 }
 
 function renderStatusLine(state){
@@ -1024,22 +1039,32 @@ async function loadMunicipisGps(){
 // Mostra el nom de cada municipi sobre el mapa GPS real, a la seva
 // posició GPS de veritat (no la del mapa il·lustrat). És només text,
 // sense cap icona, perquè no es confongui amb la posició del corredor.
+let gpsCpCardMarkers = {}; // índex de checkpoint -> marcador Leaflet, per poder refrescar l'hora sense recrear-los
+
 function renderGpsCheckpointLabels(){
   if (!gpsMap) return;
   gpsCheckpointLabels.forEach(m => gpsMap.removeLayer(m));
+  gpsCpCardMarkers = {};
   gpsCheckpointLabels = Object.entries(allMunicipisGps)
     .filter(([name, pos]) => pos && pos.lat != null && pos.lng != null)
     .map(([name, pos]) => {
       // Punts especials (com la Desembocadura): es marquen com a meta
       // i no tenen clic ni popup — són purament decoratius/informatius.
       const isSpecial = pos.isFinish || pos.noClick;
-      const icon = L.divIcon({
-        className: '',
-        html: isSpecial
-          ? `<div class="gps-cp-label gps-cp-label-finish">🏁 ${name}</div>`
-          : `<div class="gps-cp-label">🪙 ${name}</div>`,
-        iconSize: null,
-      });
+      const cpIndex = checkpoints.findIndex(c => c.name === name);
+      const isCheckpoint = !isSpecial && cpIndex !== -1;
+
+      let html;
+      if (isSpecial) {
+        html = `<div class="gps-cp-label gps-cp-label-finish">🏁 ${name}</div>`;
+      } else if (isCheckpoint) {
+        // Mateix bloc unificat que el Mode Fantasy.
+        html = `<div class="cp-info-card gps-info-card">${cpInfoCardHtml(checkpoints[cpIndex], cpIndex, null, null)}</div>`;
+      } else {
+        html = `<div class="gps-cp-label">🪙 ${name}</div>`;
+      }
+
+      const icon = L.divIcon({ className: '', html, iconSize: null });
       const marker = L.marker([pos.lat, pos.lng], { icon, interactive: !pos.noClick }).addTo(gpsMap);
       if (!pos.noClick) {
         marker.on('click', () => {
@@ -1047,8 +1072,29 @@ function renderGpsCheckpointLabels(){
           openTownInfo(cp || { name });
         });
       }
+      if (isCheckpoint) gpsCpCardMarkers[cpIndex] = marker;
       return marker;
     });
+  if (serverState) refreshGpsInfoCards(computeEtas(serverState), serverState);
+}
+
+// Actualitza només el text (hora, fet/no fet) dels blocs del Mode
+// GPS que corresponen a checkpoints, sense haver de recrear els
+// marcadors sencers.
+function refreshGpsInfoCards(etas, state){
+  Object.entries(gpsCpCardMarkers).forEach(([idxStr, marker]) => {
+    const i = Number(idxStr);
+    const c = checkpoints[i];
+    if (!c) return;
+    const el = marker.getElement && marker.getElement();
+    if (!el) return;
+    const cardEl = el.querySelector('.cp-info-card') || el;
+    const isDone = !!(state && state.arrivals && state.arrivals[String(i)] != null);
+    const isCurrentTarget = state && state.status === 'moving' && state.targetIndex === i;
+    cardEl.classList.toggle('done', isDone);
+    cardEl.classList.toggle('current', !!isCurrentTarget && !isDone);
+    cardEl.innerHTML = cpInfoCardHtml(c, i, etas, state);
+  });
 }
 
 async function initGpsMap(){
