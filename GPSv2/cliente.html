@@ -206,20 +206,22 @@
   .cp-info-line1{
     display:flex; align-items:center; justify-content:center; gap:4px;
     font-family:'Manrope',sans-serif; font-weight:800; font-size:10px;
-    color:#FFD24C; white-space:nowrap;
+    white-space:nowrap;
   }
   .cp-info-coin{ width:13px; height:13px; object-fit:contain; animation:coinBlink 1.6s ease-in-out infinite; }
   @keyframes coinBlink{ 0%,100%{ opacity:1; } 50%{ opacity:0.35; } }
   .cp-info-name{ color:var(--paper); }
+  .cp-info-line2{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    margin-top:3px; white-space:nowrap;
+  }
   .cp-info-time{
     font-family:'Press Start 2P', monospace; font-size:6.5px; color:var(--aigua);
-    margin-top:3px; white-space:nowrap;
   }
   .cp-info-card.done .cp-info-time{ color:var(--diabetis); }
   .cp-info-card.current .cp-info-time{ color:var(--coral); }
   .cp-info-veure{
-    font-family:'Manrope',sans-serif; font-weight:800; font-size:8.5px; color:var(--aigua);
-    margin-top:3px; white-space:nowrap;
+    font-family:'Manrope',sans-serif; font-weight:800; font-size:8.5px; color:#FFD24C;
   }
 
   .gps-cp-label{ animation: cpPulseSubtle 1.8s ease-in-out infinite; }
@@ -825,16 +827,14 @@ function fmtHM(ts){
 // "Veure més". El fa servir tant el Mode Fantasy com el Mode GPS,
 // perquè es vegi exactament igual als dos.
 function cpInfoCardHtml(c, i, etas, state){
-  const money = Number(c.moneyRaised) || 0;
   const isDone = !!(state && state.arrivals && state.arrivals[String(i)] != null);
   let timeText;
   if (!etas || etas[i] == null) timeText = '—';
   else if (isDone) timeText = (i === 0 ? '🏁 ' : '✓ ') + fmtHM(etas[i]);
   else timeText = fmtHM(etas[i]);
   return `
-    <div class="cp-info-line1"><img class="cp-info-coin" src="assets/gold-coins.png" alt="">${money.toLocaleString('ca-ES')}€ <span class="cp-info-name">${c.name}</span></div>
-    <div class="cp-info-time">${timeText}</div>
-    <div class="cp-info-veure">Veure més →</div>
+    <div class="cp-info-line1"><img class="cp-info-coin" src="assets/gold-coins.png" alt=""><span class="cp-info-name">${c.name}</span></div>
+    <div class="cp-info-line2"><span class="cp-info-time">${timeText}</span><span class="cp-info-veure">Veure més →</span></div>
   `;
 }
 
