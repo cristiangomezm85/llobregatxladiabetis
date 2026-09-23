@@ -6,7 +6,7 @@
 
 const { randomUUID } = require("crypto");
 const { calcularImport, descripcioComanda } = require("./lib/pricing");
-const { crearOrdre, emailJaRegistrat, marcarEmailPagat } = require("./lib/store");
+const { crearOrdre, marcarEmailPagat } = require("./lib/store");
 const { notificarMailerLite } = require("./lib/mailerlite");
 
 exports.handler = async (event) => {
@@ -21,26 +21,15 @@ exports.handler = async (event) => {
     return resposta(400, { error: "JSON invàlid" });
   }
 
-  // Inscripció única per email: si ja hi ha una comanda pagada amb aquest
-  // mateix email, no deixem continuar (MailerLite no permet enviar-hi un
-  // altre correu igual el mateix dia). No aplica a "animar" (compra de
-  // samarretes) ni a "dorsal0" (donació simbòlica): cap dels dos és "una
-  // inscripció de participant", així que la mateixa persona ha de poder
-  // repetir amb el mateix email tants cops com vulgui.
-  const MODALITATS_SENSE_RESTRICCIO_EMAIL = new Set(["animar", "dorsal0"]);
-  try {
-    if (
-      !MODALITATS_SENSE_RESTRICCIO_EMAIL.has(payload.modalitat) &&
-      (await emailJaRegistrat(payload.email_contacte))
-    ) {
-      return resposta(409, { error: "EMAIL_JA_REGISTRAT" });
-    }
-  } catch (e) {
-    console.error("Error comprovant email duplicat:", e);
-    // Si la comprovació falla per error tècnic, deixem continuar: és
-    // preferible arriscar-se a un duplicat rar que bloquejar inscripcions
-    // legítimes per una caiguda temporal de l'emmagatzematge.
-  }
+  // Nota: abans hi havia aquí una comprovació que bloquejava una segona
+  // inscripció física (caminant/corrent/bici) pagada amb el mateix email
+  // ("EMAIL_JA_REGISTRAT"), pensada per MailerLite (només permet 1 enviament
+  // automàtic per subscriptor i dia). S'ha tret expressament: bloquejava per
+  // igual una família inscrivint dos menors amb l'email del tutor que
+  // qualsevol altra reinscripció legítima amb el mateix email. El límit de
+  // MailerLite segueix existint (es podria perdre l'email de confirmació
+  // d'una segona inscripció el mateix dia), però es tracta a banda -- no
+  // s'ha de bloquejar la inscripció en si per això.
 
   let calcul;
   try {
@@ -94,6 +83,7 @@ exports.handler = async (event) => {
     });
   }
 
+  const MODALITATS_SENSE_RESTRICCIO_EMAIL = new Set(["animar", "dorsal0"]);
   if (esGratuit) {
     if (!MODALITATS_SENSE_RESTRICCIO_EMAIL.has(dadesOrdre.modalitat)) {
       try {
