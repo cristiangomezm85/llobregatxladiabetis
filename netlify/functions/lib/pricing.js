@@ -189,7 +189,13 @@ async function validarFisic(payload) {
 
   const tarifa = tarifaActual();
   const etapes = tram.dies.length;
-  const baseCentims = tarifa.preus[etapes] || 0;
+  // La Caminada de Cloenda (tram_tipus === "cloenda") té preu fix, igual
+  // que la samarreta solidària -- no es cobra segons el nombre de
+  // dies/etapes com la resta de trams físics (de fet sempre és 1 dia,
+  // però encara que no ho fos, el preu seria sempre aquest).
+  const baseCentims = payload.tram_tipus === "cloenda"
+    ? tarifa.preus.animar
+    : (tarifa.preus[etapes] || 0);
   return { baseCentims, unitats: etapes };
 }
 
