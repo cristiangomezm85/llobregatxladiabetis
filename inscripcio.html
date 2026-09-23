@@ -965,7 +965,7 @@
         </thead>
         <tbody>
           <tr>
-            <th data-i18n="taula_fila_animar">Samarreta solidària</th>
+            <th data-i18n="taula_fila_animar">Samarreta solidària / Caminada de Cloenda</th>
             <td id="cel-earlybird-animar">10 €</td>
             <td id="cel-standard-animar">12 €</td>
             <td id="cel-lastcall-animar">15 €</td>
@@ -1286,7 +1286,7 @@
       es:'Last call<br><span style="font-weight:400;">hasta 4/10</span>',
       en:'Last call<br><span style="font-weight:400;">until 10/4</span>'
     },
-    taula_fila_animar: { ca:"Samarreta solidària", es:"Camiseta solidaria", en:"Solidarity t-shirt" },
+    taula_fila_animar: { ca:"Samarreta solidària / Caminada de Cloenda", es:"Camiseta solidaria / Caminata de Clausura", en:"Solidarity t-shirt / Closing Walk" },
     taula_fila_1etapa: { ca:"Participar 1 etapa", es:"Participar 1 etapa", en:"Participate 1 stage" },
     taula_fila_2etapes: { ca:"Participar 2 etapes", es:"Participar 2 etapas", en:"Participate 2 stages" },
     taula_fila_3etapes: { ca:"Participar 3 etapes", es:"Participar 3 etapas", en:"Participate 3 stages" },
@@ -1995,7 +1995,10 @@
     if (codiHeroiValidat) return 0;
     const tarifa = tarifaActual();
     if (modalitatActiva === "animar") return tarifa.preus.animar * totalSamarretesAnimar();
-    // Modalitats físiques: el preu depèn del nombre d'etapes (dies) que cobreix el tram triat
+    // Modalitats físiques: el preu depèn del nombre d'etapes (dies) que
+    // cobreix el tram triat -- excepte la Caminada de Cloenda, que té preu
+    // fix igual que la samarreta solidària.
+    if (tramTipusActiu === "cloenda") return tarifa.preus.animar;
     const iniciOpt = iniciSel.selectedOptions[0];
     const finalOpt = finalSel.selectedOptions[0];
     if (!iniciOpt || !iniciOpt.value || !finalOpt || !finalOpt.value) return 0;
@@ -2274,6 +2277,7 @@
     data_invalida: { ca:"La data de naixement no és vàlida.", es:"La fecha de nacimiento no es válida.", en:"The date of birth is not valid." },
     falta_telefon: { ca:"Falta el telèfon.", es:"Falta el teléfono.", en:"Missing phone number." },
     telefon_invalid: { ca:"El telèfon no és vàlid (només xifres, entre 9 i 15).", es:"El teléfono no es válido (solo cifras, entre 9 y 15).", en:"The phone number is not valid (digits only, 9 to 15)." },
+    falta_sexe: { ca:"Cal indicar el sexe.", es:"Debes indicar el sexo.", en:"Please select your sex." },
     dni_invalid: { ca:"El DNI/NIE/Passaport no és vàlid.", es:"El DNI/NIE/Pasaporte no es válido.", en:"The DNI/NIE/Passport is not valid." },
     tutor_dni_invalid: { ca:"El DNI/NIE/Passaport del tutor legal no és vàlid.", es:"El DNI/NIE/Pasaporte del tutor legal no es válido.", en:"The guardian's DNI/NIE/Passport is not valid." },
     emergencia_telefon_invalid: { ca:"El telèfon d'emergència no és vàlid (només xifres, entre 9 i 15).", es:"El teléfono de emergencia no es válido (solo cifras, entre 9 y 15).", en:"The emergency phone number is not valid (digits only, 9 to 15)." },
