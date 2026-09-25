@@ -138,7 +138,7 @@
       "km": 60.3,
       "comarca": "Berguedà",
       "tipus": "municipi",
-      "estat": "interessat",
+      "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
@@ -151,7 +151,8 @@
       "google_maps_url": "https://www.google.com/maps?q=42.033703,1.882563",
       "hora_arribada": "18:00",
       "hora_sortida": null,
-      "donacio_slug": "gironella-x-la-diabetes"
+      "donacio_slug": "gironella-x-la-diabetes",
+      "exclos_recorregut": false
     },
     {
       "id": "gironella-inici-etapa2",
