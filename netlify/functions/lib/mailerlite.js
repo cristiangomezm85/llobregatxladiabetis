@@ -9,6 +9,13 @@
 // grups nous per idioma, l'automatització de confirmació d'inscripció
 // s'ha de muntar amb el mateix criteri (condició/filtre pel camp idioma)
 // que ja feu servir.
+//
+// Els camps (name, modalitat, tram, samarretes...) es calculen a
+// lib/dades-comanda.js, compartit amb lib/confirmacio-email.js (l'email
+// transaccional per Resend), perquè els dos correus mostrin exactament els
+// mateixos valors.
+
+const { construirCampsComanda } = require("./dades-comanda");
 
 async function notificarMailerLite(ordre, orderId) {
   const apiKey = process.env.MAILERLITE_API_KEY;
@@ -18,61 +25,7 @@ async function notificarMailerLite(ordre, orderId) {
   const email = ordre.email_contacte;
   if (!email) return;
 
-  const payload = ordre.payload || {};
-
-  const municipi = ordre.recollida_text || payload.recollida_municipi_nom || "";
-
-  // Un sol camp de tram, ja resolt segons modalitat, per no dependre de
-  // contingut condicional a MailerLite (que no tenim):
-  //  - caminant/corrent/bici: "Inici → Final"
-  //  - animar: el municipi des d'on anima (el mateix que la recollida)
-  //  - dorsal0: no hi ha tram, mostrem "Dorsal 0"
-  let tram;
-  if (payload.tram_inici_nom && payload.tram_final_nom) {
-    tram = `${payload.tram_inici_nom} → ${payload.tram_final_nom}`;
-  } else if (ordre.modalitat === "animar") {
-    tram = municipi || "—";
-  } else {
-    tram = "Dorsal 0";
-  }
-
-  // Dades perquè el correu funcioni com a comprovant d'inscripció (a banda
-  // del rebut de pagament que envia Stripe): numero de comanda curt,
-  // import i data. La data que fem servir és la de pagament si ja existeix
-  // (comanda pagada) o la de creacio (comanda gratuita/Heroi).
-  const numComanda = orderId ? orderId.slice(0, 8).toUpperCase() : "";
-  const importPagat = ordre.import_centims != null ? (ordre.import_centims / 100).toFixed(2) + " €" : "";
-  const dataIso = ordre.data_pagament || ordre.data_creacio || "";
-  let dataInscripcio = "";
-  if (dataIso) {
-    const d = new Date(dataIso);
-    if (!isNaN(d)) dataInscripcio = d.toLocaleDateString("ca-ES", { day: "2-digit", month: "2-digit", year: "numeric" });
-  }
-
-  // Resum de les samarretes. Tant "animar" com les modalitats físiques
-  // arriben aquí amb payload.samarretes: en les físiques, pricing.js hi
-  // posa una entrada amb la talla i una quantitat igual al nombre d'etapes.
-  let samarretesResum = "";
-  if (Array.isArray(payload.samarretes) && payload.samarretes.length) {
-    samarretesResum = payload.samarretes
-      .map((s) => `${s.talla || "?"} x${s.quantitat || 0}`)
-      .join(", ");
-  }
-
-  const fields = {
-    name: payload.nom || "",
-    last_name: payload.cognoms || "",
-    phone: payload.telefon || "",
-    idioma: (payload.idioma || "CA").toUpperCase(),
-    modalitat: ordre.modalitat || "",
-    municipi,
-    colla_nom: payload.club_nom || "",
-    tram,
-    num_comanda: numComanda,
-    import_pagat: importPagat,
-    data_inscripcio: dataInscripcio,
-    samarretes: samarretesResum,
-  };
+  const fields = construirCampsComanda(ordre, orderId);
 
   await fetch("https://connect.mailerlite.com/api/subscribers", {
     method: "POST",
