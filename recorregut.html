@@ -350,6 +350,35 @@
   .btn:hover svg { transform: translateX(3px); }
 
   /* ============================================
+
+  /* ============================================
+     HERO BACKGROUND IMAGE (recuperat de pobles.html — sense això la
+     <picture class="page-hero-bg"> es renderitza en flux normal (mida
+     natural, sense overlay) i descol·loca tota la capçalera)
+     ============================================ */
+  .page-hero { position: relative; isolation: isolate; }
+  .page-hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .page-hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  .page-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(21,49,95,0.82) 0%, rgba(14,27,54,0.88) 100%);
+    pointer-events: none;
+  }
+  .page-hero-inner { position: relative; z-index: 2; }
+  .page-hero::before { z-index: 2; }
      FOOTER
      ============================================ */
   footer {
@@ -721,6 +750,16 @@
     font-weight: 800; font-size: .86rem; color: var(--blau-llobregat);
   }
   .rec-jump a:hover { background: var(--blau-llobregat); color: #fff; border-color: var(--blau-llobregat); }
+
+  .rec-maps-link {
+    color: var(--blau-diabetis) !important;
+    font-weight: 700;
+    font-size: 0.88em;
+    text-decoration: underline;
+    text-decoration-color: rgba(30,114,212,0.4);
+    text-underline-offset: 2px;
+  }
+  .rec-maps-link:hover { text-decoration-color: currentColor; }
 </style>
 </head>
 <body>
@@ -1205,12 +1244,12 @@
     }
     tbody.innerHTML = pobles.map(p => {
       const isFrontissa = p.km === 0 || (p.frontissa === true);
-      const nomCell = p.google_maps_url
-        ? `<a href="${escapeHTML(p.google_maps_url)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:.3rem;color:var(--blau-llobregat);">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            ${escapeHTML(p.nom)}
-          </a>`
-        : escapeHTML(p.nom);
+      const lang = document.documentElement.getAttribute('data-lang') || 'ca';
+      const mapaWord = { ca: 'mapa', es: 'mapa', en: 'map' }[lang] || 'mapa';
+      const mapsLink = p.google_maps_url
+        ? ` <a href="${escapeHTML(p.google_maps_url)}" target="_blank" rel="noopener" class="rec-maps-link">(${mapaWord})</a>`
+        : '';
+      const nomCell = escapeHTML(p.nom) + mapsLink;
       return `<tr class="${isFrontissa ? 'is-frontissa' : ''}">
         <td class="rec-td-nom">${nomCell}</td>
         <td>${fmtKm(p.km)}</td>
@@ -1244,14 +1283,36 @@
       countChip.textContent = pobles.length + ' ' + word;
     }
 
-    // Mapa Leaflet
+    // Mapa Leaflet — amb imatge il·lustrada de reserva si Leaflet o els
+    // tiles no arriben a carregar (xarxa restrictiva, bloquejador, etc.)
+    function showMapFallback() {
+      const staticImg = 'mapas/' + stageId.replace('etapa', 'etapa') + '-dia.png';
+      mapEl.innerHTML = `
+        <div style="position:relative; width:100%; height:100%;">
+          <img src="${staticImg}" alt="" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'">
+          <div style="position:absolute; left:0; right:0; bottom:0; padding:.6rem .9rem; background:linear-gradient(0deg, rgba(14,27,54,.82), transparent); color:#fff; font-size:.78rem;">
+            <span lang="ca">No s'ha pogut carregar el mapa interactiu. Descarrega el GPX o obre'l a Wikiloc amb els botons de dalt.</span>
+            <span lang="es">No se ha podido cargar el mapa interactivo. Descarga el GPX o ábrelo en Wikiloc con los botones de arriba.</span>
+            <span lang="en">The interactive map couldn't load. Download the GPX or open it in Wikiloc with the buttons above.</span>
+          </div>
+        </div>`;
+    }
+
     mapEl.innerHTML = '';
-    if (typeof L === 'undefined') return;
-    const map = L.map(mapEl, { scrollWheelZoom: false });
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 17,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
-    }).addTo(map);
+    if (typeof L === 'undefined') { showMapFallback(); return; }
+
+    let map;
+    try {
+      map = L.map(mapEl, { scrollWheelZoom: false });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 17,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+      }).addTo(map);
+    } catch (e) {
+      console.warn('No s\'ha pogut inicialitzar Leaflet', e);
+      showMapFallback();
+      return;
+    }
 
     const bounds = [];
 
@@ -1288,6 +1349,10 @@
     } else {
       map.setView([41.7, 1.9], 9);
     }
+    // Bug clàssic de Leaflet: si el contenidor encara no tenia la mida
+    // definitiva quan s'ha creat el mapa (fonts/CSS acabant de carregar),
+    // els tiles surten grisos/tallats fins que no es recalcula la mida.
+    setTimeout(() => map.invalidateSize(), 250);
   }
 
   function boot() {
