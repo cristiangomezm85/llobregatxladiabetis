@@ -8,6 +8,7 @@ const { randomUUID } = require("crypto");
 const { calcularImport, descripcioComanda } = require("./lib/pricing");
 const { crearOrdre, marcarEmailPagat } = require("./lib/store");
 const { notificarMailerLite } = require("./lib/mailerlite");
+const { enviarEmailConfirmacio } = require("./lib/confirmacio-email");
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
@@ -96,6 +97,15 @@ exports.handler = async (event) => {
       await notificarMailerLite(dadesOrdre, orderId);
     } catch (e) {
       console.error("Error notificant MailerLite:", e);
+    }
+    // Email de confirmació per una via transaccional (MailerSend), a banda
+    // de MailerLite: dispara sempre, sense el límit d'1 email/24h per
+    // subscriptor que té l'automatització de MailerLite. Veure
+    // lib/confirmacio-email.js.
+    try {
+      await enviarEmailConfirmacio(dadesOrdre, orderId);
+    } catch (e) {
+      console.error("Error enviant l'email de confirmació:", e);
     }
   }
 
