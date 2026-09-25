@@ -131,7 +131,14 @@ async function validarFisic(payload) {
   if (!telefonValid(payload.telefon)) throw new Error("El telèfon no és vàlid");
   if (!emailValid(payload.email_contacte)) throw new Error("Falta un email vàlid");
   if (!payload.relacio) throw new Error("Falta la relació amb la diabetis tipus 1");
-  if (!["home", "dona"].includes(payload.sexe)) throw new Error("Falta indicar el sexe");
+  // "altre" és una opció vàlida al formulari (select .fi-sexe) des de fa
+  // temps — aquesta llista blanca es va quedar desactualitzada i rebutjava
+  // qualsevol inscripció amb sexe "altre" amb un error confús ("Falta
+  // indicar el sexe" encara que sí que s'hagués triat). La talla de
+  // samarreta no depèn d'això (TALLES_VALIDES ja accepta home-* i dona-*
+  // independentment del sexe marcat), així que només calia ampliar
+  // aquesta llista.
+  if (!["home", "dona", "altre"].includes(payload.sexe)) throw new Error("Falta indicar el sexe");
   if (!payload.contacte_emergencia_nom || !payload.contacte_emergencia_telefon) {
     throw new Error("Falta el contacte d'emergència");
   }
