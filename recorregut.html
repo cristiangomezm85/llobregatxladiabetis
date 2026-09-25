@@ -739,6 +739,36 @@
   table.rec-table td.rec-td-nom { font-weight: 800; color: var(--blau-llobregat); }
   table.rec-table td.rec-td-hora { font-variant-numeric: tabular-nums; white-space: nowrap; }
   table.rec-table tr.is-frontissa { background: rgba(90,192,230,0.08); }
+
+  /* Mòbil: targetes apilades en comptes de taula amb scroll horitzontal */
+  @media (max-width: 640px) {
+    .rec-table-wrap { overflow-x: visible; border: none; }
+    table.rec-table { min-width: 0; border: 1px solid var(--linia); border-radius: 16px; overflow: hidden; }
+    table.rec-table thead { display: none; }
+    table.rec-table, table.rec-table tbody, table.rec-table tr, table.rec-table td { display: block; width: 100%; }
+    table.rec-table tr { padding: .85rem 1rem .95rem; border-bottom: 1px solid var(--linia); }
+    table.rec-table tr:last-child { border-bottom: none; }
+    table.rec-table td { border-bottom: none; padding: .15rem 0; }
+    table.rec-table td.rec-td-nom { font-size: 1rem; margin-bottom: .35rem; }
+    table.rec-table td.rec-td-km,
+    table.rec-table td.rec-td-hora {
+      display: flex;
+      gap: .5rem;
+      align-items: baseline;
+      font-size: .88rem;
+    }
+    table.rec-table td.rec-td-km::before,
+    table.rec-table td.rec-td-hora::before {
+      content: attr(data-label);
+      min-width: 80px;
+      flex-shrink: 0;
+      color: var(--gris);
+      font-weight: 700;
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+  }
   .rec-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--blau-diabetis); margin-right: .5rem; }
 
   .rec-legend { display: flex; gap: 1.2rem; flex-wrap: wrap; margin: .8rem 0 0; font-size: .82rem; color: var(--gris); }
@@ -1122,6 +1152,7 @@
       en: 'Towns of the Solidarity Llobregat · Llobregat for Diabetes',
     };
     document.title = titles[lang] || titles.ca;
+    document.dispatchEvent(new CustomEvent('llxd:langchange', { detail: { lang } }));
   }
   langButtons.forEach(b => b.addEventListener('click', () => setLang(b.dataset.setLang)));
 
@@ -1190,6 +1221,7 @@
 (function () {
   const LANG_NAMES = { ca: 'lang', es: 'lang', en: 'lang' }; // no-op, kept for clarity
   const currentLangEl = document.documentElement;
+  const stageTableCache = []; // { tbody, pobles, countChip } — per re-pintar taules si canvia l'idioma després de carregades
 
   function fmtKm(km) {
     if (km === undefined || km === null) return '—';
@@ -1252,11 +1284,13 @@
         ? ` <a href="${escapeHTML(p.google_maps_url)}" target="_blank" rel="noopener" class="rec-maps-link">(${mapaWord})</a>`
         : '';
       const nomCell = escapeHTML(p.nom) + mapsLink;
+      const labelArribada = { ca: 'Arribada', es: 'Llegada', en: 'Arrival' }[lang] || 'Arribada';
+      const labelSortida = { ca: 'Sortida', es: 'Salida', en: 'Departure' }[lang] || 'Sortida';
       return `<tr class="${isFrontissa ? 'is-frontissa' : ''}">
         <td class="rec-td-nom">${nomCell}</td>
-        <td>${fmtKm(p.km)}</td>
-        <td class="rec-td-hora">${p.hora_arribada ? escapeHTML(p.hora_arribada) : '—'}</td>
-        <td class="rec-td-hora">${p.hora_sortida ? escapeHTML(p.hora_sortida) : '—'}</td>
+        <td class="rec-td-km" data-label="Km">${fmtKm(p.km)}</td>
+        <td class="rec-td-hora" data-label="${labelArribada}">${p.hora_arribada ? escapeHTML(p.hora_arribada) : '—'}</td>
+        <td class="rec-td-hora" data-label="${labelSortida}">${p.hora_sortida ? escapeHTML(p.hora_sortida) : '—'}</td>
       </tr>`;
     }).join('');
   }
@@ -1284,6 +1318,7 @@
       const word = { ca: 'punts de pas', es: 'puntos de paso', en: 'waypoints' }[lang] || 'punts de pas';
       countChip.textContent = pobles.length + ' ' + word;
     }
+    stageTableCache.push({ tbody, pobles, countChip });
 
     // Mapa Leaflet — amb imatge il·lustrada de reserva si Leaflet o els
     // tiles no arriben a carregar (xarxa restrictiva, bloquejador, etc.)
@@ -1360,6 +1395,19 @@
   function boot() {
     document.querySelectorAll('.rec-map[data-gpx]').forEach(initStage);
   }
+
+  // Si l'usuari tria l'idioma DESPRÉS que les taules ja s'hagin carregat
+  // (p. ex. primera visita, amb el splash d'idioma per sobre), les tornem
+  // a pintar perquè "(mapa)", les etiquetes de mòbil i el comptador de
+  // punts de pas surtin en l'idioma triat, no en el de per defecte.
+  document.addEventListener('llxd:langchange', () => {
+    const lang = currentLangEl.getAttribute('data-lang') || 'ca';
+    const word = { ca: 'punts de pas', es: 'puntos de paso', en: 'waypoints' }[lang] || 'punts de pas';
+    stageTableCache.forEach(({ tbody, pobles, countChip }) => {
+      if (tbody) renderTable(tbody, pobles);
+      if (countChip) countChip.textContent = pobles.length + ' ' + word;
+    });
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
