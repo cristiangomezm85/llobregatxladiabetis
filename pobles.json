@@ -311,7 +311,7 @@
       "km": 64.3,
       "comarca": "Bages",
       "tipus": "municipi",
-      "estat": "interessat",
+      "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
@@ -323,7 +323,8 @@
       "google_maps_url": "https://www.google.com/maps?q=41.665659,1.864047",
       "hora_arribada": "16:32",
       "hora_sortida": "16:42",
-      "donacio_slug": "sant-vicen-de-castellet-x-la-diabetes"
+      "donacio_slug": "sant-vicen-de-castellet-x-la-diabetes",
+      "exclos_recorregut": false
     },
     {
       "id": "el-borras",
