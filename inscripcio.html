@@ -194,6 +194,15 @@
   }
 
   .tram-fila{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px; }
+  /* Bug real: un selector de classe amb "display" sempre guanya a la regla
+     per defecte del navegador per a [hidden] (és CSS d'autor contra CSS
+     d'user-agent, no una qüestió d'especificitat ni d'ordre) — així que
+     fer tramFilaPersonalitzat.hidden = true en JS no amagava aquesta fila
+     de debò, es quedava visible i interactiva encara que buida. Per això
+     als selectors "Municipi d'inici"/"Municipi final" no hi sortia res
+     quan s'escollia la Caminada de Cloenda (o "Tot el tram"): la fila mai
+     arribava a desaparèixer del tot. */
+  .tram-fila[hidden]{ display:none; }
   @media (max-width:480px){ .tram-fila{ grid-template-columns:1fr; } }
   .samarreta-fila{ display:grid; grid-template-columns:1fr 90px auto; gap:10px; align-items:end; margin-bottom:12px; }
   @media (max-width:480px){ .samarreta-fila{ grid-template-columns:1fr 70px auto; } }
@@ -1056,14 +1065,22 @@
   // d'una còpia fixa al codi. Un municipi es pot excloure del selector
   // marcant-lo amb "exclos_recorregut": true a pobles.json.
   let POBLES_ORDENATS = [];
+  // Còpia SENSE filtrar — cal per trobar per id punts marcats
+  // "exclos_recorregut": true (com "el-prat-de-llobregat", que existeix
+  // només per calcular la Caminada de Cloenda, però no ha de sortir mai
+  // al desplegable públic de "Tram personalitzat"). Si es fa servir
+  // POBLES_ORDENATS (la llista filtrada) per buscar aquest punt, la
+  // cerca falla i la Caminada de Cloenda es queda sense inici/final.
+  let POBLES_TOTS = [];
   async function carregarPobles() {
     try {
       const res = await fetch("/pobles.json");
       const dades = await res.json();
-      POBLES_ORDENATS = (dades.pobles || [])
-        .filter((p) => !p.exclos_recorregut)
-        .map((p) => ({ id: p.id, nom: p.nom, dia: p.dia, km: p.km }))
+      const mapejats = (dades.pobles || [])
+        .map((p) => ({ id: p.id, nom: p.nom, dia: p.dia, km: p.km, exclos_recorregut: !!p.exclos_recorregut }))
         .sort((a, b) => (a.dia - b.dia) || (a.km - b.km));
+      POBLES_TOTS = mapejats;
+      POBLES_ORDENATS = mapejats.filter((p) => !p.exclos_recorregut);
     } catch (e) {
       console.error("No s'ha pogut carregar pobles.json:", e);
     }
@@ -2091,8 +2108,13 @@
     });
   }
 
+  // Fa servir la llista SENSE filtrar (POBLES_TOTS) a propòsit: "tot" i
+  // "cloenda" necessiten poder trobar punts interns marcats
+  // exclos_recorregut (com "el-prat-de-llobregat"), que mai han de
+  // sortir al desplegable públic de "Tram personalitzat" (aquest sí fa
+  // servir POBLES_ORDENATS, la llista filtrada).
   function trobarPoble(id) {
-    return POBLES_ORDENATS.find((p) => p.id === id) || null;
+    return POBLES_TOTS.find((p) => p.id === id) || null;
   }
 
   function resetTramTipus() {
