@@ -526,7 +526,7 @@
       "km": 45.1,
       "comarca": "Baix Llobregat",
       "tipus": "municipi",
-      "estat": "interessat",
+      "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
@@ -538,7 +538,8 @@
       "google_maps_url": "https://www.google.com/maps?q=41.396602,2.01156",
       "hora_arribada": "13:27",
       "hora_sortida": "13:37",
-      "donacio_slug": "sant-vicen-dels-horts-x-la-diabetes"
+      "donacio_slug": "sant-vicen-dels-horts-x-la-diabetes",
+      "exclos_recorregut": false
     },
     {
       "id": "sant-boi-de-llobregat",
