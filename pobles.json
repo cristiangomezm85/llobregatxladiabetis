@@ -1,7 +1,7 @@
 {
-  "actualitzat": "2026-09-16",
+  "actualitzat": "2026-09-25",
   "ordre": "riu",
-  "comentari": "Llistat de pobles i punts del recorregut, ordenats pel pas del riu. Estat: 'pendent' (punt de pas), 'interessat' (tramitant), 'adherit' (oficial), 'punt-etapa' (inici/fi d'etapa). Els municipis 'frontissa' (Gironella, Monistrol de Montserrat) tenen dues entrades: una com a final d'una etapa i una altra com a inici de la seguent, per evitar que el selector de tram compti una etapa de mes quan el tram comenca just al punt de canvi.",
+  "comentari": "Llistat de pobles i punts del recorregut, ordenats pel pas del riu. Estat: 'pendent' (punt de pas), 'interessat' (tramitant), 'adherit' (oficial), 'punt-etapa' (inici/fi d'etapa). Els municipis 'frontissa' (Gironella, Monistrol de Montserrat) tenen dues entrades: una com a final d'una etapa i una altra com a inici de la seguent, per evitar que el selector de tram compti una etapa de mes quan el tram comenca just al punt de canvi. Camps nous (setembre 2026): gps {lat,lng} i google_maps_url (ubicacio del punt de trobada), hora_arribada / hora_sortida (estimades i provisionals, segons el planning oficial de la ruta), i donacio_slug (relaciona aquest poble amb el seu repte a dona/retos.json per a qui vulgui mostrar l'import recaptat per municipi). exclos_recorregut=true amaga el punt dels desplegables de tram/recollida de la inscripcio (p. ex. Castellbisbal, que col·labora amb donatius pero no es parada fisica del recorregut).",
   "pobles": [
     {
       "id": "castellar-de-n-hug",
@@ -14,39 +14,63 @@
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 42.282243,
+        "lng": 2.016636
+      },
+      "google_maps_url": "https://www.google.com/maps?q=42.282243,2.016636",
+      "hora_arribada": null,
+      "hora_sortida": "08:00",
+      "donacio_slug": "castellar-de-n-hug-x-la-diabetes"
     },
     {
       "id": "la-pobla-de-lillet",
       "nom": "La Pobla de Lillet",
       "dia": 1,
-      "km": 8,
+      "km": 8.4,
       "comarca": "Berguedà",
       "tipus": "municipi",
       "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 42.243803,
+        "lng": 1.974786
+      },
+      "google_maps_url": "https://www.google.com/maps?q=42.243803,1.974786",
+      "hora_arribada": "09:20",
+      "hora_sortida": "09:30",
+      "donacio_slug": "la-pobla-de-lillet-x-la-diabetes"
     },
     {
       "id": "guardiola-de-bergueda",
       "nom": "Guardiola de Berguedà",
       "dia": 1,
-      "km": 22,
+      "km": 21.6,
       "comarca": "Berguedà",
       "tipus": "municipi",
       "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 42.233122,
+        "lng": 1.87941
+      },
+      "google_maps_url": "https://www.google.com/maps?q=42.233122,1.87941",
+      "hora_arribada": "11:10",
+      "hora_sortida": "11:20",
+      "donacio_slug": "guardiola-de-bergueda-x-la-diabetes"
     },
     {
       "id": "sant-jordi-de-cercs",
       "nom": "Sant Jordi de Cercs",
       "dia": 1,
-      "km": 37,
+      "km": 36.7,
       "comarca": "Berguedà",
       "tipus": "nucli",
       "municipi_principal": "Cercs",
@@ -54,26 +78,42 @@
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 42.151566,
+        "lng": 1.85613
+      },
+      "google_maps_url": "https://www.google.com/maps?q=42.151566,1.85613",
+      "hora_arribada": "14:15",
+      "hora_sortida": "14:25",
+      "donacio_slug": "sant-jordi-de-cercs-x-la-diabetes"
     },
     {
       "id": "berga",
       "nom": "Berga",
       "dia": 1,
-      "km": 47,
+      "km": 47.7,
       "comarca": "Berguedà",
       "tipus": "municipi",
       "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 42.099042,
+        "lng": 1.85105
+      },
+      "google_maps_url": "https://www.google.com/maps?q=42.099042,1.85105",
+      "hora_arribada": "16:08",
+      "hora_sortida": "16:18",
+      "donacio_slug": "berga-x-la-diabetes"
     },
     {
       "id": "cal-rosal",
       "nom": "Cal Rosal (Olvan)",
       "dia": 1,
-      "km": 55,
+      "km": 56.2,
       "comarca": "Berguedà",
       "tipus": "municipi",
       "municipi_principal": "Olvan",
@@ -81,13 +121,21 @@
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 42.067883,
+        "lng": 1.868541
+      },
+      "google_maps_url": "https://www.google.com/maps?q=42.067883,1.868541",
+      "hora_arribada": "17:17",
+      "hora_sortida": "17:27",
+      "donacio_slug": "cal-rosal-olvan-x-la-diabetes"
     },
     {
       "id": "gironella",
       "nom": "Gironella",
       "dia": 1,
-      "km": 60,
+      "km": 60.3,
       "comarca": "Berguedà",
       "tipus": "municipi",
       "estat": "interessat",
@@ -95,7 +143,15 @@
       "aporta": [],
       "notes": null,
       "foto": null,
-      "frontissa": true
+      "frontissa": true,
+      "gps": {
+        "lat": 42.033703,
+        "lng": 1.882563
+      },
+      "google_maps_url": "https://www.google.com/maps?q=42.033703,1.882563",
+      "hora_arribada": "18:00",
+      "hora_sortida": null,
+      "donacio_slug": "gironella-x-la-diabetes"
     },
     {
       "id": "gironella-inici-etapa2",
@@ -110,33 +166,57 @@
       "notes": "Punt frontissa: mateix municipi que 'gironella', pero com a inici de l'etapa 2 (dia 2, km 0). No mostrar duplicat al desplegable de recollida.",
       "foto": null,
       "frontissa": true,
-      "exclos_recollida": true
+      "exclos_recollida": true,
+      "gps": {
+        "lat": 42.033703,
+        "lng": 1.882563
+      },
+      "google_maps_url": "https://www.google.com/maps?q=42.033703,1.882563",
+      "hora_arribada": null,
+      "hora_sortida": "07:30",
+      "donacio_slug": "gironella-x-la-diabetes"
     },
     {
       "id": "puig-reig",
       "nom": "Puig-reig",
       "dia": 2,
-      "km": 9,
+      "km": 8.5,
       "comarca": "Berguedà",
       "tipus": "municipi",
       "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 41.97399,
+        "lng": 1.879208
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.97399,1.879208",
+      "hora_arribada": "08:34",
+      "hora_sortida": "08:44",
+      "donacio_slug": "puig-reig-x-la-diabetes"
     },
     {
       "id": "navas",
       "nom": "Navàs",
       "dia": 2,
-      "km": 20,
+      "km": 21,
       "comarca": "Bages",
       "tipus": "municipi",
       "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 41.900015,
+        "lng": 1.879395
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.900015,1.879395",
+      "hora_arribada": "10:18",
+      "hora_sortida": "10:28",
+      "donacio_slug": "navas-x-la-diabetes"
     },
     {
       "id": "balsareny",
@@ -149,79 +229,21 @@
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 41.863107,
+        "lng": 1.876879
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.863107,1.876879",
+      "hora_arribada": "11:13",
+      "hora_sortida": "11:23",
+      "donacio_slug": "balsareny-x-la-diabetes"
     },
     {
       "id": "sallent",
       "nom": "Sallent",
       "dia": 2,
-      "km": 32,
-      "comarca": "Bages",
-      "tipus": "municipi",
-      "estat": "adherit",
-      "embaixador": null,
-      "aporta": [],
-      "notes": null,
-      "foto": null
-    },
-    {
-      "id": "navarcles",
-      "nom": "Navarcles",
-      "dia": 2,
-      "km": 44,
-      "comarca": "Bages",
-      "tipus": "municipi",
-      "estat": "adherit",
-      "embaixador": null,
-      "aporta": [],
-      "notes": null,
-      "foto": null
-    },
-    {
-      "id": "manresa",
-      "nom": "Manresa",
-      "dia": 2,
-      "km": 53,
-      "comarca": "Bages",
-      "tipus": "municipi",
-      "estat": "interessat",
-      "embaixador": null,
-      "aporta": [],
-      "notes": null,
-      "foto": null
-    },
-    {
-      "id": "sant-vicenc-de-castellet",
-      "nom": "Sant Vicenç de Castellet",
-      "dia": 2,
-      "km": 63,
-      "comarca": "Bages",
-      "tipus": "municipi",
-      "estat": "interessat",
-      "embaixador": null,
-      "aporta": [],
-      "notes": null,
-      "foto": null
-    },
-    {
-      "id": "el-borras",
-      "nom": "Castellbell i el Vilar",
-      "dia": 2,
-      "km": 67,
-      "comarca": "Bages",
-      "tipus": "municipi",
-      "municipi_principal": "Sant Vicenç de Castellet",
-      "estat": "pendent",
-      "embaixador": null,
-      "aporta": [],
-      "notes": null,
-      "foto": null
-    },
-    {
-      "id": "monistrol-de-montserrat",
-      "nom": "Monistrol de Montserrat",
-      "dia": 2,
-      "km": 75,
+      "km": 33.5,
       "comarca": "Bages",
       "tipus": "municipi",
       "estat": "adherit",
@@ -229,7 +251,121 @@
       "aporta": [],
       "notes": null,
       "foto": null,
-      "frontissa": true
+      "gps": {
+        "lat": 41.824053,
+        "lng": 1.894565
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.824053,1.894565",
+      "hora_arribada": "12:12",
+      "hora_sortida": "12:22",
+      "donacio_slug": "sallent-x-la-diabetes"
+    },
+    {
+      "id": "navarcles",
+      "nom": "Navarcles",
+      "dia": 2,
+      "km": 43.8,
+      "comarca": "Bages",
+      "tipus": "municipi",
+      "estat": "adherit",
+      "embaixador": null,
+      "aporta": [],
+      "notes": null,
+      "foto": null,
+      "gps": {
+        "lat": 41.75171,
+        "lng": 1.903825
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.75171,1.903825",
+      "hora_arribada": "13:39",
+      "hora_sortida": "13:49",
+      "donacio_slug": "navarcles-x-la-diabetes"
+    },
+    {
+      "id": "manresa",
+      "nom": "Manresa",
+      "dia": 2,
+      "km": 56.1,
+      "comarca": "Bages",
+      "tipus": "municipi",
+      "estat": "interessat",
+      "embaixador": null,
+      "aporta": [],
+      "notes": null,
+      "foto": null,
+      "gps": {
+        "lat": 41.70092524712058,
+        "lng": 1.8685905736670065
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.70092524712058,1.8685905736670065",
+      "hora_arribada": "15:21",
+      "hora_sortida": "15:31",
+      "donacio_slug": "manresa-x-la-diabetes"
+    },
+    {
+      "id": "sant-vicenc-de-castellet",
+      "nom": "Sant Vicenç de Castellet",
+      "dia": 2,
+      "km": 64.3,
+      "comarca": "Bages",
+      "tipus": "municipi",
+      "estat": "interessat",
+      "embaixador": null,
+      "aporta": [],
+      "notes": null,
+      "foto": null,
+      "gps": {
+        "lat": 41.665659,
+        "lng": 1.864047
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.665659,1.864047",
+      "hora_arribada": "16:32",
+      "hora_sortida": "16:42",
+      "donacio_slug": "sant-vicen-de-castellet-x-la-diabetes"
+    },
+    {
+      "id": "el-borras",
+      "nom": "Castellbell i el Vilar",
+      "dia": 2,
+      "km": 72.2,
+      "comarca": "Bages",
+      "tipus": "municipi",
+      "municipi_principal": "Sant Vicenç de Castellet",
+      "estat": "pendent",
+      "embaixador": null,
+      "aporta": [],
+      "notes": null,
+      "foto": null,
+      "gps": {
+        "lat": 41.629017,
+        "lng": 1.86412
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.629017,1.86412",
+      "hora_arribada": "17:41",
+      "hora_sortida": "17:51",
+      "donacio_slug": "castellbell-i-el-vilar-x-la-diabetes"
+    },
+    {
+      "id": "monistrol-de-montserrat",
+      "nom": "Monistrol de Montserrat",
+      "dia": 2,
+      "km": 76.5,
+      "comarca": "Bages",
+      "tipus": "municipi",
+      "estat": "adherit",
+      "embaixador": null,
+      "aporta": [],
+      "notes": null,
+      "foto": null,
+      "frontissa": true,
+      "gps": {
+        "lat": 41.609762,
+        "lng": 1.842477
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.609762,1.842477",
+      "hora_arribada": "18:23",
+      "hora_sortida": null,
+      "donacio_slug": "monistrol-de-montserrat-x-la-diabetes"
     },
     {
       "id": "monistrol-de-montserrat-inici-etapa3",
@@ -244,76 +380,124 @@
       "notes": "Punt frontissa: mateix municipi que 'monistrol-de-montserrat', pero com a inici de l'etapa 3 (dia 3, km 0). No mostrar duplicat al desplegable de recollida.",
       "foto": null,
       "frontissa": true,
-      "exclos_recollida": true
-    },
-    {
-      "id": "esparreguera",
-      "nom": "Esparreguera",
-      "dia": 3,
-      "km": 11,
-      "comarca": "Baix Llobregat",
-      "tipus": "municipi",
-      "estat": "interessat",
-      "embaixador": null,
-      "aporta": [],
-      "notes": null,
-      "foto": null
+      "exclos_recollida": true,
+      "gps": {
+        "lat": 41.609762,
+        "lng": 1.842477
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.609762,1.842477",
+      "hora_arribada": null,
+      "hora_sortida": "07:00",
+      "donacio_slug": "monistrol-de-montserrat-x-la-diabetes"
     },
     {
       "id": "olesa-de-montserrat",
       "nom": "Olesa de Montserrat",
       "dia": 3,
-      "km": 14,
+      "km": 12.7,
       "comarca": "Baix Llobregat",
       "tipus": "municipi",
       "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 41.544304,
+        "lng": 1.891297
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.544304,1.891297",
+      "hora_arribada": "08:35",
+      "hora_sortida": "08:45",
+      "donacio_slug": "olesa-de-montserrat-x-la-diabetes"
     },
     {
-      "id": "martorell",
-      "nom": "Martorell",
+      "id": "esparreguera",
+      "nom": "Esparreguera",
       "dia": 3,
-      "km": 23,
-      "comarca": "Baix Llobregat",
-      "tipus": "municipi",
-      "estat": "adherit",
-      "embaixador": null,
-      "aporta": [],
-      "notes": null,
-      "foto": null
-    },
-    {
-      "id": "c",
-      "nom": "CastellBisbal",
-      "dia": 3,
-      "km": 26,
-      "comarca": "Vallés Occidental",
-      "tipus": "municipi",
-      "estat": "adherit",
-      "aporta": [],
-      "embaixador": null
-    },
-    {
-      "id": "sant-andreu-de-la-barca",
-      "nom": "Sant Andreu de la Barca",
-      "dia": 3,
-      "km": 30,
+      "km": 15.7,
       "comarca": "Baix Llobregat",
       "tipus": "municipi",
       "estat": "interessat",
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 41.538838,
+        "lng": 1.870566
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.538838,1.870566",
+      "hora_arribada": "09:07",
+      "hora_sortida": "09:17",
+      "donacio_slug": "esparreguera-x-la-diabetes"
+    },
+    {
+      "id": "martorell",
+      "nom": "Martorell",
+      "dia": 3,
+      "km": 30.7,
+      "comarca": "Baix Llobregat",
+      "tipus": "municipi",
+      "estat": "adherit",
+      "embaixador": null,
+      "aporta": [],
+      "notes": null,
+      "foto": null,
+      "gps": {
+        "lat": 41.475025,
+        "lng": 1.936812
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.475025,1.936812",
+      "hora_arribada": "11:09",
+      "hora_sortida": "11:19",
+      "donacio_slug": "martorell-x-la-diabetes"
+    },
+    {
+      "id": "castellbisbal",
+      "nom": "Castellbisbal",
+      "dia": 3,
+      "km": 32,
+      "comarca": "Vallés Occidental",
+      "tipus": "municipi",
+      "estat": "adherit",
+      "aporta": [],
+      "embaixador": null,
+      "exclos_recorregut": true,
+      "notes": {
+        "ca": "Col·labora amb el repte fent donatius, però el recorregut físic no hi passa.",
+        "es": "Colabora con el reto haciendo donativos, pero el recorrido físico no pasa por aquí.",
+        "en": "Contributes to the challenge through donations, but the physical route does not stop here."
+      },
+      "foto": null,
+      "donacio_slug": "castellbisbal-x-la-diabetes"
+    },
+    {
+      "id": "sant-andreu-de-la-barca",
+      "nom": "Sant Andreu de la Barca",
+      "dia": 3,
+      "km": 36.7,
+      "comarca": "Baix Llobregat",
+      "tipus": "municipi",
+      "estat": "interessat",
+      "embaixador": null,
+      "aporta": [],
+      "notes": null,
+      "foto": null,
+      "gps": {
+        "lat": 41.451545,
+        "lng": 1.973424
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.451545,1.973424",
+      "hora_arribada": "12:04",
+      "hora_sortida": "12:14",
+      "donacio_slug": "sant-andreu-de-la-barca-x-la-diabetes"
     },
     {
       "id": "palleja-sant-vicenc-dels-horts",
       "nom": "Pallejà",
       "dia": 3,
-      "km": 33,
+      "km": 41.1,
       "comarca": "Baix Llobregat",
       "tipus": "municipi",
       "compartit": true,
@@ -321,98 +505,159 @@
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 41.422548,
+        "lng": 2.000183
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.422548,2.000183",
+      "hora_arribada": "12:47",
+      "hora_sortida": "12:57",
+      "donacio_slug": "palleja-x-la-diabetes"
     },
     {
-      "id": "molins-de-rei",
+      "id": "sant-vicenc-dels-horts",
       "nom": "Sant Vicenç dels Horts",
       "dia": 3,
-      "km": 38,
+      "km": 45.1,
       "comarca": "Baix Llobregat",
       "tipus": "municipi",
       "estat": "interessat",
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
-    },
-    {
-      "id": "sant-joan-despi",
-      "nom": "Sant Boi de Llobregat",
-      "dia": 3,
-      "km": 45,
-      "comarca": "Baix Llobregat",
-      "tipus": "municipi",
-      "estat": "adherit",
-      "embaixador": null,
-      "aporta": [],
-      "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 41.396602,
+        "lng": 2.01156
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.396602,2.01156",
+      "hora_arribada": "13:27",
+      "hora_sortida": "13:37",
+      "donacio_slug": "sant-vicen-dels-horts-x-la-diabetes"
     },
     {
       "id": "sant-boi-de-llobregat",
-      "nom": "Sant Joan Despí",
+      "nom": "Sant Boi de Llobregat",
       "dia": 3,
-      "km": 46,
+      "km": 52.5,
       "comarca": "Baix Llobregat",
       "tipus": "municipi",
       "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 41.347414,
+        "lng": 2.043047
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.347414,2.043047",
+      "hora_arribada": "14:32",
+      "hora_sortida": "14:42",
+      "donacio_slug": "sant-boi-x-la-diabetes"
+    },
+    {
+      "id": "sant-joan-despi",
+      "nom": "Sant Joan Despí",
+      "dia": 3,
+      "km": 53.5,
+      "comarca": "Baix Llobregat",
+      "tipus": "municipi",
+      "estat": "adherit",
+      "embaixador": null,
+      "aporta": [],
+      "notes": null,
+      "foto": null,
+      "gps": {
+        "lat": 41.349679,
+        "lng": 2.04672
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.349679,2.04672",
+      "hora_arribada": "14:50",
+      "hora_sortida": "15:00",
+      "donacio_slug": "sant-joan-x-la-diabetes"
     },
     {
       "id": "cornella-de-llobregat",
       "nom": "Cornellà de Llobregat",
       "dia": 3,
-      "km": 49,
+      "km": 55.8,
       "comarca": "Baix Llobregat",
       "tipus": "municipi",
       "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 41.348639,
+        "lng": 2.069744
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.348639,2.069744",
+      "hora_arribada": "15:27",
+      "hora_sortida": "15:37",
+      "donacio_slug": "cornella-x-la-diabetes"
     },
     {
       "id": "l-hospitalet-de-llobregat",
       "nom": "L'Hospitalet de Llobregat",
       "dia": 3,
-      "km": 53,
+      "km": 59.9,
       "comarca": "Barcelonès",
       "tipus": "municipi",
       "estat": "interessat",
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 41.343675,
+        "lng": 2.10307
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.343675,2.10307",
+      "hora_arribada": "15:58",
+      "hora_sortida": "16:08",
+      "donacio_slug": "hospitalet-x-la-diabetes"
     },
     {
       "id": "el-prat-de-llobregat",
       "nom": "El Prat de Llobregat",
       "dia": 3,
-      "km": 58,
+      "km": 64.7,
       "comarca": "Baix Llobregat",
-      "tipus": "municipi",
-      "estat": "adherit",
+      "tipus": "punt",
+      "estat": "pendent",
       "embaixador": null,
       "aporta": [],
-      "notes": null,
-      "foto": null
+      "notes": {
+        "ca": "Punt intern només per calcular la Caminada de Cloenda (anada i tornada, 4 km). No es mostra enlloc: el punt públic és 'Desembocadura (el Prat)'.",
+        "es": "Punto interno solo para calcular la Caminada de Cloenda (ida y vuelta, 4 km). No se muestra en ningún sitio: el punto público es 'Desembocadura (el Prat)'.",
+        "en": "Internal point only used to calculate the closing there-and-back walk (4 km). Not shown anywhere: the public point is 'Desembocadura (el Prat)'."
+      },
+      "foto": null,
+      "exclos_recorregut": true
     },
     {
       "id": "desembocadura-del-llobregat",
-      "nom": "Desembocadura del Llobregat",
+      "nom": "Desembocadura (el Prat)",
       "dia": 3,
-      "km": 60,
+      "km": 66.7,
       "comarca": "Baix Llobregat",
       "tipus": "punt",
       "estat": "punt-etapa",
       "embaixador": null,
       "aporta": [],
       "notes": null,
-      "foto": null
+      "foto": null,
+      "gps": {
+        "lat": 41.294221,
+        "lng": 2.119009
+      },
+      "google_maps_url": "https://www.google.com/maps?q=41.294221,2.119009",
+      "hora_arribada": "17:00",
+      "hora_sortida": null,
+      "donacio_slug": "el-prat-x-la-diabetes"
     }
   ]
 }

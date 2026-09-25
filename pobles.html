@@ -1306,6 +1306,7 @@
       <a href="el-repte.html"><span lang="ca">El Repte</span><span lang="es">El Reto</span><span lang="en">The Challenge</span></a>
       <a href="persones.html"><span lang="ca">Persones</span><span lang="es">Personas</span><span lang="en">People</span></a>
       <a href="pobles.html" class="is-current"><span lang="ca">Pobles</span><span lang="es">Pueblos</span><span lang="en">Towns</span></a>
+      <a href="recorregut.html"><span lang="ca">Recorregut</span><span lang="es">Recorrido</span><span lang="en">Route</span></a>
       <a href="patrocina.html"><span lang="ca">Patrocina</span><span lang="es">Patrocina</span><span lang="en">Sponsor</span></a>
       <div class="lang-toggle" role="group" aria-label="Llengua">
         <button data-set-lang="ca" class="active" type="button">CA</button>
@@ -1855,7 +1856,7 @@
         </h4>
         <ul>
           <li><a href="index.html#repte"><span lang="ca">El repte</span><span lang="es">El reto</span><span lang="en">The challenge</span></a></li>
-          <li><a href="el-repte.html#recorregut"><span lang="ca">Recorregut</span><span lang="es">Recorrido</span><span lang="en">Route</span></a></li>
+          <li><a href="recorregut.html"><span lang="ca">Recorregut</span><span lang="es">Recorrido</span><span lang="en">Route</span></a></li>
           <li><a href="el-repte.html#corredor"><span lang="ca">Impulsor</span><span lang="es">Impulsor</span><span lang="en">Founder</span></a></li>
           <li><a href="index.html#causa"><span lang="ca">La causa</span><span lang="es">La causa</span><span lang="en">The cause</span></a></li>
         </ul>
@@ -2098,6 +2099,10 @@
         <div class="poble-info">
           <h3 class="poble-nom">${escapeHTML(p.nom)}</h3>
           ${subHTML}
+          ${p.google_maps_url ? `<a href="${escapeHTML(p.google_maps_url)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:.3rem;font-size:.8rem;font-weight:800;color:var(--blau-diabetis);margin-top:.35rem;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span lang="ca">Veure el punt a Google Maps</span><span lang="es">Ver el punto en Google Maps</span><span lang="en">View point on Google Maps</span>
+          </a>` : ''}
         </div>
         <span class="poble-estat poble-estat--${estat.cls}">
           <span lang="ca">${estat.ca}</span>
@@ -2128,7 +2133,10 @@
       return r.json();
     })
     .then(data => {
-      const pobles = (data && Array.isArray(data.pobles)) ? data.pobles : [];
+      // exclos_recorregut = punts interns que no formen part del recorregut
+      // públic (col·laboren en donatius però no hi ha parada física, o són
+      // punts auxiliars de càlcul com el de la Caminada de Cloenda).
+      const pobles = (data && Array.isArray(data.pobles) ? data.pobles : []).filter(p => !p.exclos_recorregut);
       // Agrupem per dia
       const grupsDia = { 1: [], 2: [], 3: [] };
       pobles.forEach(p => {
