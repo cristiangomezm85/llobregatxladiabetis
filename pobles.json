@@ -161,7 +161,7 @@
       "km": 0,
       "comarca": "Berguedà",
       "tipus": "municipi",
-      "estat": "interessat",
+      "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": "Punt frontissa: mateix municipi que 'gironella', pero com a inici de l'etapa 2 (dia 2, km 0). No mostrar duplicat al desplegable de recollida.",
@@ -175,7 +175,8 @@
       "google_maps_url": "https://www.google.com/maps?q=42.033703,1.882563",
       "hora_arribada": null,
       "hora_sortida": "07:30",
-      "donacio_slug": "gironella-x-la-diabetes"
+      "donacio_slug": "gironella-x-la-diabetes",
+      "exclos_recorregut": false
     },
     {
       "id": "puig-reig",
