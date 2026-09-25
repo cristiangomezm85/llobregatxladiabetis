@@ -169,6 +169,13 @@ function normaliseItem(type, item) {
     clean.estat = clean.estat || 'pendent';
     if (!Array.isArray(clean.aporta)) clean.aporta = [];
     if (!clean.embaixador || !clean.embaixador.nom) clean.embaixador = null;
+    // gps només es guarda si porta les dues coordenades (si no, un punt a
+    // mig omplir trencaria qualsevol mapa que el llegeixi després).
+    if (clean.gps && clean.gps.lat !== undefined && clean.gps.lng !== undefined) {
+      clean.gps = { lat: Number(clean.gps.lat), lng: Number(clean.gps.lng) };
+    } else {
+      delete clean.gps;
+    }
   }
   if (type === 'patrocinadors') {
     clean.nom = clean.nom || 'Patrocinador sense nom';
