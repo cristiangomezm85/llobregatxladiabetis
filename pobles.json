@@ -611,7 +611,7 @@
       "km": 59.9,
       "comarca": "Barcelonès",
       "tipus": "municipi",
-      "estat": "interessat",
+      "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
@@ -623,7 +623,8 @@
       "google_maps_url": "https://www.google.com/maps?q=41.343675,2.10307",
       "hora_arribada": "15:58",
       "hora_sortida": "16:08",
-      "donacio_slug": "hospitalet-x-la-diabetes"
+      "donacio_slug": "hospitalet-x-la-diabetes",
+      "exclos_recorregut": false
     },
     {
       "id": "el-prat-de-llobregat",
