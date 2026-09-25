@@ -324,12 +324,26 @@ function construirContingut(ordre, orderId, idioma) {
 }
 
 async function enviarEmailConfirmacio(ordre, orderId) {
+  // NOTA DE DIAGNÒSTIC (temporal): logs explícits a cada pas perquè, mirant
+  // els logs de la funció a Netlify, es vegi sense ambigüitat si s'ha
+  // arribat a trucar Resend o s'ha aturat abans (i per quin motiu). Un cop
+  // confirmat que els correus arriben bé, es poden treure aquests
+  // console.log (deixant els console.error, que ja hi eren).
   const apiKey = process.env.RESEND_API_KEY;
   const fromEmail = process.env.RESEND_FROM_EMAIL;
-  if (!apiKey || !fromEmail) return; // opcional, no bloqueja res si no està configurat
+  console.log(
+    `[RESEND] comanda=${orderId} RESEND_API_KEY=${apiKey ? "definida (" + apiKey.slice(0, 6) + "…)" : "NO DEFINIDA"} RESEND_FROM_EMAIL=${fromEmail || "NO DEFINIDA"}`
+  );
+  if (!apiKey || !fromEmail) {
+    console.log(`[RESEND] comanda=${orderId} -> S'OMET l'enviament: falta RESEND_API_KEY o RESEND_FROM_EMAIL`);
+    return; // opcional, no bloqueja res si no està configurat
+  }
 
   const email = ordre.email_contacte;
-  if (!email) return;
+  if (!email) {
+    console.log(`[RESEND] comanda=${orderId} -> S'OMET l'enviament: la comanda no té email_contacte`);
+    return;
+  }
 
   const payload = ordre.payload || {};
   const idiomaRaw = (payload.idioma || "CA").toUpperCase();
@@ -338,6 +352,8 @@ async function enviarEmailConfirmacio(ordre, orderId) {
   const { subject, html, text } = construirContingut(ordre, orderId, idioma);
   const fromName = process.env.RESEND_FROM_NAME || "Repte Llobregat x la Diabetis";
   const nomDesti = [payload.nom, payload.cognoms].filter(Boolean).join(" ");
+
+  console.log(`[RESEND] comanda=${orderId} -> Enviant a ${email} (idioma ${idioma}) des de ${fromEmail}...`);
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -351,8 +367,10 @@ async function enviarEmailConfirmacio(ordre, orderId) {
     }),
   });
 
+  const cos = await res.text().catch(() => "");
+  console.log(`[RESEND] comanda=${orderId} -> Resend ha respost status=${res.status} body=${cos.slice(0, 300)}`);
+
   if (!res.ok) {
-    const cos = await res.text().catch(() => "");
     throw new Error(`Resend ha respost ${res.status}: ${cos.slice(0, 300)}`);
   }
 }
