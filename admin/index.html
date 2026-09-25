@@ -407,6 +407,25 @@
               <label><input type="checkbox" name="aporta" value="aportacio"> Aportación económica</label>
               <label><input type="checkbox" name="aporta" value="altres"> Otros</label>
             </fieldset>
+            <details open>
+              <summary>Horario y ubicación (recorregut)</summary>
+              <div class="form-grid two">
+                <label>Hora llegada<input name="hora_arribada" type="time"></label>
+                <label>Hora salida<input name="hora_sortida" type="time"></label>
+              </div>
+              <div class="form-grid three">
+                <label>Latitud<input name="gps.lat" type="number" step="0.000001" placeholder="41.544304"></label>
+                <label>Longitud<input name="gps.lng" type="number" step="0.000001" placeholder="1.891297"></label>
+                <label>URL Google Maps<input name="google_maps_url" type="url" placeholder="https://maps.google.com/..."></label>
+              </div>
+              <label class="checkbox-row"><input type="checkbox" name="exclos_recorregut"> No es parada física del recorregut (solo donativos)</label>
+              <p class="help-text">Las horas son estimadas y provisionales — se muestran así en la web pública.</p>
+            </details>
+            <details>
+              <summary>Donativos</summary>
+              <label>Slug del reto en dona/retos.json<input name="donacio_slug" placeholder="p.ex. olesa-de-montserrat-x-la-diabetes"></label>
+              <p class="help-text">Relaciona este pueblo con su reto de Mi Grano de Arena, para poder mostrar el importe recaudado por municipio (p. ej. en el track en directo). No modifica dona/retos.json, que sigue sincronizándose solo desde la plataforma externa.</p>
+            </details>
             <details>
               <summary>Notas públicas</summary>
               <div class="form-grid three">

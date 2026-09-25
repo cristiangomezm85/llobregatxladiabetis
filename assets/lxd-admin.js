@@ -551,6 +551,14 @@
       item.dia = Number(item.dia || 1);
       item.km = Number(item.km || 0);
       if (!item.embaixador || !item.embaixador.nom) item.embaixador = null;
+      // Les coordenades només es guarden senceres (lat+lng): una sola
+      // banda no serveix per situar el punt al mapa, i és més fàcil de
+      // detectar aquí que no pas deixar-ho a mig omplir al JSON.
+      if (item.gps && item.gps.lat !== '' && item.gps.lng !== '') {
+        item.gps = { lat: Number(item.gps.lat), lng: Number(item.gps.lng) };
+      } else {
+        delete item.gps;
+      }
     }
     if (type === 'patrocinadors' && item.km !== undefined && item.km !== '') item.km = Number(item.km);
     if (!item.id) item.id = slugify(item.nom || item.organitzacio || item.municipi || 'item');
