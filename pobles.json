@@ -650,7 +650,7 @@
       "km": 66.7,
       "comarca": "Baix Llobregat",
       "tipus": "punt",
-      "estat": "punt-etapa",
+      "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
@@ -662,7 +662,8 @@
       "google_maps_url": "https://www.google.com/maps?q=41.294221,2.119009",
       "hora_arribada": "17:00",
       "hora_sortida": null,
-      "donacio_slug": "el-prat-x-la-diabetes"
+      "donacio_slug": "el-prat-x-la-diabetes",
+      "exclos_recorregut": false
     }
   ]
 }
