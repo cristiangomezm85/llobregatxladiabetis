@@ -482,7 +482,7 @@
       "km": 36.7,
       "comarca": "Baix Llobregat",
       "tipus": "municipi",
-      "estat": "interessat",
+      "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
@@ -494,7 +494,8 @@
       "google_maps_url": "https://www.google.com/maps?q=41.451545,1.973424",
       "hora_arribada": "12:04",
       "hora_sortida": "12:14",
-      "donacio_slug": "sant-andreu-de-la-barca-x-la-diabetes"
+      "donacio_slug": "sant-andreu-de-la-barca-x-la-diabetes",
+      "exclos_recorregut": false
     },
     {
       "id": "palleja-sant-vicenc-dels-horts",
