@@ -9,6 +9,7 @@
 const Stripe = require("stripe");
 const { obtenirOrdre, actualitzarOrdre, marcarEmailPagat } = require("./lib/store");
 const { notificarMailerLite } = require("./lib/mailerlite");
+const { enviarEmailConfirmacio } = require("./lib/confirmacio-email");
 
 exports.handler = async (event) => {
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
@@ -68,6 +69,15 @@ exports.handler = async (event) => {
     await notificarMailerLite(ordre, orderId);
   } catch (e) {
     console.error("Error notificant MailerLite:", e);
+  }
+  // Email de confirmació per una via transaccional (MailerSend), a banda
+  // de MailerLite: dispara sempre, sense el límit d'1 email/24h per
+  // subscriptor que té l'automatització de MailerLite. Veure
+  // lib/confirmacio-email.js.
+  try {
+    await enviarEmailConfirmacio(ordre, orderId);
+  } catch (e) {
+    console.error("Error enviant l'email de confirmació:", e);
   }
 
   return { statusCode: 200, body: "OK" };
