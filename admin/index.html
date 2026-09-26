@@ -647,8 +647,17 @@ ADMIN_TOKEN=...</code></pre>
         let minKm=-Infinity,maxKm=Infinity;
         const startId=String(p.tram_inici||'');
         const endId=String(p.tram_final||'');
-        if(day===startDay&&startId){const a=municipis.find(x=>String(x.id)===startId);if(a)minKm=Number(a.km);}
-        if(day===endDay&&endId){const b=municipis.find(x=>String(x.id)===endId);if(b)maxKm=Number(b.km);}
+        // OJO: tram_inici/tram_final pueden ser puntos internos con
+        // tipus:"punt" (p.ej. "el-prat-de-llobregat"/"desembocadura-del-llobregat",
+        // los límites de la Caminada de Cloenda) que quedan FUERA de
+        // "municipis" (filtrado a solo tipus==='municipi'). Buscarlos ahí
+        // siempre fallaba, dejando minKm/maxKm sin restringir y sumando
+        // +1 a TODOS los municipios del día para cada inscrito de la
+        // Cloenda (el primero del día, Monistrol de Montserrat en la
+        // etapa 3, era el más visible). Por eso aquí se busca en la lista
+        // completa "pobles", no en "municipis".
+        if(day===startDay&&startId){const a=pobles.find(x=>String(x.id)===startId);if(a)minKm=Number(a.km);}
+        if(day===endDay&&endId){const b=pobles.find(x=>String(x.id)===endId);if(b)maxKm=Number(b.km);}
         (byDay[day]||[]).forEach(m=>{
           const km=Number(m.km); const name=String(m.municipi_principal||m.nom||'').trim();
           if(name&&km>=minKm&&km<=maxKm&&!seen.has(name)){seen.add(name);out[name]=(out[name]||0)+1;}
