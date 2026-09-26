@@ -2,6 +2,38 @@
   "actualitzat": "2026-09-25",
   "ordre": "riu",
   "comentari": "Llistat de pobles i punts del recorregut, ordenats pel pas del riu. Estat: 'pendent' (punt de pas), 'interessat' (tramitant), 'adherit' (oficial), 'punt-etapa' (inici/fi d'etapa). Els municipis 'frontissa' (Gironella, Monistrol de Montserrat) tenen dues entrades: una com a final d'una etapa i una altra com a inici de la seguent, per evitar que el selector de tram compti una etapa de mes quan el tram comenca just al punt de canvi. Camps nous (setembre 2026): gps {lat,lng} i google_maps_url (ubicacio del punt de trobada), hora_arribada / hora_sortida (estimades i provisionals, segons el planning oficial de la ruta), i donacio_slug (relaciona aquest poble amb el seu repte a dona/retos.json per a qui vulgui mostrar l'import recaptat per municipi). exclos_recorregut=true amaga el punt dels desplegables de tram/recollida de la inscripcio (p. ex. Castellbisbal, que col·labora amb donatius pero no es parada fisica del recorregut).",
+  "cloenda": {
+    "comentari": "Caminada de Cloenda del diumenge 18 d'octubre a El Prat: no es una etapa mes (no te 'dia' ni compta per als desplegables de tram), es un acte propi al final de l'etapa 3. wikiloc_url i gpx son editables aqui mateix -- aquest fitxer es l'unica font que llegeix recorregut.html per pintar aquesta seccio. 'punts' porta les coordenades gps del pàrquing Cal Tet i del Mirador del Semàfor: els marcadors del mapa surten SEMPRE d'aqui (com als pobles normals), no del gpx -- aixi, si el fetch del gpx falla (xarxa lenta, fitxer no trobat), els dos punts es veuen igualment i nomes es perd la linia blava del traçat.",
+    "titol": { "ca": "Caminada de Cloenda", "es": "Caminata de Clausura", "en": "Closing Walk" },
+    "data": "2026-10-18",
+    "distancia_km": 4.3,
+    "gpx": "gpx/caminada-cloenda-el-prat.gpx",
+    "wikiloc_url": "https://es.wikiloc.com/rutas-senderismo/llxd-corresolidaris-caminada-cloenda-el-prat-284645977",
+    "punt_trobada": { "ca": "Pàrquing Cal Tet, el Prat de Llobregat", "es": "Aparcamiento Cal Tet, el Prat de Llobregat", "en": "Cal Tet car park, el Prat de Llobregat" },
+    "google_maps_url": "https://www.google.com/maps/search/?api=1&query=Parking+Cal+Tet+El+Prat+de+Llobregat",
+    "punts": [
+      {
+        "id": "parking-cal-tet",
+        "rol": "inici-final",
+        "nom": { "ca": "Pàrquing Cal Tet", "es": "Parking Cal Tet", "en": "Cal Tet car park" },
+        "gps": { "lat": 41.308809, "lng": 2.112296 }
+      },
+      {
+        "id": "mirador-semafor",
+        "rol": "meta",
+        "nom": { "ca": "Mirador del Semàfor (meta del repte)", "es": "Mirador del Semáforo (meta del reto)", "en": "Mirador del Semàfor (challenge finish line)" },
+        "gps": { "lat": 41.294925, "lng": 2.120039 }
+      }
+    ],
+    "horaris": [
+      { "hora": "16:00", "ca": "Trobada al pàrquing Cal Tet", "es": "Encuentro en el parking Cal Tet", "en": "Meeting point at the Cal Tet car park" },
+      { "hora": "16:15", "ca": "Inici de la cloenda i la caminada", "es": "Inicio de la clausura y la caminata", "en": "Closing ceremony and walk begin" },
+      { "hora": "16:45", "ca": "La caminada arriba al Mirador del Semàfor (meta del repte)", "es": "La caminata llega al Mirador del Semáforo (meta del reto)", "en": "The walk reaches Mirador del Semàfor (challenge finish line)" },
+      { "hora": "17:00", "ca": "Arribada de la marxa general al Mirador del Semàfor", "es": "Llegada de la marcha general al Mirador del Semáforo", "en": "Main march arrives at Mirador del Semàfor" },
+      { "hora": "17:30", "ca": "Tornada de la caminada al pàrquing Cal Tet", "es": "Vuelta de la caminata al parking Cal Tet", "en": "Walk returns to the Cal Tet car park" },
+      { "hora": "19:00", "ca": "Final de la cloenda", "es": "Final de la clausura", "en": "Closing ceremony ends" }
+    ]
+  },
   "pobles": [
     {
       "id": "castellar-de-n-hug",
@@ -138,7 +170,7 @@
       "km": 60.3,
       "comarca": "Berguedà",
       "tipus": "municipi",
-      "estat": "adherit",
+      "estat": "interessat",
       "embaixador": null,
       "aporta": [],
       "notes": null,
@@ -151,8 +183,7 @@
       "google_maps_url": "https://www.google.com/maps?q=42.033703,1.882563",
       "hora_arribada": "18:00",
       "hora_sortida": null,
-      "donacio_slug": "gironella-x-la-diabetes",
-      "exclos_recorregut": false
+      "donacio_slug": "gironella-x-la-diabetes"
     },
     {
       "id": "gironella-inici-etapa2",
@@ -161,7 +192,7 @@
       "km": 0,
       "comarca": "Berguedà",
       "tipus": "municipi",
-      "estat": "adherit",
+      "estat": "interessat",
       "embaixador": null,
       "aporta": [],
       "notes": "Punt frontissa: mateix municipi que 'gironella', pero com a inici de l'etapa 2 (dia 2, km 0). No mostrar duplicat al desplegable de recollida.",
@@ -175,8 +206,7 @@
       "google_maps_url": "https://www.google.com/maps?q=42.033703,1.882563",
       "hora_arribada": null,
       "hora_sortida": "07:30",
-      "donacio_slug": "gironella-x-la-diabetes",
-      "exclos_recorregut": false
+      "donacio_slug": "gironella-x-la-diabetes"
     },
     {
       "id": "puig-reig",
@@ -311,7 +341,7 @@
       "km": 64.3,
       "comarca": "Bages",
       "tipus": "municipi",
-      "estat": "adherit",
+      "estat": "interessat",
       "embaixador": null,
       "aporta": [],
       "notes": null,
@@ -323,8 +353,7 @@
       "google_maps_url": "https://www.google.com/maps?q=41.665659,1.864047",
       "hora_arribada": "16:32",
       "hora_sortida": "16:42",
-      "donacio_slug": "sant-vicen-de-castellet-x-la-diabetes",
-      "exclos_recorregut": false
+      "donacio_slug": "sant-vicen-de-castellet-x-la-diabetes"
     },
     {
       "id": "el-borras",
@@ -482,7 +511,7 @@
       "km": 36.7,
       "comarca": "Baix Llobregat",
       "tipus": "municipi",
-      "estat": "adherit",
+      "estat": "interessat",
       "embaixador": null,
       "aporta": [],
       "notes": null,
@@ -494,8 +523,7 @@
       "google_maps_url": "https://www.google.com/maps?q=41.451545,1.973424",
       "hora_arribada": "12:04",
       "hora_sortida": "12:14",
-      "donacio_slug": "sant-andreu-de-la-barca-x-la-diabetes",
-      "exclos_recorregut": false
+      "donacio_slug": "sant-andreu-de-la-barca-x-la-diabetes"
     },
     {
       "id": "palleja-sant-vicenc-dels-horts",
@@ -526,7 +554,7 @@
       "km": 45.1,
       "comarca": "Baix Llobregat",
       "tipus": "municipi",
-      "estat": "adherit",
+      "estat": "interessat",
       "embaixador": null,
       "aporta": [],
       "notes": null,
@@ -538,8 +566,7 @@
       "google_maps_url": "https://www.google.com/maps?q=41.396602,2.01156",
       "hora_arribada": "13:27",
       "hora_sortida": "13:37",
-      "donacio_slug": "sant-vicen-dels-horts-x-la-diabetes",
-      "exclos_recorregut": false
+      "donacio_slug": "sant-vicen-dels-horts-x-la-diabetes"
     },
     {
       "id": "sant-boi-de-llobregat",
@@ -611,7 +638,7 @@
       "km": 59.9,
       "comarca": "Barcelonès",
       "tipus": "municipi",
-      "estat": "adherit",
+      "estat": "interessat",
       "embaixador": null,
       "aporta": [],
       "notes": null,
@@ -623,8 +650,7 @@
       "google_maps_url": "https://www.google.com/maps?q=41.343675,2.10307",
       "hora_arribada": "15:58",
       "hora_sortida": "16:08",
-      "donacio_slug": "hospitalet-x-la-diabetes",
-      "exclos_recorregut": false
+      "donacio_slug": "hospitalet-x-la-diabetes"
     },
     {
       "id": "el-prat-de-llobregat",
@@ -651,7 +677,7 @@
       "km": 66.7,
       "comarca": "Baix Llobregat",
       "tipus": "punt",
-      "estat": "adherit",
+      "estat": "punt-etapa",
       "embaixador": null,
       "aporta": [],
       "notes": null,
@@ -663,8 +689,7 @@
       "google_maps_url": "https://www.google.com/maps?q=41.294221,2.119009",
       "hora_arribada": "17:00",
       "hora_sortida": null,
-      "donacio_slug": "el-prat-x-la-diabetes",
-      "exclos_recorregut": false
+      "donacio_slug": "el-prat-x-la-diabetes"
     }
   ]
 }
