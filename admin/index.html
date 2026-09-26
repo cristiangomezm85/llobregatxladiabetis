@@ -621,7 +621,14 @@ ADMIN_TOKEN=...</code></pre>
   // siempre el orden geográfico de Castellar de n'Hug a El Prat, no el
   // volumen de gente.
   function buildRouteOrder(pobles){
-    const municipis=pobles.filter(p=>p&&(!p.tipus || p.tipus==='municipi'));
+    // Els "punt" normalment son marcadors interns (mai una barra pròpia),
+    // pero "desembocadura-del-llobregat" es l'excepcio: es el final PUBLIC
+    // i real del recorregut (on arriben tant els corredors/ciclistes del
+    // tram complet com els caminants de la Cloenda), no nomes un punt
+    // auxiliar de calcul -- per aixo aqui SI compta com a barra, a
+    // diferencia de "el-prat-de-llobregat" (exclos_recorregut:true, nomes
+    // fa servir per calcular el tram de la Cloenda i mai s'ha de veure).
+    const municipis=pobles.filter(p=>p&&(!p.tipus || p.tipus==='municipi' || (p.tipus==='punt' && !p.exclos_recorregut)));
     const byDay={1:[],2:[],3:[]};
     municipis.forEach(p=>{const d=Number(p.dia);if(byDay[d])byDay[d].push(p);});
     Object.values(byDay).forEach(a=>a.sort((x,y)=>Number(x.km||0)-Number(y.km||0)));
