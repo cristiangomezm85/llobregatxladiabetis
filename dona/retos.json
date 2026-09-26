@@ -5,8 +5,8 @@
     "es": "https://www.migranodearena.org/reto/llobregat-x-la-diabetes",
     "en": "https://www.migranodearena.org/en/cause/llobregat-x-la-diabetes"
   },
-  "totalRecaudado": 1449,
-  "actualizado": "2026-09-26T13:30:54.081Z",
+  "totalRecaudado": 1479,
+  "actualizado": "2026-09-26T13:45:40.126Z",
   "retos": [
     {
       "slug": "astolfo-x-la-diabetes",
@@ -59,7 +59,7 @@
       "tipo": "heroe",
       "foto": "fotos/PKsTEAM.jpeg",
       "url": "https://www.migranodearena.org/reto/pk-s-team-x-la-diabetes",
-      "recaudado": 680,
+      "recaudado": 690,
       "diasRestantes": 35
     },
     {
@@ -368,7 +368,7 @@
       "tipo": "poble",
       "foto": "fotos/Sant Joan Despí.png",
       "url": "https://www.migranodearena.org/reto/sant-joan-x-la-diabetes",
-      "recaudado": 35,
+      "recaudado": 45,
       "diasRestantes": 35
     },
     {
@@ -386,7 +386,7 @@
       "tipo": "poble",
       "foto": "fotos/Hospitalet de Llobregat.png",
       "url": "https://www.migranodearena.org/reto/hospitalet-x-la-diabetes",
-      "recaudado": 50,
+      "recaudado": 60,
       "diasRestantes": 35
     },
     {
