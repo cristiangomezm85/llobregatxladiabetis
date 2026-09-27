@@ -479,7 +479,17 @@
   .donut-legend-label { color: var(--tinta); flex: 1; line-height: 1.3; }
   .donut-legend-value { font-weight: 700; color: var(--blau-llobregat); white-space: nowrap; }
   .donut-legend-pct { color: var(--gris); font-size: .78rem; white-space: nowrap; min-width: 3ch; text-align: right; }
-  @media (max-width: 480px) { .donut-wrap { justify-content: center; } .donut-legend { min-width: 0; width: 100%; } }
+  @media (max-width: 560px) {
+    .donut-wrap { justify-content: center; }
+    /* "width: 100%" per si sol no basta: quan .donut-legend te flex-basis 0%
+       (heretat de "flex: 1" a la regla base), el "width" es ignora en l'eix
+       principal d'un flex item i la llegenda es queda comprimida a l'espai
+       que li sobra al costat del donut (168px fixos), fent que les files
+       (nom + valor + %) desbordin la targeta per la dreta en mobil. Forçant
+       flex-basis a 100% amb flex-wrap:wrap del contenidor, la llegenda salta
+       a la seva pròpia fila i ja pot fer servir tot l'ample disponible. */
+    .donut-legend { min-width: 0; flex: 1 1 100%; width: 100%; }
+  }
 
   /* ============================================
      INSCRITS — columnes (Dia)
@@ -562,6 +572,28 @@
       content: attr(data-label); min-width: 92px; flex-shrink: 0; color: var(--gris);
       font-weight: 700; font-size: .68rem; text-transform: uppercase; letter-spacing: .04em;
     }
+  }
+
+  /* ============================================
+     INSCRITS — paginació del llistat
+     ============================================ */
+  .insc-pagination {
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+    margin-top: 1.2rem; flex-wrap: wrap;
+  }
+  .insc-page-btn {
+    display: inline-flex; align-items: center; gap: .35rem;
+    padding: .5rem .9rem; border-radius: 99px; border: 1px solid var(--linia);
+    background: #fff; color: var(--blau-llobregat); font-weight: 700; font-size: .85rem;
+    cursor: pointer; transition: background .15s ease, border-color .15s ease;
+  }
+  .insc-page-btn:hover:not(:disabled) { background: rgba(30,114,212,0.06); border-color: var(--blau-diabetis); }
+  .insc-page-btn:disabled { color: var(--gris-clar); cursor: not-allowed; opacity: .6; }
+  .insc-page-status { color: var(--gris); font-size: .85rem; white-space: nowrap; }
+  @media (max-width: 480px) {
+    .insc-pagination { gap: .6rem; }
+    .insc-page-btn { padding: .5rem .75rem; font-size: .8rem; }
+    .insc-page-status { width: 100%; text-align: center; order: -1; }
   }
 </style>
 </head>
@@ -666,9 +698,9 @@
       <div class="insc-card" id="cardSexe">
         <h3><span lang="ca">Sexe</span><span lang="es">Sexo</span><span lang="en">Gender</span></h3>
         <p class="insc-card-note">
-          <span lang="ca">Només inclou inscripcions caminant, corrent o en bici (és quan es demana aquesta dada).</span>
-          <span lang="es">Solo incluye inscripciones caminando, corriendo o en bici (es cuando se pide este dato).</span>
-          <span lang="en">Only includes walking, running or cycling registrations (that's when this is asked).</span>
+          <span lang="ca">Aquesta dada només es demana a caminant, corrent i bici; la resta d'inscripcions compten com a "Desconegut".</span>
+          <span lang="es">Este dato solo se pide en caminando, corriendo y bici; el resto de inscripciones cuentan como "Desconocido".</span>
+          <span lang="en">This is only asked for walking, running and cycling; other registrations count as "Unknown".</span>
         </p>
         <div class="donut-wrap">
           <div class="donut-chart" id="donutSexe"></div>
@@ -789,6 +821,16 @@
           <tr><td colspan="6" style="color:var(--gris);"><span lang="ca">Carregant…</span><span lang="es">Cargando…</span><span lang="en">Loading…</span></td></tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="insc-pagination" id="inscPagination" hidden>
+      <button type="button" class="insc-page-btn" id="inscPagePrev">
+        <span lang="ca">‹ Anterior</span><span lang="es">‹ Anterior</span><span lang="en">‹ Previous</span>
+      </button>
+      <span class="insc-page-status" id="inscPageStatus"></span>
+      <button type="button" class="insc-page-btn" id="inscPageNext">
+        <span lang="ca">Següent ›</span><span lang="es">Siguiente ›</span><span lang="en">Next ›</span>
+      </button>
     </div>
   </section>
 
@@ -976,6 +1018,7 @@
       home: { ca: 'Home', es: 'Hombre', en: 'Man' },
       dona: { ca: 'Dona', es: 'Mujer', en: 'Woman' },
       altre: { ca: 'Altre', es: 'Otro', en: 'Other' },
+      desconegut: { ca: 'Desconegut', es: 'Desconocido', en: 'Unknown' },
     },
     relacio: {
       tinc: { ca: 'Tinc diabetis tipus 1', es: 'Tengo diabetes tipo 1', en: 'I have type 1 diabetes' },
@@ -1008,7 +1051,7 @@
   // miri com es miri ordenat -- mai es recolora per rànquing.
   const BRAND_HUES = ['#1E72D4', '#FF6B47', '#5AC0E6', '#2FAE7A', '#A855F7'];
   const COLOR_MAPS = {
-    sexe: { home: BRAND_HUES[0], dona: BRAND_HUES[1], altre: BRAND_HUES[2] },
+    sexe: { home: BRAND_HUES[0], dona: BRAND_HUES[1], altre: BRAND_HUES[2], desconegut: '#98A2B3' },
     relacio: { tinc: BRAND_HUES[0], familiar: BRAND_HUES[1], cap: BRAND_HUES[2] },
     modalitat: { caminant: BRAND_HUES[0], corrent: BRAND_HUES[1], bici: BRAND_HUES[2], animar: BRAND_HUES[3], dorsal0: BRAND_HUES[4] },
   };
@@ -1407,8 +1450,11 @@
     const lang = curLang();
     document.getElementById('inscKpis').innerHTML = `<div class="insc-kpi"><strong>${INSCRITS.length}</strong><span><span lang="ca">Inscrits</span><span lang="es">Inscritos</span><span lang="en">Registered</span></span></div>`;
 
-    // Sexe: només fisics (caminant/corrent/bici) el tenen.
-    const sexeM = aggregate(INSCRITS, r => r.sexe);
+    // Sexe: només fisics (caminant/corrent/bici) el tenen; la resta
+    // (animar/dorsal0, o qualsevol registre sense el camp) cauen a
+    // "Desconegut" perquè el total del gràfic quadri amb el total
+    // d'inscrits.
+    const sexeM = aggregate(INSCRITS, r => r.sexe || 'desconegut');
     renderDonut('donutSexe', 'legendSexe', 'tableSexe',
       sortedEntries(sexeM).map(([k, v]) => [k, labelOf('sexe', k), v]),
       COLOR_MAPS.sexe, CENTER_LABEL[lang]);
@@ -1462,14 +1508,25 @@
     </tr>`;
   }
 
+  const TAULA_PAGE_SIZE = 25;
+  let taulaPage = 0;
+
   function renderTaula() {
     const lang = curLang();
     const q = normalitza(document.getElementById('inscCerca').value || '');
-    const filtrats = !q ? INSCRITS : INSCRITS.filter(r => {
+    const filtrats = (!q ? INSCRITS.slice() : INSCRITS.filter(r => {
       const modalitatText = r.modalitat ? labelOf('modalitat', r.modalitat) : '';
       const hay = [r.nom_public, r.club, modalitatText, r.tram_inici_nom, r.tram_final_nom].map(normalitza).join(' ');
       return hay.includes(q);
-    });
+    })).sort((a, b) => a.nom_public.localeCompare(b.nom_public, lang));
+
+    // Paginació: es renderitzen 25 files a la vegada perquè el llistat
+    // (161 inscrits i creixent) no carregui de cop tota la pàgina.
+    const totalPages = Math.max(1, Math.ceil(filtrats.length / TAULA_PAGE_SIZE));
+    if (taulaPage > totalPages - 1) taulaPage = totalPages - 1;
+    if (taulaPage < 0) taulaPage = 0;
+    const pageStart = taulaPage * TAULA_PAGE_SIZE;
+    const pageItems = filtrats.slice(pageStart, pageStart + TAULA_PAGE_SIZE);
 
     const tbody = document.getElementById('taulaInscritsBody');
     if (!filtrats.length) {
@@ -1477,11 +1534,7 @@
         { ca: 'Cap resultat amb aquesta cerca.', es: 'Ningún resultado con esta búsqueda.', en: 'No results for this search.' }[lang]
       }</td></tr>`;
     } else {
-      tbody.innerHTML = filtrats
-        .slice()
-        .sort((a, b) => a.nom_public.localeCompare(b.nom_public, lang))
-        .map(filaTaula)
-        .join('');
+      tbody.innerHTML = pageItems.map(filaTaula).join('');
     }
 
     const countLabels = {
@@ -1493,6 +1546,27 @@
     document.getElementById('inscComptador').innerHTML =
       `<strong>${INSCRITS.length}</strong> ` +
       { ca: 'persones ja inscrites al repte.', es: 'personas ya inscritas al reto.', en: 'people already registered for the challenge.' }[lang];
+
+    // Controls de paginació.
+    const pager = document.getElementById('inscPagination');
+    const status = document.getElementById('inscPageStatus');
+    const prevBtn = document.getElementById('inscPagePrev');
+    const nextBtn = document.getElementById('inscPageNext');
+    if (filtrats.length <= TAULA_PAGE_SIZE) {
+      pager.hidden = true;
+    } else {
+      pager.hidden = false;
+      const rangeStart = pageStart + 1;
+      const rangeEnd = Math.min(pageStart + TAULA_PAGE_SIZE, filtrats.length);
+      const statusText = {
+        ca: `Pàgina ${taulaPage + 1} de ${totalPages} · ${rangeStart}–${rangeEnd} de ${filtrats.length}`,
+        es: `Página ${taulaPage + 1} de ${totalPages} · ${rangeStart}–${rangeEnd} de ${filtrats.length}`,
+        en: `Page ${taulaPage + 1} of ${totalPages} · ${rangeStart}–${rangeEnd} of ${filtrats.length}`,
+      };
+      status.textContent = statusText[lang];
+      prevBtn.disabled = taulaPage <= 0;
+      nextBtn.disabled = taulaPage >= totalPages - 1;
+    }
   }
 
   function renderTot() {
@@ -1500,8 +1574,24 @@
     renderTaula();
   }
 
-  document.getElementById('inscCerca').addEventListener('input', renderTaula);
+  document.getElementById('inscCerca').addEventListener('input', () => { taulaPage = 0; renderTaula(); });
   document.addEventListener('llxd:langchange', renderTot);
+
+  function scrollToTaulaTop() {
+    const table = document.getElementById('taulaInscrits');
+    if (table) table.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  document.getElementById('inscPagePrev').addEventListener('click', () => {
+    if (taulaPage <= 0) return;
+    taulaPage -= 1;
+    renderTaula();
+    scrollToTaulaTop();
+  });
+  document.getElementById('inscPageNext').addEventListener('click', () => {
+    taulaPage += 1;
+    renderTaula();
+    scrollToTaulaTop();
+  });
 
   Promise.all([getInscrits(), getPobles()])
     .then(([inscritsResp, poblesResp]) => {
