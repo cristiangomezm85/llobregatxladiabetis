@@ -832,6 +832,7 @@
       <a href="persones.html"><span lang="ca">Persones</span><span lang="es">Personas</span><span lang="en">People</span></a>
       <a href="pobles.html"><span lang="ca">Pobles</span><span lang="es">Pueblos</span><span lang="en">Towns</span></a>
       <a href="recorregut.html" class="is-current"><span lang="ca">Recorregut</span><span lang="es">Recorrido</span><span lang="en">Route</span></a>
+      <a href="inscrits.html"><span lang="ca">Inscrits</span><span lang="es">Inscritos</span><span lang="en">Registered</span></a>
       <a href="patrocina.html"><span lang="ca">Patrocina</span><span lang="es">Patrocina</span><span lang="en">Sponsor</span></a>
       <div class="lang-toggle" role="group" aria-label="Llengua">
         <button data-set-lang="ca" class="active" type="button">CA</button>
@@ -1520,10 +1521,19 @@
         if (!horaris.length) {
           tbody.innerHTML = '<tr><td colspan="2" style="color:var(--gris);">—</td></tr>';
         } else {
-          tbody.innerHTML = horaris.map(h => `<tr>
-            <td class="rec-td-hora" style="font-weight:700;">${escapeHTML(h.hora || '')}</td>
-            <td class="rec-td-nom">${escapeHTML(h[lang] || h.ca || '')}</td>
-          </tr>`).join('');
+          const puntsById = {};
+          (cloenda && Array.isArray(cloenda.punts) ? cloenda.punts : []).forEach(pt => { puntsById[pt.id] = pt; });
+          const mapaWord = { ca: 'mapa', es: 'mapa', en: 'map' }[lang] || 'mapa';
+          tbody.innerHTML = horaris.map(h => {
+            const pt = h.punt_id && puntsById[h.punt_id];
+            const mapsLink = (pt && pt.google_maps_url)
+              ? ` <a href="${escapeHTML(pt.google_maps_url)}" target="_blank" rel="noopener" class="rec-maps-link">(${mapaWord})</a>`
+              : '';
+            return `<tr>
+              <td class="rec-td-hora" style="font-weight:700;">${escapeHTML(h.hora || '')}</td>
+              <td class="rec-td-nom">${escapeHTML(h[lang] || h.ca || '')}${mapsLink}</td>
+            </tr>`;
+          }).join('');
         }
       }
     }
