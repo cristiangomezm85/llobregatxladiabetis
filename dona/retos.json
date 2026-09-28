@@ -5,8 +5,8 @@
     "es": "https://www.migranodearena.org/reto/llobregat-x-la-diabetes",
     "en": "https://www.migranodearena.org/en/cause/llobregat-x-la-diabetes"
   },
-  "totalRecaudado": 1644,
-  "actualizado": "2026-09-28T20:45:44.605Z",
+  "totalRecaudado": 1744,
+  "actualizado": "2026-09-28T21:01:05.619Z",
   "retos": [
     {
       "slug": "astolfo-x-la-diabetes",
@@ -32,7 +32,7 @@
       "tipo": "heroe",
       "foto": "fotos/carlosluna.jpeg",
       "url": "https://www.migranodearena.org/reto/carlos-912runners-x-la-diabetes",
-      "recaudado": 300,
+      "recaudado": 400,
       "diasRestantes": 33
     },
     {
