@@ -8,7 +8,7 @@ const { calcularTram } = require("./route");
 // cada casella són valors fixos per tarifa, no una fórmula.
 const TARIFES = [
   { id: "earlybird", cutoff: "2026-09-10", preus: { animar: 1000, 1: 1500, 2: 3000, 3: 4500 } },
-  { id: "standard", cutoff: "2026-09-27", preus: { animar: 1200, 1: 2000, 2: 3500, 3: 5000 } },
+  { id: "standard", cutoff: "2026-10-02", preus: { animar: 1200, 1: 2000, 2: 3500, 3: 5000 } },
   { id: "lastcall", cutoff: "2026-10-04", preus: { animar: 1500, 1: 2500, 2: 4500, 3: 6000 } },
 ];
 
