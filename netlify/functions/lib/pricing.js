@@ -2,7 +2,7 @@
 // Fuente única de verdad para precios y validación legal. NUNCA se confía
 // en el importe ni en las validaciones que vengan del frontend.
 
-const { calcularTram } = require("./route");
+const { calcularTram, arrodonirKm } = require("./route");
 
 // Tarifes per fases (early bird / estàndard / last call). Els preus de
 // cada casella són valors fixos per tarifa, no una fórmula.
@@ -159,7 +159,7 @@ async function validarFisic(payload) {
   // punts), aixi que el dupliquem aqui, a l'origen, perque tot el que es
   // deriva d'aquest valor (MailerLite, la targeta de gracies.html, el propi
   // resum de la comanda) surti ja consistent amb els 4 km reals.
-  payload.tram_km = payload.tram_tipus === "cloenda" ? tram.kmTotal * 2 : tram.kmTotal;
+  payload.tram_km = payload.tram_tipus === "cloenda" ? arrodonirKm(tram.kmTotal * 2) : tram.kmTotal;
   payload.tram_inici_nom = tram.iniciNom;
   payload.tram_final_nom = tram.finalNom;
 

@@ -6,6 +6,16 @@
 
 const TRAM_TOTALS = { 1: 60.3, 2: 76.5, 3: 66.7 }; // ha de coincidir amb inscripcio.html
 
+// Sumar/restar els km (decimals com 60.3, 76.5...) amb float de JS acumula
+// error de precisió binària (p. ex. 66.7 - 53.5 dona 13.200000000000003 en
+// lloc de 13.2). Els km del recorregut sempre tenen com a molt 1 decimal,
+// així que arrodonim a 1 decimal després de cada operació -- és un
+// arrodoniment sense pèrdua (el valor "real" ja només tenia 1 decimal) que
+// només neteja el soroll de precisió, mai canvia el resultat matemàtic.
+function arrodonirKm(km) {
+  return Math.round(km * 10) / 10;
+}
+
 let cachedPobles = null;
 let cachedAt = 0;
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minuts
@@ -68,7 +78,7 @@ async function calcularTram(iniciId, finalId) {
     dies.push(String(dFi));
   }
 
-  return { kmTotal, dies, iniciNom: inici.nom, finalNom: final.nom };
+  return { kmTotal: arrodonirKm(kmTotal), dies, iniciNom: inici.nom, finalNom: final.nom };
 }
 
-module.exports = { TRAM_TOTALS, carregarPobles, trobarPoble, calcularTram };
+module.exports = { TRAM_TOTALS, carregarPobles, trobarPoble, calcularTram, arrodonirKm };

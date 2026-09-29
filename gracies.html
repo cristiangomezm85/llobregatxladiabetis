@@ -449,6 +449,16 @@
   };
   function tr(key) { return (TEXTOS[key] && TEXTOS[key][lang]) || (TEXTOS[key] && TEXTOS[key].ca) || ""; }
 
+  // tram_km ve del backend com a número (p. ex. 13.2), però algunes comandes
+  // antigues el tenen desat amb soroll de precisió de float de JS (p. ex.
+  // 13.200000000000003, per un 66.7 - 53.5 que mai s'havia arrodonit abans
+  // de desar-se). Els km del recorregut sempre tenen com a molt 1 decimal,
+  // així que arrodonim aquí, a la sortida, perquè la targeta i el caption
+  // surtin nets encara que la comanda desada tingui el valor brut.
+  function fmtKm(km) {
+    return Math.round(km * 10) / 10;
+  }
+
   // El text per a les modalitats físiques és dinàmic: inclou la modalitat,
   // el tram (d'on a on) i els km, a més de la menció a @arediabetis.
   var MODALITAT_PARAULA = {
@@ -474,7 +484,7 @@
       .replace("{modalitat}", modalitatText)
       .replace("{inici}", dades.tram_inici_nom || "")
       .replace("{final}", dades.tram_final_nom || "")
-      .replace("{km}", dades.tram_km != null ? dades.tram_km : "");
+      .replace("{km}", dades.tram_km != null ? fmtKm(dades.tram_km) : "");
   }
 
   function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
@@ -701,7 +711,7 @@
 
         ctx.fillStyle = "#FF6B47";
         ctx.font = fnt("800 260px 'Bricolage Grotesque'");
-        ctx.fillText(String(dades.tram_km), cx, Y(1060));
+        ctx.fillText(String(fmtKm(dades.tram_km)), cx, Y(1060));
 
         ctx.fillStyle = "#D7E3F5";
         ctx.font = fnt("700 40px Manrope");
@@ -849,7 +859,7 @@
       if (isFisic && dades.tram_km) {
         ctx.fillStyle = "#ffffff";
         ctx.font = fnt("800 52px 'Bricolage Grotesque'");
-        ctx.fillText(tr("label_fare") + " " + dades.tram_km + " " + tr("label_km"), textX, y);
+        ctx.fillText(tr("label_fare") + " " + fmtKm(dades.tram_km) + " " + tr("label_km"), textX, y);
         y += Y(62);
 
         if (dades.tram_dies) {

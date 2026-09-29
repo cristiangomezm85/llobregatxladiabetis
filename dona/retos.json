@@ -59,7 +59,7 @@
       "tipo": "heroe",
       "foto": "fotos/PKsTEAM.jpeg",
       "url": "https://www.migranodearena.org/reto/pk-s-team-x-la-diabetes",
-      "recaudado": 750,
+      "recaudado": 730,
       "diasRestantes": 32
     },
     {
@@ -349,6 +349,18 @@
       "url": {
         "es": "https://www.migranodearena.org/reto/sant-vicen-dels-horts-x-la-diabetes",
         "ca": "https://www.migranodearena.org/ca/repte/sant-vicen-dels-horts-x-la-diabetis"
+      },
+      "recaudado": 0,
+      "diasRestantes": 32
+    },
+    {
+      "slug": "santa-coloma-de-cervello-x-la-diabetes",
+      "nombre": "Santa Coloma de Cervelló x la Diabetes",
+      "tipo": "poble",
+      "foto": "fotos/Santa Coloma.png",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/santa-coloma-de-cervello-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/santa-coloma-de-cervello-x-la-diabetes"
       },
       "recaudado": 0,
       "diasRestantes": 32
