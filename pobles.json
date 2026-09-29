@@ -1,7 +1,7 @@
 {
-  "actualitzat": "2026-09-25",
+  "actualitzat": "2026-09-29",
   "ordre": "riu",
-  "comentari": "Llistat de pobles i punts del recorregut, ordenats pel pas del riu. Estat: 'pendent' (punt de pas), 'interessat' (tramitant), 'adherit' (oficial), 'punt-etapa' (inici/fi d'etapa). Els municipis 'frontissa' (Gironella, Monistrol de Montserrat) tenen dues entrades: una com a final d'una etapa i una altra com a inici de la seguent, per evitar que el selector de tram compti una etapa de mes quan el tram comenca just al punt de canvi. Camps nous (setembre 2026): gps {lat,lng} i google_maps_url (ubicacio del punt de trobada), hora_arribada / hora_sortida (estimades i provisionals, segons el planning oficial de la ruta), i donacio_slug (relaciona aquest poble amb el seu repte a dona/retos.json per a qui vulgui mostrar l'import recaptat per municipi). exclos_recorregut=true amaga el punt dels desplegables de tram/recollida de la inscripcio (p. ex. Castellbisbal, que col·labora amb donatius pero no es parada fisica del recorregut).",
+  "comentari": "Llistat de pobles i punts del recorregut, ordenats pel pas del riu. Estat: 'pendent' (punt de pas), 'interessat' (tramitant), 'adherit' (oficial), 'punt-etapa' (inici/fi d'etapa). Els municipis 'frontissa' (Gironella, Monistrol de Montserrat) tenen dues entrades: una com a final d'una etapa i una altra com a inici de la seguent, per evitar que el selector de tram compti una etapa de mes quan el tram comenca just al punt de canvi. Camps nous (setembre 2026): gps {lat,lng} i google_maps_url (ubicacio del punt de trobada), hora_arribada / hora_sortida (estimades i provisionals, segons el planning oficial de la ruta), i donacio_slug (relaciona aquest poble amb el seu repte a dona/retos.json per a qui vulgui mostrar l'import recaptat per municipi). exclos_recorregut=true amaga el punt DEL TOT: del mapa (recorregut.html), de /pobles.html i dels desplegables de tram/recollida de la inscripcio (p. ex. Castellbisbal, que col·labora amb donatius pero no es parada fisica del recorregut i no te ni gps). exclos_inscripcio=true (nou, setembre 2026) es mes suau: nomes amaga el punt dels desplegables de tram/recollida de la inscripcio, pero es segueix veient al mapa i a /pobles.html (p. ex. Santa Coloma de Cervello, que s'afegeix com a punt de pas confirmat pero sense obrir-se com a opcio de tram perque no torni a descol·locar preus/samarretes de qui ja s'havia inscrit abans).",
   "cloenda": {
     "comentari": "Caminada de Cloenda del diumenge 18 d'octubre a El Prat: no es una etapa mes (no te 'dia' ni compta per als desplegables de tram), es un acte propi al final de l'etapa 3. wikiloc_url i gpx son editables aqui mateix -- aquest fitxer es l'unica font que llegeix recorregut.html per pintar aquesta seccio. 'punts' porta les coordenades gps i el google_maps_url del pàrquing Cal Tet i del Mirador del Semàfor: els marcadors del mapa surten SEMPRE d'aqui (com als pobles normals), no del gpx -- aixi, si el fetch del gpx falla (xarxa lenta, fitxer no trobat), els dos punts es veuen igualment i nomes es perd la linia blava del traçat. Cada fila de 'horaris' pot portar un 'punt_id' (referencia a l'id d'un element de 'punts') per mostrar el link '(mapa)' a la taula, igual que a les altres etapes.",
     "titol": { "ca": "Caminada de Cloenda", "es": "Caminata de Clausura", "en": "Closing Walk" },
@@ -569,6 +569,32 @@
       "hora_arribada": "13:27",
       "hora_sortida": "13:37",
       "donacio_slug": "sant-vicen-dels-horts-x-la-diabetes"
+    },
+    {
+      "id": "santa-coloma-de-cervello",
+      "nom": "Santa Coloma de Cervelló",
+      "dia": 3,
+      "km": 49.5,
+      "comarca": "Baix Llobregat",
+      "tipus": "municipi",
+      "estat": "interessat",
+      "embaixador": null,
+      "aporta": [],
+      "notes": {
+        "ca": "S'incorpora sense desviament: el punt de trobada és al pas del recorregut (no al centre del poble). No surt com a opció de tram/recollida a la inscripció (exclos_inscripcio): les persones que ja s'han inscrit per un altre tram no es veuen afectades.",
+        "es": "Se incorpora sin desvío: el punto de encuentro está al paso del recorrido (no en el centro del pueblo). No aparece como opción de tramo/recogida en la inscripción (exclos_inscripcio): las personas ya inscritas en otro tramo no se ven afectadas.",
+        "en": "Joins without a detour: the meeting point sits right on the route (not the town centre). It does not appear as a stage/pickup option during registration (exclos_inscripcio): people already registered for a different stage are unaffected."
+      },
+      "exclos_inscripcio": true,
+      "foto": null,
+      "gps": {
+        "lat": 41.366184,
+        "lng": 2.039262
+      },
+      "google_maps_url": "https://maps.app.goo.gl/sE5LtH6Wkt7Vha48A",
+      "hora_arribada": "14:00",
+      "hora_sortida": "14:05",
+      "donacio_slug": "santa-coloma-de-cervello-x-la-diabetes"
     },
     {
       "id": "sant-boi-de-llobregat",

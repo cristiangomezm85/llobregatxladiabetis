@@ -1062,8 +1062,13 @@
   // no depèn de cap fetch ni servidor, funciona obrint el fitxer tal qual).
   // La llista de municipis del selector de tram es carrega en viu des de
   // pobles.json (la mateixa font que /pobles.html i l'admin), en lloc
-  // d'una còpia fixa al codi. Un municipi es pot excloure del selector
-  // marcant-lo amb "exclos_recorregut": true a pobles.json.
+  // d'una còpia fixa al codi. Un municipi es pot excloure del selector amb
+  // "exclos_recorregut": true (amaga el punt DEL TOT: mapa, /pobles.html i
+  // aquí) o amb "exclos_inscripcio": true (nou, setembre 2026 — amaga'l
+  // només d'aquí, però es segueix veient al mapa i a /pobles.html; útil per
+  // a un poble que s'incorpora com a punt de pas confirmat després que ja
+  // hi hagi gent inscrita en altres trams, sense obrir-lo com a opció nova
+  // de tram/recollida i descol·locar preus/samarretes de ningú).
   let POBLES_ORDENATS = [];
   // Còpia SENSE filtrar — cal per trobar per id punts marcats
   // "exclos_recorregut": true (com "el-prat-de-llobregat", que existeix
@@ -1077,10 +1082,10 @@
       const res = await fetch("/pobles.json");
       const dades = await res.json();
       const mapejats = (dades.pobles || [])
-        .map((p) => ({ id: p.id, nom: p.nom, dia: p.dia, km: p.km, exclos_recorregut: !!p.exclos_recorregut }))
+        .map((p) => ({ id: p.id, nom: p.nom, dia: p.dia, km: p.km, exclos_recorregut: !!p.exclos_recorregut, exclos_inscripcio: !!p.exclos_inscripcio }))
         .sort((a, b) => (a.dia - b.dia) || (a.km - b.km));
       POBLES_TOTS = mapejats;
-      POBLES_ORDENATS = mapejats.filter((p) => !p.exclos_recorregut);
+      POBLES_ORDENATS = mapejats.filter((p) => !p.exclos_recorregut && !p.exclos_inscripcio);
     } catch (e) {
       console.error("No s'ha pogut carregar pobles.json:", e);
     }
@@ -1987,6 +1992,15 @@
     return total;
   }
 
+  // Restar/sumar km decimals (60.3, 76.5...) amb float de JS acumula error
+  // de precisió binària (p. ex. 66.7 - 53.5 dona 13.200000000000003 en lloc
+  // de 13.2). Els km del recorregut sempre tenen com a molt 1 decimal, així
+  // que arrodonim a 1 decimal després de cada operació -- neteja el soroll
+  // de precisió sense canviar el resultat matemàtic real.
+  function arrodonirKm(km) {
+    return Math.round(km * 10) / 10;
+  }
+
   function calcularTramClient(iniciOpt, finalOpt) {
     const dIni = Number(iniciOpt.dataset.dia);
     const dFi = Number(finalOpt.dataset.dia);
@@ -2001,7 +2015,7 @@
       for (let d = dIni + 1; d < dFi; d++) km += TRAM_TOTALS[d];
       km += kFi;
     }
-    return { error: false, km, dies: (dFi - dIni + 1) };
+    return { error: false, km: arrodonirKm(km), dies: (dFi - dIni + 1) };
   }
 
   const iniciSel = blocFisic.querySelector(".fi-tram-inici");
@@ -2060,7 +2074,7 @@
       // el km calculat pel tram (diferència entre els dos punts) només és
       // la meitat del recorregut real, així que el dupliquem només per a
       // mostrar-lo (no afecta el preu, que depèn del nombre de dies/etapes).
-      const kmMostrat = tramTipusActiu === "cloenda" ? resultat.km * 2 : resultat.km;
+      const kmMostrat = tramTipusActiu === "cloenda" ? arrodonirKm(resultat.km * 2) : resultat.km;
       kmVal.textContent = `${kmMostrat} km · ${nDies} ${nDies === 1 ? etapaWord : etapesWord} · ${nDies} ${nDies === 1 ? samarretaWord : samarretesWord}`;
       kmBlock.classList.add("visible");
     }
