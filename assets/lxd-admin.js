@@ -1,6 +1,13 @@
 (function () {
   'use strict';
 
+  // Comandes antigues poden tenir tram_km desat amb soroll de precisió de
+  // float de JS (p. ex. 13.200000000000003 en lloc de 13.2). Arrodonim
+  // només per mostrar-ho aquí; no toca el valor desat.
+  function fmtKm(km) {
+    return typeof km === 'number' ? Math.round(km * 10) / 10 : km;
+  }
+
   const API = '/api/admin-content';
   const INSCRIPCIONS_API = '/.netlify/functions/admin-inscripcions';
   const state = {
@@ -415,7 +422,7 @@
     const tramInfo = $('#inscripcioTramInfo');
     if (tramInfo) {
       const tram = (p.tram_inici_nom && p.tram_final_nom)
-        ? `${p.tram_inici_nom} → ${p.tram_final_nom} (${p.tram_km != null ? p.tram_km : '?'} km)`
+        ? `${p.tram_inici_nom} → ${p.tram_final_nom} (${p.tram_km != null ? fmtKm(p.tram_km) : '?'} km)`
         : 'sin municipio de inicio/fin concreto guardado (cuenta el día completo)';
       tramInfo.textContent = 'Recorrido guardado ahora mismo: ' + tram + '. El municipio exacto de inicio/fin no se puede editar aquí, solo los días marcados arriba.';
     }
