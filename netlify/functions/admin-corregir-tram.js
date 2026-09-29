@@ -36,7 +36,7 @@
 // justificant del canvi (aquí no es crea cap registre d'auditoria propi).
 
 const { obtenirOrdre, actualitzarOrdre } = require("./lib/store");
-const { calcularTram } = require("./lib/route");
+const { calcularTram, arrodonirKm } = require("./lib/route");
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
@@ -125,7 +125,7 @@ async function corregirTram({ orderId, tramIniciNou, tramFinalNou }) {
     tram_inici_nom: tramNou.iniciNom,
     tram_final_nom: tramNou.finalNom,
     tram_dies: tramNou.dies,
-    tram_km: payloadActual.tram_tipus === "cloenda" ? tramNou.kmTotal * 2 : tramNou.kmTotal,
+    tram_km: payloadActual.tram_tipus === "cloenda" ? arrodonirKm(tramNou.kmTotal * 2) : tramNou.kmTotal,
   };
 
   // Les samarretes d'un tram físic són sempre "1 per dia" (veure
