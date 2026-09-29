@@ -5,8 +5,8 @@
     "es": "https://www.migranodearena.org/reto/llobregat-x-la-diabetes",
     "en": "https://www.migranodearena.org/en/cause/llobregat-x-la-diabetes"
   },
-  "totalRecaudado": 1779,
-  "actualizado": "2026-09-29T14:45:42.729Z",
+  "totalRecaudado": 1819,
+  "actualizado": "2026-09-29T21:01:03.496Z",
   "retos": [
     {
       "slug": "astolfo-x-la-diabetes",
@@ -50,7 +50,7 @@
       "tipo": "heroe",
       "foto": "fotos/Emi.jpg",
       "url": "https://www.migranodearena.org/reto/emi-x-la-diabetes",
-      "recaudado": 0,
+      "recaudado": 20,
       "diasRestantes": 32
     },
     {
@@ -445,6 +445,15 @@
       "url": "https://www.migranodearena.org/reto/llobregat-por-la-diabetes",
       "recaudado": 0,
       "diasRestantes": 19
+    },
+    {
+      "slug": "santa-coloma-de-cervello-x-la-diabetes",
+      "nombre": "santa-coloma-de-cervello-x-la-diabetes",
+      "tipo": "pendiente",
+      "foto": null,
+      "url": "https://www.migranodearena.org/reto/santa-coloma-de-cervello-x-la-diabetes",
+      "recaudado": 0,
+      "diasRestantes": 32
     }
   ]
 }
