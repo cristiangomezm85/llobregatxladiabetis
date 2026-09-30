@@ -1,7 +1,10 @@
 /* LXD · Universal form router
    - Redirige los CTA antiguos al formulario universal.
    - Preselecciona el tipo de solicitud según el botón pulsado.
-   - Bloquea la inscripción de participantes hasta que se abra oficialmente.
+   - La inscripción de participantes YA está abierta, pero tiene su propio
+     formulario con pago online (inscripcio.html): este formulario genérico
+     no cobra ni valida precio, así que para el tipo "participant" no deja
+     enviar -- en vez de eso, redirige a inscripcio.html.
  */
 (function () {
   'use strict';
@@ -93,7 +96,7 @@
     if (!type) {
       note.innerHTML = '<span lang="ca">Tria una opció per començar.</span><span lang="es">Elige una opción para empezar.</span><span lang="en">Choose an option to start.</span>';
     } else if (blocked) {
-      note.innerHTML = '<span lang="ca">Inscripció de participants encara no oberta. Properament.</span><span lang="es">Inscripción de participantes todavía no abierta. Próximamente.</span><span lang="en">Participant registration is not open yet. Coming soon.</span>';
+      note.innerHTML = '<span lang="ca">La inscripció de participants (amb pagament online) es fa des d\'un formulari propi. <a href="inscripcio.html">Ves al formulari d\'inscripció &rarr;</a></span><span lang="es">La inscripción de participantes (con pago online) se hace desde un formulario propio. <a href="inscripcio.html">Ve al formulario de inscripción &rarr;</a></span><span lang="en">Participant registration (with online payment) is done through its own form. <a href="inscripcio.html">Go to the registration form &rarr;</a></span>';
     } else if (type === 'patrocini') {
       note.innerHTML = '<span lang="ca">Revisarem la proposta i et contactarem per concretar el patrocini.</span><span lang="es">Revisaremos la propuesta y te contactaremos para concretar el patrocinio.</span><span lang="en">We will review the proposal and contact you to arrange the sponsorship.</span>';
     } else {
