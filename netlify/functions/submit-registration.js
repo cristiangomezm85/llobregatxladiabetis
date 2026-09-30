@@ -67,6 +67,7 @@ exports.handler = async (event) => {
     import_centims: calcul.totalCentims,
     unitats: calcul.unitats,
     descompte_heroi: !!calcul.descompteHeroiAplicat,
+    descompte_centims_aplicat: calcul.descompteCentimsAplicat || 0,
     estat: esGratuit ? "pagat" : "pendent",
     email_contacte: payload.email_contacte || "",
     descripcio,
