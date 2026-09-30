@@ -65,16 +65,48 @@ function dniValid(str) {
   return typeof str === "string" && /^[A-Za-z0-9]{5,12}$/.test(str.trim());
 }
 
-// Codis d'Heroi vàlids: llista separada per comes a la variable d'entorn
-// HEROIS_CODES (p. ex. "ANNA2026,MARC2026"). Es guarda com a secret a
-// Netlify, no al codi, perquè es pugui actualitzar sense fer deploy.
-function codiHeroiValid(codi) {
-  if (!codi) return false;
-  const llista = (process.env.HEROIS_CODES || "")
+// Codis de descompte vàlids: llista separada per comes a la variable
+// d'entorn HEROIS_CODES (p. ex. "ANNA2026,MARC2026,CORESOLIDARIS5:500"). Es
+// guarda com a secret a Netlify, no al codi, perquè es pugui actualitzar
+// sense fer deploy.
+//
+// Cada entrada és:
+//   - "CODI"          -> descompte complet (gratuït). Comportament per
+//                        defecte, el que ja tenien els codis d'Heroi:
+//                        participació sense cost com a reconeixement per
+//                        qui ajuda a recaptar fons.
+//   - "CODI:CENTIMS"  -> descompte parcial d'aquest import, en cèntims
+//                        (p. ex. ":500" = 5 €). Pensat per a col·laboradors
+//                        com Corresolidaris, que no participen gratis sinó
+//                        amb un descompte fix.
+function parsCodisDescompte() {
+  return (process.env.HEROIS_CODES || "")
     .split(",")
-    .map((c) => c.trim().toUpperCase())
-    .filter(Boolean);
-  return llista.includes(String(codi).trim().toUpperCase());
+    .map((entrada) => entrada.trim())
+    .filter(Boolean)
+    .map((entrada) => {
+      const [codiRaw, centimsRaw] = entrada.split(":");
+      const codi = (codiRaw || "").trim().toUpperCase();
+      const centims = centimsRaw !== undefined ? parseInt(centimsRaw.trim(), 10) : NaN;
+      const gratis = !Number.isFinite(centims);
+      return { codi, gratis, descompteCentims: gratis ? null : centims };
+    })
+    .filter((c) => c.codi);
+}
+
+// Retorna la info del codi ({ codi, gratis, descompteCentims }) o null si
+// no existeix. No valida encara el modalitat/import -- això es fa a
+// calcularImport.
+function trobarCodiDescompte(codi) {
+  if (!codi) return null;
+  const cercat = String(codi).trim().toUpperCase();
+  return parsCodisDescompte().find((c) => c.codi === cercat) || null;
+}
+
+// Manté el nom històric (usat per validar-codi.js i el frontend antic):
+// només diu si el codi existeix, sense revelar l'import del descompte.
+function codiHeroiValid(codi) {
+  return trobarCodiDescompte(codi) !== null;
 }
 
 function validarDonacio(payload) {
@@ -230,15 +262,23 @@ async function calcularImport(payload) {
     throw new Error(`Modalitat desconeguda: ${payload.modalitat}`);
   }
 
-  // Codi de descompte d'Heroi: participació sense cost com a reconeixement
-  // per qui ajuda a recaptar fons. El Dorsal 0 ja és una donació simbòlica,
-  // així que el codi no hi aplica.
+  // Codi de descompte (Heroi = gratuït, o parcial per cèntims -- p. ex.
+  // Corresolidaris). El Dorsal 0 ja és una donació simbòlica, així que el
+  // codi no hi aplica.
   let descompteHeroiAplicat = false;
+  let descompteCentimsAplicat = 0;
   if (payload.codi_descompte && payload.modalitat !== "dorsal0") {
-    if (!codiHeroiValid(payload.codi_descompte)) {
-      throw new Error("El codi de descompte d'Heroi no és vàlid");
+    const info = trobarCodiDescompte(payload.codi_descompte);
+    if (!info) {
+      throw new Error("El codi de descompte no és vàlid");
     }
-    resultat.baseCentims = 0;
+    if (info.gratis) {
+      descompteCentimsAplicat = resultat.baseCentims;
+      resultat.baseCentims = 0;
+    } else {
+      descompteCentimsAplicat = Math.min(info.descompteCentims, resultat.baseCentims);
+      resultat.baseCentims -= descompteCentimsAplicat;
+    }
     descompteHeroiAplicat = true;
   }
 
@@ -248,6 +288,7 @@ async function calcularImport(payload) {
     totalCentims: resultat.baseCentims + donacioCentims,
     unitats: resultat.unitats,
     descompteHeroiAplicat,
+    descompteCentimsAplicat,
   };
 }
 
@@ -274,4 +315,5 @@ module.exports = {
   calcularImport,
   descripcioComanda,
   codiHeroiValid,
+  trobarCodiDescompte,
 };
