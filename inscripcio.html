@@ -1188,6 +1188,7 @@
     btn_validar_codi: { ca:"Validar", es:"Validar", en:"Validate" },
     codi_validant: { ca:"Comprovant…", es:"Comprobando…", en:"Checking…" },
     codi_valid: { ca:"✓ Codi aplicat", es:"✓ Código aplicado", en:"✓ Code applied" },
+    codi_valid_import: { ca:"✓ Descompte de {import} aplicat", es:"✓ Descuento de {import} aplicado", en:"✓ Discount of {import} applied" },
     codi_invalid: { ca:"Aquest codi no és vàlid.", es:"Este código no es válido.", en:"This code is not valid." },
     heroi_popup_titol: { ca:"Què és ser un Heroi?", es:"¿Qué es ser un Héroe?", en:"What does it mean to be a Hero?" },
     heroi_popup_text1: {
@@ -1631,6 +1632,11 @@
   const codiHeroiValidarBtn = document.getElementById("codi-heroi-validar");
   const codiHeroiEstat = document.getElementById("codi-heroi-estat");
   let codiHeroiValidat = false;
+  // Detall del descompte del codi validat: { gratis: true } per als codis
+  // d'Heroi (100% descompte, com sempre), o { gratis: false, descompte_centims }
+  // per a codis d'import parcial (p. ex. Corresolidaris). null si no hi ha
+  // cap codi validat.
+  let codiDescompteInfo = null;
 
   async function validarCodiHeroi() {
     const codi = codiDescompteInput.value.trim();
@@ -1643,17 +1649,22 @@
       const data = await res.json();
       if (data.valid) {
         codiHeroiValidat = true;
+        codiDescompteInfo = { gratis: !!data.gratis, descompte_centims: data.descompte_centims || 0 };
         codiHeroiEstat.className = "codi-heroi-estat valid";
-        codiHeroiEstat.textContent = t("codi_valid");
+        codiHeroiEstat.textContent = codiDescompteInfo.gratis
+          ? t("codi_valid")
+          : t("codi_valid_import").replace("{import}", formatEur(codiDescompteInfo.descompte_centims));
         codiDescompteInput.disabled = true;
       } else {
         codiHeroiValidat = false;
+        codiDescompteInfo = null;
         codiDescompteInput.value = "";
         codiHeroiEstat.className = "codi-heroi-estat invalid";
         codiHeroiEstat.textContent = t("codi_invalid");
       }
     } catch (e) {
       codiHeroiValidat = false;
+      codiDescompteInfo = null;
       codiHeroiEstat.className = "codi-heroi-estat invalid";
       codiHeroiEstat.textContent = t("codi_invalid");
     }
@@ -1669,6 +1680,7 @@
   codiDescompteInput.addEventListener("input", () => {
     if (codiHeroiValidat) {
       codiHeroiValidat = false;
+      codiDescompteInfo = null;
       codiHeroiEstat.className = "codi-heroi-estat";
       codiHeroiEstat.textContent = "";
       actualitzarTotal();
@@ -2021,10 +2033,9 @@
   const iniciSel = blocFisic.querySelector(".fi-tram-inici");
   const finalSel = blocFisic.querySelector(".fi-tram-final");
 
-  function calcularBasePreu() {
+  function calcularBasePreuSenseDescompte() {
     if (!modalitatActiva) return 0;
     if (modalitatActiva === "dorsal0") return 0;
-    if (codiHeroiValidat) return 0;
     const tarifa = tarifaActual();
     if (modalitatActiva === "animar") return tarifa.preus.animar * totalSamarretesAnimar();
     // Modalitats físiques: el preu depèn del nombre d'etapes (dies) que
@@ -2037,6 +2048,18 @@
     const tram = calcularTramClient(iniciOpt, finalOpt);
     if (tram.error) return 0;
     return tarifa.preus[tram.dies] || 0;
+  }
+
+  // Codi d'Heroi (gratis: true): deixa l'import a 0, com sempre. Codi
+  // d'import parcial com Corresolidaris (gratis: false): resta el
+  // descompte_centims de l'import base sense baixar de 0 -- el càlcul real
+  // (i la font de veritat) sempre és al backend, això només és la
+  // previsualització.
+  function calcularBasePreu() {
+    const base = calcularBasePreuSenseDescompte();
+    if (modalitatActiva === "dorsal0" || !codiDescompteInfo) return base;
+    if (codiDescompteInfo.gratis) return 0;
+    return Math.max(0, base - codiDescompteInfo.descompte_centims);
   }
   const kmBlock = blocFisic.querySelector("[data-tram-km]");
   const kmVal = blocFisic.querySelector("[data-tram-km-value]");
