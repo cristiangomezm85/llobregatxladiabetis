@@ -609,26 +609,25 @@
   const RETOS_JSON_URL = 'https://cdn.jsdelivr.net/gh/cristiangomezm85/llobregatxladiabetis@main/dona/retos.json';
 
   // Efecto "contador" para el número grande del total: mientras esperamos
-  // la cifra de inscripciones, el número sube rápido y borroso (ilegible a
-  // propósito) en vez de quedarse quieto o saltar de golpe. Solo se activa
-  // si esa espera se nota (más de UMBRAL_FLORITURA_MS) — si la respuesta
-  // llega rápido, el número final se pinta directo, sin animación de más.
+  // la cifra de inscripciones, se muestra la cifra parcial (solo Mi Grano de
+  // Arena) ya conocida, con un desenfoque/opacidad que indica "cargando",
+  // en vez de un número inventado. Antes aquí se mostraba una cifra con un
+  // salto aleatorio (base + random) que, al ser siempre más alta que la
+  // base pero sin relación con el total real, podía leerse como "la cifra
+  // va mal" — se ha quitado para no mostrar nunca un número que no sea
+  // real. Solo se activa si la espera se nota (más de UMBRAL_FLORITURA_MS)
+  // — si la respuesta llega rápido, el número final se pinta directo, sin
+  // pasar por este estado intermedio.
   const UMBRAL_FLORITURA_MS = 150;
-  let florituraTimer = null;
   function setTotalDisplay(valor){
     document.getElementById('totalRecaudado').textContent = formatEuros(valor);
   }
   function iniciarFlorituraContador(base){
     const el = document.getElementById('totalRecaudado');
     el.classList.add('counting');
-    (function tick(){
-      const salto = Math.round(base * (0.03 + Math.random() * 0.18));
-      setTotalDisplay(base + salto);
-      florituraTimer = setTimeout(tick, 45);
-    })();
+    setTotalDisplay(base);
   }
   function pararFlorituraContador(){
-    if (florituraTimer) { clearTimeout(florituraTimer); florituraTimer = null; }
     document.getElementById('totalRecaudado').classList.remove('counting');
   }
   // Al terminar, un conteo rápido (pero legible) desde el número borroso
