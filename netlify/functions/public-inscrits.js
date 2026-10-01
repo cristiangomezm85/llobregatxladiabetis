@@ -14,6 +14,9 @@
 //
 // Fa servir el mateix magatzem que admin-inscripcions.js (lib/store.js),
 // però aquí NO cal cap token: només llegim, i només els camps de dalt.
+//
+// El Dorsal 0 (donació simbòlica, sense participació real) queda EXCLÒS:
+// vegeu esDorsal0() més avall.
 
 const { llistarOrdres } = require("./lib/store");
 
@@ -28,6 +31,17 @@ function status(o) {
 
 function paid(o) {
   return status(o) === "pagat";
+}
+
+// El Dorsal 0 és una donació simbòlica, no una inscripció real: qui el
+// compra no participa físicament ni virtualment al repte. Es queda fora
+// del directori/estadístiques d'inscrits.html perquè no és lògic comptar-lo
+// com a "inscrit" (abans sí es comptava al total però no sempre tenia tots
+// els camps d'estadístiques, cosa que feia que els gràfics no quadressin
+// amb el total -- ara simplement no hi entra).
+function esDorsal0(o) {
+  const p = (o && o.payload && typeof o.payload === "object") ? o.payload : {};
+  return String(o.modalitat || p.modalitat || "").trim().toLowerCase() === "dorsal0";
 }
 
 function nomPublic(nom, cognoms) {
@@ -52,7 +66,7 @@ exports.handler = async (event) => {
 
   try {
     const ordres = await llistarOrdres();
-    const pagats = ordres.filter(paid);
+    const pagats = ordres.filter(paid).filter((o) => !esDorsal0(o));
 
     const inscrits = pagats.map((o) => {
       const p = (o && o.payload && typeof o.payload === "object") ? o.payload : {};
