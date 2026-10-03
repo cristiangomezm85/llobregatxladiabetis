@@ -36,7 +36,9 @@ exports.handler = async (event) => {
 
   const columnes = [
     "order_id", "modalitat", "estat", "import_base_centims", "donacio_centims",
-    "import_centims", "unitats", "email_contacte", "recollida_text",
+    "import_centims", "unitats",
+    "codi_descompte", "descompte_heroi", "descompte_centims_aplicat",
+    "email_contacte", "recollida_text",
     "nom", "cognoms", "telefon", "dni", "data_naixement", "es_menor",
     "tutor_nom", "tutor_cognoms", "relacio", "talla_samarreta", "samarretes",
     "club_nom",
@@ -56,6 +58,13 @@ exports.handler = async (event) => {
       donacio_centims: o.donacio_centims,
       import_centims: o.import_centims,
       unitats: o.unitats,
+      // Codi de descompte introduït al formulari (normalitzat en majúscules,
+      // igual que el compara lib/pricing.js) i el descompte que realment es
+      // va aplicar. Ull: per a "dorsal0" el codi s'ignora al càlcul, així
+      // que pot aparèixer el codi amb descompte_centims_aplicat = 0.
+      codi_descompte: p.codi_descompte ? String(p.codi_descompte).trim().toUpperCase() : "",
+      descompte_heroi: o.descompte_heroi,
+      descompte_centims_aplicat: o.descompte_centims_aplicat,
       email_contacte: o.email_contacte,
       recollida_text: o.recollida_text,
       nom: p.nom, cognoms: p.cognoms, telefon: p.telefon,
