@@ -4,6 +4,17 @@
 
 const { calcularTram, arrodonirKm } = require("./route");
 
+// Interruptor únic i manual per tancar les inscripcions (totes les
+// modalitats, incloent Dorsal 0 -- qui vulgui col·laborar un cop tancat ho
+// fa fent una donació a /dona, no inscrivint-se aquí). Mentre sigui `true`,
+// calcularImport() rebutja QUALSEVOL comanda nova abans de validar res més
+// -- és el mateix punt d'entrada que fa servir submit-registration.js per a
+// totes les modalitats, així que n'hi ha prou amb aquest únic lloc. No és
+// una data de tall automàtica (com les tarifes TARIFES de sota): algú ha de
+// tornar a posar-ho a `false` (i desplegar) si mai es reobrissin les
+// inscripcions.
+const INSCRIPCIONS_TANCADES = true;
+
 // Tarifes per fases (early bird / estàndard / last call). Els preus de
 // cada casella són valors fixos per tarifa, no una fórmula.
 const TARIFES = [
@@ -245,6 +256,11 @@ async function validarFisic(payload) {
  * quan correspongui.
  */
 async function calcularImport(payload) {
+  if (INSCRIPCIONS_TANCADES) {
+    throw new Error(
+      "Les inscripcions estan tancades. Si vols col·laborar amb el repte, pots fer una donació a /dona."
+    );
+  }
   if (!payload || !payload.modalitat) {
     throw new Error("Falta el camp 'modalitat'");
   }
@@ -304,6 +320,7 @@ function descripcioComanda(payload) {
 }
 
 module.exports = {
+  INSCRIPCIONS_TANCADES,
   TARIFES,
   TALLES_VALIDES,
   TALLES_ADULT,
