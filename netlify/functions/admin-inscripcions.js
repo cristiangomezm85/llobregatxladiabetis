@@ -9,10 +9,13 @@
 // lxd-admin.js amb /api/admin-content. Si ADMIN_TOKEN no està definit
 // (per exemple en local), no es demana token, igual que a l'altre editor.
 
-const { llistarOrdres, obtenirOrdre, actualitzarOrdre, eliminarOrdre } = require("./lib/store");
+const { llistarOrdres, obtenirOrdre, actualitzarOrdre, eliminarOrdre, marcarEmailPagat } = require("./lib/store");
+const { notificarMailerLite } = require("./lib/mailerlite");
+const { enviarEmailConfirmacio } = require("./lib/confirmacio-email");
 
 // Camps que MAI es poden tocar des d'aquí perquè determinen o deriven el
-// preu ja cobrat (o l'estat de pagament). Qualsevol altra cosa de
+// preu ja cobrat. L'"estat" es tracta a part (només pagat/pendent, vegeu
+// l'acció "update"). Qualsevol altra cosa de
 // contacte/identificació es pot corregir sense problema.
 const CAMPS_PROHIBITS_TOP = new Set([
   "estat", "import_base_centims", "donacio_centims", "import_centims", "unitats",
@@ -76,6 +79,21 @@ exports.handler = async (event) => {
           payloadNou[k] = payloadPatch[k];
         });
 
+        // Estat de pagament: només es permet passar a "pagat" o "pendent"
+        // (p. ex. una inscripció gratuïta per codi Heroi que es va quedar
+        // penjada). No toca imports ni res de Stripe.
+        const estatDemanat = typeof patch.estat === "string" ? patch.estat.trim().toLowerCase() : "";
+        const estatActual = String(actual.estat || "").trim().toLowerCase();
+        let marcaPagatara = false;
+        if (["pagat", "pendent"].includes(estatDemanat) && estatDemanat !== estatActual) {
+          patchTop.estat = estatDemanat;
+          if (estatDemanat === "pagat") {
+            marcaPagatara = true;
+            patchTop.data_pagament = actual.data_pagament || new Date().toISOString();
+            patchTop.pagament_manual = true;
+          }
+        }
+
         const actualitzat = await actualitzarOrdre(body.order_id, {
           ...patchTop,
           payload: payloadNou,
@@ -84,6 +102,21 @@ exports.handler = async (event) => {
           // payload.
           email_contacte: patchTop.email_contacte || payloadNou.email_contacte || actual.email_contacte,
         });
+
+        // Mateixos efectes que quan una comanda passa a pagada pel camí normal
+        // (webhook de Stripe / inscripció gratuïta): índex d'emails pagats,
+        // MailerLite i email de confirmació. Cap no bloqueja el desat.
+        if (marcaPagatara) {
+          const ordrePagada = { ...actual, ...patchTop, payload: payloadNou };
+          if (!["animar", "dorsal0"].includes(ordrePagada.modalitat)) {
+            try { await marcarEmailPagat(ordrePagada.email_contacte, body.order_id); }
+            catch (e) { console.error("Error marcant email com a pagat:", e); }
+          }
+          try { await notificarMailerLite(ordrePagada, body.order_id); }
+          catch (e) { console.error("Error notificant MailerLite:", e); }
+          try { await enviarEmailConfirmacio(ordrePagada, body.order_id); }
+          catch (e) { console.error("Error enviant l'email de confirmació:", e); }
+        }
         return resposta(200, { ok: true, ordre: actualitzat });
       }
 
