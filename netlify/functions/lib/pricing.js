@@ -326,26 +326,33 @@ async function validarFisicLastMinute(payload) {
     throw new Error("El telèfon d'emergència no és vàlid");
   }
 
-  // Nomes des de la Caminada de Cloenda, o des d'un dels 4 punts permesos
-  // -- en tots dos casos el final és sempre el punt fix del recorregut
-  // (no es confia en el tram_final que pugui enviar el client).
+  // Nomes des de la Caminada de Cloenda (inici i final fixos), o des d'un
+  // dels 4 punts permesos amb el final lliure: calcularTram ja comprova que
+  // el final existeix i és posterior a l'inici dins el recorregut.
   let iniciId;
+  let finalId = LAST_MINUT_FINAL_ID;
   if (payload.tram_tipus === "cloenda") {
     iniciId = "el-prat-de-llobregat";
   } else if (payload.tram_tipus === "personalitzat" && LAST_MINUT_PUNTS_PERMESOS.includes(payload.tram_inici)) {
     iniciId = payload.tram_inici;
+    if (!payload.tram_final) throw new Error("Falta el municipi final del tram");
+    finalId = payload.tram_final;
   } else {
     throw new Error(
       "Aquesta inscripció last minute només es pot fer des de Sant Boi, Sant Joan Despí, Cornellà o l'Hospitalet, o fent la Caminada de Cloenda."
     );
   }
-  const tram = await calcularTram(iniciId, LAST_MINUT_FINAL_ID);
+  const tram = await calcularTram(iniciId, finalId);
   payload.tram_inici = iniciId;
-  payload.tram_final = LAST_MINUT_FINAL_ID;
+  payload.tram_final = finalId;
   payload.tram_dies = tram.dies;
   payload.tram_km = payload.tram_tipus === "cloenda" ? arrodonirKm(tram.kmTotal * 2) : tram.kmTotal;
   payload.tram_inici_nom = tram.iniciNom;
   payload.tram_final_nom = tram.finalNom;
+
+  if (!payload.recollida_municipi) {
+    throw new Error("Falta el municipi de recollida");
+  }
 
   if (payload.federat && !payload.num_llicencia_federativa) {
     throw new Error("Falta el número de llicència federativa");
@@ -367,7 +374,7 @@ async function validarFisicLastMinute(payload) {
     throw new Error("Falta acceptar totes les caselles legals");
   }
 
-  // Sense samarreta: no es demana talla_samarreta ni recollida_municipi, i
+  // Sense samarreta: no es demana talla_samarreta, i
   // no s'afegeix res a payload.samarretes -- shirtEntries() a
   // public-stats.js ja ignora les comandes sense talla/array, així que no
   // calen canvis allà per excloure-les del recompte de samarretes.
@@ -416,6 +423,8 @@ async function calcularImport(payload) {
   // codi no hi aplica.
   let descompteHeroiAplicat = false;
   let descompteCentimsAplicat = 0;
+  // Last minute: preu fix, no admet cap codi de descompte (s'ignora).
+  if (ferLastMinute) payload.codi_descompte = "";
   if (payload.codi_descompte && payload.modalitat !== "dorsal0") {
     const info = trobarCodiDescompte(payload.codi_descompte);
     if (!info) {
