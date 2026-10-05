@@ -206,17 +206,24 @@
   @media (max-width:480px){ .tram-fila{ grid-template-columns:1fr; } }
   .samarreta-fila{ display:grid; grid-template-columns:1fr 90px auto; gap:10px; align-items:end; margin-bottom:12px; }
   @media (max-width:480px){ .samarreta-fila{ grid-template-columns:1fr 70px auto; } }
-  .tram-tipus-opcions{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
-  @media (max-width:560px){ .tram-tipus-opcions{ grid-template-columns:1fr; } }
+  .tram-tipus-opcions{
+    display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px;
+    max-width:520px; margin:6px auto 18px;
+  }
+  @media (max-width:560px){ .tram-tipus-opcions{ grid-template-columns:1fr; max-width:none; } }
   .tram-tipus-btn{
-    border:1.5px solid #E4E1D8; background:#fff; border-radius:10px;
-    padding:12px 10px; text-align:center; cursor:pointer; font-family:'Manrope',sans-serif;
-    display:flex; flex-direction:column; gap:3px;
+    border:2px solid #E4E1D8; background:#fff; border-radius:var(--radi);
+    padding:18px 14px; text-align:center; cursor:pointer; font-family:'Manrope',sans-serif;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px;
+    box-shadow:0 4px 14px rgba(14,27,54,0.07);
+    transition:border-color .15s, transform .15s, background .15s;
   }
+  .tram-tipus-btn:hover{ transform:translateY(-2px); }
+  .tram-tipus-btn:focus-visible{ outline:3px solid var(--blau-aigua); outline-offset:2px; }
   .tram-tipus-btn strong{
-    font-family:'Bricolage Grotesque',sans-serif; font-size:13px; font-weight:700; color:var(--blau-llobregat);
+    font-family:'Bricolage Grotesque',sans-serif; font-size:15px; font-weight:700; color:var(--blau-llobregat);
   }
-  .tram-tipus-btn span{ font-size:11.5px; color:var(--gris); }
+  .tram-tipus-btn span{ font-size:12.5px; color:var(--gris); }
   .tram-tipus-btn.actiu{ border-color:var(--coral); background:#FFF1EC; }
   .tram-tipus-btn.actiu strong{ color:var(--coral); }
   .tram-km-display{
@@ -913,6 +920,13 @@
       </div>
 
 
+      <div class="camp">
+        <label data-i18n="lbl_recollida_lm">M'aniria millor recollir el pack de participant al municipi més proper a... *</label>
+        <select class="fi-recollida" required>
+          <option value="">—</option>
+        </select>
+      </div>
+
       <div class="menor-caixa" data-menor-caixa>
         <div class="avis" data-i18n="avis_menor">Ets menor de 18 anys el dia d'inici del repte</div>
         <div class="fila-2">
@@ -964,18 +978,6 @@
         <input type="number" id="donacio-altra" min="1" step="1" placeholder="Ex: 15">
       </div>
       <div class="donacio-avis" id="donacio-avis" data-i18n="don_avis">Cal triar una opció de donació (pot ser 0 €).</div>
-    </div>
-
-    <div class="camp codi-heroi-camp" id="codi-heroi-camp" hidden>
-      <label for="codi-descompte">
-        <span data-i18n="lbl_codi_heroi">Codi descompte Herois (opcional)</span>
-        <button type="button" class="preu-info-btn info-btn-clar" onclick="window.obrirPopupHerois()" aria-label="Què és el codi d'Heroi?" title="Què és el codi d'Heroi?">i</button>
-      </label>
-      <div class="codi-heroi-fila">
-        <input type="text" id="codi-descompte" placeholder="Ex: HEROI2026" autocomplete="off">
-        <button type="button" id="codi-heroi-validar" class="codi-heroi-validar-btn" data-i18n="btn_validar_codi">Validar</button>
-      </div>
-      <div class="codi-heroi-estat" id="codi-heroi-estat"></div>
     </div>
 
     <div class="resum-total" id="resum-total" hidden>
@@ -1050,16 +1052,6 @@
       </table>
       <p class="taula-preus-nota" data-i18n="taula_preus_nota">El preu es calcula automàticament segons la data d'avui i la tarifa vigent.</p>
     </div>
-  </div>
-</div>
-
-<div class="preu-popup-overlay" id="heroi-popup-overlay">
-  <div class="preu-popup">
-    <button type="button" class="preu-popup-tancar" onclick="window.tancarPopupHerois()" aria-label="Tancar">&times;</button>
-    <h3 data-i18n="heroi_popup_titol">Què és ser un Heroi?</h3>
-    <p data-i18n="heroi_popup_text1">Els Herois i Heroïnes són persones que, a més de fer el repte, ajuden activament a recaptar fons per a AREDI. Tenen un perfil públic al web i material propi per difondre la seva campanya de recaptació.</p>
-    <p data-i18n-html="heroi_popup_text2">Com a reconeixement d'aquesta col·laboració, l'organització premia els Herois amb la <strong>participació sense cost</strong> al repte.</p>
-    <p data-i18n-html="heroi_popup_text3">Pots fer-te Heroi/ïna a la web d'Herois. Per a més informació, escriu-nos a <a href="mailto:info@llobregat.org">info@llobregat.org</a>.</p>
   </div>
 </div>
 
@@ -1230,6 +1222,7 @@
       en:"Sunday 18 October, from 5.00 pm to 7.30 pm, at the Cal Tet car park (El Prat de Llobregat)."
     },
     lbl_llicencia: { ca:"Número de llicència federativa *", es:"Número de licencia federativa *", en:"Federation licence number *" },
+    lbl_recollida_lm: { ca:"M'aniria millor recollir el pack de participant al municipi més proper a... *", es:"Me iría mejor recoger el pack de participante en el municipio más cercano a... *", en:"It would suit me best to collect my participant pack in the town closest to... *" },
     lbl_recollida: { ca:"M'aniria millor recollir la samarreta al municipi més proper a... *", es:"Me iría mejor recoger la camiseta en el municipio más cercano a... *", en:"It would suit me best to collect the t-shirt in the town closest to... *" },
     lbl_talla: { ca:"Talla de samarreta *", es:"Talla de camiseta *", en:"T-shirt size *" },
     samarreta_preview_text: {
@@ -1615,18 +1608,6 @@
     if (e.key === "Escape") { window.tancarPopupPreus(); window.tancarPopupHerois(); window.tancarPopupCloenda(); window.tancarPopupTalla(); }
   });
 
-  // ---------- Popup informatiu sobre el codi de descompte d'Heroi ----------
-  const heroiPopupOverlay = document.getElementById("heroi-popup-overlay");
-  window.obrirPopupHerois = function () {
-    heroiPopupOverlay.classList.add("visible");
-  };
-  window.tancarPopupHerois = function () {
-    heroiPopupOverlay.classList.remove("visible");
-  };
-  heroiPopupOverlay.addEventListener("click", (e) => {
-    if (e.target === heroiPopupOverlay) window.tancarPopupHerois();
-  });
-
   // ---------- Popup informatiu sobre la Caminada de Cloenda ----------
   const cloendaPopupOverlay = document.getElementById("cloenda-popup-overlay");
   window.obrirPopupCloenda = function () {
@@ -1683,65 +1664,8 @@
   const donacioCaixa = document.getElementById("donacio-caixa");
   const donacioD0Avis = document.getElementById("donacio-d0-avis");
   const resumTotal = document.getElementById("resum-total");
-  const codiHeroiCamp = document.getElementById("codi-heroi-camp");
-  const codiDescompteInput = document.getElementById("codi-descompte");
-  const codiHeroiValidarBtn = document.getElementById("codi-heroi-validar");
-  const codiHeroiEstat = document.getElementById("codi-heroi-estat");
-  let codiHeroiValidat = false;
-  // Detall del descompte del codi validat: { gratis: true } per als codis
-  // d'Heroi (100% descompte, com sempre), o { gratis: false, descompte_centims }
-  // per a codis d'import parcial (p. ex. Corresolidaris). null si no hi ha
-  // cap codi validat.
+  // Last minute: preu fix, sense codis de descompte.
   let codiDescompteInfo = null;
-
-  async function validarCodiHeroi() {
-    const codi = codiDescompteInput.value.trim();
-    if (!codi) return;
-    codiHeroiValidarBtn.disabled = true;
-    codiHeroiEstat.className = "codi-heroi-estat";
-    codiHeroiEstat.textContent = t("codi_validant");
-    try {
-      const res = await fetch("/.netlify/functions/validar-codi?codi=" + encodeURIComponent(codi));
-      const data = await res.json();
-      if (data.valid) {
-        codiHeroiValidat = true;
-        codiDescompteInfo = { gratis: !!data.gratis, descompte_centims: data.descompte_centims || 0 };
-        codiHeroiEstat.className = "codi-heroi-estat valid";
-        codiHeroiEstat.textContent = codiDescompteInfo.gratis
-          ? t("codi_valid")
-          : t("codi_valid_import").replace("{import}", formatEur(codiDescompteInfo.descompte_centims));
-        codiDescompteInput.disabled = true;
-      } else {
-        codiHeroiValidat = false;
-        codiDescompteInfo = null;
-        codiDescompteInput.value = "";
-        codiHeroiEstat.className = "codi-heroi-estat invalid";
-        codiHeroiEstat.textContent = t("codi_invalid");
-      }
-    } catch (e) {
-      codiHeroiValidat = false;
-      codiDescompteInfo = null;
-      codiHeroiEstat.className = "codi-heroi-estat invalid";
-      codiHeroiEstat.textContent = t("codi_invalid");
-    }
-    codiHeroiValidarBtn.disabled = false;
-    actualitzarTotal();
-  }
-  codiHeroiValidarBtn.addEventListener("click", validarCodiHeroi);
-  codiDescompteInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") { e.preventDefault(); validarCodiHeroi(); }
-  });
-  // Si l'usuari torna a editar el codi (per exemple, l'esborra i en prova un
-  // altre), invalidem l'estat anterior fins que el torni a validar.
-  codiDescompteInput.addEventListener("input", () => {
-    if (codiHeroiValidat) {
-      codiHeroiValidat = false;
-      codiDescompteInfo = null;
-      codiHeroiEstat.className = "codi-heroi-estat";
-      codiHeroiEstat.textContent = "";
-      actualitzarTotal();
-    }
-  });
   const arediCaixa = document.getElementById("aredi-caixa");
   const totalDisplay = document.getElementById("total-display");
   const desglosDisplay = document.getElementById("desglose-display");
@@ -1780,7 +1704,6 @@
 
       donacioCaixa.hidden = false;
       resumTotal.hidden = false;
-      codiHeroiCamp.hidden = modalitatActiva === "dorsal0";
       arediCaixa.hidden = false;
       submitBtn.hidden = false;
 
@@ -1887,15 +1810,15 @@
 
     // Last minute: la llista d'inici es queda restringida als punts
     // permesos, i el final sempre és el punt fix del recorregut.
+    const finalIdPrev = finalSel.value;
     omplirSelectMunicipis(iniciSel, POBLES_ORDENATS.filter((p) => LAST_MINUT_PUNTS.includes(p.id)));
     const iniciOpt = iniciSel.selectedOptions[0];
     if (iniciOpt && iniciOpt.value) {
-      const finalPobleLM = POBLES_TOTS.find((p) => p.id === LAST_MINUT_FINAL);
-      if (finalPobleLM) {
-        omplirSelectMunicipis(finalSel, [finalPobleLM]);
-        finalSel.value = LAST_MINUT_FINAL;
-      }
-      finalSel.disabled = true;
+      finalSel.disabled = false;
+      const dIni = Number(iniciOpt.dataset.dia);
+      const kIni = Number(iniciOpt.dataset.km);
+      const posteriors = POBLES_ORDENATS.filter((p) => p.dia > dIni || (p.dia === dIni && p.km > kIni));
+      omplirSelectMunicipis(finalSel, posteriors, finalIdPrev);
     } else {
       omplirSelectMunicipis(finalSel, []);
       finalSel.querySelector("option").textContent = t("opt_tria_inici_primer");
@@ -2158,13 +2081,13 @@
       recomputeTramFisic();
       return;
     }
-    // Last minute: el final sempre és el punt fix del recorregut (no es tria).
-    const finalPobleLM = POBLES_TOTS.find((p) => p.id === LAST_MINUT_FINAL);
-    if (finalPobleLM) {
-      omplirSelectMunicipis(finalSel, [finalPobleLM]);
-      finalSel.value = LAST_MINUT_FINAL;
-    }
-    finalSel.disabled = true;
+    // Last minute: l'inici està restringit, però el final es pot triar
+    // lliurement entre qualsevol municipi posterior (com a la inscripció normal).
+    finalSel.disabled = false;
+    const dIni = Number(iniciOpt.dataset.dia);
+    const kIni = Number(iniciOpt.dataset.km);
+    const posteriors = POBLES_ORDENATS.filter((p) => p.dia > dIni || (p.dia === dIni && p.km > kIni));
+    omplirSelectMunicipis(finalSel, posteriors, "");
     recomputeTramFisic();
   });
   finalSel.addEventListener("change", () => {
@@ -2391,6 +2314,7 @@
     falta_relacio: { ca:"Falta indicar la relació amb la diabetis tipus 1.", es:"Falta indicar la relación con la diabetes tipo 1.", en:"Please indicate your connection to type 1 diabetes." },
     falta_samarretes: { ca:"Afegeix almenys una samarreta (talla i quantitat).", es:"Añade al menos una camiseta (talla y cantidad).", en:"Add at least one t-shirt (size and quantity)." },
     falta_talla: { ca:"Falta la talla de samarreta.", es:"Falta la talla de camiseta.", en:"Missing t-shirt size." },
+    falta_recollida_lm: { ca:"Falta triar el municipi de recollida.", es:"Falta elegir el municipio de recogida.", en:"Please choose the pickup town." },
     falta_recollida: { ca:"Falta triar quan i on recollir la samarreta.", es:"Falta elegir cuándo y dónde recoger la camiseta.", en:"Please choose when and where to collect the t-shirt." },
     falta_identificacio: { ca:"Falten dades d'identificació.", es:"Faltan datos de identificación.", en:"Missing identification details." },
     falta_emergencia: { ca:"Falta el contacte d'emergència.", es:"Falta el contacto de emergencia.", en:"Missing emergency contact." },
@@ -2501,6 +2425,8 @@
         const sexe = val(".fi-sexe", blocFisic);
         const iniciOpt = iniciSel.selectedOptions[0];
         const finalOpt = finalSel.selectedOptions[0];
+        const recollidaSel = blocFisic.querySelector(".fi-recollida");
+        const recollidaText = recollidaSel.selectedOptions[0] ? recollidaSel.selectedOptions[0].textContent : "";
         const federat = checked('.fi-federat[value="si"]', blocFisic);
         const llicencia = val(".fi-llicencia", blocFisic);
         const teClub = checked('.fi-club[value="si"]', blocFisic);
@@ -2525,6 +2451,7 @@
         if (!relacio) throw new Error(msg("falta_relacio"));
         if (!emergenciaNom || !emergenciaTelefon) throw new Error(msg("falta_emergencia"));
         if (!telefonValid(emergenciaTelefon)) throw new Error(msg("emergencia_telefon_invalid"));
+        if (!recollidaSel.value) throw new Error(msg("falta_recollida_lm"));
         if (!tramTipusActiu) throw new Error(msg("falta_tram_tipus"));
         if (!iniciOpt || !iniciOpt.value || !finalOpt || !finalOpt.value) throw new Error(msg("falta_tram"));
         const tram = calcularTramClient(iniciOpt, finalOpt);
@@ -2541,7 +2468,7 @@
           ...dades, nom, cognoms, dni, dataNaixement, telefon, email,
           emergenciaNom, emergenciaTelefon, relacioText,
           tramInici: iniciOpt.textContent, tramFinal: finalOpt.textContent,
-          tramKm: tram.km, tramDies: tram.dies, federat, llicencia,
+          tramKm: tram.km, tramDies: tram.dies, federat, llicencia, recollida: recollidaText,
           esMenor: esMenor === true, tutorNom, tutorCognoms, clubNom,
         };
         payloadAPI = {
@@ -2550,6 +2477,7 @@
           contacte_emergencia_nom: emergenciaNom, contacte_emergencia_telefon: emergenciaTelefon,
           relacio,
           tram_inici: iniciOpt.value, tram_final: finalOpt.value, tram_tipus: tramTipusActiu,
+          recollida_municipi: recollidaSel.value, recollida_municipi_nom: recollidaText,
           federat, num_llicencia_federativa: llicencia,
           club_nom: clubNom,
           tutor_nom: tutorNom, tutor_cognoms: tutorCognoms, tutor_dni: tutorDni,
@@ -2564,7 +2492,7 @@
     }
 
     payloadAPI.donacio_centims = donacioSeleccionada || 0;
-    payloadAPI.codi_descompte = codiDescompteInput.value.trim();
+    payloadAPI.codi_descompte = "";
     // Idioma triat pel formulari (CA/ES/EN): es guarda a la comanda i es
     // passa a MailerLite perquè l'automatització de correu pugui triar la
     // versió correcta del missatge de confirmació.
