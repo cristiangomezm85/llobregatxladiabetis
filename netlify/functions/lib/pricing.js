@@ -3,7 +3,7 @@
 // en el importe ni en las validaciones que vengan del frontend.
 
 const { calcularTram, arrodonirKm } = require("./route");
-const { llistarOrdres, comptarLastMinutePagades } = require("./store");
+const { comptarPlacesLastMinute } = require("./store");
 
 // Interruptor únic i manual per tancar les inscripcions (totes les
 // modalitats, incloent Dorsal 0 -- qui vulgui col·laborar un cop tancat ho
@@ -26,7 +26,7 @@ const INSCRIPCIONS_TANCADES = true;
 // (inscripcio-last-minute.html): no hi ha cap mecanisme automàtic que ho
 // faci per nosaltres.
 const LAST_MINUT_LIMIT = 100;
-const LAST_MINUT_PREU_CENTIMS = 700; // 7 € tancats, independents de tarifes/etapes
+const LAST_MINUT_PREU_CENTIMS = 800; // 8 € tancats, independents de tarifes/etapes
 // Fi de la finestra: final del dilluns 12 d'octubre de 2026, hora
 // peninsular espanyola (CEST, UTC+2) -> 2026-10-12T22:00:00Z. Si en
 // realitat es volia tallar a una altra hora, només cal canviar aquesta
@@ -293,11 +293,10 @@ function esComandaLastMinute(o) {
   );
 }
 
-// Només compten les comandes last minute PAGADES (índex lleuger a
-// store.js). Abans es llegien totes les comandes (lent) i a més comptaven
-// també les pendents/abandonades, que ocupaven plaça sense haver pagat.
 async function comptarLastMinuteOcupades() {
-  return comptarLastMinutePagades();
+  // Només compta claus d'un store petit (vegeu submit-registration.js), no
+  // llegeix cap comanda: així respon en uns pocs ms encara que n'hi hagi milers.
+  return comptarPlacesLastMinute();
 }
 
 async function validarFisicLastMinute(payload) {
@@ -474,6 +473,7 @@ module.exports = {
   LAST_MINUT_FINAL_ID,
   LAST_MINUT_PUNTS_PERMESOS,
   comptarLastMinuteOcupades,
+  esComandaLastMinute,
   TARIFES,
   TALLES_VALIDES,
   TALLES_ADULT,

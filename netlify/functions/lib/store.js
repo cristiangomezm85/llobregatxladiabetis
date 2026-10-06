@@ -30,55 +30,15 @@ function ordresStore() {
 // cada inscripció (lent i, amb prou comandes, arriba a fallar). S'escriu
 // quan una comanda passa a "pagat" (gratuïta a l'instant, o des del
 // webhook de Stripe) i només es llegeix (1 lectura) per comprovar-ho.
+// Una clau per cada comanda last minute física (caminant/corrent/bici).
+// Comptar-ne les claus és molt més ràpid que llegir totes les comandes una
+// per una (que és el que feia el comptador de places i el trigava molt).
+function placesLastMinuteStore() {
+  return getStore(opcionsStore("places-last-minute"));
+}
+
 function emailsPagatsStore() {
   return getStore(opcionsStore("emails-pagats"));
-}
-
-// Índex lleuger de places last minute PAGADES: una clau per comanda.
-// Comptar places = 1 sola crida a list() (sense llegir cap comanda), en
-// comptes de llegir totes les comandes cada cop (que trigava massa i feia
-// caure per timeout el comptador públic de inscripcio-last-minute.html).
-function lastMinuteStore() {
-  return getStore(opcionsStore("last-minute-pagades"));
-}
-
-function esLastMinuteFisica(o) {
-  return !!(
-    o &&
-    o.payload &&
-    o.payload.last_minute === true &&
-    ["caminant", "corrent", "bici"].includes(o.payload.modalitat)
-  );
-}
-
-async function marcarLastMinutePagada(orderId, ordre) {
-  if (!orderId || !esLastMinuteFisica(ordre)) return;
-  await lastMinuteStore().set(orderId, new Date().toISOString());
-}
-
-async function desmarcarLastMinute(orderId) {
-  try { await lastMinuteStore().delete(orderId); } catch (e) { /* no bloqueja */ }
-}
-
-async function comptarLastMinutePagades() {
-  const { blobs } = await lastMinuteStore().list();
-  return blobs.length;
-}
-
-// Ús puntual (admin): reconstrueix l'índex a partir de totes les comandes
-// pagades. Necessari un cop després del desplegament, per incloure les
-// inscripcions last minute fetes abans que existís l'índex.
-async function reindexarLastMinute() {
-  const ordres = await llistarOrdres();
-  const store = lastMinuteStore();
-  let n = 0;
-  for (const o of ordres) {
-    if (o.estat === "pagat" && esLastMinuteFisica(o)) {
-      await store.set(o.order_id, o.data_pagament || new Date().toISOString());
-      n++;
-    }
-  }
-  return n;
 }
 
 function normalitzarEmail(email) {
@@ -127,10 +87,23 @@ async function llistarOrdres() {
 // Elimina una comanda (des de l'admin: tant "pagades" com "incompletes").
 // Si tenia email marcat com a pagat a l'índex, el treiem també, perquè
 // aquell email pugui tornar a inscriure's si cal.
+async function marcarPlacaLastMinute(orderId) {
+  await placesLastMinuteStore().set(orderId, new Date().toISOString());
+}
+
+async function comptarPlacesLastMinute() {
+  const { blobs } = await placesLastMinuteStore().list();
+  return blobs.length;
+}
+
 async function eliminarOrdre(orderId) {
   const actual = await obtenirOrdre(orderId);
   await ordresStore().delete(orderId);
-  await desmarcarLastMinute(orderId);
+  try {
+    await placesLastMinuteStore().delete(orderId); // allibera la plaça last minute
+  } catch (e) {
+    // si no hi era, no passa res
+  }
   if (actual && actual.estat === "pagat" && actual.email_contacte) {
     try {
       await emailsPagatsStore().delete(normalitzarEmail(actual.email_contacte));
@@ -167,10 +140,8 @@ module.exports = {
   actualitzarOrdre,
   llistarOrdres,
   eliminarOrdre,
+  marcarPlacaLastMinute,
+  comptarPlacesLastMinute,
   emailJaRegistrat,
   marcarEmailPagat,
-  esLastMinuteFisica,
-  marcarLastMinutePagada,
-  comptarLastMinutePagades,
-  reindexarLastMinute,
 };
