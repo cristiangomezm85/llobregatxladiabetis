@@ -33,7 +33,9 @@ exports.handler = async (event) => {
       headers: {
         ...CORS_HEADERS,
         "Content-Type": "application/json",
-        "Cache-Control": "no-store",
+        // El CDN reutilitza la resposta uns segons: el comptador no cal que
+        // sigui al mil·lisegon (la comprovació real és al servidor en inscriure's).
+        "Cache-Control": "public, max-age=5, s-maxage=15, stale-while-revalidate=60",
       },
       body: JSON.stringify({
         ok: true,

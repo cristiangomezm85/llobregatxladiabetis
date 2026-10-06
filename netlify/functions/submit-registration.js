@@ -5,8 +5,8 @@
 // i crea una comanda "pendent" a Netlify Blobs. Encara no cobra res.
 
 const { randomUUID } = require("crypto");
-const { calcularImport, descripcioComanda } = require("./lib/pricing");
-const { crearOrdre, marcarEmailPagat, marcarLastMinutePagada } = require("./lib/store");
+const { calcularImport, descripcioComanda, esComandaLastMinute } = require("./lib/pricing");
+const { crearOrdre, marcarEmailPagat, marcarPlacaLastMinute } = require("./lib/store");
 const { notificarMailerLite } = require("./lib/mailerlite");
 const { enviarEmailConfirmacio } = require("./lib/confirmacio-email");
 
@@ -85,6 +85,16 @@ exports.handler = async (event) => {
     });
   }
 
+  // Reserva la plaça last minute (compta per al límit de 100 i per al
+  // comptador públic). Només caminant/corrent/bici amb el flag last_minute.
+  if (esComandaLastMinute(dadesOrdre)) {
+    try {
+      await marcarPlacaLastMinute(orderId);
+    } catch (e) {
+      console.error("Error reservant la plaça last minute:", e);
+    }
+  }
+
   const MODALITATS_SENSE_RESTRICCIO_EMAIL = new Set(["animar", "dorsal0"]);
   if (esGratuit) {
     if (!MODALITATS_SENSE_RESTRICCIO_EMAIL.has(dadesOrdre.modalitat)) {
@@ -93,11 +103,6 @@ exports.handler = async (event) => {
       } catch (e) {
         console.error("Error marcant email com a pagat:", e);
       }
-    }
-    try {
-      await marcarLastMinutePagada(orderId, dadesOrdre);
-    } catch (e) {
-      console.error("Error marcant plaça last minute:", e);
     }
     try {
       await notificarMailerLite(dadesOrdre, orderId);
