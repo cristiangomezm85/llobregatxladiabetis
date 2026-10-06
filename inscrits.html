@@ -1168,7 +1168,7 @@
     let lastErr;
     for (const url of candidats) {
       try {
-        const r = await fetch(url, { cache: 'no-store' });
+        const r = await fetch(url);
         if (r.ok) return await r.json();
         lastErr = new Error('HTTP ' + r.status);
       } catch (e) { lastErr = e; }
