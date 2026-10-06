@@ -3,7 +3,7 @@
 // en el importe ni en las validaciones que vengan del frontend.
 
 const { calcularTram, arrodonirKm } = require("./route");
-const { llistarOrdres } = require("./store");
+const { llistarOrdres, comptarLastMinutePagades } = require("./store");
 
 // Interruptor únic i manual per tancar les inscripcions (totes les
 // modalitats, incloent Dorsal 0 -- qui vulgui col·laborar un cop tancat ho
@@ -293,9 +293,11 @@ function esComandaLastMinute(o) {
   );
 }
 
+// Només compten les comandes last minute PAGADES (índex lleuger a
+// store.js). Abans es llegien totes les comandes (lent) i a més comptaven
+// també les pendents/abandonades, que ocupaven plaça sense haver pagat.
 async function comptarLastMinuteOcupades() {
-  const ordres = await llistarOrdres();
-  return ordres.filter(esComandaLastMinute).length;
+  return comptarLastMinutePagades();
 }
 
 async function validarFisicLastMinute(payload) {
