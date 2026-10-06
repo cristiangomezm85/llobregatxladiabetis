@@ -5,6 +5,7 @@
 // Ús: /.netlify/functions/export-data?token=EL_TEU_TOKEN
 
 const { llistarOrdres } = require("./lib/store");
+const { recollidaPerExportar } = require("./lib/recollida-especial");
 
 exports.handler = async (event) => {
   const secretConfigurat = (process.env.EXPORT_SECRET || "").trim();
@@ -66,7 +67,9 @@ exports.handler = async (event) => {
       descompte_heroi: o.descompte_heroi,
       descompte_centims_aplicat: o.descompte_centims_aplicat,
       email_contacte: o.email_contacte,
-      recollida_text: o.recollida_text,
+      // Lloc de recollida especial (llista a lib/recollida-especial.js): només
+      // canvia el CSV, mai la comanda guardada.
+      recollida_text: recollidaPerExportar(o),
       nom: p.nom, cognoms: p.cognoms, telefon: p.telefon,
       dni: p.dni, data_naixement: p.data_naixement, es_menor: p.es_menor,
       tutor_nom: p.tutor_nom, tutor_cognoms: p.tutor_cognoms,
