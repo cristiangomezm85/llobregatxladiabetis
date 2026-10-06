@@ -6,7 +6,7 @@
 
 const { randomUUID } = require("crypto");
 const { calcularImport, descripcioComanda } = require("./lib/pricing");
-const { crearOrdre, marcarEmailPagat } = require("./lib/store");
+const { crearOrdre, marcarEmailPagat, marcarLastMinutePagada } = require("./lib/store");
 const { notificarMailerLite } = require("./lib/mailerlite");
 const { enviarEmailConfirmacio } = require("./lib/confirmacio-email");
 
@@ -93,6 +93,11 @@ exports.handler = async (event) => {
       } catch (e) {
         console.error("Error marcant email com a pagat:", e);
       }
+    }
+    try {
+      await marcarLastMinutePagada(orderId, dadesOrdre);
+    } catch (e) {
+      console.error("Error marcant plaça last minute:", e);
     }
     try {
       await notificarMailerLite(dadesOrdre, orderId);

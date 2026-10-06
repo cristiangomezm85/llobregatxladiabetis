@@ -9,7 +9,7 @@
 // lxd-admin.js amb /api/admin-content. Si ADMIN_TOKEN no està definit
 // (per exemple en local), no es demana token, igual que a l'altre editor.
 
-const { llistarOrdres, obtenirOrdre, actualitzarOrdre, eliminarOrdre, marcarEmailPagat } = require("./lib/store");
+const { llistarOrdres, obtenirOrdre, actualitzarOrdre, eliminarOrdre, marcarEmailPagat, marcarLastMinutePagada } = require("./lib/store");
 const { notificarMailerLite } = require("./lib/mailerlite");
 const { enviarEmailConfirmacio } = require("./lib/confirmacio-email");
 
@@ -112,6 +112,8 @@ exports.handler = async (event) => {
             try { await marcarEmailPagat(ordrePagada.email_contacte, body.order_id); }
             catch (e) { console.error("Error marcant email com a pagat:", e); }
           }
+          try { await marcarLastMinutePagada(body.order_id, ordrePagada); }
+          catch (e) { console.error("Error marcant plaça last minute:", e); }
           try { await notificarMailerLite(ordrePagada, body.order_id); }
           catch (e) { console.error("Error notificant MailerLite:", e); }
           try { await enviarEmailConfirmacio(ordrePagada, body.order_id); }

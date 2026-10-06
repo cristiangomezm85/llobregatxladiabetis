@@ -7,7 +7,7 @@
 // Esdeveniment: checkout.session.completed
 
 const Stripe = require("stripe");
-const { obtenirOrdre, actualitzarOrdre, marcarEmailPagat } = require("./lib/store");
+const { obtenirOrdre, actualitzarOrdre, marcarEmailPagat, marcarLastMinutePagada } = require("./lib/store");
 const { notificarMailerLite } = require("./lib/mailerlite");
 const { enviarEmailConfirmacio } = require("./lib/confirmacio-email");
 
@@ -63,6 +63,12 @@ exports.handler = async (event) => {
     } catch (e) {
       console.error("Error marcant email com a pagat:", e);
     }
+  }
+
+  try {
+    await marcarLastMinutePagada(orderId, ordre);
+  } catch (e) {
+    console.error("Error marcant plaça last minute:", e);
   }
 
   try {
