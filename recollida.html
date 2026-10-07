@@ -29,6 +29,7 @@
   .p h3{margin:0 0 6px;font-family:'Bricolage Grotesque',sans-serif;font-size:17px;color:var(--blau)}
   .p .q{font-weight:700;color:var(--blau2);font-size:14.5px}
   .p .per{font-size:13.5px;color:var(--gris);margin-top:6px}
+  .p .q.pend{display:inline-block;background:#FFF3D6;color:#8A5A00;border:1px solid #F5C451;border-radius:8px;padding:4px 10px}
   .p .mapa{display:inline-block;margin-top:10px;font-size:14px;font-weight:700;color:var(--blau2);text-decoration:none}
   .p .mapa:hover{text-decoration:underline}
   .nota{background:#EEF5FF;border:1px solid #C9DDF7;border-radius:12px;padding:14px 16px;margin-top:18px;font-size:15px}
@@ -88,7 +89,7 @@
     punts.forEach(function(p){
       var d=document.createElement('div');d.className='p';
       var h=document.createElement('h3');h.textContent=p.nom[lang];
-      var q=document.createElement('div');q.className='q';q.textContent=p.quan[lang];
+      var q=document.createElement('div');q.className='q'+(p.pendent?' pend':'');q.textContent=p.quan[lang];
       var r=document.createElement('div');r.className='per';r.textContent=T.per+' '+p.per[lang];
       d.appendChild(h);d.appendChild(q);d.appendChild(r);
       if(p.mapa){var a=document.createElement('a');a.href=p.mapa;a.target='_blank';a.rel='noopener';a.className='mapa';a.textContent=T.mapa;d.appendChild(a)}

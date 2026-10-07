@@ -37,6 +37,7 @@
   .nota{font-size:13px;color:var(--gris);margin:10px 0 0}
   select{width:100%;padding:12px;border:1px solid #b9c3d6;border-radius:10px;font:600 15px 'Manrope',sans-serif;background:#fff;color:var(--tinta)}
   .quan{margin-top:10px;padding:10px 12px;background:#EEF5FF;border-radius:10px;font-size:14px}
+  .quan.pend{background:#FFF3D6;color:#8A5A00;border:1px solid #F5C451;font-weight:700}
   .mapa{display:inline-block;margin-top:10px;font-size:14px;font-weight:700;color:#1E72D4;text-decoration:none}
   .mapa:hover{text-decoration:underline}
   button.principal{margin-top:12px;width:100%;padding:13px;border:0;border-radius:10px;background:var(--blau2);color:#fff;font:700 15px 'Manrope',sans-serif;cursor:pointer}
@@ -179,7 +180,7 @@
     if(!llista.some(function(p){return p.id===d.punt.id}))llista.unshift(d.punt);
     llista.forEach(function(p){var o=document.createElement('option');o.value=p.id;o.textContent=p.nom[lang];if(p.id===d.punt.id)o.selected=true;sel.appendChild(o)});
     sel.disabled=!d.pot_canviar;
-    function actualitzaQuan(){var p=llista.filter(function(x){return x.id===sel.value})[0];$('quan').textContent=p?p.quan[lang]:'';var m=$('mapa');if(p&&p.mapa){m.href=p.mapa;m.textContent=T.mapaTxt;m.hidden=false}else{m.hidden=true;m.removeAttribute('href')}}
+    function actualitzaQuan(){var p=llista.filter(function(x){return x.id===sel.value})[0];$('quan').textContent=p?p.quan[lang]:'';$('quan').classList.toggle('pend',!!(p&&p.pendent));var m=$('mapa');if(p&&p.mapa){m.href=p.mapa;m.textContent=T.mapaTxt;m.hidden=false}else{m.hidden=true;m.removeAttribute('href')}}
     actualitzaQuan();sel.onchange=function(){actualitzaQuan();$('desa').disabled=(sel.value===d.punt.id);$('msg').textContent=''};
     $('desa').textContent=T.desa;$('desa').hidden=!d.pot_canviar;$('desa').disabled=true;
     $('avis').textContent=d.complet?T.avisFet:d.bloquejat_organitzacio?T.avisOrg:d.pot_canviar?T.avisObert(limitTxt(d.limit_canvi)):T.avisTancat;

@@ -1886,6 +1886,10 @@
     const p = PUNTS_ENTREGA.find((x) => x.id === sel.value);
     box.hidden = !p;
     box.textContent = p ? (p.quan[currentLang] || p.quan.ca) : "";
+    box.style.background = p && p.pendent ? "#FFF3D6" : "#EEF5FF";
+    box.style.color = p && p.pendent ? "#8A5A00" : "";
+    box.style.border = p && p.pendent ? "1px solid #F5C451" : "";
+    box.style.fontWeight = p && p.pendent ? "700" : "";
     if (p && p.mapa) {
       const etiqueta = { ca: "📍 Com arribar-hi", es: "📍 Cómo llegar", en: "📍 Get directions" };
       box.appendChild(document.createElement("br"));
