@@ -7,7 +7,9 @@ exports.handler = async () => ({
   statusCode: 200,
   headers: {
     "Content-Type": "application/json; charset=utf-8",
-    "Cache-Control": "public, max-age=300, s-maxage=300, stale-while-revalidate=3600",
+    // El navegador sempre revalida (un canvi d'horari o lloc es veu al moment) i el CDN
+    // el guarda només 60 s.
+    "Cache-Control": "public, max-age=0, s-maxage=60, must-revalidate",
   },
   body: JSON.stringify({
     ok: true,
