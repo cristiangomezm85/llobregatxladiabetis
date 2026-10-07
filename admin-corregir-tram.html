@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Corregir tram d'una inscripció</title>
+<title>Corregir tram i camisetes d'una inscripció</title>
 <style>
   :root{
     --blau:#15315F; --blau-clar:#1E72D4; --coral:#FF6B47;
@@ -51,16 +51,24 @@
   .estado{font-size:.85rem;margin-top:10px;min-height:1.2em;}
   .estado.error{color:var(--vermell);font-weight:600;}
   .estado.ok{color:var(--verd);font-weight:600;}
+  details.sam{border:1px solid var(--linia);border-radius:12px;background:white;margin-bottom:18px;}
+  details.sam > summary{cursor:pointer;padding:14px 18px;font-weight:700;color:var(--blau);font-size:.85rem;letter-spacing:.03em;text-transform:uppercase;}
+  details.sam .cos{padding:0 18px 16px;}
+  .sam-fila{display:flex;gap:10px;align-items:center;margin-top:8px;}
+  .sam-fila select{flex:2;} .sam-fila input[type=number]{flex:0 0 90px;width:90px;padding:10px 12px;border:1px solid var(--linia);border-radius:8px;font-size:.95rem;background:var(--paper);}
+  .btn-petit{padding:8px 14px;font-size:.82rem;}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>Corregir tram (etapa) d'una inscripció</h1>
+  <h1>Corregir tram (etapa) i camisetes d'una inscripció</h1>
   <p class="sub">
     Eina interna, només per al cas en què la persona es va equivocar de municipi
     d'inici/final però l'etapa correcta té el <b>mateix nombre de dies</b> que la
     guardada — per tant el preu ja cobrat no canvia. Si el nombre de dies fos
     diferent, l'eina rebutjarà el canvi automàticament.
+    A més, al final de la fitxa pots <b>afegir o editar les camisetes</b> de qualsevol
+    inscripció (també animar o dorsal 0); això no toca imports ni l'estat de pagament.
   </p>
 
   <fieldset>
@@ -77,6 +85,9 @@
     <div style="margin-top:10px;">
       <button class="btn-primario" id="btnCarregar">Carregar inscripcions</button>
     </div>
+    <label style="display:flex;align-items:center;gap:8px;font-weight:500;margin-top:12px;">
+      <input type="checkbox" id="totes"> Mostrar també les inscripcions sense tram (animar, dorsal 0…) per editar-ne les camisetes
+    </label>
     <div class="lista" id="llista" hidden></div>
     <p class="estado" id="estatLlista"></p>
   </fieldset>
@@ -102,6 +113,25 @@
     <p class="estado" id="estatCorreccio"></p>
     <pre class="resultado" id="resultat" hidden></pre>
   </fieldset>
+
+  <details class="sam" id="detailsSam" hidden>
+    <summary>4. Camisetes d'aquesta inscripció (afegir o editar)</summary>
+    <div class="cos">
+      <div class="actual" id="samInfo"></div>
+      <div id="samFiles"></div>
+      <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn-secundario btn-petit" id="btnAfegirSam" type="button">+ Afegir camiseta</button>
+        <button class="btn-peligro" id="btnDesarSam" type="button">Desar camisetes</button>
+      </div>
+      <p class="aviso">
+        Es guarda a la inscripció (només el camp de camisetes: no canvia imports, estat ni dades personals).
+        Les files amb la mateixa talla se sumen. El recompte, l'Excel de camisetes i el lliurament amb QR
+        ho recullen sols. Si ja s'ha lliurat material d'aquesta inscripció, canvia-ho amb cura.
+      </p>
+      <p class="estado" id="estatSam"></p>
+      <pre class="resultado" id="resultatSam" hidden></pre>
+    </div>
+  </details>
 </div>
 
 <script>
@@ -155,7 +185,7 @@
     const llistaEl = $('llista');
     const filtrades = ordres.filter(o => {
       const { p } = o;
-      if (!o._fisic) return false;
+      if (!o._fisic && !$('totes').checked) return false;
       if (!f) return true;
       const camps = [o._nom, o._email, o.order_id].join(' ').toLowerCase();
       return camps.includes(f);
@@ -168,7 +198,7 @@
     llistaEl.innerHTML = filtrades.map(o => `
       <div class="fila" data-id="${o.order_id}">
         <div class="nom">${escapeHtml(o._nom)}</div>
-        <div class="detall">${escapeHtml(o._email)} · ${escapeHtml(o.payload.tram_inici_nom || o.payload.tram_inici)} → ${escapeHtml(o.payload.tram_final_nom || o.payload.tram_final)} (${(o.payload.tram_dies||[]).length} dia/es) · ${escapeHtml(o.estat || '')}</div>
+        <div class="detall">${escapeHtml(o._email)} · ${o._fisic ? escapeHtml(o.payload.tram_inici_nom || o.payload.tram_inici) + ' → ' + escapeHtml(o.payload.tram_final_nom || o.payload.tram_final) + ' (' + (o.payload.tram_dies||[]).length + ' dia/es)' : escapeHtml(o.modalitat || o.payload.modalitat || 'sense tram')} · camisetes: ${escapeHtml(resumSamarretes(o))} · ${escapeHtml(o.estat || '')}</div>
       </div>
     `).join('');
     llistaEl.hidden = false;
@@ -215,12 +245,16 @@
   });
 
   $('cerca').addEventListener('input', () => renderLlista($('cerca').value));
+  $('totes').addEventListener('change', () => renderLlista($('cerca').value));
 
   function seleccionarOrdre(orderId){
     ordreSeleccionada = ordres.find(o => o.order_id === orderId);
     if (!ordreSeleccionada) return;
     document.querySelectorAll('.fila').forEach(el => el.classList.toggle('seleccionada', el.dataset.id === orderId));
     const p = ordreSeleccionada.payload;
+    obrirCamisetes();
+    $('fieldsetCorreccio').hidden = !ordreSeleccionada._fisic;
+    if (!ordreSeleccionada._fisic) { $('detailsSam').scrollIntoView({behavior:'smooth', block:'nearest'}); return; }
     $('actualInfo').innerHTML =
       `<b>${escapeHtml(ordreSeleccionada._nom)}</b> (${escapeHtml(ordreSeleccionada._email)})<br>` +
       `Tram actual: <b>${escapeHtml(p.tram_inici_nom || p.tram_inici)}</b> → <b>${escapeHtml(p.tram_final_nom || p.tram_final)}</b> ` +
@@ -229,7 +263,6 @@
       $('selInici').value = p.tram_inici;
       $('selFinal').value = p.tram_final;
     }
-    $('fieldsetCorreccio').hidden = false;
     $('resultat').hidden = true;
     $('estatCorreccio').textContent = '';
     $('estatCorreccio').className = 'estado';
@@ -267,6 +300,138 @@
       estatEl.className = 'estado error';
     }
   });
+
+  // ───────── Camisetes (afegir / editar) ─────────
+  const TALLES_GRUPS = (() => {
+    const ad = ['XS','S','M','L','XL','XXL','XXXL'], inf = ['4','6','8','10','12','14'];
+    return [['Home', ad.map(t => 'home-' + t)], ['Dona', ad.map(t => 'dona-' + t)], ['Infantil', inf.map(t => 'infantil-' + t)]];
+  })();
+  const TALLES_VALIDES = TALLES_GRUPS.flatMap(g => g[1]);
+  function etiquetaTalla(v){
+    const m = String(v || '').match(/^(home|dona|infantil)-(.+)$/);
+    return m ? ({home:'Home',dona:'Dona',infantil:'Infantil'}[m[1]] + ' ' + m[2]) : String(v || '');
+  }
+
+  // Mateixa lògica que la resta del sistema: primer payload.samarretes, i si
+  // no n'hi ha, el format antic (talla_samarreta + unitats).
+  function samarretesDe(o){
+    const p = (o && o.payload) || {};
+    let out = [];
+    if (Array.isArray(p.samarretes)) {
+      out = p.samarretes.filter(s => s && Number(s.quantitat) > 0).map(s => ({ ...s, talla: String(s.talla || p.talla_samarreta || ''), quantitat: Number(s.quantitat) }));
+    }
+    if (!out.length) {
+      const q = Number(o.camisetes_total || o.samarretes_total || o.unitats || 0);
+      if (q > 0 && p.talla_samarreta) out = [{ talla: String(p.talla_samarreta), quantitat: q }];
+    }
+    return out;
+  }
+  function resumSamarretes(o){
+    const l = samarretesDe(o);
+    return l.length ? l.map(s => etiquetaTalla(s.talla) + ' ×' + s.quantitat).join(', ') : 'cap';
+  }
+
+  let filesSam = [];
+
+  function obrirCamisetes(){
+    const o = ordreSeleccionada;
+    filesSam = samarretesDe(o).map(s => ({ orig: s, talla: s.talla, quantitat: s.quantitat }));
+    $('detailsSam').hidden = false;
+    $('samInfo').innerHTML =
+      `<b>${escapeHtml(o._nom)}</b> (${escapeHtml(o._email)}) · ${escapeHtml(o.modalitat || (o.payload && o.payload.modalitat) || '')} · ${escapeHtml(o.estat || '')}<br>` +
+      `Camisetes ara: <b>${escapeHtml(resumSamarretes(o))}</b> · order_id: <code>${escapeHtml(o.order_id)}</code>` +
+      (String(o.estat || '').trim().toLowerCase() !== 'pagat' ? '<br><span style="color:var(--vermell);font-weight:600;">Aquesta inscripció no consta com a pagada: no sortirà al lliurament ni als recomptes.</span>' : '');
+    renderFilesSam();
+    $('estatSam').textContent = ''; $('estatSam').className = 'estado';
+    $('resultatSam').hidden = true;
+  }
+
+  function optionsTalla(actual){
+    let h = '<option value="">— talla —</option>' + TALLES_GRUPS.map(([g, ts]) =>
+      `<optgroup label="${g}">` + ts.map(t => `<option value="${t}"${t === actual ? ' selected' : ''}>${etiquetaTalla(t)}</option>`).join('') + '</optgroup>').join('');
+    if (actual && !TALLES_VALIDES.includes(actual)) h += `<option value="${escapeHtml(actual)}" selected>${escapeHtml(actual)} (no estàndard)</option>`;
+    return h;
+  }
+
+  function renderFilesSam(){
+    const c = $('samFiles');
+    if (!filesSam.length) { c.innerHTML = '<p class="aviso">Aquesta inscripció no té camisetes. Fes servir «Afegir camiseta».</p>'; return; }
+    c.innerHTML = filesSam.map((f, i) => `
+      <div class="sam-fila" data-i="${i}">
+        <select data-camp="talla">${optionsTalla(f.talla)}</select>
+        <input type="number" data-camp="quantitat" min="1" max="20" step="1" value="${f.quantitat}" aria-label="Quantitat">
+        <button type="button" class="btn-secundario btn-petit" data-treure="${i}" title="Treure">✕</button>
+      </div>`).join('');
+    c.querySelectorAll('.sam-fila').forEach(el => {
+      const i = Number(el.dataset.i);
+      el.querySelector('[data-camp=talla]').addEventListener('change', e => { filesSam[i].talla = e.target.value; });
+      el.querySelector('[data-camp=quantitat]').addEventListener('input', e => { filesSam[i].quantitat = Number(e.target.value); });
+      el.querySelector('[data-treure]').addEventListener('click', () => { filesSam.splice(i, 1); renderFilesSam(); });
+    });
+  }
+
+  $('btnAfegirSam').addEventListener('click', () => { filesSam.push({ orig: {}, talla: '', quantitat: 1 }); renderFilesSam(); });
+
+  $('btnDesarSam').addEventListener('click', async () => {
+    if (!ordreSeleccionada) return;
+    const o = ordreSeleccionada, estatEl = $('estatSam'), resEl = $('resultatSam');
+    const token = tokenInput.value.trim();
+    const fail = m => { estatEl.textContent = m; estatEl.className = 'estado error'; };
+    if (!token) return fail('Falta el token.');
+
+    // Valida i fusiona files amb la mateixa talla.
+    const fusio = new Map();
+    for (const f of filesSam) {
+      if (!f.talla) return fail('Hi ha una fila sense talla: tria-la o treu-la.');
+      if (!TALLES_VALIDES.includes(f.talla) && !(f.orig && f.orig.talla === f.talla)) return fail('Talla no vàlida: ' + f.talla);
+      const q = Number(f.quantitat);
+      if (!Number.isInteger(q) || q < 1 || q > 20) return fail('La quantitat ha de ser un enter entre 1 i 20.');
+      if (fusio.has(f.talla)) fusio.get(f.talla).quantitat += q;
+      else fusio.set(f.talla, { ...(f.orig || {}), talla: f.talla, quantitat: q });
+    }
+    const nova = Array.from(fusio.values());
+    const abans = samarretesDe(o);
+
+    // Mantenim talla_samarreta (camp de les modalitats físiques) coherent: només
+    // si la talla que hi havia ja no surt a la llista nova.
+    const payloadPatch = { samarretes: nova };
+    const tallaFisica = o.payload && o.payload.talla_samarreta;
+    if (tallaFisica && nova.length && !nova.some(s => s.talla === tallaFisica)) payloadPatch.talla_samarreta = nova[0].talla;
+
+    estatEl.textContent = 'Desant...'; estatEl.className = 'estado';
+    $('btnDesarSam').disabled = true;
+    try {
+      const res = await fetch(API_INSCRIPCIONS, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ action: 'update', order_id: o.order_id, patch: { payload: payloadPatch } }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || ('HTTP ' + res.status));
+      // Actualitzem la còpia local (conservant els camps _nom, _email…).
+      o.payload = (data.ordre && data.ordre.payload) || { ...o.payload, ...payloadPatch };
+      resEl.hidden = false; resEl.className = 'resultado ok';
+      resEl.textContent = 'Justificant del canvi (guarda\'l):\n' + JSON.stringify({
+        order_id: o.order_id, abans, despres: samarretesDe(o),
+      }, null, 2);
+      estatEl.textContent = 'Camisetes desades correctament.'; estatEl.className = 'estado ok';
+      obrirCamisetesSenseEsborrarMissatge();
+      renderLlista($('cerca').value);
+    } catch (err) {
+      fail('No s\'ha desat: ' + err.message);
+    } finally {
+      $('btnDesarSam').disabled = false;
+    }
+  });
+
+  // Refresca la fitxa després de desar sense esborrar el missatge ni el justificant.
+  function obrirCamisetesSenseEsborrarMissatge(){
+    const msg = $('estatSam').textContent, cls = $('estatSam').className;
+    const res = $('resultatSam').textContent, resHidden = $('resultatSam').hidden, resCls = $('resultatSam').className;
+    obrirCamisetes();
+    $('estatSam').textContent = msg; $('estatSam').className = cls;
+    $('resultatSam').textContent = res; $('resultatSam').hidden = resHidden; $('resultatSam').className = resCls;
+  }
 </script>
 </body>
 </html>
