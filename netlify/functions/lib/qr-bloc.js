@@ -12,21 +12,21 @@ const T = {
   CA: {
     titol: "El teu QR de recollida",
     intro: "Mostra aquest QR a la taula de recollida del teu punt per agafar la bossa, la pulsera i la samarreta (si en tens). La pulsera és obligatòria durant el repte: és necessària per l'assegurança i per accedir a l'avituallament.",
-    punt: "El teu punt de recollida", codi: "Codi d'inscripció",
+    mapa: "📍 Com arribar-hi", punt: "El teu punt de recollida", codi: "Codi d'inscripció",
     canvi: "Pots canviar el punt de recollida des del teu perfil fins l'11 d'octubre. A partir del 12 d'octubre ja no es podrà modificar.",
     boto: "Veure el meu perfil →", alt: "QR de recollida", sense: "Si no et carrega la imatge, obre el teu perfil amb el botó de sota: el QR també hi surt.",
   },
   ES: {
     titol: "Tu QR de recogida",
     intro: "Muestra este QR en la mesa de recogida de tu punto para llevarte la bolsa, la pulsera y la camiseta (si tienes). La pulsera es obligatoria durante el reto: es necesaria para el seguro y para acceder al avituallamiento.",
-    punt: "Tu punto de recogida", codi: "Código de inscripción",
+    mapa: "📍 Cómo llegar", punt: "Tu punto de recogida", codi: "Código de inscripción",
     canvi: "Puedes cambiar el punto de recogida desde tu perfil hasta el 11 de octubre. A partir del 12 de octubre ya no se podrá modificar.",
     boto: "Ver mi perfil →", alt: "QR de recogida", sense: "Si no te carga la imagen, abre tu perfil con el botón de abajo: el QR también aparece ahí.",
   },
   EN: {
     titol: "Your pickup QR",
     intro: "Show this QR at your point's pickup table to collect your bag, wristband and t-shirt (if you have one). The wristband is mandatory during the challenge: it is required for insurance and to access the aid stations.",
-    punt: "Your pickup point", codi: "Registration code",
+    mapa: "📍 Get directions", punt: "Your pickup point", codi: "Registration code",
     canvi: "You can change your pickup point from your profile until October 11. From October 12 it can no longer be changed.",
     boto: "View my profile →", alt: "Pickup QR", sense: "If the image doesn't load, open your profile with the button below: the QR is there too.",
   },
@@ -45,6 +45,7 @@ function blocQr(ordre, orderId, idioma, estat) {
   const punt = puntPerId(E.puntEfectiu(ordre, estat || {}));
   const puntNom = punt ? punt.nom[l] : "";
   const puntQuan = punt ? punt.quan[l] : "";
+  const urlMapa = punt && punt.mapa ? punt.mapa : "";
   const urlQr = `${BASE}/.netlify/functions/qr?id=${orderId}`;
   const urlPerfil = `${BASE}/perfil?id=${orderId}&lang=${l}`;
   const codi = orderId.slice(0, 8).toUpperCase();
@@ -63,7 +64,7 @@ function blocQr(ordre, orderId, idioma, estat) {
                 <tr>
                   <td style="padding:8px 22px 4px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:21px; color:#0E1B36;">
                     <p style="margin:0 0 10px;">${esc(t.intro)}</p>
-                    <p style="margin:0 0 10px;"><b>${esc(t.punt)}:</b><br>${esc(puntNom)}<br><span style="color:#5A6478;">${esc(puntQuan)}</span></p>
+                    <p style="margin:0 0 10px;"><b>${esc(t.punt)}:</b><br>${esc(puntNom)}<br><span style="color:#5A6478;">${esc(puntQuan)}</span>${urlMapa ? `<br><a href="${esc(urlMapa)}" target="_blank" style="color:#1E72D4; font-weight:bold; text-decoration:none;">${esc(t.mapa)}</a>` : ""}</p>
                     <p style="margin:0 0 10px; color:#B3361B;"><b>${esc(t.canvi)}</b></p>
                   </td>
                 </tr>
@@ -81,7 +82,7 @@ function blocQr(ordre, orderId, idioma, estat) {
             </td>
           </tr>`;
 
-  const text = [t.titol, `${t.codi}: ${codi}`, `${t.punt}: ${puntNom} — ${puntQuan}`, t.intro, t.canvi, `${t.boto.replace(" →", "")}: ${urlPerfil}`].join("\n");
+  const text = [t.titol, `${t.codi}: ${codi}`, `${t.punt}: ${puntNom} — ${puntQuan}` + (urlMapa ? `\n${t.mapa.replace("📍 ", "")}: ${urlMapa}` : ""), t.intro, t.canvi, `${t.boto.replace(" →", "")}: ${urlPerfil}`].join("\n");
   return { html, text, urlPerfil, urlQr };
 }
 

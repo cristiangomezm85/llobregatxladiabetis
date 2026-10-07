@@ -22,74 +22,74 @@ const SANT_JUST = new Set(ORDRES_SANT_JUST.map(([id]) => id));
 //        comanda que assignen aquest punt per defecte.
 const PUNTS = [
   {
-    id: "alsamasa", seleccionable: true, mesa: true, claus: ["hospitalet", "cornella"],
+    id: "alsamasa", seleccionable: true, mesa: true, mapa: "https://maps.app.goo.gl/ojuRPhoM7goJA5968", claus: ["hospitalet", "cornella"],
     nom: { ca: "Alsamasa (Esplugues de Llobregat)", es: "Alsamasa (Esplugues de Llobregat)", en: "Alsamasa (Esplugues de Llobregat)" },
     quan: { ca: "14, 15 i 16 d'octubre, de 9h a 19h", es: "14, 15 y 16 de octubre, de 9h a 19h", en: "October 14, 15 and 16, 9am–7pm" },
     per: { ca: "L'Hospitalet i Cornellà", es: "L'Hospitalet y Cornellà", en: "L'Hospitalet and Cornellà" },
   },
   {
-    id: "biblioteca-sjd", seleccionable: true, mesa: true,
+    id: "biblioteca-sjd", seleccionable: true, mesa: true, mapa: "https://maps.app.goo.gl/eQ1DU2PVrX3BxBJF9",
     claus: ["sant joan desp", "sant boi", "sant vicen", "pallej", "sant andreu", "santa coloma"],
     nom: { ca: "Biblioteca Mercè Rodoreda (Sant Joan Despí)", es: "Biblioteca Mercè Rodoreda (Sant Joan Despí)", en: "Mercè Rodoreda Library (Sant Joan Despí)" },
     quan: { ca: "14 d'octubre, de 16h a 20h", es: "14 de octubre, de 16h a 20h", en: "October 14, 4pm–8pm" },
     per: { ca: "Sant Joan Despí i municipis veïns riu amunt", es: "Sant Joan Despí y municipios vecinos río arriba", en: "Sant Joan Despí and neighbouring towns upstream" },
   },
   {
-    id: "salvador-boada", seleccionable: true, mesa: true, claus: ["martorell", "esparreguera", "olesa"],
-    nom: { ca: "Complex esportiu municipal Salvador Boada (Martorell)", es: "Complejo deportivo municipal Salvador Boada (Martorell)", en: "Salvador Boada municipal sports complex (Martorell)" },
+    id: "salvador-boada", seleccionable: true, mesa: true, mapa: "https://maps.app.goo.gl/DAVi71RVG4kyrFYeA", claus: ["martorell", "esparreguera", "olesa"],
+    nom: { ca: "Pavelló Municipal Salvador Boada (Olesa de Montserrat)", es: "Pabellón Municipal Salvador Boada (Olesa de Montserrat)", en: "Salvador Boada Municipal Pavilion (Olesa de Montserrat)" },
     quan: { ca: "14, 15 i 16 d'octubre, de 7h a 22h", es: "14, 15 y 16 de octubre, de 7h a 22h", en: "October 14, 15 and 16, 7am–10pm" },
     per: { ca: "Martorell, Esparreguera i Olesa", es: "Martorell, Esparreguera y Olesa", en: "Martorell, Esparreguera and Olesa" },
   },
   {
-    id: "castellar", seleccionable: true, mesa: true, claus: ["castellar"],
+    id: "castellar", seleccionable: true, mesa: true, mapa: "https://www.google.com/maps?q=42.282243,2.016636", claus: ["castellar"],
     nom: { ca: "Castellar de n'Hug (Hostal La Closa / plaça de l'Ajuntament)", es: "Castellar de n'Hug (Hostal La Closa / plaza del Ayuntamiento)", en: "Castellar de n'Hug (Hostal La Closa / Town Hall square)" },
     quan: { ca: "15 d'octubre de 20h a 22h a l'Hostal La Closa · 16 d'octubre de 7:30h a 7:50h a la plaça de l'Ajuntament", es: "15 de octubre de 20h a 22h en el Hostal La Closa · 16 de octubre de 7:30h a 7:50h en la plaza del Ayuntamiento", en: "October 15, 8pm–10pm at Hostal La Closa · October 16, 7:30am–7:50am at the Town Hall square" },
     per: { ca: "Castellar de n'Hug", es: "Castellar de n'Hug", en: "Castellar de n'Hug" },
   },
   {
-    id: "gironella", seleccionable: true, mesa: true, claus: ["gironella"],
+    id: "gironella", seleccionable: true, mesa: true, mapa: "https://www.google.com/maps?q=42.033703,1.882563", claus: ["gironella"],
     nom: { ca: "Gironella (arribada de la 1a etapa)", es: "Gironella (llegada de la 1.ª etapa)", en: "Gironella (stage 1 finish)" },
-    quan: { ca: "16 d'octubre, de 18h a 19h", es: "16 de octubre, de 18h a 19h", en: "October 16, 6pm–7pm" },
+    quan: { ca: "16 d'octubre, de 18h a 19h · també 30 minuts abans de la sortida", es: "16 de octubre, de 18h a 19h · también 30 minutos antes de la salida", en: "October 16, 6pm–7pm · also 30 minutes before the start" },
     per: { ca: "Gironella", es: "Gironella", en: "Gironella" },
   },
   {
-    id: "monistrol", seleccionable: true, mesa: true, claus: ["monistrol"],
+    id: "monistrol", seleccionable: true, mesa: true, mapa: "https://www.google.com/maps?q=41.609762,1.842477", claus: ["monistrol"],
     nom: { ca: "Monistrol de Montserrat (arribada de la 2a etapa)", es: "Monistrol de Montserrat (llegada de la 2.ª etapa)", en: "Monistrol de Montserrat (stage 2 finish)" },
-    quan: { ca: "17 d'octubre, de 18h a 19h", es: "17 de octubre, de 18h a 19h", en: "October 17, 6pm–7pm" },
+    quan: { ca: "17 d'octubre, de 18h a 19h · també 30 minuts abans de la sortida", es: "17 de octubre, de 18h a 19h · también 30 minutos antes de la salida", en: "October 17, 6pm–7pm · also 30 minutes before the start" },
     per: { ca: "Monistrol de Montserrat", es: "Monistrol de Montserrat", en: "Monistrol de Montserrat" },
   },
   {
-    id: "berga", seleccionable: true, mesa: true, claus: ["berga"],
+    id: "berga", seleccionable: true, mesa: true, mapa: "https://www.google.com/maps?q=42.099042,1.85105", claus: ["berga"],
     nom: { ca: "Berga (Escola Fedac Xarxa)", es: "Berga (Escola Fedac Xarxa)", en: "Berga (Escola Fedac Xarxa)" },
     quan: { ca: "16 d'octubre, de 9h a 16h", es: "16 de octubre, de 9h a 16h", en: "October 16, 9am–4pm" },
     per: { ca: "Berga", es: "Berga", en: "Berga" },
   },
   {
     id: "sallent", seleccionable: true, mesa: true, claus: ["sallent"],
-    nom: { ca: "Sallent (lliurament amb l'Eli)", es: "Sallent (entrega con Eli)", en: "Sallent (handover with Eli)" },
+    nom: { ca: "Sallent", es: "Sallent", en: "Sallent" },
     quan: { ca: "Durant el 15 d'octubre", es: "Durante el 15 de octubre", en: "During October 15" },
     per: { ca: "Sallent", es: "Sallent", en: "Sallent" },
   },
   {
-    id: "navas", seleccionable: true, mesa: true, claus: ["navas"],
+    id: "navas", seleccionable: true, mesa: true, mapa: "https://www.google.com/maps?q=41.900015,1.879395", claus: ["navas"],
     nom: { ca: "Navàs (lliurament a la pujada)", es: "Navàs (entrega en la subida)", en: "Navàs (handover on the climb)" },
     quan: { ca: "Durant el 15 d'octubre", es: "Durante el 15 de octubre", en: "During October 15" },
     per: { ca: "Navàs", es: "Navàs", en: "Navàs" },
   },
   {
-    id: "manresa", seleccionable: true, mesa: true, claus: ["manresa"],
+    id: "manresa", seleccionable: true, mesa: true, mapa: "https://www.google.com/maps?q=41.70092524712058,1.8685905736670065", claus: ["manresa"],
     nom: { ca: "Manresa (lliurament amb l'ADCC)", es: "Manresa (entrega con la ADCC)", en: "Manresa (handover with ADCC)" },
     quan: { ca: "Durant el 15 d'octubre", es: "Durante el 15 de octubre", en: "During October 15" },
     per: { ca: "Manresa", es: "Manresa", en: "Manresa" },
   },
   {
     id: "cal-rosal", seleccionable: true, mesa: true, claus: ["cal rosal"],
-    nom: { ca: "Cal Rosal (lliurament amb la Montse)", es: "Cal Rosal (entrega con Montse)", en: "Cal Rosal (handover with Montse)" },
-    quan: { ca: "La Montse ho coordinarà amb tu", es: "Montse lo coordinará contigo", en: "Montse will arrange it with you" },
+    nom: { ca: "Cal Rosal", es: "Cal Rosal", en: "Cal Rosal" },
+    quan: { ca: "L'organització ho coordinarà amb tu", es: "La organización lo coordinará contigo", en: "The organisation will arrange it with you" },
     per: { ca: "Cal Rosal", es: "Cal Rosal", en: "Cal Rosal" },
   },
   {
-    id: "prat", seleccionable: true, mesa: true, claus: ["prat", "desembocadura"],
+    id: "prat", seleccionable: true, mesa: true, mapa: "https://www.google.com/maps/search/?api=1&query=Parking+Cal+Tet+El+Prat+de+Llobregat", claus: ["prat", "desembocadura"],
     nom: { ca: "El Prat de Llobregat (Parking Cal Tet)", es: "El Prat de Llobregat (Parking Cal Tet)", en: "El Prat de Llobregat (Cal Tet car park)" },
     quan: { ca: "Diumenge 18 d'octubre, de 15h a 16h", es: "Domingo 18 de octubre, de 15h a 16h", en: "Sunday October 18, 3pm–4pm" },
     per: { ca: "El Prat i Desembocadura", es: "El Prat y Desembocadura", en: "El Prat and the river mouth" },
@@ -141,7 +141,7 @@ function dinsDeTermini(ara) {
 
 // Versió per enviar al navegador (sense claus internes).
 function publicPunt(p) {
-  return { id: p.id, nom: p.nom, quan: p.quan, per: p.per, seleccionable: p.seleccionable, mesa: p.mesa };
+  return { id: p.id, nom: p.nom, quan: p.quan, per: p.per, mapa: p.mapa || null, seleccionable: p.seleccionable, mesa: p.mesa };
 }
 
 module.exports = {
