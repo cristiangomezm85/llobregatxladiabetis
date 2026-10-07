@@ -8,7 +8,7 @@
 
 const { obtenirOrdre } = require("./lib/store");
 const { construirCampsComanda } = require("./lib/dades-comanda");
-const { PUNTS, LIMIT_CANVI_ISO, puntPerId, dinsDeTermini, publicPunt } = require("./lib/punts");
+const { PUNTS, LIMIT_CANVI_ISO, puntPerId, dinsDeTermini, publicPunt, esPuntExcepcio } = require("./lib/punts");
 const E = require("./lib/entregues");
 
 function resp(statusCode, body) {
@@ -25,7 +25,7 @@ function vista(ordre, estat, orderId) {
   const cl = E.checklist(ordre, estat);
   const puntId = E.puntEfectiu(ordre, estat);
   const punt = puntPerId(puntId);
-  const bloquejat = puntId === "sant-just";
+  const bloquejat = esPuntExcepcio(puntId);
   return {
     ok: true,
     id: orderId,
@@ -71,7 +71,7 @@ exports.handler = async (event) => {
       if (!ordre) return resp(404, { ok: false, codi: "no_trobada" });
       if (!E.estaPagada(ordre)) return resp(409, { ok: false, codi: "no_pagada" });
       let estat = await E.obtenirEstat(id);
-      if (E.puntEfectiu(ordre, estat) === "sant-just") return resp(403, { ok: false, codi: "bloquejat" });
+      if (esPuntExcepcio(E.puntEfectiu(ordre, estat))) return resp(403, { ok: false, codi: "bloquejat" });
       if (!E.checklist(ordre, estat).items.length) return resp(409, { ok: false, codi: "sense_entrega" });
       if (E.checklist(ordre, estat).complet) return resp(409, { ok: false, codi: "ja_entregat" });
       estat = await E.canviarPunt(id, nou.id);
