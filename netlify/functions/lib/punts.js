@@ -12,6 +12,9 @@ const { ORDRES: ORDRES_SANT_JUST, es912 } = require("./recollida-especial");
 
 // Últim moment per canviar de punt: 11/10/2026 23:59:59 hora de Madrid
 // (CEST = UTC+2). A partir del 12/10 ja no es pot canviar.
+// Marca de versió: surt a /.netlify/functions/punts-publics per comprovar què hi ha desplegat.
+const VERSIO = "2026-10-07-berga-pendent-912";
+
 const LIMIT_CANVI_ISO = "2026-10-11T21:59:59.999Z";
 
 const SANT_JUST = new Set(ORDRES_SANT_JUST.map(([id]) => id));
@@ -168,6 +171,6 @@ function publicPunt(p) {
 }
 
 module.exports = {
-  PUNTS, ALTRES, LIMIT_CANVI_ISO, puntPerId, puntPerDefecte, dinsDeTermini, esPuntExcepcio, puntExcepcio,
+  VERSIO, PUNTS, ALTRES, LIMIT_CANVI_ISO, puntPerId, puntPerDefecte, dinsDeTermini, esPuntExcepcio, puntExcepcio,
   publicPunt, normalitzar,
 };
