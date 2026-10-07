@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ca"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Entregues — admin</title>
+<style>
+body{font:15px/1.5 system-ui,sans-serif;margin:0;padding:20px;background:#f4f6fa;color:#1a2233}
+.w{max-width:960px;margin:0 auto}.card{background:#fff;border-radius:12px;padding:18px;margin-bottom:16px;box-shadow:0 2px 10px #0001}
+h1{margin:0 0 10px;font-size:22px}h2{margin:0 0 8px;font-size:17px}
+button{padding:9px 16px;border:0;border-radius:8px;background:#1E72D4;color:#fff;font:600 14px inherit;cursor:pointer;margin:6px 8px 0 0}
+button.g{background:#1A8A3C}button.r{background:#C0262D}button:disabled{opacity:.4}
+input[type=password],input[type=text]{padding:8px 10px;border:1px solid #bbc;border-radius:8px;font:inherit;width:100%;max-width:420px}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{border-bottom:1px solid #e3e6ee;padding:6px 8px;text-align:left}td.n,th.n{text-align:right}
+.m{margin-top:10px;font-weight:600}
+</style></head><body><div class="w">
+<h1>Entregues de bosses, pulseres i samarretes</h1>
+<div class="card"><label>Token d'admin <small>(es fa servir el de l'admin si ja hi has entrat)</small></label><br><input type="password" id="tok" autocomplete="off"></div>
+
+<div class="card"><h2>Resum per punt</h2>
+<button id="bRes">Actualitzar resum</button>
+<table id="t" hidden><thead><tr><th>Punt</th><th class="n">Assignats</th><th class="n">Complets</th><th class="n">Parcials</th><th class="n">Pendents</th><th class="n">QR enviat</th></tr></thead><tbody></tbody></table>
+<div class="m" id="mRes"></div></div>
+
+<div class="card"><h2>Índex de cerca dels voluntaris</h2>
+<p>Cal reconstruir-lo abans de l'esdeveniment i després de les últimes inscripcions, perquè el buscador manual vagi ràpid.</p>
+<button id="bIx">Reconstruir índex</button><div class="m" id="mIx"></div></div>
+
+<div class="card"><h2>Enviar el correu amb el QR a les inscripcions ja pagades</h2>
+<p>Només envia a qui encara no l'ha rebut. Per lots de 40. Comprova abans el límit diari del teu pla de Resend (el gratuït és de 100 correus al dia).</p>
+<button id="bSim">Simular</button><button class="g" id="bProva">Prova: enviar només 1 correu</button><button class="g" id="bLot">Enviar un lot</button><button class="g" id="bTots">Enviar tots els lots</button><button class="r" id="bPara" hidden>Parar</button>
+<div class="m" id="mQr"></div></div>
+
+<div class="card"><h2>Desfer un lliurament (error d'un voluntari)</h2>
+<input type="text" id="idDesfer" placeholder="order_id de la comanda"><br>
+<button class="r" id="bDesfer">Desfer lliurament</button><div class="m" id="mDesfer"></div></div>
+</div>
+<script>
+var API='/.netlify/functions/admin-entregues',$=function(i){return document.getElementById(i)},para=false;
+function tok(){var t=$('tok').value.trim();if(t)return t;try{return sessionStorage.getItem('lxd-admin-token')||localStorage.getItem('lxd-admin-token')||''}catch(e){return ''}}
+function crida(m,cos){var h={'content-type':'application/json'},t=tok();if(t)h.authorization='Bearer '+t;
+ return fetch(API,{method:m,headers:h,body:cos?JSON.stringify(cos):undefined}).then(function(r){return r.json().catch(function(){return {ok:false,error:'Resposta no vàlida (HTTP '+r.status+')'}})})}
+$('bRes').onclick=function(){$('mRes').textContent='Carregant…';crida('GET').then(function(j){
+ if(!j.ok){$('mRes').textContent='Error: '+(j.error||'');return}$('mRes').textContent='';var tb=$('t').tBodies[0];tb.textContent='';$('t').hidden=false;
+ j.punts.forEach(function(p){var r=tb.insertRow();[p.nom,p.assignats,p.complets,p.parcials,p.pendents,p.qr_enviats].forEach(function(v,i){var c=r.insertCell();c.textContent=v;if(i)c.className='n'})})}).catch(function(){$('mRes').textContent='Error de connexió'})};
+$('bIx').onclick=function(){$('mIx').textContent='Reconstruint… (pot trigar uns segons)';crida('POST',{action:'reindexar'}).then(function(j){$('mIx').textContent=j.ok?('Fet: '+j.persones+' persones indexades.'):('Error: '+(j.error||''))}).catch(function(){$('mIx').textContent='Error de connexió'})};
+$('bSim').onclick=function(){crida('POST',{action:'enviar-qr',aplicar:false}).then(function(j){$('mQr').textContent=j.ok?('Simulació: '+j.pendents_total+' correus pendents (lot actual: '+j.aquest_lot+').'):('Error: '+(j.error||''))})};
+function lot(n){return crida('POST',{action:'enviar-qr',aplicar:true,limit:n||40})}
+$('bProva').onclick=function(){lot(1).then(function(j){$('mQr').textContent=j.ok?('Prova enviada: '+j.enviats+' correu. Queden '+j.queden+'. Comprova que ha arribat bé.'):('Error: '+(j.error||''))})};
+$('bLot').onclick=function(){$('bLot').disabled=true;lot().then(function(j){$('bLot').disabled=false;$('mQr').textContent=j.ok?('Enviats '+j.enviats+'. Queden '+j.queden+'.'):('Error: '+(j.error||''))})};
+$('bTots').onclick=function(){if(!confirm('Enviar el correu del QR a TOTES les inscripcions pendents?'))return;para=false;$('bTots').disabled=true;$('bPara').hidden=false;
+ (function seg(){if(para){fi('Aturat.');return}lot().then(function(j){if(!j.ok){fi('Error: '+(j.error||''));return}$('mQr').textContent='Enviats '+j.enviats+' en aquest lot. Queden '+j.queden+'.';if(j.queden>0&&j.enviats>0)setTimeout(seg,1500);else fi('Fet. Queden '+j.queden+'.')}).catch(function(){fi('Error de connexió')})})();
+ function fi(m){$('mQr').textContent=m;$('bTots').disabled=false;$('bPara').hidden=true}};
+$('bPara').onclick=function(){para=true};
+$('bDesfer').onclick=function(){var id=$('idDesfer').value.trim();if(!id)return;if(!confirm('Desfer el lliurament d\'aquesta comanda?'))return;crida('POST',{action:'desfer',id:id}).then(function(j){$('mDesfer').textContent=j.ok?'Lliurament desfet.':('Error: '+(j.error||''))})};
+</script></body></html>
