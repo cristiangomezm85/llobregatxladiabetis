@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Voluntaris — Llobregat x la Diabetis</title>
+<link rel="icon" type="image/png" href="img/logo-small.png">
+<style>
+  :root{--blau:#15315F;--blau2:#1E72D4;--coral:#FF6B47;--paper:#F3F5F9;--tinta:#0E1B36;--gris:#5A6478;--ok:#1A8A3C;--err:#C0262D;--vora:#DCE1EA}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:var(--paper);color:var(--tinta);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.4;font-size:17px}
+  header{background:var(--blau);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  header b{font-size:15px}
+  header button{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:8px;padding:6px 10px;font-size:13px}
+  main{max-width:560px;margin:0 auto;padding:16px}
+  h1{font-size:22px;margin:4px 0 12px;color:var(--blau)}
+  label{display:block;font-weight:700;margin:14px 0 6px;font-size:15px}
+  input,select{width:100%;padding:14px;font-size:17px;border:1px solid #b9c3d6;border-radius:12px;background:#fff;color:var(--tinta)}
+  button.gran{display:block;width:100%;margin-top:14px;padding:18px;border:0;border-radius:14px;background:var(--blau2);color:#fff;font-size:18px;font-weight:700}
+  button.gran.sec{background:#fff;color:var(--blau2);border:2px solid var(--blau2)}
+  button.gran.ok{background:var(--ok)}
+  button.gran:disabled{opacity:.4}
+  .card{background:#fff;border:1px solid var(--vora);border-radius:14px;padding:16px;margin-top:14px}
+  #video{width:100%;border-radius:14px;background:#000;max-height:60vh;object-fit:cover}
+  .res{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+  .res button{text-align:left;padding:14px;border:1px solid var(--vora);border-radius:12px;background:#fff;font-size:17px;color:var(--tinta)}
+  .res small{color:var(--gris);display:block}
+  .banner{border-radius:14px;padding:16px;margin-top:14px;font-weight:700}
+  .banner.err{background:#FDECEC;border:2px solid var(--err);color:#8F1B20}
+  .banner.warn{background:#FFF4E0;border:2px solid #E09A1F;color:#7A4B00}
+  .banner.fet{background:#E8F6EC;border:2px solid var(--ok);color:#146B2E}
+  .banner small{display:block;font-weight:500;margin-top:4px}
+  .nom{font-size:24px;font-weight:800;color:var(--blau);margin:0}
+  .sub{color:var(--gris);font-size:15px}
+  .item{display:flex;align-items:center;gap:14px;padding:16px 4px;border-bottom:1px solid var(--vora);font-size:19px}
+  .item:last-child{border-bottom:0}
+  .item input{width:30px;height:30px;flex:none;accent-color:var(--ok)}
+  .item.fet{color:var(--gris);text-decoration:line-through}
+  .msg{margin-top:12px;font-weight:700}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <b id="capcalera">Voluntaris</b>
+  <span id="sync" style="font-size:13px"></span>
+  <button id="canviaMesa" hidden>Canviar taula</button>
+</header>
+<div id="alertes" style="max-width:560px;margin:0 auto;padding:0 16px"></div>
+<main>
+
+  <!-- 1. Accés -->
+  <section id="vLogin" hidden>
+    <h1>Entrar</h1>
+    <label for="codi">Codi de voluntari</label>
+    <input id="codi" type="password" autocomplete="off" autocapitalize="off">
+    <label for="nomVol">El teu nom</label>
+    <input id="nomVol" type="text" autocomplete="off" placeholder="Nom i inicial del cognom">
+    <button class="gran" id="entra">Entrar</button>
+    <div class="msg" id="msgLogin" style="color:var(--err)"></div>
+  </section>
+
+  <!-- 2. Taula -->
+  <section id="vMesa" hidden>
+    <h1>On ets?</h1>
+    <label for="selMesa">Taula de recollida</label>
+    <select id="selMesa"></select>
+    <button class="gran" id="triaMesa">Començar</button>
+  </section>
+
+  <!-- 3. Inici -->
+  <section id="vInici" hidden>
+    <div class="card"><div class="sub">Taula</div><div class="nom" id="mesaNom"></div><div class="sub" id="mesaQuan"></div></div>
+    <button class="gran" id="bBuscar">Buscar participant</button>
+    <div id="opcions" hidden>
+      <button class="gran sec" id="bCamera">📷 Escanejar QR amb la càmera</button>
+      <button class="gran sec" id="bManual">🔎 Cercar manualment (nom, email o DNI)</button>
+    </div>
+  </section>
+
+  <!-- 4a. Càmera -->
+  <section id="vCamera" hidden>
+    <video id="video" playsinline muted></video>
+    <canvas id="cv" hidden></canvas>
+    <div class="msg" id="msgCam"></div>
+    <button class="gran sec" id="camTorna">Enrere</button>
+  </section>
+
+  <!-- 4b. Cerca manual -->
+  <section id="vCerca" hidden>
+    <label for="q">Nom, email o DNI</label>
+    <input id="q" type="text" autocomplete="off" autocapitalize="off" placeholder="Mínim 3 caràcters">
+    <div class="res" id="resultats"></div>
+    <div class="msg" id="msgCerca"></div>
+    <button class="gran sec" id="cercaTorna">Enrere</button>
+  </section>
+
+  <!-- 5. Resultat -->
+  <section id="vResultat" hidden>
+    <div id="bannerRes"></div>
+    <div id="fitxa" hidden>
+      <div class="card">
+        <p class="nom" id="pNom"></p>
+        <div class="sub" id="pSub"></div>
+        <div id="llista" style="margin-top:8px"></div>
+        <div class="sub" id="pAvis" style="margin-top:8px"></div>
+      </div>
+      <button class="gran ok" id="bLlest">Llest</button>
+    </div>
+    <div class="msg" id="msgRes"></div>
+    <button class="gran sec" id="resTorna">Següent participant</button>
+  </section>
+</main>
+
+<script src="assets/jsqr.js"></script>
+<script>
+(function(){
+  var API='/.netlify/functions/voluntari';
+  var $=function(i){return document.getElementById(i)};
+  var S={codi:'',nom:'',mesa:null,mesas:[]};
+  var cam={stream:null,raf:0,actiu:false};
+  var actual=null;
+
+  try{var g=JSON.parse(sessionStorage.getItem('lxd-vol')||'null');if(g){S.codi=g.codi;S.nom=g.nom;S.mesa=g.mesa}}catch(e){}
+  function desa(){try{sessionStorage.setItem('lxd-vol',JSON.stringify({codi:S.codi,nom:S.nom,mesa:S.mesa}))}catch(e){}}
+
+  var VISTES=['vLogin','vMesa','vInici','vCamera','vCerca','vResultat'];
+  function mostra(v){
+    if(v!=='vCamera')paraCamera();
+    VISTES.forEach(function(x){$(x).hidden=(x!==v)});
+    $('canviaMesa').hidden=(v==='vLogin'||v==='vMesa');
+    window.scrollTo(0,0);
+  }
+
+  function crida(cos){
+    return fetch(API,{method:'POST',headers:{'content-type':'application/json','x-voluntari-code':S.codi},body:JSON.stringify(cos)})
+      .then(function(r){return r.json().catch(function(){return {ok:false,codi:'resposta'}}).then(function(j){j._http=r.status;return j})});
+  }
+  function esAuth(j){if(j&&(j._http===401||j.codi==='codi_incorrecte')){S.codi='';desa();mostra('vLogin');$('msgLogin').textContent='El codi ja no és vàlid. Torna a entrar.';return true}return false}
+
+  /* ---- Accés ---- */
+  $('entra').onclick=function(){
+    var codi=$('codi').value.trim(),nom=$('nomVol').value.trim();
+    if(!codi||nom.length<2){$('msgLogin').textContent='Omple el codi i el teu nom.';return}
+    S.codi=codi;S.nom=nom;$('msgLogin').textContent='';$('entra').disabled=true;
+    crida({action:'login'}).then(function(j){
+      $('entra').disabled=false;
+      if(j.ok){S.mesas=j.mesas;desa();vesAMesa()}
+      else if(j._http===503)$('msgLogin').textContent='El sistema encara no està configurat.';
+      else $('msgLogin').textContent='Codi incorrecte.';
+    }).catch(function(){$('entra').disabled=false;$('msgLogin').textContent='Sense connexió. Torna-ho a provar.'});
+  };
+
+  function vesAMesa(){
+    var sel=$('selMesa');sel.textContent='';
+    S.mesas.forEach(function(m){var o=document.createElement('option');o.value=m.id;o.textContent=m.nom.ca;sel.appendChild(o)});
+    if(S.mesa)sel.value=S.mesa;
+    mostra('vMesa');
+  }
+  $('triaMesa').onclick=function(){S.mesa=$('selMesa').value;desa();vesAInici()};
+  $('canviaMesa').onclick=function(){if(!S.mesas.length){tornaLogin();return}vesAMesa()};
+  function tornaLogin(){mostra('vLogin')}
+
+  function vesAInici(){
+    var m=S.mesas.filter(function(x){return x.id===S.mesa})[0];
+    $('mesaNom').textContent=m?m.nom.ca:S.mesa;$('mesaQuan').textContent=m?m.quan.ca:'';
+    $('opcions').hidden=true;$('bBuscar').hidden=false;
+    mostra('vInici');
+  }
+  $('bBuscar').onclick=function(){$('bBuscar').hidden=true;$('opcions').hidden=false};
+
+  /* ---- Càmera ---- */
+  function paraCamera(){
+    cam.actiu=false;if(cam.raf)cancelAnimationFrame(cam.raf);cam.raf=0;
+    if(cam.stream){cam.stream.getTracks().forEach(function(t){t.stop()});cam.stream=null}
+    var v=$('video');if(v)v.srcObject=null;
+  }
+  $('bCamera').onclick=function(){
+    $('msgCam').textContent='Obrint la càmera…';mostra('vCamera');
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$('msgCam').textContent='Aquest navegador no permet usar la càmera. Fes servir la cerca manual.';return}
+    navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false}).then(function(st){
+      cam.stream=st;var v=$('video');v.srcObject=st;v.setAttribute('playsinline','true');return v.play()
+    }).then(function(){cam.actiu=true;$('msgCam').textContent='Apunta al QR del participant.';bucle()})
+    .catch(function(){$('msgCam').textContent='No s\'ha pogut obrir la càmera (permís denegat?). Fes servir la cerca manual.'});
+  };
+  $('camTorna').onclick=vesAInici;
+  function bucle(){
+    if(!cam.actiu)return;
+    var v=$('video'),cv=$('cv');
+    if(v.readyState>=2&&v.videoWidth){
+      var w=Math.min(640,v.videoWidth),h=Math.round(w*v.videoHeight/v.videoWidth);
+      cv.width=w;cv.height=h;var c=cv.getContext('2d',{willReadFrequently:true});c.drawImage(v,0,0,w,h);
+      var img=c.getImageData(0,0,w,h);
+      var r=window.jsQR&&window.jsQR(img.data,w,h,{inversionAttempts:'dontInvert'});
+      if(r&&r.data){paraCamera();consulta(r.data);return}
+    }
+    cam.raf=requestAnimationFrame(function(){setTimeout(bucle,120)});
+  }
+
+  /* ---- Cerca manual ---- */
+  var tCerca=null;
+  $('bManual').onclick=function(){$('q').value='';$('resultats').textContent='';$('msgCerca').textContent='';mostra('vCerca');setTimeout(function(){$('q').focus()},50)};
+  $('cercaTorna').onclick=vesAInici;
+  $('q').oninput=function(){
+    clearTimeout(tCerca);var q=$('q').value.trim();
+    if(q.length<3){$('resultats').textContent='';$('msgCerca').textContent='';return}
+    tCerca=setTimeout(function(){
+      $('msgCerca').textContent='Cercant…';
+      crida({action:'cerca',mesa:S.mesa,q:q}).then(function(j){
+        if(esAuth(j))return;
+        var cont=$('resultats');cont.textContent='';
+        if(!j.ok){$('msgCerca').textContent='No s\'ha pogut cercar.';return}
+        if(!j.resultats.length){$('msgCerca').textContent='Cap resultat.';return}
+        $('msgCerca').textContent=j.total>j.resultats.length?('Hi ha '+j.total+' resultats; mostrem els primers '+j.resultats.length+'. Afina la cerca.'):'';
+        j.resultats.forEach(function(r){
+          var b=document.createElement('button');
+          b.textContent=(r.nom+' '+r.cognoms).trim();
+          var s=document.createElement('small');s.textContent=[r.modalitat,r.dni].filter(Boolean).join(' · ');b.appendChild(s);
+          b.onclick=function(){consulta(r.id)};cont.appendChild(b);
+        });
+      }).catch(function(){$('msgCerca').textContent='Sense connexió.'});
+    },350);
+  };
+
+  /* ---- Resultat (igual per QR i per cerca manual) ---- */
+  var NOM={bossa:'Bossa',pulsera:'Pulsera',glucody:'Pack Glucody'};
+  function tallaTxt(s){var m=String(s).match(/^(home|dona|infantil)-(.+)$/i);var g={home:'Home',dona:'Dona',infantil:'Infantil'};return m?g[m[1].toLowerCase()]+' '+m[2]:s}
+  function etiqueta(it){return NOM[it.clau]||('Samarreta '+tallaTxt(it.talla)+(it.quantitat>1?' ×'+it.quantitat:''))}
+  function dataTxt(iso){try{return new Date(iso).toLocaleString('ca-ES',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Madrid'})}catch(e){return iso}}
+  function banner(cls,titol,sub){
+    var b=$('bannerRes');b.textContent='';var d=document.createElement('div');d.className='banner '+cls;d.textContent=titol;
+    if(sub){var s=document.createElement('small');s.textContent=sub;d.appendChild(s)}b.appendChild(d);
+  }
+
+  function enCua(text){var m=String(text).match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);return m?cua.filter(function(x){return x.id===m[0].toLowerCase()}):[]}
+  function consulta(text){
+    var pend=enCua(text);
+    if(pend.length){actual=null;$('fitxa').hidden=true;$('msgRes').textContent='';$('bannerRes').textContent='';mostra('vResultat');banner('warn','Acabes de registrar aquesta persona',pend[0].nom+' — encara s\'està desant al servidor. Espera uns segons abans de tornar-la a atendre.');return}
+    actual=null;$('fitxa').hidden=true;$('msgRes').textContent='';$('bannerRes').textContent='';mostra('vResultat');
+    banner('warn','Comprovant…');
+    crida({action:'escaneig',mesa:S.mesa,text:text}).then(function(j){
+      if(esAuth(j))return;
+      $('bannerRes').textContent='';
+      if(!j.ok){banner('err','No s\'ha pogut comprovar','Torna-ho a provar.');return}
+      var nom=((j.nom||'')+' '+(j.cognoms||'')).trim();
+      switch(j.estat){
+        case 'invalid':banner('err','QR no vàlid','No correspon a cap inscripció.');break;
+        case 'no_pagada':banner('err','Inscripció no confirmada',nom+' — pagament pendent.');break;
+        case 'sense_entrega':banner('warn','Res a recollir',nom+' no té cap material per recollir.');break;
+        case 'altra_mesa':banner('err','Aquesta persona NO és d\'aquesta taula',nom+' — taula assignada: '+(j.assignada?j.assignada.nom.ca+' ('+j.assignada.quan.ca+')':'cap')+'.');break;
+        case 'ja_entregat':
+          banner('fet','Ja ha recollit tot',nom+(j.darrera_entrega?' — '+dataTxt(j.darrera_entrega.data)+' per '+(j.darrera_entrega.voluntari||'?'):''));break;
+        case 'ok':mostraFitxa(j);break;
+        default:banner('err','Resposta inesperada');
+      }
+    }).catch(function(){$('bannerRes').textContent='';banner('err','Sense connexió','Torna-ho a provar quan tinguis cobertura.')});
+  }
+
+  function mostraFitxa(j){
+    actual=j;
+    $('pNom').textContent=((j.nom||'')+' '+(j.cognoms||'')).trim();
+    $('pSub').textContent=j.modalitat||'';
+    var ll=$('llista');ll.textContent='';
+    j.items.forEach(function(it){
+      var row=document.createElement('label');row.className='item'+(it.entregat?' fet':'');row.style.margin='0';
+      var cb=document.createElement('input');cb.type='checkbox';cb.value=it.clau;cb.checked=!!it.entregat;cb.disabled=!!it.entregat;
+      var sp=document.createElement('span');sp.textContent=etiqueta(it)+(it.entregat?' (ja entregat)':'');
+      row.appendChild(cb);row.appendChild(sp);ll.appendChild(row);
+    });
+    var jaAlguna=j.items.some(function(i){return i.entregat});
+    $('pAvis').textContent=jaAlguna&&j.darrera_entrega?('Entrega parcial anterior: '+dataTxt(j.darrera_entrega.data)+' per '+(j.darrera_entrega.voluntari||'?')):'';
+    $('fitxa').hidden=false;$('bLlest').disabled=false;
+  }
+
+  /* ---- Cua de lliuraments: es mostra "Registrat" a l'instant i el desat va
+         en segon pla, amb reintents i persistint-se al mòbil. ---- */
+  var cua=[];try{cua=JSON.parse(localStorage.getItem('lxd-vol-cua')||'[]')||[]}catch(e){cua=[]}
+  var enviant=false,errors=[];
+  function desaCua(){try{localStorage.setItem('lxd-vol-cua',JSON.stringify(cua))}catch(e){}pintaSync()}
+  function pintaSync(){
+    var el=$('sync');
+    el.textContent=cua.length?('⏳ '+cua.length+' per desar'):'✓ tot desat';
+    el.style.color=cua.length?'#FFD27A':'#9FE3B0';
+  }
+  function alerta(text){
+    var d=document.createElement('div');d.className='banner err';d.style.marginTop='10px';d.textContent=text;
+    var x=document.createElement('button');x.textContent='Tancar';x.style.cssText='display:block;margin-top:8px;padding:6px 12px;border-radius:8px;border:1px solid #8F1B20;background:#fff;color:#8F1B20;font-size:14px';
+    x.onclick=function(){d.remove()};d.appendChild(x);$('alertes').appendChild(d);
+  }
+  function envia(){
+    if(enviant||!cua.length||!S.codi)return;
+    enviant=true;var it=cua[0];
+    crida({action:'entrega',mesa:it.mesa,voluntari:it.voluntari,id:it.id,items:it.items,cid:it.cid,t:it.t}).then(function(j){
+      enviant=false;
+      if(j.ok){
+        if(j.duplicats&&j.duplicats.length)alerta('ATENCIÓ: '+it.nom+' — un altre voluntari ha entregat el mateix alhora ('+j.duplicats.length+' element/s duplicat/s). Avisa el responsable.');
+        cua.shift();desaCua();envia();
+      }else if(j._http===401){S.codi='';desa();mostra('vLogin');$('msgLogin').textContent='El codi ja no és vàlid. Torna a entrar; els lliuraments pendents es conserven.';
+      }else if(j._http>=500||j.codi==='error'||j.codi==='resposta'){setTimeout(envia,3000);
+      }else{
+        // Rebuig definitiu del servidor (altra taula, ja entregat...): no té sentit reintentar.
+        alerta('NO s\'ha pogut registrar '+it.nom+': '+(j.estat==='altra_mesa'?'no és d\'aquesta taula.':j.estat==='ja_entregat'?'ja ho tenia entregat.':'rebutjat pel servidor.')+' Comprova-ho a mà.');
+        cua.shift();desaCua();envia();
+      }
+    }).catch(function(){enviant=false;setTimeout(envia,3000)});
+  }
+  window.addEventListener('online',envia);
+  window.addEventListener('beforeunload',function(e){if(cua.length){e.preventDefault();e.returnValue=''}});
+  pintaSync();setInterval(envia,10000);
+
+  function cid(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36)}
+
+  $('bLlest').onclick=function(){
+    if(!actual)return;
+    var marcats=[].slice.call(document.querySelectorAll('#llista input:checked:not(:disabled)')).map(function(c){return c.value});
+    var pendentsAra=actual.items.filter(function(i){return !i.entregat}).length;
+    if(!marcats.length){$('msgRes').style.color='var(--err)';$('msgRes').textContent='Marca què has entregat.';return}
+    $('bLlest').disabled=true;$('msgRes').textContent='';
+    var nom=((actual.nom||'')+' '+(actual.cognoms||'')).trim();
+    cua.push({cid:cid(),id:actual.id,mesa:S.mesa,voluntari:S.nom,items:marcats,t:new Date().toISOString(),nom:nom});
+    desaCua();envia();
+    $('fitxa').hidden=true;$('bannerRes').textContent='';
+    var falten=pendentsAra-marcats.length;
+    banner(falten>0?'warn':'fet','Registrat',falten>0?('Queden '+falten+' elements pendents per entregar a aquesta persona.'):'Entrega completa.');
+    actual=null;
+  };
+  $('resTorna').onclick=vesAInici;
+
+  /* ---- Arrencada ---- */
+  if(S.codi&&S.nom){
+    crida({action:'login'}).then(function(j){
+      if(j.ok){S.mesas=j.mesas;if(S.mesa&&S.mesas.some(function(m){return m.id===S.mesa}))vesAInici();else vesAMesa()}
+      else{S.codi='';mostra('vLogin')}
+    }).catch(function(){mostra('vLogin')});
+  }else mostra('vLogin');
+})();
+</script>
+</body>
+</html>

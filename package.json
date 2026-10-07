@@ -2,7 +2,7 @@
   "name": "llobregat-admin-static",
   "version": "1.0.0",
   "private": true,
-  "description": "Web est\u00e1tica de Llobregat x la Diabetis con admin local/Netlify para JSON.",
+  "description": "Web estática de Llobregat x la Diabetis con admin local/Netlify para JSON.",
   "scripts": {
     "dev": "node scripts/local-dev.js",
     "netlify:dev": "netlify dev --dir .",
@@ -12,6 +12,7 @@
   "dependencies": {
     "stripe": "^17.0.0",
     "@netlify/blobs": "^8.1.0",
-    "exceljs": "^4.4.0"
+    "exceljs": "^4.4.0",
+    "qrcode": "^1.5.4"
   }
 }

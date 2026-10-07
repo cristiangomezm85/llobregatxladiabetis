@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>El meu perfil — Llobregat x la Diabetis</title>
+<link rel="icon" type="image/png" href="img/logo-small.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--blau:#15315F;--blau2:#1E72D4;--aigua:#5AC0E6;--coral:#FF6B47;--paper:#FAFAF6;--tinta:#0E1B36;--gris:#5A6478;--ok:#1A8A3C;--vora:#E4E8F0}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:var(--paper);color:var(--tinta);font-family:'Manrope',sans-serif;line-height:1.5}
+  header{background:var(--blau);color:#fff}
+  .hin{max-width:640px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{display:flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:14px}
+  .brand img{height:28px;width:28px;border-radius:50%}
+  .lang{display:flex;gap:4px}
+  .lang button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#D7E3F5;font:700 11.5px 'Manrope',sans-serif;padding:4px 10px;border-radius:999px;cursor:pointer}
+  .lang button.on{background:#fff;color:var(--blau);border-color:#fff}
+  main{max-width:640px;margin:0 auto;padding:20px 16px 48px}
+  h1{font-family:'Bricolage Grotesque',sans-serif;color:var(--blau);font-size:28px;line-height:1.15;margin:4px 0 4px}
+  h2{font-family:'Bricolage Grotesque',sans-serif;color:var(--blau);font-size:18px;margin:0 0 10px}
+  .card{background:#fff;border:1px solid var(--vora);border-radius:14px;padding:18px;margin-top:16px}
+  .qr{text-align:center}
+  .qr img{width:min(260px,70vw);height:auto;border:1px solid var(--vora);border-radius:10px;padding:6px;background:#fff}
+  .codi{color:var(--gris);font-size:13px;margin-top:6px}
+  .qr p{font-size:14px;color:var(--gris);margin:8px 0 0}
+  ul.items{list-style:none;margin:0;padding:0}
+  ul.items li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--vora)}
+  ul.items li:last-child{border-bottom:0}
+  .dot{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--vora);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff}
+  li.fet .dot{background:var(--ok);border-color:var(--ok)}
+  li.fet span.t{color:var(--gris);text-decoration:line-through}
+  .nota{font-size:13px;color:var(--gris);margin:10px 0 0}
+  select{width:100%;padding:12px;border:1px solid #b9c3d6;border-radius:10px;font:600 15px 'Manrope',sans-serif;background:#fff;color:var(--tinta)}
+  .quan{margin-top:10px;padding:10px 12px;background:#EEF5FF;border-radius:10px;font-size:14px}
+  button.principal{margin-top:12px;width:100%;padding:13px;border:0;border-radius:10px;background:var(--blau2);color:#fff;font:700 15px 'Manrope',sans-serif;cursor:pointer}
+  button.principal:disabled{opacity:.45;cursor:not-allowed}
+  .avis{margin-top:12px;padding:10px 12px;border-radius:10px;background:#FFF3E8;color:#8A3B00;font-size:13.5px}
+  .ok-msg{margin-top:10px;color:var(--ok);font-weight:700;font-size:14px}
+  .err-msg{margin-top:10px;color:#C0262D;font-weight:700;font-size:14px}
+  .estat{padding:40px 8px;text-align:center;color:var(--gris)}
+  .fet-banner{background:#E8F6EC;border:1px solid #b9e0c3;color:#146B2E;padding:12px 14px;border-radius:12px;margin-top:16px;font-weight:700}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><div class="hin">
+  <div class="brand"><img src="img/logo-small.png" alt=""><span>Llobregat x la Diabetis</span></div>
+  <div class="lang" id="lang"><button data-l="ca">CA</button><button data-l="es">ES</button><button data-l="en">EN</button></div>
+</div></header>
+<main>
+  <div id="estat" class="estat"></div>
+  <div id="contingut" hidden>
+    <h1 id="salut"></h1>
+    <div id="resum" style="color:var(--gris);font-size:14px"></div>
+    <div id="bannerFet" class="fet-banner" hidden></div>
+
+    <section class="card qr" id="cardQr">
+      <h2 id="tQr"></h2>
+      <img id="qrImg" alt="QR">
+      <div class="codi" id="codi"></div>
+      <p id="pQr"></p>
+    </section>
+
+    <section class="card" id="cardItems">
+      <h2 id="tItems"></h2>
+      <ul class="items" id="items"></ul>
+      <p class="nota" id="nPulsera"></p>
+    </section>
+
+    <section class="card" id="cardPunt">
+      <h2 id="tPunt"></h2>
+      <select id="selPunt" aria-label="punt"></select>
+      <div class="quan" id="quan"></div>
+      <button class="principal" id="desa"></button>
+      <div id="msg"></div>
+      <div class="avis" id="avis"></div>
+    </section>
+  </div>
+</main>
+<script>
+(function(){
+  var API='/.netlify/functions/perfil-api';
+  var D={
+    ca:{salut:function(n){return 'Hola'+(n?', '+n:'')+'!'},carrega:'Carregant…',errId:'Aquest enllaç no és vàlid. Obre el perfil des del botó del teu correu.',errNo:'No hem trobat aquesta inscripció.',errPag:'Aquesta inscripció encara no està confirmada (pagament pendent).',errGen:'No s\'ha pogut carregar el perfil. Torna-ho a provar d\'aquí un moment.',
+      tQr:'El teu QR de recollida',pQr:'Mostra aquest QR a la taula de recollida del teu punt. També pots ensenyar aquesta pantalla.',codi:'Codi d\'inscripció',
+      tItems:'El que has de recollir',bossa:'Bossa',pulsera:'Pulsera',glucody:'Pack Glucody',samarreta:'Samarreta',
+      nPulsera:'La pulsera és obligatòria durant tot el repte: és necessària per a l\'assegurança i per accedir a l\'avituallament.',
+      tPunt:'El teu punt de recollida',desa:'Desar el canvi',desat:'Punt de recollida actualitzat.',errDesa:'No s\'ha pogut desar. Torna-ho a provar.',
+      avisObert:function(d){return 'Pots canviar el punt de recollida fins l\'11 d\'octubre ('+d+'). A partir del 12 d\'octubre ja no es podrà modificar.'},
+      avisTancat:'El termini per canviar el punt de recollida ha acabat (era fins l\'11 d\'octubre).',
+      avisOrg:'El teu punt de recollida l\'assigna l\'organització. Si necessites un canvi, escriu-nos a info@llobregat.org.',
+      avisFet:'Ja has recollit el teu material: el punt de recollida no es pot canviar.',
+      fet:function(d){return 'Material recollit el '+d+'. Gràcies!'},
+      nada:'Aquesta inscripció no té material a recollir.',
+      mod:{caminant:'Caminant',corrent:'Corredor/a',bici:'Bici',animar:'Animar',dorsal0:'Dorsal 0'},
+      gen:{home:'Home',dona:'Dona',infantil:'Infantil'}},
+    es:{salut:function(n){return '¡Hola'+(n?', '+n:'')+'!'},carrega:'Cargando…',errId:'Este enlace no es válido. Abre el perfil desde el botón de tu correo.',errNo:'No hemos encontrado esta inscripción.',errPag:'Esta inscripción aún no está confirmada (pago pendiente).',errGen:'No se ha podido cargar el perfil. Inténtalo de nuevo en un momento.',
+      tQr:'Tu QR de recogida',pQr:'Muestra este QR en la mesa de recogida de tu punto. También puedes enseñar esta pantalla.',codi:'Código de inscripción',
+      tItems:'Lo que debes recoger',bossa:'Bolsa',pulsera:'Pulsera',glucody:'Pack Glucody',samarreta:'Camiseta',
+      nPulsera:'La pulsera es obligatoria durante todo el reto: es necesaria para el seguro y para acceder al avituallamiento.',
+      tPunt:'Tu punto de recogida',desa:'Guardar el cambio',desat:'Punto de recogida actualizado.',errDesa:'No se ha podido guardar. Inténtalo de nuevo.',
+      avisObert:function(d){return 'Puedes cambiar el punto de recogida hasta el 11 de octubre ('+d+'). A partir del 12 de octubre ya no se podrá modificar.'},
+      avisTancat:'El plazo para cambiar el punto de recogida ha terminado (era hasta el 11 de octubre).',
+      avisOrg:'Tu punto de recogida lo asigna la organización. Si necesitas un cambio, escríbenos a info@llobregat.org.',
+      avisFet:'Ya has recogido tu material: el punto de recogida no se puede cambiar.',
+      fet:function(d){return 'Material recogido el '+d+'. ¡Gracias!'},
+      nada:'Esta inscripción no tiene material que recoger.',
+      mod:{caminant:'Caminante',corrent:'Corredor/a',bici:'Bici',animar:'Animar',dorsal0:'Dorsal 0'},
+      gen:{home:'Hombre',dona:'Mujer',infantil:'Infantil'}},
+    en:{salut:function(n){return 'Hi'+(n?', '+n:'')+'!'},carrega:'Loading…',errId:'This link is not valid. Open your profile from the button in your email.',errNo:'We could not find this registration.',errPag:'This registration is not confirmed yet (payment pending).',errGen:'Could not load your profile. Please try again in a moment.',
+      tQr:'Your pickup QR',pQr:'Show this QR at your point\'s pickup table. You can also show this screen.',codi:'Registration code',
+      tItems:'What you will collect',bossa:'Bag',pulsera:'Wristband',glucody:'Glucody pack',samarreta:'T-shirt',
+      nPulsera:'The wristband is mandatory throughout the challenge: it is required for insurance and to access the aid stations.',
+      tPunt:'Your pickup point',desa:'Save change',desat:'Pickup point updated.',errDesa:'Could not save. Please try again.',
+      avisObert:function(d){return 'You can change your pickup point until October 11 ('+d+'). From October 12 it can no longer be changed.'},
+      avisTancat:'The deadline to change your pickup point has passed (it was until October 11).',
+      avisOrg:'Your pickup point is assigned by the organisation. If you need a change, email info@llobregat.org.',
+      avisFet:'You have already collected your items: the pickup point can no longer be changed.',
+      fet:function(d){return 'Items collected on '+d+'. Thank you!'},
+      nada:'This registration has nothing to collect.',
+      mod:{caminant:'Walker',corrent:'Runner',bici:'Cyclist',animar:'Cheer',dorsal0:'Bib 0'},
+      gen:{home:'Men',dona:'Women',infantil:'Kids'}}
+  };
+  var $=function(i){return document.getElementById(i)};
+  var q=new URLSearchParams(location.search);
+  var id=(q.get('id')||'').toLowerCase();
+  var lang=q.get('lang');
+  try{ if(!lang) lang=localStorage.getItem('lxd-lang'); }catch(e){}
+  if(['ca','es','en'].indexOf(lang)<0) lang='ca';
+  var dades=null, primera=true;
+
+  function t(){return D[lang]}
+  function dataTxt(iso){try{return new Date(iso).toLocaleString(lang==='en'?'en-GB':lang==='es'?'es-ES':'ca-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Madrid'})}catch(e){return iso}}
+  function limitTxt(iso){try{return new Date(iso).toLocaleString(lang==='en'?'en-GB':lang==='es'?'es-ES':'ca-ES',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Madrid'})}catch(e){return ''}}
+  function talla(s){var m=String(s).match(/^(home|dona|infantil)-(.+)$/i);return m?(t().gen[m[1].toLowerCase()]+' '+m[2]):s}
+  function estat(msg){$('estat').textContent=msg;$('estat').hidden=false;$('contingut').hidden=true}
+
+  function pinta(){
+    if(!dades) return;
+    var T=t(), d=dades;
+    document.documentElement.lang=lang;
+    document.querySelectorAll('#lang button').forEach(function(b){b.classList.toggle('on',b.dataset.l===lang)});
+    $('estat').hidden=true;$('contingut').hidden=false;
+    $('salut').textContent=T.salut(d.nom);
+    $('resum').textContent=[T.mod[d.modalitat]||d.modalitat,d.tram].filter(Boolean).join(' · ');
+    var fet=$('bannerFet');
+    if(d.complet&&d.entregat_data){fet.hidden=false;fet.textContent=T.fet(dataTxt(d.entregat_data))}else fet.hidden=true;
+
+    var teEntrega=d.te_entrega;
+    $('cardQr').hidden=!teEntrega;$('cardItems').hidden=!teEntrega;$('cardPunt').hidden=!teEntrega;
+    if(!teEntrega){$('resum').textContent=T.nada;return}
+
+    $('tQr').textContent=T.tQr;$('pQr').textContent=T.pQr;
+    $('qrImg').src='/.netlify/functions/qr?id='+encodeURIComponent(d.id);
+    $('codi').textContent=T.codi+': '+d.id.slice(0,8).toUpperCase();
+
+    $('tItems').textContent=T.tItems;
+    var ul=$('items');ul.textContent='';
+    d.items.forEach(function(it){
+      var li=document.createElement('li');if(it.entregat)li.className='fet';
+      var dot=document.createElement('span');dot.className='dot';dot.textContent=it.entregat?'✓':'';
+      var tx=document.createElement('span');tx.className='t';
+      var nom=it.clau==='bossa'?T.bossa:it.clau==='pulsera'?T.pulsera:it.clau==='glucody'?T.glucody:(T.samarreta+' '+talla(it.talla)+(it.quantitat>1?' ×'+it.quantitat:''));
+      tx.textContent=nom;li.appendChild(dot);li.appendChild(tx);ul.appendChild(li);
+    });
+    $('nPulsera').textContent=d.items.some(function(i){return i.clau==='pulsera'})?T.nPulsera:'';
+
+    $('tPunt').textContent=T.tPunt;
+    var sel=$('selPunt');sel.textContent='';
+    var llista=d.punts.slice();
+    if(!llista.some(function(p){return p.id===d.punt.id}))llista.unshift(d.punt);
+    llista.forEach(function(p){var o=document.createElement('option');o.value=p.id;o.textContent=p.nom[lang];if(p.id===d.punt.id)o.selected=true;sel.appendChild(o)});
+    sel.disabled=!d.pot_canviar;
+    function actualitzaQuan(){var p=llista.filter(function(x){return x.id===sel.value})[0];$('quan').textContent=p?p.quan[lang]:''}
+    actualitzaQuan();sel.onchange=function(){actualitzaQuan();$('desa').disabled=(sel.value===d.punt.id);$('msg').textContent=''};
+    $('desa').textContent=T.desa;$('desa').hidden=!d.pot_canviar;$('desa').disabled=true;
+    $('avis').textContent=d.complet?T.avisFet:d.bloquejat_organitzacio?T.avisOrg:d.pot_canviar?T.avisObert(limitTxt(d.limit_canvi)):T.avisTancat;
+  }
+
+  $('desa').onclick=function(){
+    var T=t();$('desa').disabled=true;$('msg').textContent='';
+    fetch(API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:id,punt:$('selPunt').value})})
+      .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})})
+      .then(function(x){
+        if(x.ok&&x.j.ok){dades=x.j;pinta();$('msg').className='ok-msg';$('msg').textContent=T.desat}
+        else{$('msg').className='err-msg';$('msg').textContent=(x.j&&x.j.codi==='termini_tancat')?T.avisTancat:T.errDesa;$('desa').disabled=false}
+      }).catch(function(){$('msg').className='err-msg';$('msg').textContent=T.errDesa;$('desa').disabled=false});
+  };
+  document.querySelectorAll('#lang button').forEach(function(b){b.onclick=function(){lang=b.dataset.l;try{localStorage.setItem('lxd-lang',lang)}catch(e){};if(dades)pinta();else estat(t().carrega)}});
+
+  estat(t().carrega);
+  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id)){estat(t().errId);return}
+  fetch(API+'?id='+encodeURIComponent(id),{cache:'no-store'}).then(function(r){return r.json().then(function(j){return {s:r.status,j:j}})}).then(function(x){
+    if(x.j&&x.j.ok){dades=x.j;if(!q.get('lang')){var m={CA:'ca',ES:'es',EN:'en'}[x.j.idioma];var guardat=null;try{guardat=localStorage.getItem('lxd-lang')}catch(e){}if(m&&!guardat)lang=m}pinta()}
+    else if(x.j&&x.j.codi==='no_pagada')estat(t().errPag);
+    else if(x.s===404)estat(t().errNo);
+    else if(x.s===400)estat(t().errId);
+    else estat(t().errGen);
+  }).catch(function(){estat(t().errGen)});
+})();
+</script>
+</body>
+</html>

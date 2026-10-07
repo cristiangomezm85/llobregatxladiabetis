@@ -925,6 +925,9 @@
         <select class="fi-recollida" required>
           <option value="">—</option>
         </select>
+        <div class="fi-recollida-quan" style="margin-top:8px;padding:10px 12px;background:#EEF5FF;border-radius:10px;font-size:14px;" hidden></div>
+        <div style="margin-top:8px;font-size:13px;color:var(--gris);" data-i18n="nota_recollida_lm"></div>
+        <div class="fi-recollida-err" style="margin-top:8px;font-size:13px;color:#C0262D;font-weight:700;" hidden></div>
       </div>
 
       <div class="menor-caixa" data-menor-caixa>
@@ -1222,7 +1225,9 @@
       en:"Sunday 18 October, from 5.00 pm to 7.30 pm, at the Cal Tet car park (El Prat de Llobregat)."
     },
     lbl_llicencia: { ca:"Número de llicència federativa *", es:"Número de licencia federativa *", en:"Federation licence number *" },
-    lbl_recollida_lm: { ca:"M'aniria millor recollir el pack de participant al municipi més proper a... *", es:"Me iría mejor recoger el pack de participante en el municipio más cercano a... *", en:"It would suit me best to collect my participant pack in the town closest to... *" },
+    lbl_recollida_lm: { ca:"Tria el punt on recollir el teu pack de participant (bossa i pulsera) *", es:"Elige el punto donde recoger tu pack de participante (bolsa y pulsera) *", en:"Choose where to collect your participant pack (bag and wristband) *" },
+    nota_recollida_lm: { ca:"És la teva tria definitiva. Podràs canviar-la des del teu perfil fins l'11 d'octubre (el rebràs per correu amb el teu QR). La pulsera és obligatòria durant el repte: és necessària per a l'assegurança i per accedir a l'avituallament.", es:"Es tu elección definitiva. Podrás cambiarla desde tu perfil hasta el 11 de octubre (lo recibirás por correo con tu QR). La pulsera es obligatoria durante el reto: es necesaria para el seguro y para acceder al avituallamiento.", en:"This is your final choice. You can change it from your profile until October 11 (you will get it by email with your QR). The wristband is mandatory during the challenge: it is required for insurance and to access the aid stations." },
+    err_punts: { ca:"No s'han pogut carregar els punts de recollida. Recarrega la pàgina.", es:"No se han podido cargar los puntos de recogida. Recarga la página.", en:"Could not load the pickup points. Please reload the page." },
     lbl_recollida: { ca:"M'aniria millor recollir la samarreta al municipi més proper a... *", es:"Me iría mejor recoger la camiseta en el municipio más cercano a... *", en:"It would suit me best to collect the t-shirt in the town closest to... *" },
     lbl_talla: { ca:"Talla de samarreta *", es:"Talla de camiseta *", en:"T-shirt size *" },
     samarreta_preview_text: {
@@ -1329,7 +1334,7 @@
     resum_municipi: { ca:"Municipi", es:"Municipio", en:"Town" },
     resum_tram: { ca:"Tram", es:"Tramo", en:"Segment" },
     resum_talla: { ca:"Talla de samarreta", es:"Talla de camiseta", en:"T-shirt size" },
-    resum_recollida: { ca:"Recollida de samarreta", es:"Recogida de camiseta", en:"T-shirt pickup" },
+    resum_recollida: { ca:"Punt de recollida", es:"Punto de recogida", en:"Pickup point" },
     resum_menor: { ca:"Menor d'edat", es:"Menor de edad", en:"Under 18" },
     resum_tutor: { ca:"Mare/pare/tutor legal", es:"Madre/padre/tutor legal", en:"Parent/legal guardian" },
     resum_etapes: { ca:"Etapes i samarretes", es:"Etapas y camisetas", en:"Stages and t-shirts" },
@@ -1430,11 +1435,11 @@
       es:'Sí. Si haces el tramo <strong>Martorell - El Prat</strong>, el <a href="https://cebllob.cat/esport-popular/la-travessa-de-la-comarca/" target="_blank" rel="noopener">Consell Esportiu del Baix Llobregat</a> te dará un obsequio en la clausura por completar su Travessa de la Comarca.',
       en:'Yes. If you do the <strong>Martorell - El Prat</strong> segment, the <a href="https://cebllob.cat/esport-popular/la-travessa-de-la-comarca/" target="_blank" rel="noopener">Consell Esportiu del Baix Llobregat</a> will give you a gift at the closing ceremony for completing their Travessa de la Comarca.'
     },
-    faq_q10: { ca:"Com i quan recullo la samarreta?", es:"¿Cómo y cuándo recojo la camiseta?", en:"How and when do I collect my t-shirt?" },
+    faq_q10: { ca:"Com i quan recullo el meu pack?", es:"¿Cómo y cuándo recojo mi pack?", en:"How and when do I collect my pack?" },
     faq_a10: {
-      ca:"Al formulari tries el municipi del recorregut més proper a on visquis. Encara estem acabant de concretar els punts exactes de recollida amb els ajuntaments col·laboradors; t'avisarem per email amb els detalls.",
-      es:"En el formulario eliges el municipio del recorrido más cercano a donde vives. Todavía estamos cerrando los puntos exactos de recogida con los ayuntamientos colaboradores; te avisaremos por email con los detalles.",
-      en:"In the form you choose the town along the route closest to where you live. We're still finalising the exact pickup points with the collaborating town councils; we'll email you the details."
+      ca:"Al formulari tries el punt de recollida (amb els seus dies i horaris). Hi recolliràs la bossa i la pulsera amb el QR que rebràs per correu. Pots canviar el punt des del teu perfil fins l'11 d'octubre.",
+      es:"En el formulario eliges el punto de recogida (con sus días y horarios). Allí recogerás la bolsa y la pulsera con el QR que recibirás por correo. Puedes cambiar el punto desde tu perfil hasta el 11 de octubre.",
+      en:"In the form you choose the pickup point (with its days and times). You will collect your bag and wristband there with the QR you receive by email. You can change the point from your profile until October 11."
     },
     faq_q11: { ca:"Estic federat/da, això canvia alguna cosa?", es:"Estoy federado/a, ¿esto cambia algo?", en:"I'm federated — does that change anything?" },
     faq_a11: {
@@ -1850,9 +1855,59 @@
     if (valorActual) sel.value = valorActual;
   }
 
+  // Punts de recollida del pack de participant: vénen del servidor (mateixa
+  // llista que fan servir el perfil, l'escàner i els correus).
+  let PUNTS_ENTREGA = [];
+  function nomPuntCA(id) {
+    const p = PUNTS_ENTREGA.find((x) => x.id === id);
+    return p ? p.nom.ca : "";
+  }
+  function omplirSelectPunts(sel) {
+    if (!sel) return;
+    const valorActual = sel.value;
+    sel.innerHTML = "";
+    const opt0 = document.createElement("option");
+    opt0.value = "";
+    opt0.textContent = "—";
+    sel.appendChild(opt0);
+    PUNTS_ENTREGA.forEach((p) => {
+      const opt = document.createElement("option");
+      opt.value = p.id;
+      opt.textContent = p.nom[currentLang] || p.nom.ca;
+      sel.appendChild(opt);
+    });
+    if (valorActual) sel.value = valorActual;
+    mostrarQuanPunt();
+  }
+  function mostrarQuanPunt() {
+    const sel = document.querySelector(".fi-recollida");
+    const box = document.querySelector(".fi-recollida-quan");
+    if (!sel || !box) return;
+    const p = PUNTS_ENTREGA.find((x) => x.id === sel.value);
+    box.hidden = !p;
+    box.textContent = p ? (p.quan[currentLang] || p.quan.ca) : "";
+  }
+  async function carregarPuntsEntrega() {
+    const err = document.querySelector(".fi-recollida-err");
+    for (let i = 0; i < 4; i++) {
+      try {
+        const r = await fetch("/.netlify/functions/punts-publics");
+        const j = await r.json();
+        if (j && j.ok && Array.isArray(j.punts) && j.punts.length) {
+          PUNTS_ENTREGA = j.punts;
+          if (err) err.hidden = true;
+          refreshPickupSelects();
+          return;
+        }
+      } catch (e) { /* es reintenta */ }
+      await new Promise((res) => setTimeout(res, 800 * (i + 1)));
+    }
+    if (err) { err.textContent = t("err_punts"); err.hidden = false; }
+  }
+
   function refreshPickupSelects() {
     omplirSelectPickup(document.querySelector(".an-recollida"));
-    omplirSelectPickup(document.querySelector(".fi-recollida"));
+    omplirSelectPunts(document.querySelector(".fi-recollida"));
   }
 
   // ---------- Samarreta solidària: files repetibles de talla + quantitat ----------
@@ -2284,6 +2339,8 @@
   document.documentElement.setAttribute("data-lang", idiomaInicial);
   document.documentElement.setAttribute("lang", idiomaInicial);
   aplicarIdioma(idiomaInicial);
+  document.querySelector(".fi-recollida").addEventListener("change", mostrarQuanPunt);
+  carregarPuntsEntrega();
 
   // ---------- Enviament (versió de validació: mostra un resum, no paga) ----------
   function mostrarError(msg) {
@@ -2314,7 +2371,7 @@
     falta_relacio: { ca:"Falta indicar la relació amb la diabetis tipus 1.", es:"Falta indicar la relación con la diabetes tipo 1.", en:"Please indicate your connection to type 1 diabetes." },
     falta_samarretes: { ca:"Afegeix almenys una samarreta (talla i quantitat).", es:"Añade al menos una camiseta (talla y cantidad).", en:"Add at least one t-shirt (size and quantity)." },
     falta_talla: { ca:"Falta la talla de samarreta.", es:"Falta la talla de camiseta.", en:"Missing t-shirt size." },
-    falta_recollida_lm: { ca:"Falta triar el municipi de recollida.", es:"Falta elegir el municipio de recogida.", en:"Please choose the pickup town." },
+    falta_recollida_lm: { ca:"Falta triar el punt de recollida.", es:"Falta elegir el punto de recogida.", en:"Please choose the pickup point." },
     falta_recollida: { ca:"Falta triar quan i on recollir la samarreta.", es:"Falta elegir cuándo y dónde recoger la camiseta.", en:"Please choose when and where to collect the t-shirt." },
     falta_identificacio: { ca:"Falten dades d'identificació.", es:"Faltan datos de identificación.", en:"Missing identification details." },
     falta_emergencia: { ca:"Falta el contacte d'emergència.", es:"Falta el contacto de emergencia.", en:"Missing emergency contact." },
@@ -2477,7 +2534,8 @@
           contacte_emergencia_nom: emergenciaNom, contacte_emergencia_telefon: emergenciaTelefon,
           relacio,
           tram_inici: iniciOpt.value, tram_final: finalOpt.value, tram_tipus: tramTipusActiu,
-          recollida_municipi: recollidaSel.value, recollida_municipi_nom: recollidaText,
+          recollida_punt: recollidaSel.value,
+          recollida_municipi: recollidaSel.value, recollida_municipi_nom: nomPuntCA(recollidaSel.value) || recollidaText,
           federat, num_llicencia_federativa: llicencia,
           club_nom: clubNom,
           tutor_nom: tutorNom, tutor_cognoms: tutorCognoms, tutor_dni: tutorDni,

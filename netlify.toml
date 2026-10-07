@@ -16,7 +16,7 @@
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    Permissions-Policy = "camera=(self), microphone=(), geolocation=(), payment=()"
     Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://cdn.jsdelivr.net; form-action 'self'; upgrade-insecure-requests"
 
 [[headers]]
@@ -111,3 +111,19 @@
   to = "/404.html"
   status = 404
   force = true
+
+# Recollida de material (bosses, pulseres, samarretes, pack Glucody)
+[[redirects]]
+  from = "/perfil"
+  to = "/perfil.html"
+  status = 200
+
+[[redirects]]
+  from = "/voluntaris"
+  to = "/voluntaris.html"
+  status = 200
+
+[[redirects]]
+  from = "/recollida"
+  to = "/recollida.html"
+  status = 200
