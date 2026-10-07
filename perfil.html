@@ -37,6 +37,8 @@
   .nota{font-size:13px;color:var(--gris);margin:10px 0 0}
   select{width:100%;padding:12px;border:1px solid #b9c3d6;border-radius:10px;font:600 15px 'Manrope',sans-serif;background:#fff;color:var(--tinta)}
   .quan{margin-top:10px;padding:10px 12px;background:#EEF5FF;border-radius:10px;font-size:14px}
+  .mapa{display:inline-block;margin-top:10px;font-size:14px;font-weight:700;color:#1E72D4;text-decoration:none}
+  .mapa:hover{text-decoration:underline}
   button.principal{margin-top:12px;width:100%;padding:13px;border:0;border-radius:10px;background:var(--blau2);color:#fff;font:700 15px 'Manrope',sans-serif;cursor:pointer}
   button.principal:disabled{opacity:.45;cursor:not-allowed}
   .avis{margin-top:12px;padding:10px 12px;border-radius:10px;background:#FFF3E8;color:#8A3B00;font-size:13.5px}
@@ -76,6 +78,7 @@
       <h2 id="tPunt"></h2>
       <select id="selPunt" aria-label="punt"></select>
       <div class="quan" id="quan"></div>
+      <a id="mapa" class="mapa" target="_blank" rel="noopener" hidden></a>
       <button class="principal" id="desa"></button>
       <div id="msg"></div>
       <div class="avis" id="avis"></div>
@@ -90,7 +93,7 @@
       tQr:'El teu QR de recollida',pQr:'Mostra aquest QR a la taula de recollida del teu punt. També pots ensenyar aquesta pantalla.',codi:'Codi d\'inscripció',
       tItems:'El que has de recollir',bossa:'Bossa',pulsera:'Pulsera',glucody:'Pack Glucody',samarreta:'Samarreta',
       nPulsera:'La pulsera és obligatòria durant tot el repte: és necessària per a l\'assegurança i per accedir a l\'avituallament.',
-      tPunt:'El teu punt de recollida',desa:'Desar el canvi',desat:'Punt de recollida actualitzat.',errDesa:'No s\'ha pogut desar. Torna-ho a provar.',
+      tPunt:'El teu punt de recollida',mapaTxt:'📍 Com arribar-hi',desa:'Desar el canvi',desat:'Punt de recollida actualitzat.',errDesa:'No s\'ha pogut desar. Torna-ho a provar.',
       avisObert:function(d){return 'Pots canviar el punt de recollida fins l\'11 d\'octubre ('+d+'). A partir del 12 d\'octubre ja no es podrà modificar.'},
       avisTancat:'El termini per canviar el punt de recollida ha acabat (era fins l\'11 d\'octubre).',
       avisOrg:'El teu punt de recollida l\'assigna l\'organització. Si necessites un canvi, escriu-nos a info@llobregat.org.',
@@ -103,7 +106,7 @@
       tQr:'Tu QR de recogida',pQr:'Muestra este QR en la mesa de recogida de tu punto. También puedes enseñar esta pantalla.',codi:'Código de inscripción',
       tItems:'Lo que debes recoger',bossa:'Bolsa',pulsera:'Pulsera',glucody:'Pack Glucody',samarreta:'Camiseta',
       nPulsera:'La pulsera es obligatoria durante todo el reto: es necesaria para el seguro y para acceder al avituallamiento.',
-      tPunt:'Tu punto de recogida',desa:'Guardar el cambio',desat:'Punto de recogida actualizado.',errDesa:'No se ha podido guardar. Inténtalo de nuevo.',
+      tPunt:'Tu punto de recogida',mapaTxt:'📍 Cómo llegar',desa:'Guardar el cambio',desat:'Punto de recogida actualizado.',errDesa:'No se ha podido guardar. Inténtalo de nuevo.',
       avisObert:function(d){return 'Puedes cambiar el punto de recogida hasta el 11 de octubre ('+d+'). A partir del 12 de octubre ya no se podrá modificar.'},
       avisTancat:'El plazo para cambiar el punto de recogida ha terminado (era hasta el 11 de octubre).',
       avisOrg:'Tu punto de recogida lo asigna la organización. Si necesitas un cambio, escríbenos a info@llobregat.org.',
@@ -116,7 +119,7 @@
       tQr:'Your pickup QR',pQr:'Show this QR at your point\'s pickup table. You can also show this screen.',codi:'Registration code',
       tItems:'What you will collect',bossa:'Bag',pulsera:'Wristband',glucody:'Glucody pack',samarreta:'T-shirt',
       nPulsera:'The wristband is mandatory throughout the challenge: it is required for insurance and to access the aid stations.',
-      tPunt:'Your pickup point',desa:'Save change',desat:'Pickup point updated.',errDesa:'Could not save. Please try again.',
+      tPunt:'Your pickup point',mapaTxt:'📍 Get directions',desa:'Save change',desat:'Pickup point updated.',errDesa:'Could not save. Please try again.',
       avisObert:function(d){return 'You can change your pickup point until October 11 ('+d+'). From October 12 it can no longer be changed.'},
       avisTancat:'The deadline to change your pickup point has passed (it was until October 11).',
       avisOrg:'Your pickup point is assigned by the organisation. If you need a change, email info@llobregat.org.',
@@ -176,7 +179,7 @@
     if(!llista.some(function(p){return p.id===d.punt.id}))llista.unshift(d.punt);
     llista.forEach(function(p){var o=document.createElement('option');o.value=p.id;o.textContent=p.nom[lang];if(p.id===d.punt.id)o.selected=true;sel.appendChild(o)});
     sel.disabled=!d.pot_canviar;
-    function actualitzaQuan(){var p=llista.filter(function(x){return x.id===sel.value})[0];$('quan').textContent=p?p.quan[lang]:''}
+    function actualitzaQuan(){var p=llista.filter(function(x){return x.id===sel.value})[0];$('quan').textContent=p?p.quan[lang]:'';var m=$('mapa');if(p&&p.mapa){m.href=p.mapa;m.textContent=T.mapaTxt;m.hidden=false}else{m.hidden=true;m.removeAttribute('href')}}
     actualitzaQuan();sel.onchange=function(){actualitzaQuan();$('desa').disabled=(sel.value===d.punt.id);$('msg').textContent=''};
     $('desa').textContent=T.desa;$('desa').hidden=!d.pot_canviar;$('desa').disabled=true;
     $('avis').textContent=d.complet?T.avisFet:d.bloquejat_organitzacio?T.avisOrg:d.pot_canviar?T.avisObert(limitTxt(d.limit_canvi)):T.avisTancat;

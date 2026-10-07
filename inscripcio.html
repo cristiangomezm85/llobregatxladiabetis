@@ -1886,6 +1886,17 @@
     const p = PUNTS_ENTREGA.find((x) => x.id === sel.value);
     box.hidden = !p;
     box.textContent = p ? (p.quan[currentLang] || p.quan.ca) : "";
+    if (p && p.mapa) {
+      const etiqueta = { ca: "📍 Com arribar-hi", es: "📍 Cómo llegar", en: "📍 Get directions" };
+      box.appendChild(document.createElement("br"));
+      const a = document.createElement("a");
+      a.href = p.mapa;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.style.cssText = "font-weight:700;color:#1E72D4;text-decoration:none;";
+      a.textContent = etiqueta[currentLang] || etiqueta.ca;
+      box.appendChild(a);
+    }
   }
   async function carregarPuntsEntrega() {
     const err = document.querySelector(".fi-recollida-err");

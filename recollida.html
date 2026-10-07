@@ -29,6 +29,8 @@
   .p h3{margin:0 0 6px;font-family:'Bricolage Grotesque',sans-serif;font-size:17px;color:var(--blau)}
   .p .q{font-weight:700;color:var(--blau2);font-size:14.5px}
   .p .per{font-size:13.5px;color:var(--gris);margin-top:6px}
+  .p .mapa{display:inline-block;margin-top:10px;font-size:14px;font-weight:700;color:var(--blau2);text-decoration:none}
+  .p .mapa:hover{text-decoration:underline}
   .nota{background:#EEF5FF;border:1px solid #C9DDF7;border-radius:12px;padding:14px 16px;margin-top:18px;font-size:15px}
   .nota.coral{background:#FFF3EE;border-color:#FFD2C4}
   ul{padding-left:20px}
@@ -54,17 +56,17 @@
 (function(){
   var D={
     ca:{h1:'On recollir la bossa i la samarreta',lead:'La recollida es fa per proximitat. Rebràs per correu el teu QR personal amb el punt que t\'hem assignat segons el municipi que vas triar.',hPunts:'Punts de recollida',
-      per:'Per a:',nQr:'Porta el QR del correu (o obre el teu perfil des del botó del correu) i ensenya\'l a la taula de recollida del teu punt. Hi recolliràs la bossa, la pulsera, la samarreta i, si et correspon, el pack Glucody.',
+      per:'Per a:',mapa:'📍 Com arribar-hi',nQr:'Porta el QR del correu (o obre el teu perfil des del botó del correu) i ensenya\'l a la taula de recollida del teu punt. Hi recolliràs la bossa, la pulsera, la samarreta i, si et correspon, el pack Glucody.',
       nPuls:'La pulsera és obligatòria durant tot el repte: és necessària per a l\'assegurança i per accedir a l\'avituallament.',
       hCom:'Com funciona',
       com:['Cada persona rep un correu amb el seu QR i un botó per anar al seu perfil.','Des del perfil pots canviar el punt de recollida fins l\'11 d\'octubre. A partir del 12 d\'octubre ja no es pot canviar.','A la taula de recollida, un voluntari escaneja el QR i et lliura el material. Només et poden atendre a la taula que tens assignada.','Si no trobes el correu, escriu-nos a info@llobregat.org.'],err:'No s\'han pogut carregar els punts. Torna-ho a provar.'},
     es:{h1:'Dónde recoger la bolsa y la camiseta',lead:'La recogida se hace por proximidad. Recibirás por correo tu QR personal con el punto que te hemos asignado según el municipio que elegiste.',hPunts:'Puntos de recogida',
-      per:'Para:',nQr:'Lleva el QR del correo (o abre tu perfil desde el botón del correo) y enséñalo en la mesa de recogida de tu punto. Allí recogerás la bolsa, la pulsera, la camiseta y, si te corresponde, el pack Glucody.',
+      per:'Para:',mapa:'📍 Cómo llegar',nQr:'Lleva el QR del correo (o abre tu perfil desde el botón del correo) y enséñalo en la mesa de recogida de tu punto. Allí recogerás la bolsa, la pulsera, la camiseta y, si te corresponde, el pack Glucody.',
       nPuls:'La pulsera es obligatoria durante todo el reto: es necesaria para el seguro y para acceder al avituallamiento.',
       hCom:'Cómo funciona',
       com:['Cada persona recibe un correo con su QR y un botón para ir a su perfil.','Desde el perfil puedes cambiar el punto de recogida hasta el 11 de octubre. A partir del 12 de octubre ya no se puede cambiar.','En la mesa de recogida, un voluntario escanea el QR y te entrega el material. Solo te pueden atender en la mesa que tienes asignada.','Si no encuentras el correo, escríbenos a info@llobregat.org.'],err:'No se han podido cargar los puntos. Inténtalo de nuevo.'},
     en:{h1:'Where to collect your bag and t-shirt',lead:'Collection is by proximity. You will receive your personal QR by email with the point we have assigned to you based on the town you chose.',hPunts:'Pickup points',
-      per:'For:',nQr:'Bring the QR from your email (or open your profile from the email button) and show it at your point\'s pickup table. You will collect your bag, wristband, t-shirt and, if applicable, the Glucody pack.',
+      per:'For:',mapa:'📍 Get directions',nQr:'Bring the QR from your email (or open your profile from the email button) and show it at your point\'s pickup table. You will collect your bag, wristband, t-shirt and, if applicable, the Glucody pack.',
       nPuls:'The wristband is mandatory throughout the challenge: it is required for insurance and to access the aid stations.',
       hCom:'How it works',
       com:['Everyone receives an email with their QR and a button to their profile.','From your profile you can change your pickup point until October 11. From October 12 it can no longer be changed.','At the pickup table, a volunteer scans the QR and hands over your items. You can only be served at the table assigned to you.','If you can\'t find the email, write to info@llobregat.org.'],err:'Could not load the points. Please try again.'}
@@ -88,7 +90,9 @@
       var h=document.createElement('h3');h.textContent=p.nom[lang];
       var q=document.createElement('div');q.className='q';q.textContent=p.quan[lang];
       var r=document.createElement('div');r.className='per';r.textContent=T.per+' '+p.per[lang];
-      d.appendChild(h);d.appendChild(q);d.appendChild(r);g.appendChild(d);
+      d.appendChild(h);d.appendChild(q);d.appendChild(r);
+      if(p.mapa){var a=document.createElement('a');a.href=p.mapa;a.target='_blank';a.rel='noopener';a.className='mapa';a.textContent=T.mapa;d.appendChild(a)}
+      g.appendChild(d);
     });
   }
   document.querySelectorAll('#lang button').forEach(function(b){b.onclick=function(){lang=b.dataset.l;try{localStorage.setItem('lxd-lang',lang)}catch(e){};pinta()}});
