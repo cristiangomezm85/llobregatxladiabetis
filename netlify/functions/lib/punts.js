@@ -13,7 +13,7 @@ const { ORDRES: ORDRES_SANT_JUST, es912 } = require("./recollida-especial");
 // Últim moment per canviar de punt: 11/10/2026 23:59:59 hora de Madrid
 // (CEST = UTC+2). A partir del 12/10 ja no es pot canviar.
 // Marca de versió: surt a /.netlify/functions/punts-publics per comprovar què hi ha desplegat.
-const VERSIO = "2026-10-07-manresa-coordina";
+const VERSIO = "2026-10-07-manresa-contacte";
 
 const LIMIT_CANVI_ISO = "2026-10-11T21:59:59.999Z";
 
@@ -80,9 +80,9 @@ const PUNTS = [
     per: { ca: "Navàs", es: "Navàs", en: "Navàs" },
   },
   {
-    id: "manresa", seleccionable: true, mesa: true, mapa: "https://www.google.com/maps?q=41.70092524712058,1.8685905736670065", claus: ["manresa"],
-    nom: { ca: "Manresa (lliurament amb l'ADCC)", es: "Manresa (entrega con la ADCC)", en: "Manresa (handover with ADCC)" },
-    quan: { ca: "Durant el 15 d'octubre · L'organització ho coordinarà amb tu", es: "Durante el 15 de octubre · La organización lo coordinará contigo", en: "During October 15 · The organisation will arrange it with you" },
+    id: "manresa", seleccionable: true, mesa: true, claus: ["manresa"],
+    nom: { ca: "Manresa", es: "Manresa", en: "Manresa" },
+    quan: { ca: "L'organització es posarà en contacte amb tu", es: "La organización contactará contigo", en: "The organisation will contact you" },
     per: { ca: "Manresa", es: "Manresa", en: "Manresa" },
   },
   {
