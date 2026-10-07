@@ -46,6 +46,8 @@ function blocQr(ordre, orderId, idioma, estat) {
   const puntNom = punt ? punt.nom[l] : "";
   const puntQuan = punt ? punt.quan[l] : "";
   const urlMapa = punt && punt.mapa ? punt.mapa : "";
+  const quanColor = punt && punt.pendent ? "#B26A00" : "#5A6478";
+  const quanPes = punt && punt.pendent ? "bold" : "normal";
   const urlQr = `${BASE}/.netlify/functions/qr?id=${orderId}`;
   const urlPerfil = `${BASE}/perfil?id=${orderId}&lang=${l}`;
   const codi = orderId.slice(0, 8).toUpperCase();
@@ -64,7 +66,7 @@ function blocQr(ordre, orderId, idioma, estat) {
                 <tr>
                   <td style="padding:8px 22px 4px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:21px; color:#0E1B36;">
                     <p style="margin:0 0 10px;">${esc(t.intro)}</p>
-                    <p style="margin:0 0 10px;"><b>${esc(t.punt)}:</b><br>${esc(puntNom)}<br><span style="color:#5A6478;">${esc(puntQuan)}</span>${urlMapa ? `<br><a href="${esc(urlMapa)}" target="_blank" style="color:#1E72D4; font-weight:bold; text-decoration:none;">${esc(t.mapa)}</a>` : ""}</p>
+                    <p style="margin:0 0 10px;"><b>${esc(t.punt)}:</b><br>${esc(puntNom)}<br><span style="color:${quanColor}; font-weight:${quanPes};">${esc(puntQuan)}</span>${urlMapa ? `<br><a href="${esc(urlMapa)}" target="_blank" style="color:#1E72D4; font-weight:bold; text-decoration:none;">${esc(t.mapa)}</a>` : ""}</p>
                     <p style="margin:0 0 10px; color:#B3361B;"><b>${esc(t.canvi)}</b></p>
                   </td>
                 </tr>

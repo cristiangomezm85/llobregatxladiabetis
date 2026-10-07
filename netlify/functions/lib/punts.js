@@ -59,9 +59,9 @@ const PUNTS = [
     per: { ca: "Monistrol de Montserrat", es: "Monistrol de Montserrat", en: "Monistrol de Montserrat" },
   },
   {
-    id: "berga", seleccionable: true, mesa: true, mapa: "https://www.google.com/maps?q=42.099042,1.85105", claus: ["berga"],
-    nom: { ca: "Berga (Escola Fedac Xarxa)", es: "Berga (Escola Fedac Xarxa)", en: "Berga (Escola Fedac Xarxa)" },
-    quan: { ca: "16 d'octubre, de 9h a 16h", es: "16 de octubre, de 9h a 16h", en: "October 16, 9am–4pm" },
+    id: "berga", seleccionable: true, pendent: true, mesa: true, claus: ["berga"],
+    nom: { ca: "Berga", es: "Berga", en: "Berga" },
+    quan: { ca: "Pendent de definir", es: "Pendiente de definir", en: "To be confirmed" },
     per: { ca: "Berga", es: "Berga", en: "Berga" },
   },
   {
@@ -164,7 +164,7 @@ function dinsDeTermini(ara) {
 
 // Versió per enviar al navegador (sense claus internes).
 function publicPunt(p) {
-  return { id: p.id, nom: p.nom, quan: p.quan, per: p.per, mapa: p.mapa || null, seleccionable: p.seleccionable, mesa: p.mesa };
+  return { id: p.id, nom: p.nom, quan: p.quan, per: p.per, mapa: p.mapa || null, pendent: !!p.pendent, seleccionable: p.seleccionable, mesa: p.mesa };
 }
 
 module.exports = {
