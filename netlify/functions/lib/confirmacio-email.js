@@ -44,6 +44,7 @@
 // inscripció ni el pagament.
 
 const { construirCampsComanda } = require("./dades-comanda");
+const { blocQr } = require("./qr-bloc");
 
 const TEXTOS = {
   CA: {
@@ -62,7 +63,7 @@ const TEXTOS = {
     queSaberTitol: "Què has de saber ara",
     bullets: [
       "Llegeix el reglament del repte: horaris, seguretat i normes de la cursa.",
-      "La samarreta i la bossa es recolliran al punt disponible més proper al municipi que has triat. No podem garantir que sigui exactament aquest municipi; ho confirmarem més endavant.",
+      "La bossa, la pulsera i la samarreta es recullen al punt de recollida que t'hem assignat (a l'apartat de dalt i al teu perfil). Hi podràs anar amb el QR d'aquest correu.",
       'Consulta les distàncies i tots els punts de pas del recorregut a llobregat.org/pobles.&nbsp; <a href="https://llobregat.org/pobles" target="_blank" style="color:#1E72D4; font-weight:bold;">Veure els punts del recorregut →</a>',
       "Anirem actualitzant l'hora estimada de pas per cada punt i les franges d'avituallament a mesura que ho concretem amb els respectius ajuntaments.",
       "Segueix-nos a Instagram per no perdre't res dels preparatius.",
@@ -88,7 +89,7 @@ const TEXTOS = {
     queSaberTitol: "Qué debes saber ahora",
     bullets: [
       "Lee el reglamento del reto: horarios, seguridad y normas de la carrera.",
-      "La camiseta y la bolsa se recogerán en el punto disponible más cercano al municipio que has elegido. No podemos garantizar que sea exactamente ese municipio; lo confirmaremos más adelante.",
+      "La bolsa, la pulsera y la camiseta se recogen en el punto de recogida que te hemos asignado (arriba y en tu perfil). Podrás ir con el QR de este correo.",
       'Consulta las distancias y todos los puntos de paso del recorrido en llobregat.org/pobles.&nbsp; <a href="https://llobregat.org/pobles" target="_blank" style="color:#1E72D4; font-weight:bold;">Ver los puntos del recorrido →</a>',
       "Iremos actualizando la hora estimada de paso por cada punto y las franjas de avituallamiento a medida que lo concretemos con los respectivos ayuntamientos.",
       "Síguenos en Instagram para no perderte nada de los preparativos.",
@@ -114,7 +115,7 @@ const TEXTOS = {
     queSaberTitol: "What you need to know now",
     bullets: [
       "Read the challenge rules: schedules, safety, and race rules.",
-      "The t-shirt and bag will be collected at the available point closest to the town you chose. We can't guarantee it will be exactly that town; we'll confirm it later.",
+      "The bag, wristband and t-shirt are collected at the pickup point we have assigned to you (above and in your profile). Bring the QR from this email.",
       'Check the distances and all the route\'s waypoints at llobregat.org/pobles.&nbsp; <a href="https://llobregat.org/pobles" target="_blank" style="color:#1E72D4; font-weight:bold;">See the route waypoints →</a>',
       "We'll keep updating the estimated time at each point and the refreshment stop windows as we confirm them with each town council.",
       "Follow us on Instagram so you don't miss any of the preparations.",
@@ -132,7 +133,7 @@ function escapeHtml(str) {
   }[c]));
 }
 
-function construirContingut(ordre, orderId, idioma) {
+function construirContingut(ordre, orderId, idioma, estatEntrega) {
   const camps = construirCampsComanda(ordre, orderId);
   const t = TEXTOS[idioma];
   const et = t.etiquetes;
@@ -165,6 +166,8 @@ function construirContingut(ordre, orderId, idioma) {
                     <span style="color:#FF6B47; font-weight:bold;">&#8226;</span>&nbsp; ${b}
                   </td>
                 </tr>`).join("");
+
+  const bloc = blocQr(ordre, orderId, idioma, estatEntrega);
 
   const html = `<!DOCTYPE html>
 <html lang="${idioma.toLowerCase()}" xmlns="http://www.w3.org/1999/xhtml">
@@ -250,6 +253,8 @@ function construirContingut(ordre, orderId, idioma) {
             </td>
           </tr>
 
+${bloc ? bloc.html : ""}
+
           <tr>
             <td class="llxd-px" style="padding:28px 40px 4px;">
               <div style="font-family:Arial, Helvetica, sans-serif; font-size:13px; font-weight:bold; letter-spacing:0.5px; text-transform:uppercase; color:#5A6478; margin-bottom:12px;">
@@ -313,6 +318,7 @@ function construirContingut(ordre, orderId, idioma) {
     t.resumTitol + ":",
     ...textFiles,
     "",
+    ...(bloc ? [bloc.text, ""] : []),
     t.queSaberTitol + ":",
     ...textBullets,
     "",
@@ -372,6 +378,15 @@ async function enviarEmailConfirmacio(ordre, orderId) {
 
   if (!res.ok) {
     throw new Error(`Resend ha respost ${res.status}: ${cos.slice(0, 300)}`);
+  }
+
+  // Aquest correu ja porta el QR de recollida: ho anotem perquè l'enviament
+  // massiu (admin-entregues, "enviar-qr") no el torni a enviar.
+  try {
+    const E = require("./entregues");
+    if (E.elementsComanda(ordre).res) await E.marcarQrEnviat(orderId);
+  } catch (e) {
+    console.error("[RESEND] no s'ha pogut anotar qr_enviat:", e);
   }
 }
 

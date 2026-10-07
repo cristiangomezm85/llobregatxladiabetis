@@ -4,6 +4,7 @@
 
 const { calcularTram, arrodonirKm } = require("./route");
 const { comptarPlacesLastMinute } = require("./store");
+const { puntPerId } = require("./punts");
 
 // Interruptor únic i manual per tancar les inscripcions (totes les
 // modalitats, incloent Dorsal 0 -- qui vulgui col·laborar un cop tancat ho
@@ -351,9 +352,17 @@ async function validarFisicLastMinute(payload) {
   payload.tram_inici_nom = tram.iniciNom;
   payload.tram_final_nom = tram.finalNom;
 
-  if (!payload.recollida_municipi) {
-    throw new Error("Falta el municipi de recollida");
+  // Punt de recollida del pack (bossa i pulsera): ha de ser un dels punts
+  // oficials (lib/punts.js). El nom es fixa al servidor (en català) perquè
+  // estadístiques, exportacions i correus no depenguin del que enviï el
+  // navegador.
+  const puntRec = puntPerId(String(payload.recollida_punt || payload.recollida_municipi || ""));
+  if (!puntRec || !puntRec.seleccionable) {
+    throw new Error("Falta triar un punt de recollida vàlid");
   }
+  payload.recollida_punt = puntRec.id;
+  payload.recollida_municipi = puntRec.id;
+  payload.recollida_municipi_nom = puntRec.nom.ca;
 
   if (payload.federat && !payload.num_llicencia_federativa) {
     throw new Error("Falta el número de llicència federativa");
