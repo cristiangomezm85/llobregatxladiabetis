@@ -6,7 +6,7 @@
 // "ordres") no es modifica mai.
 
 const { getStore } = require("@netlify/blobs");
-const { puntPerDefecte, puntPerId } = require("./punts");
+const { puntPerDefecte, puntPerId, puntExcepcio } = require("./punts");
 
 function opcionsStore(name) {
   // "strong": llegeix sempre l'última versió (si no, una taula podria veure
@@ -132,6 +132,8 @@ function estaPagada(ordre) {
 }
 
 function puntEfectiu(ordre, estat) {
+  const exc = puntExcepcio(ordre);
+  if (exc) return exc;
   const triat = estat && estat.punt;
   if (triat && puntPerId(triat)) return triat;
   return puntPerDefecte(ordre);

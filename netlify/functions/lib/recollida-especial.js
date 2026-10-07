@@ -8,6 +8,17 @@
 // Només s'aplica a comandes en estat "pagat".
 
 const LLOC_ESPECIAL = "Club Bàsquet Sant Just";
+const LLOC_912 = "Recollida 912 Runners";
+
+// Grup "912 Runners": qualsevol comanda el club de la qual contingui 912 com a
+// número sencer ("912 Runners", "912runners", "912RUNNERS"...). Es mira el
+// camp "club_nom" de la comanda en el moment de fer servir la regla, de manera
+// que també s'hi afegeixen les inscripcions noves, sense llista de comandes.
+const RE_912 = /(^|[^0-9])912([^0-9]|$)/;
+function es912(ordre) {
+  const p = (ordre && ordre.payload) || {};
+  return RE_912.test(String(p.club_nom || p.club || (ordre && (ordre.club_nom || ordre.club)) || ""));
+}
 
 // order_id de la llista de l'organització (90 comandes pagades).
 // "similitud" = el nom no coincidia exactament i es va proposar per semblança.
@@ -110,7 +121,7 @@ const MAPA = new Map(ORDRES.map(([id]) => [id, LLOC_ESPECIAL]));
 function recollidaPerExportar(ordre) {
   const original = ordre && ordre.recollida_text;
   if (!ordre || String(ordre.estat || "").trim().toLowerCase() !== "pagat") return original;
-  return MAPA.get(ordre.order_id) || original;
+  return MAPA.get(ordre.order_id) || (es912(ordre) ? LLOC_912 : original);
 }
 
-module.exports = { recollidaPerExportar, LLOC_ESPECIAL, ORDRES };
+module.exports = { recollidaPerExportar, LLOC_ESPECIAL, LLOC_912, ORDRES, es912 };

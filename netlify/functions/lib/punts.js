@@ -8,7 +8,7 @@
 // El punt escollit per cada participant NO es guarda a la comanda (blob
 // "ordres"), sinó a part, al store "entregues" (vegeu lib/entregues.js).
 
-const { ORDRES: ORDRES_SANT_JUST } = require("./recollida-especial");
+const { ORDRES: ORDRES_SANT_JUST, es912 } = require("./recollida-especial");
 
 // Últim moment per canviar de punt: 11/10/2026 23:59:59 hora de Madrid
 // (CEST = UTC+2). A partir del 12/10 ja no es pot canviar.
@@ -36,7 +36,7 @@ const PUNTS = [
   },
   {
     id: "salvador-boada", seleccionable: true, mesa: true, mapa: "https://maps.app.goo.gl/DAVi71RVG4kyrFYeA", claus: ["martorell", "esparreguera", "olesa"],
-    nom: { ca: "Pavelló Municipal Salvador Boada (Olesa de Montserrat)", es: "Pabellón Municipal Salvador Boada (Olesa de Montserrat)", en: "Salvador Boada Municipal Pavilion (Olesa de Montserrat)" },
+    nom: { ca: "Recepció complex municipal Salvador Boada", es: "Recepción complejo municipal Salvador Boada", en: "Salvador Boada municipal complex reception" },
     quan: { ca: "14, 15 i 16 d'octubre, de 7h a 22h", es: "14, 15 y 16 de octubre, de 7h a 22h", en: "October 14, 15 and 16, 7am–10pm" },
     per: { ca: "Martorell, Esparreguera i Olesa", es: "Martorell, Esparreguera y Olesa", en: "Martorell, Esparreguera and Olesa" },
   },
@@ -96,12 +96,21 @@ const PUNTS = [
   },
   {
     // Llista especial de l'organització: no es pot canviar des del perfil.
-    id: "sant-just", seleccionable: false, mesa: true, claus: [],
+    id: "sant-just", seleccionable: false, excepcio: true, mesa: true, claus: [],
     nom: { ca: "Club Bàsquet Sant Just", es: "Club Bàsquet Sant Just", en: "Club Bàsquet Sant Just" },
     quan: { ca: "Ho gestiona el club; consulta amb l'organització", es: "Lo gestiona el club; consulta con la organización", en: "Handled by the club; check with the organisation" },
     per: { ca: "Llista de l'organització", es: "Lista de la organización", en: "Organisation list" },
   },
 ];
+
+// Grup especial de l'organització: tots els qui tenen "912" al club.
+// No es pot triar ni canviar (excepcio: true).
+PUNTS.push({
+  id: "912-runners", seleccionable: false, excepcio: true, mesa: true, claus: [],
+  nom: { ca: "Recollida 912 Runners", es: "Recogida 912 Runners", en: "912 Runners pickup" },
+  quan: { ca: "L'organització ho coordinarà amb tu", es: "La organización lo coordinará contigo", en: "The organisation will arrange it with you" },
+  per: { ca: "Corredors del club 912 Runners", es: "Corredores del club 912 Runners", en: "912 Runners club members" },
+});
 
 const ALTRES = {
   id: "altres", seleccionable: false, mesa: false, claus: [],
@@ -120,10 +129,24 @@ function normalitzar(s) {
 
 function puntPerId(id) { return PER_ID.get(id) || null; }
 
+// Punts "d'excepció" (assignats per l'organització): ningú els pot triar i qui
+// hi és assignat no els pot canviar.
+function esPuntExcepcio(id) { const p = PER_ID.get(id); return !!(p && p.excepcio); }
+
+// Punt d'excepció d'una comanda (null si no en té). Té prioritat sobre
+// qualsevol altra elecció.
+function puntExcepcio(ordre) {
+  if (!ordre) return null;
+  if (SANT_JUST.has(ordre.order_id)) return "sant-just";
+  if (es912(ordre)) return "912-runners";
+  return null;
+}
+
 // Punt assignat per defecte segons el lloc de recollida de la comanda.
 function puntPerDefecte(ordre) {
   if (!ordre) return ALTRES.id;
-  if (SANT_JUST.has(ordre.order_id)) return "sant-just";
+  const exc = puntExcepcio(ordre);
+  if (exc) return exc;
   const p = ordre.payload || {};
   // Inscripcions noves: el participant ja ha triat un punt concret al formulari.
   const triat = p.recollida_punt && PER_ID.get(String(p.recollida_punt));
@@ -145,6 +168,6 @@ function publicPunt(p) {
 }
 
 module.exports = {
-  PUNTS, ALTRES, LIMIT_CANVI_ISO, puntPerId, puntPerDefecte, dinsDeTermini,
+  PUNTS, ALTRES, LIMIT_CANVI_ISO, puntPerId, puntPerDefecte, dinsDeTermini, esPuntExcepcio, puntExcepcio,
   publicPunt, normalitzar,
 };
