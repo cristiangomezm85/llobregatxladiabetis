@@ -83,10 +83,12 @@ exports.handler = async (event) => {
       PUNTS.concat([ALTRES]).forEach((p) => {
         files[p.id] = { id: p.id, nom: p.nom.ca, pendent: !!p.pendent, assignats: 0, complets: 0, parcials: 0, pendents: 0, qr_enviats: 0, qr_pendents: 0, sense_correu: 0 };
       });
-      // Control de seguretat: tota inscripció pagada que no sigui dorsal 0 hauria de
-      // tenir almenys una samarreta. Si no en té, és una dada que cal revisar.
+      // Control de seguretat: tota inscripció pagada que no sigui dorsal 0 ni last minute
+      // (les last minute, de 8 €, NO inclouen samarreta) hauria de tenir almenys una
+      // samarreta. Si no en té, és una dada que cal revisar.
       const senseSamarreta = ordres.filter(E.estaPagada)
         .filter((o) => String(o.modalitat || (o.payload || {}).modalitat || "").toLowerCase() !== "dorsal0")
+        .filter((o) => (o.payload || {}).last_minute !== true)
         .filter((o) => E.elementsComanda(o).samarretes.length === 0)
         .map((o) => ({ id: o.order_id, nom: [(o.payload || {}).nom, (o.payload || {}).cognoms].filter(Boolean).join(" ") }));
       ordres.filter(E.estaPagada).forEach((o) => {
