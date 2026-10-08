@@ -8,12 +8,12 @@
 // El punt escollit per cada participant NO es guarda a la comanda (blob
 // "ordres"), sinó a part, al store "entregues" (vegeu lib/entregues.js).
 
-const { ORDRES: ORDRES_SANT_JUST, es912 } = require("./recollida-especial");
+const { ORDRES: ORDRES_SANT_JUST, es912, esSantJust } = require("./recollida-especial");
 
 // Últim moment per canviar de punt: 11/10/2026 23:59:59 hora de Madrid
 // (CEST = UTC+2). A partir del 12/10 ja no es pot canviar.
 // Marca de versió: surt a /.netlify/functions/punts-publics per comprovar què hi ha desplegat.
-const VERSIO = "2026-10-08-912-canviable";
+const VERSIO = "2026-10-08-cb-sant-just";
 
 const LIMIT_CANVI_ISO = "2026-10-11T21:59:59.999Z";
 
@@ -142,7 +142,7 @@ function esPuntExcepcio(id) { const p = PER_ID.get(id); return !!(p && p.excepci
 // qualsevol altra elecció.
 function puntExcepcio(ordre) {
   if (!ordre) return null;
-  if (SANT_JUST.has(ordre.order_id)) return "sant-just";
+  if (SANT_JUST.has(ordre.order_id) || esSantJust(ordre)) return "sant-just";
   return null;
 }
 
