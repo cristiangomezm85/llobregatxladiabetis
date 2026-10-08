@@ -226,7 +226,7 @@
   /* ---- Resultat (igual per QR i per cerca manual) ---- */
   var NOM={bossa:'Bossa',pulsera:'Pulsera',glucody:'Pack Glucody'};
   function tallaTxt(s){var m=String(s).match(/^(home|dona|infantil)-(.+)$/i);var g={home:'Home',dona:'Dona',infantil:'Infantil'};return m?g[m[1].toLowerCase()]+' '+m[2]:s}
-  function etiqueta(it){return NOM[it.clau]||('Samarreta '+tallaTxt(it.talla)+(it.quantitat>1?' ×'+it.quantitat:''))}
+  function etiqueta(it){return NOM[it.clau]||('Samarreta '+tallaTxt(it.talla))}
   function dataTxt(iso){try{return new Date(iso).toLocaleString('ca-ES',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Madrid'})}catch(e){return iso}}
   function banner(cls,titol,sub){
     var b=$('bannerRes');b.textContent='';var d=document.createElement('div');d.className='banner '+cls;d.textContent=titol;
@@ -263,10 +263,15 @@
     $('pSub').textContent=j.modalitat||'';
     var ll=$('llista');ll.textContent='';
     j.items.forEach(function(it){
-      var row=document.createElement('label');row.className='item'+(it.entregat?' fet':'');row.style.margin='0';
-      var cb=document.createElement('input');cb.type='checkbox';cb.value=it.clau;cb.checked=!!it.entregat;cb.disabled=!!it.entregat;
-      var sp=document.createElement('span');sp.textContent=etiqueta(it)+(it.entregat?' (ja entregat)':'');
-      row.appendChild(cb);row.appendChild(sp);ll.appendChild(row);
+      /* Una fila per unitat (3 samarretes L = 3 files); les files d'una mateixa talla es marquen juntes. */
+      var n=NOM[it.clau]?1:Math.max(1,parseInt(it.quantitat,10)||1),grup=[];
+      for(var k=0;k<n;k++){
+        var row=document.createElement('label');row.className='item'+(it.entregat?' fet':'');row.style.margin='0';
+        var cb=document.createElement('input');cb.type='checkbox';cb.value=it.clau;cb.checked=!!it.entregat;cb.disabled=!!it.entregat;
+        var sp=document.createElement('span');sp.textContent=etiqueta(it)+(it.entregat?' (ja entregat)':'');
+        row.appendChild(cb);row.appendChild(sp);ll.appendChild(row);grup.push(cb);
+        if(n>1)cb.onchange=(function(g){return function(){var v=this.checked;g.forEach(function(x){x.checked=v})}})(grup);
+      }
     });
     var jaAlguna=j.items.some(function(i){return i.entregat});
     $('pAvis').textContent=jaAlguna&&j.darrera_entrega?('Entrega parcial anterior: '+dataTxt(j.darrera_entrega.data)+' per '+(j.darrera_entrega.voluntari||'?')):'';
@@ -313,7 +318,7 @@
 
   $('bLlest').onclick=function(){
     if(!actual)return;
-    var marcats=[].slice.call(document.querySelectorAll('#llista input:checked:not(:disabled)')).map(function(c){return c.value});
+    var marcats=[].slice.call(document.querySelectorAll('#llista input:checked:not(:disabled)')).map(function(c){return c.value}).filter(function(c,i,a){return a.indexOf(c)===i});
     var pendentsAra=actual.items.filter(function(i){return !i.entregat}).length;
     if(!marcats.length){$('msgRes').style.color='var(--err)';$('msgRes').textContent='Marca què has entregat.';return}
     $('bLlest').disabled=true;$('msgRes').textContent='';

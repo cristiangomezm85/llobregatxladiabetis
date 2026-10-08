@@ -166,11 +166,15 @@
     $('tItems').textContent=T.tItems;
     var ul=$('items');ul.textContent='';
     d.items.forEach(function(it){
-      var li=document.createElement('li');if(it.entregat)li.className='fet';
-      var dot=document.createElement('span');dot.className='dot';dot.textContent=it.entregat?'✓':'';
-      var tx=document.createElement('span');tx.className='t';
-      var nom=it.clau==='bossa'?T.bossa:it.clau==='pulsera'?T.pulsera:it.clau==='glucody'?T.glucody:(T.samarreta+' '+talla(it.talla)+(it.quantitat>1?' ×'+it.quantitat:''));
-      tx.textContent=nom;li.appendChild(dot);li.appendChild(tx);ul.appendChild(li);
+      /* Una fila per unitat: 3 camisetes L = 3 files "Camiseta L" (evita llegir "L ×3" com una 3XL). */
+      var n=(it.clau==='bossa'||it.clau==='pulsera'||it.clau==='glucody')?1:Math.max(1,parseInt(it.quantitat,10)||1);
+      for(var k=0;k<n;k++){
+        var li=document.createElement('li');if(it.entregat)li.className='fet';
+        var dot=document.createElement('span');dot.className='dot';dot.textContent=it.entregat?'✓':'';
+        var tx=document.createElement('span');tx.className='t';
+        var nom=it.clau==='bossa'?T.bossa:it.clau==='pulsera'?T.pulsera:it.clau==='glucody'?T.glucody:(T.samarreta+' '+talla(it.talla));
+        tx.textContent=nom;li.appendChild(dot);li.appendChild(tx);ul.appendChild(li);
+      }
     });
     $('nPulsera').textContent=d.items.some(function(i){return i.clau==='pulsera'})?T.nPulsera:'';
 
