@@ -7,6 +7,7 @@
 // retornem DNI, telèfon, email ni data de naixement.
 
 const { obtenirOrdre } = require("./lib/store");
+const { es912 } = require("./lib/recollida-especial");
 const { construirCampsComanda } = require("./lib/dades-comanda");
 const { PUNTS, LIMIT_CANVI_ISO, puntPerId, dinsDeTermini, publicPunt, esPuntExcepcio } = require("./lib/punts");
 const E = require("./lib/entregues");
@@ -39,7 +40,8 @@ function vista(ordre, estat, orderId) {
     items: cl.items,
     complet: cl.complet,
     punt: punt ? publicPunt(punt) : null,
-    punts: PUNTS.filter((x) => x.seleccionable).map(publicPunt),
+    // El grup 912 Runners també hi veu el seu punt, per poder-hi tornar.
+    punts: PUNTS.filter((x) => x.seleccionable || (x.id === "912-runners" && es912(ordre))).map(publicPunt),
     pot_canviar: dinsDeTermini() && !bloquejat && cl.items.length > 0 && !cl.complet,
     bloquejat_organitzacio: bloquejat,
     limit_canvi: LIMIT_CANVI_ISO,
@@ -66,9 +68,9 @@ exports.handler = async (event) => {
       if (!E.idValid(id)) return resp(400, { ok: false, codi: "id_invalid" });
       if (!dinsDeTermini()) return resp(403, { ok: false, codi: "termini_tancat" });
       const nou = puntPerId(String(body.punt || ""));
-      if (!nou || !nou.seleccionable) return resp(400, { ok: false, codi: "punt_invalid" });
       const ordre = await obtenirOrdre(id);
       if (!ordre) return resp(404, { ok: false, codi: "no_trobada" });
+      if (!nou || !(nou.seleccionable || (nou.id === "912-runners" && es912(ordre)))) return resp(400, { ok: false, codi: "punt_invalid" });
       if (!E.estaPagada(ordre)) return resp(409, { ok: false, codi: "no_pagada" });
       let estat = await E.obtenirEstat(id);
       if (esPuntExcepcio(E.puntEfectiu(ordre, estat))) return resp(403, { ok: false, codi: "bloquejat" });

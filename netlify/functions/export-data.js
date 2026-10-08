@@ -5,7 +5,9 @@
 // Ús: /.netlify/functions/export-data?token=EL_TEU_TOKEN
 
 const { llistarOrdres } = require("./lib/store");
-const { recollidaPerExportar } = require("./lib/recollida-especial");
+const { recollidaPerExportar, es912 } = require("./lib/recollida-especial");
+const { puntPerId } = require("./lib/punts");
+const E = require("./lib/entregues");
 
 exports.handler = async (event) => {
   const secretConfigurat = (process.env.EXPORT_SECRET || "").trim();
@@ -34,6 +36,17 @@ exports.handler = async (event) => {
       body: "Error accedint a l'emmagatzematge: " + (err && err.message ? err.message : String(err)),
     };
   }
+
+  // Punts triats des del perfil: només es fan servir per al grup 912 (que pot
+  // canviar de punt). Si no es poden llegir, s'exporta com abans.
+  let estats = {};
+  try { estats = await E.llistarEstats(); } catch (err) { console.error("[export-data] estats:", err); }
+  const puntTriatNom = (o) => {
+    if (!es912(o)) return undefined;
+    const id = (estats[o.order_id] || {}).punt;
+    const pt = id && id !== "912-runners" ? puntPerId(id) : null;
+    return pt ? pt.nom.ca : undefined;
+  };
 
   const columnes = [
     "order_id", "modalitat", "estat", "import_base_centims", "donacio_centims",
@@ -69,7 +82,7 @@ exports.handler = async (event) => {
       email_contacte: o.email_contacte,
       // Lloc de recollida especial (llista a lib/recollida-especial.js): només
       // canvia el CSV, mai la comanda guardada.
-      recollida_text: recollidaPerExportar(o),
+      recollida_text: recollidaPerExportar(o, puntTriatNom(o)),
       nom: p.nom, cognoms: p.cognoms, telefon: p.telefon,
       dni: p.dni, data_naixement: p.data_naixement, es_menor: p.es_menor,
       tutor_nom: p.tutor_nom, tutor_cognoms: p.tutor_cognoms,
