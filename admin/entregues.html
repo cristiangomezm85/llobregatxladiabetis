@@ -22,6 +22,8 @@ button.s{background:#556}
 <h1>Entregues de bosses, pulseres i samarretes</h1>
 <div class="card"><label>Token d'admin <small>(es fa servir el de l'admin si ja hi has entrat)</small></label><br><input type="password" id="tok" autocomplete="off"></div>
 
+<div class="card" id="avisSam" hidden style="border:2px solid #C0262D"><h2>Revisa: inscripcions pagades sense samarreta</h2><p>Aquestes inscripcions no tenen cap samarreta registrada i no apareixeran a l'entrega. Busca-les a «Buscar una persona» i afegeix-ne la samarreta des de l'editor de ruta i samarretes.</p><ul id="llAvisSam"></ul></div>
+
 <div class="card"><h2>Enviar el correu amb el QR, per zona</h2>
 <p>Cada zona es llança per separat, amb el seu propi botó. Les zones «pendent de definir» (ara Berga) i «Per assignar» queden en espera i no es poden enviar fins que estiguin resoltes. Només rep el correu qui encara no l'ha rebut. Quan una zona ja està enviada, el botó queda bloquejat i el servidor tampoc ho permet. Comprova el límit diari del teu pla de Resend (el gratuït és de 100 correus al dia).</p>
 <button id="bZones">Actualitzar zones</button>
@@ -56,10 +58,11 @@ function pintaResum(punts){var tb=$('t').tBodies[0];tb.textContent='';$('t').hid
  punts.forEach(function(p){var v=[p.assignats,p.complets,p.parcials,p.pendents,p.qr_enviats];if(!p.assignats&&!p.qr_enviats)return;
   var r=tb.insertRow();var c=r.insertCell();c.textContent=p.nom;v.forEach(function(x,i){tot[i]+=x;var d=r.insertCell();d.className='n';d.textContent=x})});
  var r=tb.insertRow();r.style.fontWeight='700';var c=r.insertCell();c.textContent='Total';tot.forEach(function(x){var d=r.insertCell();d.className='n';d.textContent=x})}
+function avisSam(l){var c=$('avisSam'),u=$('llAvisSam');u.textContent='';l.forEach(function(p){var li=el('li',null,(p.nom||'(sense nom)')+' — '+p.id);u.appendChild(li)});c.hidden=!l.length}
 var ZONES={};
 function carregaZones(){$('mZ').textContent='Carregant…';return crida('GET').then(function(j){
  if(!j.ok){$('mZ').textContent='Error: '+(j.error||'');return}
- pintaResum(j.punts);
+ pintaResum(j.punts);avisSam(j.sense_samarreta||[]);
  var tb=$('tz').tBodies[0];tb.textContent='';var pend=0,sc=0,n=0;
  j.punts.filter(function(p){return p.assignats>0}).forEach(function(p){
   ZONES[p.id]=p;n++;pend+=p.qr_pendents;sc+=p.sense_correu;
