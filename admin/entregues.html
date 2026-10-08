@@ -28,7 +28,8 @@ button.s{background:#556}
 <table id="tz" hidden><thead><tr><th>Zona</th><th class="n">Total</th><th class="n">Ja enviats</th><th class="n">Per enviar</th><th>Estat</th><th></th></tr></thead><tbody></tbody></table>
 <div class="m" id="mZ">Escriu el token i prem «Actualitzar zones» per veure les zones i enviar-ne el QR.</div></div>
 
-<div class="card"><h2>Resum per punt</h2>
+<div class="card"><h2>Resum per punt: QR enviats i recollida</h2>
+<p class="mut" style="margin:0 0 6px">Es carrega sol. «Complets» = han vingut a buscar-ho tot; «Parcials» = han recollit una part; «Pendents» = encara no han vingut.</p>
 <button id="bRes">Actualitzar resum</button>
 <table id="t" hidden><thead><tr><th>Punt</th><th class="n">Assignats</th><th class="n">Complets</th><th class="n">Parcials</th><th class="n">Pendents</th><th class="n">QR enviat</th></tr></thead><tbody></tbody></table>
 <div class="m" id="mRes"></div></div>
@@ -47,15 +48,18 @@ var API='/.netlify/functions/admin-entregues',$=function(i){return document.getE
 function tok(){var t=$('tok').value.trim();if(t)return t;try{return sessionStorage.getItem('lxd-admin-token')||localStorage.getItem('lxd-admin-token')||''}catch(e){return ''}}
 function crida(m,cos){var h={'content-type':'application/json'},t=tok();if(t)h.authorization='Bearer '+t;
  return fetch(API,{method:m,headers:h,body:cos?JSON.stringify(cos):undefined}).then(function(r){return r.json().catch(function(){return {ok:false,error:'Resposta no vàlida (HTTP '+r.status+')'}})})}
-$('bRes').onclick=function(){$('mRes').textContent='Carregant…';crida('GET').then(function(j){
- if(!j.ok){$('mRes').textContent='Error: '+(j.error||'');return}$('mRes').textContent='';var tb=$('t').tBodies[0];tb.textContent='';$('t').hidden=false;
- j.punts.forEach(function(p){var r=tb.insertRow();[p.nom,p.assignats,p.complets,p.parcials,p.pendents,p.qr_enviats].forEach(function(v,i){var c=r.insertCell();c.textContent=v;if(i)c.className='n'})})}).catch(function(){$('mRes').textContent='Error de connexió'})};
 $('bIx').onclick=function(){$('mIx').textContent='Reconstruint… (pot trigar uns segons)';crida('POST',{action:'reindexar'}).then(function(j){$('mIx').textContent=j.ok?('Fet: '+j.persones+' persones indexades.'):('Error: '+(j.error||''))}).catch(function(){$('mIx').textContent='Error de connexió'})};
 
 function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function pintaResum(punts){var tb=$('t').tBodies[0];tb.textContent='';$('t').hidden=false;$('mRes').textContent='';
+ var tot=[0,0,0,0,0];
+ punts.forEach(function(p){var v=[p.assignats,p.complets,p.parcials,p.pendents,p.qr_enviats];if(!p.assignats&&!p.qr_enviats)return;
+  var r=tb.insertRow();var c=r.insertCell();c.textContent=p.nom;v.forEach(function(x,i){tot[i]+=x;var d=r.insertCell();d.className='n';d.textContent=x})});
+ var r=tb.insertRow();r.style.fontWeight='700';var c=r.insertCell();c.textContent='Total';tot.forEach(function(x){var d=r.insertCell();d.className='n';d.textContent=x})}
 var ZONES={};
 function carregaZones(){$('mZ').textContent='Carregant…';return crida('GET').then(function(j){
  if(!j.ok){$('mZ').textContent='Error: '+(j.error||'');return}
+ pintaResum(j.punts);
  var tb=$('tz').tBodies[0];tb.textContent='';var pend=0,sc=0,n=0;
  j.punts.filter(function(p){return p.assignats>0}).forEach(function(p){
   ZONES[p.id]=p;n++;pend+=p.qr_pendents;sc+=p.sense_correu;
@@ -81,7 +85,7 @@ function enviaZona(p,bt){
   if(j.queden>0&&j.enviats>0)setTimeout(seg,1500);else fi('«'+z.nom+'» feta: '+tot+' correus enviats'+(j.queden?(' ('+j.queden+' sense enviar)'):'')+'.')
  }).catch(function(){fi('Error de connexió. Actualitza les zones per veure què s\'ha enviat.')})})();
  function fi(m){$('bZones').disabled=false;carregaZones().then(function(){$('mZ').textContent=m})}}
-$('bZones').onclick=carregaZones;
+$('bZones').onclick=carregaZones;$('bRes').onclick=carregaZones;
 
 var NOM_MOD={caminant:'Caminant',corrent:'Corredor/a',bici:'Bici',dorsal0:'Dorsal 0',animar:'Animar'};
 function pinta(persones){var R=$('res');R.textContent='';
