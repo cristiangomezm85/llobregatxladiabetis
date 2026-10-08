@@ -13,7 +13,7 @@ const { ORDRES: ORDRES_SANT_JUST, es912, esSantJust } = require("./recollida-esp
 // Últim moment per canviar de punt: 11/10/2026 23:59:59 hora de Madrid
 // (CEST = UTC+2). A partir del 12/10 ja no es pot canviar.
 // Marca de versió: surt a /.netlify/functions/punts-publics per comprovar què hi ha desplegat.
-const VERSIO = "2026-10-08-cb-92";
+const VERSIO = "2026-10-08-cb-93";
 
 const LIMIT_CANVI_ISO = "2026-10-11T21:59:59.999Z";
 
@@ -62,10 +62,10 @@ const PUNTS = [
     per: { ca: "Monistrol de Montserrat", es: "Monistrol de Montserrat", en: "Monistrol de Montserrat" },
   },
   {
-    id: "berga", seleccionable: true, pendent: true, mesa: true, claus: ["berga"],
-    nom: { ca: "Berga", es: "Berga", en: "Berga" },
-    quan: { ca: "Pendent de definir", es: "Pendiente de definir", en: "To be confirmed" },
-    per: { ca: "Berga", es: "Berga", en: "Berga" },
+    id: "berga", seleccionable: true, mesa: true, mapa: "https://www.google.com/maps?q=42.099042,1.85105", claus: ["berga", "cercs"],
+    nom: { ca: "Berga (Escola Fedac Xarxa)", es: "Berga (Escola Fedac Xarxa)", en: "Berga (Escola Fedac Xarxa)" },
+    quan: { ca: "Divendres 16 d'octubre, a partir de les 8h", es: "Viernes 16 de octubre, a partir de las 8h", en: "Friday October 16, from 8am" },
+    per: { ca: "Berga i Sant Jordi de Cercs", es: "Berga y Sant Jordi de Cercs", en: "Berga and Sant Jordi de Cercs" },
   },
   {
     id: "sallent", seleccionable: true, mesa: true, claus: ["sallent"],
