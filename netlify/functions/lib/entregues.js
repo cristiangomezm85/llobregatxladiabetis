@@ -7,6 +7,7 @@
 
 const { getStore } = require("@netlify/blobs");
 const { puntPerDefecte, puntPerId, puntExcepcio } = require("./punts");
+const { samarretesDeComanda } = require("./samarretes");
 
 function opcionsStore(name) {
   // "strong": llegeix sempre l'última versió (si no, una taula podria veure
@@ -110,7 +111,8 @@ async function llistarEstats() {
 //  - bossa i pulsera: només participants (caminant / corrent / bici).
 //  - pack Glucody: qui té diabetis tipus 1 o un familiar/amic (relacio
 //    "tinc" o "familiar"), de qualsevol modalitat excepte dorsal 0.
-//  - samarretes: les de payload.samarretes (talla + quantitat).
+//  - samarretes: les de payload.samarretes (talla + quantitat); si no n'hi ha,
+//    les dades antigues (talla_samarreta + unitats). Vegeu lib/samarretes.js.
 const PARTICIPANTS = new Set(["caminant", "corrent", "bici"]);
 
 function elementsComanda(ordre) {
@@ -119,9 +121,7 @@ function elementsComanda(ordre) {
   const participant = PARTICIPANTS.has(mod);
   const relacio = String(p.relacio || "").toLowerCase();
   const glucody = mod !== "dorsal0" && (relacio === "tinc" || relacio === "familiar");
-  const samarretes = (Array.isArray(p.samarretes) ? p.samarretes : [])
-    .map((s) => ({ talla: String((s && s.talla) || ""), quantitat: Number((s && s.quantitat) || 0) }))
-    .filter((s) => s.talla && s.quantitat > 0);
+  const samarretes = samarretesDeComanda(ordre);
   const e = { bossa: participant, pulsera: participant, glucody, samarretes };
   e.res = e.bossa || e.pulsera || e.glucody || e.samarretes.length > 0;
   return e;
