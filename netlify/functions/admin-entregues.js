@@ -149,6 +149,8 @@ exports.handler = async (event) => {
       if (b.action === "enviar-qr") {
         const punt = puntPerId(String(b.punt || "")) || (b.punt === ALTRES.id ? ALTRES : null);
         if (!punt) return resp(400, { ok: false, error: "Cal indicar la zona" });
+        if (punt.pendent) return resp(409, { ok: false, error: `La zona «${punt.nom.ca}» encara és pendent de definir: no s'envia fins que tingui lloc i hora.` });
+        if (punt.id === ALTRES.id) return resp(409, { ok: false, error: "Aquesta gent encara no té punt assignat: assigna'ls un punt abans d'enviar-los el QR." });
         const { enviarLotQr } = require("./lib/email-qr");
         const limit = Math.max(1, Math.min(Number(b.limit) || 40, 90));
         const [ordres, estats] = await Promise.all([llistarOrdres(), E.llistarEstats()]);
