@@ -15,6 +15,7 @@
 const { llistarOrdres, obtenirOrdre, actualitzarOrdre, canviarEmailPagat } = require("./lib/store");
 const { PUNTS, ALTRES, puntPerId, normalitzar } = require("./lib/punts");
 const E = require("./lib/entregues");
+const AVIS = require("./lib/avis-club");
 
 function resp(statusCode, body) {
   return { statusCode, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" }, body: JSON.stringify(body) };
@@ -104,7 +105,10 @@ exports.handler = async (event) => {
         else if (cl.items.some((i) => i.entregat)) f.parcials++;
         else f.pendents++;
       });
-      return resp(200, { ok: true, punts: Object.values(files), sense_samarreta: senseSamarreta });
+      const ja = await E.avisosEnviats(AVIS.CLAU);
+      const perId = new Map(ordres.map((o) => [o.order_id, o]));
+      const avisClub = AVIS.PERSONES.map(([id, nom]) => ({ id, nom, enviat: ja.has(id), pagada: !!perId.get(id) && E.estaPagada(perId.get(id)) }));
+      return resp(200, { ok: true, punts: Object.values(files), sense_samarreta: senseSamarreta, avis_club: avisClub });
     }
 
     if (event.httpMethod === "POST") {
@@ -152,6 +156,25 @@ exports.handler = async (event) => {
           try { await require("./lib/index-cerca").reconstruir(); } catch (e) { console.error("[admin-entregues] reindexar:", e); }
         }
         return resp(200, { ok: true, email: correuDe(ordre), canviat });
+      }
+
+      if (b.action === "enviar-avis-club") {
+        const { enviarLotQr } = require("./lib/email-qr");
+        const [ordres, estats, ja] = await Promise.all([llistarOrdres(), E.llistarEstats(), E.avisosEnviats(AVIS.CLAU)]);
+        const perId = new Map(ordres.map((o) => [o.order_id, o]));
+        const pendents = AVIS.PERSONES.map(([id]) => perId.get(id))
+          .filter((o) => o && E.estaPagada(o) && correuDe(o) && !ja.has(o.order_id));
+        if (!pendents.length) return resp(409, { ok: false, error: "L'aclariment ja s'ha enviat a tothom: no queda cap persona pendent." });
+        // Seguretat: si la versió desplegada encara assigna aquestes persones al club,
+        // el correu tornaria a dir el punt equivocat. No s'envia.
+        const encaraClub = pendents.filter((o) => E.puntEfectiu(o, estats[o.order_id] || {}) === "sant-just");
+        if (encaraClub.length) {
+          return resp(409, { ok: false, error: `Encara hi ha ${encaraClub.length} persones assignades al club: desplega primer la versió corregida (punts.js) i torna-ho a provar.` });
+        }
+        if (b.aplicar !== true) return resp(200, { ok: true, simulacio: true, pendents_total: pendents.length });
+        const r = await enviarLotQr(pendents.map((o) => ({ ordre: { ...o, email_contacte: correuDe(o) }, orderId: o.order_id, estat: estats[o.order_id] || {}, extra: AVIS.EXTRA })));
+        for (const id of r.enviats) { await E.marcarAvis(AVIS.CLAU, id); await E.marcarQrEnviat(id); }
+        return resp(200, { ok: true, enviats: r.enviats.length, queden: pendents.length - r.enviats.length });
       }
 
       if (b.action === "enviar-qr") {
