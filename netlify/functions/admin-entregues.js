@@ -83,6 +83,12 @@ exports.handler = async (event) => {
       PUNTS.concat([ALTRES]).forEach((p) => {
         files[p.id] = { id: p.id, nom: p.nom.ca, pendent: !!p.pendent, assignats: 0, complets: 0, parcials: 0, pendents: 0, qr_enviats: 0, qr_pendents: 0, sense_correu: 0 };
       });
+      // Control de seguretat: tota inscripció pagada que no sigui dorsal 0 hauria de
+      // tenir almenys una samarreta. Si no en té, és una dada que cal revisar.
+      const senseSamarreta = ordres.filter(E.estaPagada)
+        .filter((o) => String(o.modalitat || (o.payload || {}).modalitat || "").toLowerCase() !== "dorsal0")
+        .filter((o) => E.elementsComanda(o).samarretes.length === 0)
+        .map((o) => ({ id: o.order_id, nom: [(o.payload || {}).nom, (o.payload || {}).cognoms].filter(Boolean).join(" ") }));
       ordres.filter(E.estaPagada).forEach((o) => {
         const est = estats[o.order_id] || {};
         const cl = E.checklist(o, est);
@@ -96,7 +102,7 @@ exports.handler = async (event) => {
         else if (cl.items.some((i) => i.entregat)) f.parcials++;
         else f.pendents++;
       });
-      return resp(200, { ok: true, punts: Object.values(files) });
+      return resp(200, { ok: true, punts: Object.values(files), sense_samarreta: senseSamarreta });
     }
 
     if (event.httpMethod === "POST") {
