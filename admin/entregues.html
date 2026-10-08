@@ -22,6 +22,12 @@ button.s{background:#556}
 <h1>Entregues de bosses, pulseres i samarretes</h1>
 <div class="card"><label>Token d'admin <small>(es fa servir el de l'admin si ja hi has entrat)</small></label><br><input type="password" id="tok" autocomplete="off"></div>
 
+<div class="card"><h2>Enviar el correu amb el QR, per zona</h2>
+<p>Cada zona es llança per separat, amb el seu propi botó. Les zones «pendent de definir» (ara Berga) i «Per assignar» queden en espera i no es poden enviar fins que estiguin resoltes. Només rep el correu qui encara no l'ha rebut. Quan una zona ja està enviada, el botó queda bloquejat i el servidor tampoc ho permet. Comprova el límit diari del teu pla de Resend (el gratuït és de 100 correus al dia).</p>
+<button id="bZones">Actualitzar zones</button>
+<table id="tz" hidden><thead><tr><th>Zona</th><th class="n">Total</th><th class="n">Ja enviats</th><th class="n">Per enviar</th><th>Estat</th><th></th></tr></thead><tbody></tbody></table>
+<div class="m" id="mZ">Escriu el token i prem «Actualitzar zones» per veure les zones i enviar-ne el QR.</div></div>
+
 <div class="card"><h2>Resum per punt</h2>
 <button id="bRes">Actualitzar resum</button>
 <table id="t" hidden><thead><tr><th>Punt</th><th class="n">Assignats</th><th class="n">Complets</th><th class="n">Parcials</th><th class="n">Pendents</th><th class="n">QR enviat</th></tr></thead><tbody></tbody></table>
@@ -30,12 +36,6 @@ button.s{background:#556}
 <div class="card"><h2>Índex de cerca dels voluntaris</h2>
 <p>Cal reconstruir-lo abans de l'esdeveniment i després de les últimes inscripcions, perquè el buscador manual vagi ràpid.</p>
 <button id="bIx">Reconstruir índex</button><div class="m" id="mIx"></div></div>
-
-<div class="card"><h2>Enviar el correu amb el QR, per zona</h2>
-<p>Cada zona es llança per separat. Només rep el correu qui encara no l'ha rebut. Quan una zona ja està enviada, el botó queda bloquejat i el servidor tampoc ho permet. Comprova el límit diari del teu pla de Resend (el gratuït és de 100 correus al dia).</p>
-<button id="bZones">Actualitzar zones</button>
-<table id="tz" hidden><thead><tr><th>Zona</th><th class="n">Total</th><th class="n">Ja enviats</th><th class="n">Per enviar</th><th>Estat</th><th></th></tr></thead><tbody></tbody></table>
-<div class="m" id="mZ"></div></div>
 
 <div class="card"><h2>Buscar una persona</h2>
 <p>Per nom, cognoms, correu, DNI, club o identificador de comanda (mínim 3 caràcters). Des d'aquí pots reenviar-li el correu del QR (també amb un correu corregit) o desfer-li un lliurament.</p>
@@ -59,14 +59,14 @@ function carregaZones(){$('mZ').textContent='Carregant…';return crida('GET').t
  var tb=$('tz').tBodies[0];tb.textContent='';var pend=0,sc=0,n=0;
  j.punts.filter(function(p){return p.assignats>0}).forEach(function(p){
   ZONES[p.id]=p;n++;pend+=p.qr_pendents;sc+=p.sense_correu;
-  var fet=p.qr_pendents===0&&p.qr_enviats>0,r=tb.insertRow();if(fet)r.className='fet';
+  var fet=p.qr_pendents===0&&p.qr_enviats>0,espera=p.pendent||p.id==='altres',r=tb.insertRow();if(fet)r.className='fet';
   var c=r.insertCell();c.textContent=p.nom+(p.pendent?' (pendent de definir)':'');
   [p.assignats,p.qr_enviats,p.qr_pendents].forEach(function(v){var x=r.insertCell();x.className='n';x.textContent=v});
   var e=r.insertCell(),est;
-  if(fet)est=el('span','ok','✓ Enviat');else if(p.qr_enviats>0)est=el('span','av','Parcial');else est=el('span','av','Per fer');
+  if(fet)est=el('span','ok','✓ Enviat');else if(espera)est=el('span','mut','En espera');else if(p.qr_enviats>0)est=el('span','av','Parcial');else est=el('span','av','Per fer');
   e.appendChild(est);if(p.sense_correu){e.appendChild(el('div','mut','+ '+p.sense_correu+' sense correu'))}
-  var a=r.insertCell(),bt=el('button',fet?'s':'g',fet?'Fet ✓':('Enviar '+p.qr_pendents));
-  bt.disabled=p.qr_pendents===0;bt.onclick=function(){enviaZona(p,bt)};a.appendChild(bt)});
+  var a=r.insertCell(),bt=el('button',(fet||espera)?'s':'g',fet?'Fet ✓':espera?'No enviar encara':('Enviar '+p.qr_pendents));
+  bt.disabled=p.qr_pendents===0||espera;bt.onclick=function(){enviaZona(p,bt)};a.appendChild(bt)});
  $('tz').hidden=false;
  $('mZ').textContent=n?('Per enviar en total: '+pend+' correus'+(pend>100?' (més del límit diari de 100 del pla gratuït de Resend: reparteix-ho en dies o puja de pla)':'')+'.'):'Cap zona amb inscripcions pagades.';
  }).catch(function(){$('mZ').textContent='Error de connexió'})}
@@ -125,4 +125,5 @@ function cerca(){var q=$('q').value.trim();if(q.length<3){$('mCerca').textConten
   if(!j.ok){$('mCerca').textContent='Error: '+(j.error||'');return}pinta(j.persones)}).catch(function(){$('mCerca').textContent='Error de connexió'})}
 $('bCerca').onclick=cerca;$('q').onkeydown=function(e){if(e.key==='Enter')cerca()};
 if(tok())carregaZones();
+$('tok').onchange=function(){carregaZones()};
 </script></body></html>
