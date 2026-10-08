@@ -14,10 +14,18 @@ const TXT = {
   EN: { assumpte: "Your QR to collect your bag and t-shirt — Llobregat x la Diabetis", salut: (n) => `Hi${n ? ", " + n : ""}!`, intro: "The pickup points are ready. Here is your personal QR and the point we have assigned to you.", kicker: "SOLIDARITY CHALLENGE · OCTOBER 16–18, 2026", peu: 'Questions? Email us at <a href="mailto:info@llobregat.org" style="color:#5AC0E6;">info@llobregat.org</a>' },
 };
 
-function construirEmailQr(ordre, orderId, estat) {
+function construirEmailQr(ordre, orderId, estat, extra) {
   const camps = construirCampsComanda(ordre, orderId);
   const idioma = ["CA", "ES", "EN"].includes(camps.idioma) ? camps.idioma : "CA";
-  const t = TXT[idioma];
+  const t = { ...TXT[idioma] };
+  // "extra" (opcional): correu d'aclariment amb assumpte, introducció i nota pròpies.
+  const ex = extra || {};
+  if (ex.assumpte && ex.assumpte[idioma]) t.assumpte = ex.assumpte[idioma];
+  if (ex.intro && ex.intro[idioma]) t.intro = ex.intro[idioma];
+  const avis = ex.avis && ex.avis[idioma] ? ex.avis[idioma] : "";
+  const avisHtml = avis
+    ? `<p style="margin:16px 0 0;padding:12px 14px;background-color:#FFF4DD;border-left:4px solid #B26A00;border-radius:6px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:22px;color:#0E1B36;">${esc(avis)}</p>`
+    : "";
   const bloc = blocQr(ordre, orderId, idioma, estat);
   if (!bloc) return null;
   const html = `<!DOCTYPE html>
@@ -31,11 +39,11 @@ function construirEmailQr(ordre, orderId, estat) {
 <img src="https://llobregat.org/img/logo-footer-white.png" width="64" height="64" alt="Llobregat x la Diabetis" style="display:block;margin:0 auto 12px;width:64px;height:64px;">
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:1.5px;font-weight:bold;color:#5AC0E6;text-transform:uppercase;">${t.kicker}</div></td></tr>
 <tr><td class="llxd-px" style="padding:30px 40px 4px;"><h1 style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:26px;line-height:32px;font-weight:800;color:#1E72D4;">${esc(t.salut(camps.name))}</h1>
-<p style="margin:12px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:24px;color:#0E1B36;">${esc(t.intro)}</p></td></tr>
+<p style="margin:12px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:24px;color:#0E1B36;">${esc(t.intro)}</p>${avisHtml}</td></tr>
 ${bloc.html}
 <tr><td style="background-color:#0E1B36;padding:22px 40px;margin-top:20px;"><p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#7C8AA5;">Llobregat x la Diabetis · AREDI · ${t.peu}</p></td></tr>
 </table></td></tr></table></body></html>`;
-  const text = [t.salut(camps.name), "", t.intro, "", bloc.text].join("\n");
+  const text = [t.salut(camps.name), "", t.intro, ...(avis ? ["", avis] : []), "", bloc.text].join("\n");
   return { subject: t.assumpte, html, text };
 }
 
@@ -49,7 +57,7 @@ async function enviarLotQr(elements) {
   const valids = [];
   for (const el of elements) {
     const email = el.ordre.email_contacte;
-    const c = email ? construirEmailQr(el.ordre, el.orderId, el.estat) : null;
+    const c = email ? construirEmailQr(el.ordre, el.orderId, el.estat, el.extra) : null;
     if (!c) continue;
     const p = el.ordre.payload || {};
     const nom = [p.nom, p.cognoms].filter(Boolean).join(" ");

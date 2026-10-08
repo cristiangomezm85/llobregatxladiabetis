@@ -209,6 +209,15 @@ async function canviarPunt(orderId, punt) {
   return obtenirEstat(orderId);
 }
 
+// Avisos puntuals (p. ex. l'aclariment del club): una marca per persona i avís.
+async function marcarAvis(clau, orderId) {
+  await entreguesStore().set(`avis/${clau}/${orderId}`, new Date().toISOString());
+}
+async function avisosEnviats(clau) {
+  const { blobs } = await entreguesStore().list({ prefix: `avis/${clau}/` });
+  return new Set(blobs.map((b) => b.key.split("/")[2]));
+}
+
 async function marcarQrEnviat(orderId) {
   await entreguesStore().set(`qr/${orderId}`, new Date().toISOString());
 }
@@ -221,5 +230,5 @@ async function desarIndex(ix) { await entreguesStore().setJSON("index/cerca", ix
 
 module.exports = {
   idValid, obtenirEstat, llistarEstats, elementsComanda, estaPagada,
-  puntEfectiu, checklist, entregat, registrarEntrega, desferEntrega, canviarPunt, marcarQrEnviat, llegirIndex, desarIndex,
+  puntEfectiu, checklist, entregat, registrarEntrega, desferEntrega, canviarPunt, marcarQrEnviat, marcarAvis, avisosEnviats, llegirIndex, desarIndex,
 };

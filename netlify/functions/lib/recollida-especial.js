@@ -20,19 +20,12 @@ function es912(ordre) {
   return RE_912.test(String(p.club_nom || p.club || (ordre && (ordre.club_nom || ordre.club)) || ""));
 }
 
-// Grup "Club Bàsquet Sant Just": a més de la llista d'ordres de sota, qualsevol
-// comanda el club de la qual sigui el Bàsquet Sant Just ("CB Sant Just",
-// "C.B. Sant Just", "Club Bàsquet Sant Just", "Club Basket Sant Just"...)
-// s'assigna a la taula del club. No inclou altres clubs de Sant Just
-// (p. ex. "Atletisme Sant Just").
-const RE_CB_SANT_JUST = /(^| )(cb|c b|club (de )?(basquet|basket)|basquet|basket)( club)? sant just( |$)/;
-function netClub(s) {
-  return String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-}
-function esClubSantJust(ordre) {
-  const p = (ordre && ordre.payload) || {};
-  return RE_CB_SANT_JUST.test(netClub(p.club_nom || p.club || (ordre && (ordre.club_nom || ordre.club)) || ""));
-}
+// Comandes afegides A MÀ al grup Club Bàsquet Sant Just (no són a la llista
+// de l'organització de sota). Per afegir-ne una: el seu order_id i un comentari.
+const AFEGITS = [
+  ["b7344a32-47ed-49cd-962a-2887304ee8f4", "Ricard Anguera Camos"],
+  ["f7ed757f-3349-41db-8565-0ff859e24c7a", "Nerea López Paz"],
+];
 
 // order_id de la llista de l'organització (90 comandes pagades).
 // "similitud" = el nom no coincidia exactament i es va proposar per semblança.
@@ -129,11 +122,11 @@ const ORDRES = [
   ["e6b23915-2bbc-46d2-818f-258eee340ed0", "similitud"],
 ];
 
-const MAPA = new Map(ORDRES.map(([id]) => [id, LLOC_ESPECIAL]));
+const MAPA = new Map(ORDRES.concat(AFEGITS).map(([id]) => [id, LLOC_ESPECIAL]));
 
-// És del grup Club Bàsquet Sant Just? (llista de l'organització o club pel nom)
+// És del grup Club Bàsquet Sant Just? (llista de l'organització + afegits a mà)
 function esSantJust(ordre) {
-  return !!ordre && (MAPA.has(ordre.order_id) || esClubSantJust(ordre));
+  return !!ordre && MAPA.has(ordre.order_id);
 }
 
 // Retorna el lloc de recollida a exportar per a una comanda. "puntTriatNom" és
@@ -145,4 +138,4 @@ function recollidaPerExportar(ordre, puntTriatNom) {
   return (esSantJust(ordre) ? LLOC_ESPECIAL : null) || (es912(ordre) ? (puntTriatNom || LLOC_912) : original);
 }
 
-module.exports = { recollidaPerExportar, LLOC_ESPECIAL, LLOC_912, ORDRES, es912, esSantJust, esClubSantJust };
+module.exports = { recollidaPerExportar, LLOC_ESPECIAL, LLOC_912, ORDRES, es912, esSantJust, AFEGITS };

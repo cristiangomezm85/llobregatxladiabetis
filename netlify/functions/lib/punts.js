@@ -13,7 +13,7 @@ const { ORDRES: ORDRES_SANT_JUST, es912, esSantJust } = require("./recollida-esp
 // Últim moment per canviar de punt: 11/10/2026 23:59:59 hora de Madrid
 // (CEST = UTC+2). A partir del 12/10 ja no es pot canviar.
 // Marca de versió: surt a /.netlify/functions/punts-publics per comprovar què hi ha desplegat.
-const VERSIO = "2026-10-08-cb-sant-just";
+const VERSIO = "2026-10-08-cb-92";
 
 const LIMIT_CANVI_ISO = "2026-10-11T21:59:59.999Z";
 
