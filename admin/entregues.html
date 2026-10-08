@@ -10,6 +10,14 @@ button.g{background:#1A8A3C}button.r{background:#C0262D}button:disabled{opacity:
 input[type=password],input[type=text]{padding:8px 10px;border:1px solid #bbc;border-radius:8px;font:inherit;width:100%;max-width:420px}
 table{border-collapse:collapse;width:100%;font-size:14px}th,td{border-bottom:1px solid #e3e6ee;padding:6px 8px;text-align:left}td.n,th.n{text-align:right}
 .m{margin-top:10px;font-weight:600}
+.ok{color:#1A8A3C;font-weight:700}.av{color:#B26A00;font-weight:700}.mut{color:#667}
+tr.fet td{background:#f1faf3}
+.pers{border:1px solid #dde2ee;border-radius:10px;padding:12px 14px;margin-top:12px}
+.pers h3{margin:0 0 2px;font-size:16px}.pers .l{font-size:13px;color:#556;margin:2px 0}
+.bd{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:700;margin:4px 6px 0 0;background:#e8edf7;color:#234}
+.bd.v{background:#dff3e4;color:#14692f}.bd.a{background:#fdecc8;color:#8a5200}.bd.x{background:#fadadb;color:#9b1c22}
+.pers button{font-size:13px;padding:7px 12px}.pers input[type=text]{max-width:300px;margin-top:6px}
+button.s{background:#556}
 </style></head><body><div class="w">
 <h1>Entregues de bosses, pulseres i samarretes</h1>
 <div class="card"><label>Token d'admin <small>(es fa servir el de l'admin si ja hi has entrat)</small></label><br><input type="password" id="tok" autocomplete="off"></div>
@@ -23,14 +31,16 @@ table{border-collapse:collapse;width:100%;font-size:14px}th,td{border-bottom:1px
 <p>Cal reconstruir-lo abans de l'esdeveniment i després de les últimes inscripcions, perquè el buscador manual vagi ràpid.</p>
 <button id="bIx">Reconstruir índex</button><div class="m" id="mIx"></div></div>
 
-<div class="card"><h2>Enviar el correu amb el QR a les inscripcions ja pagades</h2>
-<p>Només envia a qui encara no l'ha rebut. Per lots de 40. Comprova abans el límit diari del teu pla de Resend (el gratuït és de 100 correus al dia).</p>
-<button id="bSim">Simular</button><button class="g" id="bProva">Prova: enviar només 1 correu</button><button class="g" id="bLot">Enviar un lot</button><button class="g" id="bTots">Enviar tots els lots</button><button class="r" id="bPara" hidden>Parar</button>
-<div class="m" id="mQr"></div></div>
+<div class="card"><h2>Enviar el correu amb el QR, per zona</h2>
+<p>Cada zona es llança per separat. Només rep el correu qui encara no l'ha rebut. Quan una zona ja està enviada, el botó queda bloquejat i el servidor tampoc ho permet. Comprova el límit diari del teu pla de Resend (el gratuït és de 100 correus al dia).</p>
+<button id="bZones">Actualitzar zones</button>
+<table id="tz" hidden><thead><tr><th>Zona</th><th class="n">Total</th><th class="n">Ja enviats</th><th class="n">Per enviar</th><th>Estat</th><th></th></tr></thead><tbody></tbody></table>
+<div class="m" id="mZ"></div></div>
 
-<div class="card"><h2>Desfer un lliurament (error d'un voluntari)</h2>
-<input type="text" id="idDesfer" placeholder="order_id de la comanda"><br>
-<button class="r" id="bDesfer">Desfer lliurament</button><div class="m" id="mDesfer"></div></div>
+<div class="card"><h2>Buscar una persona</h2>
+<p>Per nom, cognoms, correu, DNI, club o identificador de comanda (mínim 3 caràcters). Des d'aquí pots reenviar-li el correu del QR (també amb un correu corregit) o desfer-li un lliurament.</p>
+<input type="text" id="q" placeholder="Nom, correu, DNI…" autocomplete="off"> <button id="bCerca">Cercar</button>
+<div class="m" id="mCerca"></div><div id="res"></div></div>
 </div>
 <script>
 var API='/.netlify/functions/admin-entregues',$=function(i){return document.getElementById(i)},para=false;
@@ -41,13 +51,78 @@ $('bRes').onclick=function(){$('mRes').textContent='Carregant…';crida('GET').t
  if(!j.ok){$('mRes').textContent='Error: '+(j.error||'');return}$('mRes').textContent='';var tb=$('t').tBodies[0];tb.textContent='';$('t').hidden=false;
  j.punts.forEach(function(p){var r=tb.insertRow();[p.nom,p.assignats,p.complets,p.parcials,p.pendents,p.qr_enviats].forEach(function(v,i){var c=r.insertCell();c.textContent=v;if(i)c.className='n'})})}).catch(function(){$('mRes').textContent='Error de connexió'})};
 $('bIx').onclick=function(){$('mIx').textContent='Reconstruint… (pot trigar uns segons)';crida('POST',{action:'reindexar'}).then(function(j){$('mIx').textContent=j.ok?('Fet: '+j.persones+' persones indexades.'):('Error: '+(j.error||''))}).catch(function(){$('mIx').textContent='Error de connexió'})};
-$('bSim').onclick=function(){crida('POST',{action:'enviar-qr',aplicar:false}).then(function(j){$('mQr').textContent=j.ok?('Simulació: '+j.pendents_total+' correus pendents (lot actual: '+j.aquest_lot+').'):('Error: '+(j.error||''))})};
-function lot(n){return crida('POST',{action:'enviar-qr',aplicar:true,limit:n||40})}
-$('bProva').onclick=function(){lot(1).then(function(j){$('mQr').textContent=j.ok?('Prova enviada: '+j.enviats+' correu. Queden '+j.queden+'. Comprova que ha arribat bé.'):('Error: '+(j.error||''))})};
-$('bLot').onclick=function(){$('bLot').disabled=true;lot().then(function(j){$('bLot').disabled=false;$('mQr').textContent=j.ok?('Enviats '+j.enviats+'. Queden '+j.queden+'.'):('Error: '+(j.error||''))})};
-$('bTots').onclick=function(){if(!confirm('Enviar el correu del QR a TOTES les inscripcions pendents?'))return;para=false;$('bTots').disabled=true;$('bPara').hidden=false;
- (function seg(){if(para){fi('Aturat.');return}lot().then(function(j){if(!j.ok){fi('Error: '+(j.error||''));return}$('mQr').textContent='Enviats '+j.enviats+' en aquest lot. Queden '+j.queden+'.';if(j.queden>0&&j.enviats>0)setTimeout(seg,1500);else fi('Fet. Queden '+j.queden+'.')}).catch(function(){fi('Error de connexió')})})();
- function fi(m){$('mQr').textContent=m;$('bTots').disabled=false;$('bPara').hidden=true}};
-$('bPara').onclick=function(){para=true};
-$('bDesfer').onclick=function(){var id=$('idDesfer').value.trim();if(!id)return;if(!confirm('Desfer el lliurament d\'aquesta comanda?'))return;crida('POST',{action:'desfer',id:id}).then(function(j){$('mDesfer').textContent=j.ok?'Lliurament desfet.':('Error: '+(j.error||''))})};
+
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+var ZONES={};
+function carregaZones(){$('mZ').textContent='Carregant…';return crida('GET').then(function(j){
+ if(!j.ok){$('mZ').textContent='Error: '+(j.error||'');return}
+ var tb=$('tz').tBodies[0];tb.textContent='';var pend=0,sc=0,n=0;
+ j.punts.filter(function(p){return p.assignats>0}).forEach(function(p){
+  ZONES[p.id]=p;n++;pend+=p.qr_pendents;sc+=p.sense_correu;
+  var fet=p.qr_pendents===0&&p.qr_enviats>0,r=tb.insertRow();if(fet)r.className='fet';
+  var c=r.insertCell();c.textContent=p.nom+(p.pendent?' (pendent de definir)':'');
+  [p.assignats,p.qr_enviats,p.qr_pendents].forEach(function(v){var x=r.insertCell();x.className='n';x.textContent=v});
+  var e=r.insertCell(),est;
+  if(fet)est=el('span','ok','✓ Enviat');else if(p.qr_enviats>0)est=el('span','av','Parcial');else est=el('span','av','Per fer');
+  e.appendChild(est);if(p.sense_correu){e.appendChild(el('div','mut','+ '+p.sense_correu+' sense correu'))}
+  var a=r.insertCell(),bt=el('button',fet?'s':'g',fet?'Fet ✓':('Enviar '+p.qr_pendents));
+  bt.disabled=p.qr_pendents===0;bt.onclick=function(){enviaZona(p,bt)};a.appendChild(bt)});
+ $('tz').hidden=false;
+ $('mZ').textContent=n?('Per enviar en total: '+pend+' correus'+(pend>100?' (més del límit diari de 100 del pla gratuït de Resend: reparteix-ho en dies o puja de pla)':'')+'.'):'Cap zona amb inscripcions pagades.';
+ }).catch(function(){$('mZ').textContent='Error de connexió'})}
+function enviaZona(p,bt){
+ var z=ZONES[p.id]||p;if(!z.qr_pendents)return;
+ if(!confirm('Enviar '+z.qr_pendents+' correus amb el QR a la zona «'+z.nom+'»?'+(z.pendent?'\n\nAtenció: aquesta zona encara és «pendent de definir»; el correu dirà que el lloc i l\'hora estan per confirmar.':'')+(z.qr_pendents>100?'\n\nAtenció: són més de 100; el pla gratuït de Resend no ho permet en un dia.':'')))return;
+ var botons=document.querySelectorAll('#tz button,#bZones');for(var i=0;i<botons.length;i++)botons[i].disabled=true;
+ var tot=0;
+ (function seg(){crida('POST',{action:'enviar-qr',punt:p.id,aplicar:true,limit:40}).then(function(j){
+  if(!j.ok){fi('Error: '+(j.error||''));return}
+  tot+=j.enviats;$('mZ').textContent='«'+z.nom+'»: enviats '+tot+'. Queden '+j.queden+'…';
+  if(j.queden>0&&j.enviats>0)setTimeout(seg,1500);else fi('«'+z.nom+'» feta: '+tot+' correus enviats'+(j.queden?(' ('+j.queden+' sense enviar)'):'')+'.')
+ }).catch(function(){fi('Error de connexió. Actualitza les zones per veure què s\'ha enviat.')})})();
+ function fi(m){$('bZones').disabled=false;carregaZones().then(function(){$('mZ').textContent=m})}}
+$('bZones').onclick=carregaZones;
+
+var NOM_MOD={caminant:'Caminant',corrent:'Corredor/a',bici:'Bici',dorsal0:'Dorsal 0',animar:'Animar'};
+function pinta(persones){var R=$('res');R.textContent='';
+ if(!persones.length){$('mCerca').textContent='No s\'ha trobat ningú.';return}
+ $('mCerca').textContent=persones.length+(persones.length===25?'+':'')+' resultat'+(persones.length>1?'s':'')+'.';
+ persones.forEach(function(p){var d=el('div','pers');
+  d.appendChild(el('h3',null,(p.nom+' '+p.cognoms).trim()||'(sense nom)'));
+  d.appendChild(el('div','l',p.email||'sense correu'));
+  d.appendChild(el('div','l',[NOM_MOD[p.modalitat]||p.modalitat,p.dni,p.club].filter(Boolean).join(' · ')));
+  d.appendChild(el('div','l','Punt: '+p.punt.nom));
+  d.appendChild(el('span','bd '+(p.pagada?'v':'x'),p.pagada?'Pagada':('No pagada ('+(p.estat||'?')+')')));
+  if(p.pagada&&p.te_elements){
+   d.appendChild(el('span','bd '+(p.qr_enviat?'v':'a'),p.qr_enviat?('QR enviat '+String(p.qr_enviat).slice(0,10)):'QR no enviat'));
+   var en=p.entrega;d.appendChild(el('span','bd '+(en.complet?'v':en.alguna?'a':''),en.complet?'Tot lliurat':en.alguna?'Lliurament parcial':'Res lliurat'));
+   if(en.alguna)d.appendChild(el('div','l','Lliurat: '+en.items.filter(function(i){return i.entregat}).map(function(i){return i.clau.replace('samarreta:','samarreta ')}).join(', ')))}
+  var acc=el('div');d.appendChild(acc);var msg=el('div','m');d.appendChild(msg);
+  if(p.pagada&&p.te_elements){
+   var b1=el('button','g','Reenviar correu');b1.onclick=function(){reenvia(p,null,msg,b1)};acc.appendChild(b1);
+   var b2=el('button',null,'Canviar correu i reenviar');acc.appendChild(b2);
+   var capsa=el('div');capsa.hidden=true;var inp=el('input');inp.type='text';inp.value=p.email;inp.placeholder='correu correcte';
+   var b3=el('button','g','Desar i enviar');b3.onclick=function(){reenvia(p,inp.value.trim(),msg,b3)};capsa.appendChild(inp);capsa.appendChild(b3);d.appendChild(capsa);
+   b2.onclick=function(){capsa.hidden=!capsa.hidden;if(!capsa.hidden)inp.focus()};
+   var b4=el('button','r','Desfer lliurament');b4.disabled=!p.entrega.alguna;b4.onclick=function(){desfes(p,msg,b4)};acc.appendChild(b4)}
+  var a=el('a',null,'Obrir perfil');a.href='/perfil?id='+encodeURIComponent(p.id);a.target='_blank';a.rel='noopener';a.style.marginLeft='6px';a.style.fontSize='13px';acc.appendChild(a);
+  R.appendChild(d)})}
+function reenvia(p,email,msg,bt){
+ var dest=email||p.email;if(!dest){msg.textContent='Escriu un correu.';return}
+ if(!confirm('Enviar el correu amb el QR a '+dest+(email&&email.toLowerCase()!==p.email.toLowerCase()?'\n\nEs desarà com a nou correu de la inscripció.':'')+'?'))return;
+ bt.disabled=true;msg.textContent='Enviant…';
+ crida('POST',{action:'reenviar',id:p.id,email:email||undefined}).then(function(j){bt.disabled=false;
+  msg.textContent=j.ok?('Enviat a '+j.email+(j.canviat?' (correu de la inscripció actualitzat)':'')+'.'):('Error: '+(j.error||''));
+  if(j.ok){carregaZones()}}).catch(function(){bt.disabled=false;msg.textContent='Error de connexió'})}
+function desfes(p,msg,bt){
+ if(!confirm('Desfer els lliuraments de '+((p.nom+' '+p.cognoms).trim())+'? Tornarà a constar com a pendent de tot (l\'historial es conserva).'))return;
+ bt.disabled=true;msg.textContent='Desfent…';
+ crida('POST',{action:'desfer',id:p.id}).then(function(j){msg.textContent=j.ok?'Lliurament desfet. Torna a cercar per veure l\'estat.':('Error: '+(j.error||''));if(!j.ok)bt.disabled=false}).catch(function(){bt.disabled=false;msg.textContent='Error de connexió'})}
+function cerca(){var q=$('q').value.trim();if(q.length<3){$('mCerca').textContent='Escriu almenys 3 caràcters.';return}
+ $('mCerca').textContent='Cercant…';$('res').textContent='';
+ var h={},t=tok();if(t)h.authorization='Bearer '+t;
+ fetch(API+'?q='+encodeURIComponent(q),{headers:h}).then(function(r){return r.json().catch(function(){return {ok:false,error:'HTTP '+r.status}})}).then(function(j){
+  if(!j.ok){$('mCerca').textContent='Error: '+(j.error||'');return}pinta(j.persones)}).catch(function(){$('mCerca').textContent='Error de connexió'})}
+$('bCerca').onclick=cerca;$('q').onkeydown=function(e){if(e.key==='Enter')cerca()};
+if(tok())carregaZones();
 </script></body></html>
