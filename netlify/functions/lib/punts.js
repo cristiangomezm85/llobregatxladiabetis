@@ -13,7 +13,7 @@ const { ORDRES: ORDRES_SANT_JUST, es912 } = require("./recollida-especial");
 // Últim moment per canviar de punt: 11/10/2026 23:59:59 hora de Madrid
 // (CEST = UTC+2). A partir del 12/10 ja no es pot canviar.
 // Marca de versió: surt a /.netlify/functions/punts-publics per comprovar què hi ha desplegat.
-const VERSIO = "2026-10-07-manresa-contacte";
+const VERSIO = "2026-10-08-912-canviable";
 
 const LIMIT_CANVI_ISO = "2026-10-11T21:59:59.999Z";
 
@@ -106,10 +106,12 @@ const PUNTS = [
   },
 ];
 
-// Grup especial de l'organització: tots els qui tenen "912" al club.
-// No es pot triar ni canviar (excepcio: true).
+// Grup especial de l'organització: tots els qui tenen "912" al club. És el punt
+// per DEFECTE d'aquestes comandes, però NO és una excepció bloquejada: poden
+// canviar-lo des del perfil a qualsevol punt triable (i tornar-hi, perquè hi
+// consta només per a ells). Ningú més el pot triar (seleccionable: false).
 PUNTS.push({
-  id: "912-runners", seleccionable: false, excepcio: true, mesa: true, claus: [],
+  id: "912-runners", seleccionable: false, mesa: true, claus: [],
   nom: { ca: "Recollida 912 Runners", es: "Recogida 912 Runners", en: "912 Runners pickup" },
   quan: { ca: "L'organització ho coordinarà amb tu", es: "La organización lo coordinará contigo", en: "The organisation will arrange it with you" },
   per: { ca: "Corredors del club 912 Runners", es: "Corredores del club 912 Runners", en: "912 Runners club members" },
@@ -141,7 +143,6 @@ function esPuntExcepcio(id) { const p = PER_ID.get(id); return !!(p && p.excepci
 function puntExcepcio(ordre) {
   if (!ordre) return null;
   if (SANT_JUST.has(ordre.order_id)) return "sant-just";
-  if (es912(ordre)) return "912-runners";
   return null;
 }
 
@@ -150,6 +151,7 @@ function puntPerDefecte(ordre) {
   if (!ordre) return ALTRES.id;
   const exc = puntExcepcio(ordre);
   if (exc) return exc;
+  if (es912(ordre)) return "912-runners"; // per defecte; el participant el pot canviar
   const p = ordre.payload || {};
   // Inscripcions noves: el participant ja ha triat un punt concret al formulari.
   const triat = p.recollida_punt && PER_ID.get(String(p.recollida_punt));

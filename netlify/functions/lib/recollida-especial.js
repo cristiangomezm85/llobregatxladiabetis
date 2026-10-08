@@ -117,11 +117,13 @@ const ORDRES = [
 
 const MAPA = new Map(ORDRES.map(([id]) => [id, LLOC_ESPECIAL]));
 
-// Retorna el lloc de recollida a exportar per a una comanda.
-function recollidaPerExportar(ordre) {
+// Retorna el lloc de recollida a exportar per a una comanda. "puntTriatNom" és
+// el nom del punt que el participant ha triat des del perfil (només es té en
+// compte al grup 912, que pot canviar de punt).
+function recollidaPerExportar(ordre, puntTriatNom) {
   const original = ordre && ordre.recollida_text;
   if (!ordre || String(ordre.estat || "").trim().toLowerCase() !== "pagat") return original;
-  return MAPA.get(ordre.order_id) || (es912(ordre) ? LLOC_912 : original);
+  return MAPA.get(ordre.order_id) || (es912(ordre) ? (puntTriatNom || LLOC_912) : original);
 }
 
 module.exports = { recollidaPerExportar, LLOC_ESPECIAL, LLOC_912, ORDRES, es912 };
