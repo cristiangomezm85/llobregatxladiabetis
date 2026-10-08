@@ -123,6 +123,16 @@ async function marcarEmailPagat(email, orderId) {
   await emailsPagatsStore().set(key, orderId);
 }
 
+// Quan es corregeix el correu d'una comanda pagada: treu l'antic de l'índex
+// d'emails ja inscrits i hi posa el nou.
+async function canviarEmailPagat(emailVell, emailNou, orderId) {
+  const vell = normalitzarEmail(emailVell);
+  if (vell) {
+    try { await emailsPagatsStore().delete(vell); } catch (e) { /* no passa res */ }
+  }
+  await marcarEmailPagat(emailNou, orderId);
+}
+
 // Com MailerLite no permet enviar més d'un correu igual el mateix dia,
 // forcem que la inscripció sigui única per email: mirem si ja existeix
 // alguna comanda PAGADA amb aquest email abans de deixar continuar cap a
@@ -143,5 +153,6 @@ module.exports = {
   marcarPlacaLastMinute,
   comptarPlacesLastMinute,
   emailJaRegistrat,
+  canviarEmailPagat,
   marcarEmailPagat,
 };
