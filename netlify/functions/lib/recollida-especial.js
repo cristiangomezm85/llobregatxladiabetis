@@ -20,6 +20,20 @@ function es912(ordre) {
   return RE_912.test(String(p.club_nom || p.club || (ordre && (ordre.club_nom || ordre.club)) || ""));
 }
 
+// Grup "Club Bàsquet Sant Just": a més de la llista d'ordres de sota, qualsevol
+// comanda el club de la qual sigui el Bàsquet Sant Just ("CB Sant Just",
+// "C.B. Sant Just", "Club Bàsquet Sant Just", "Club Basket Sant Just"...)
+// s'assigna a la taula del club. No inclou altres clubs de Sant Just
+// (p. ex. "Atletisme Sant Just").
+const RE_CB_SANT_JUST = /(^| )(cb|c b|club (de )?(basquet|basket)|basquet|basket)( club)? sant just( |$)/;
+function netClub(s) {
+  return String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+function esClubSantJust(ordre) {
+  const p = (ordre && ordre.payload) || {};
+  return RE_CB_SANT_JUST.test(netClub(p.club_nom || p.club || (ordre && (ordre.club_nom || ordre.club)) || ""));
+}
+
 // order_id de la llista de l'organització (90 comandes pagades).
 // "similitud" = el nom no coincidia exactament i es va proposar per semblança.
 const ORDRES = [
@@ -117,13 +131,18 @@ const ORDRES = [
 
 const MAPA = new Map(ORDRES.map(([id]) => [id, LLOC_ESPECIAL]));
 
+// És del grup Club Bàsquet Sant Just? (llista de l'organització o club pel nom)
+function esSantJust(ordre) {
+  return !!ordre && (MAPA.has(ordre.order_id) || esClubSantJust(ordre));
+}
+
 // Retorna el lloc de recollida a exportar per a una comanda. "puntTriatNom" és
 // el nom del punt que el participant ha triat des del perfil (només es té en
 // compte al grup 912, que pot canviar de punt).
 function recollidaPerExportar(ordre, puntTriatNom) {
   const original = ordre && ordre.recollida_text;
   if (!ordre || String(ordre.estat || "").trim().toLowerCase() !== "pagat") return original;
-  return MAPA.get(ordre.order_id) || (es912(ordre) ? (puntTriatNom || LLOC_912) : original);
+  return (esSantJust(ordre) ? LLOC_ESPECIAL : null) || (es912(ordre) ? (puntTriatNom || LLOC_912) : original);
 }
 
-module.exports = { recollidaPerExportar, LLOC_ESPECIAL, LLOC_912, ORDRES, es912 };
+module.exports = { recollidaPerExportar, LLOC_ESPECIAL, LLOC_912, ORDRES, es912, esSantJust, esClubSantJust };
