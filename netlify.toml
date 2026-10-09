@@ -10,6 +10,9 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+[functions."public-stats-refresh"]
+  schedule = "*/5 * * * *"
+
 [[headers]]
   for = "/*"
   [headers.values]
