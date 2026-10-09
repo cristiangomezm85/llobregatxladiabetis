@@ -20,7 +20,15 @@
  * su mismo import relativo "./lib/store".
  */
 
-const { llistarOrdres } = require('./lib/store');
+const { llistarOrdres, llegirSnapshot, desarSnapshot } = require('./lib/store');
+
+// Calcular les estadístiques obliga a llegir TOTES les inscripcions una a
+// una (uns 5 s en fred, i creix amb cada inscripció). Per això el resultat
+// es desa a un "snapshot" que refresca la funció programada
+// public-stats-refresh cada 5 min; aquest endpoint només el serveix (ms).
+// Si no n'hi ha cap (o és massa vell), es calcula en directe com abans.
+const SNAPSHOT_CLAU = 'public-stats';
+const SNAPSHOT_MAX_EDAT_MS = 15 * 60 * 1000;
 
 function json(statusCode, body) {
   return {
@@ -78,48 +86,44 @@ function normalizeSize(s) {
     .trim() || 'Sin talla';
 }
 
-exports.handler = async function handler(event) {
-  try {
-    if (event.httpMethod === 'OPTIONS') return json(204, {});
-    if (event.httpMethod !== 'GET') return json(405, { ok: false, error: 'Método no permitido' });
+async function calcula() {
+  const ordres = await llistarOrdres();
+  // Operativa = SOLO inscripciones pagadas, igual que en el admin.
+  const pagats = ordres.filter(paid);
 
-    const ordres = await llistarOrdres();
-    // Operativa = SOLO inscripciones pagadas, igual que en el admin.
-    const pagats = ordres.filter(paid);
+  const dies = { 1: 0, 2: 0, 3: 0 };
+  pagats.forEach(o => daysOf(payload(o)).forEach(d => { dies[d] = (dies[d] || 0) + 1; }));
 
-    const dies = { 1: 0, 2: 0, 3: 0 };
-    pagats.forEach(o => daysOf(payload(o)).forEach(d => { dies[d] = (dies[d] || 0) + 1; }));
+  const modalitats = { caminant: 0, corrent: 0, bici: 0, animar: 0, dorsal0: 0 };
+  let modalitatsAltres = 0;
+  pagats.forEach(o => {
+    const k = String(o.modalitat || payload(o).modalitat || '').toLowerCase();
+    if (modalitats[k] !== undefined) modalitats[k]++;
+    else if (k) modalitatsAltres++;
+  });
 
-    const modalitats = { caminant: 0, corrent: 0, bici: 0, animar: 0, dorsal0: 0 };
-    let modalitatsAltres = 0;
-    pagats.forEach(o => {
-      const k = String(o.modalitat || payload(o).modalitat || '').toLowerCase();
-      if (modalitats[k] !== undefined) modalitats[k]++;
-      else if (k) modalitatsAltres++;
-    });
+  const camisetesPerTalla = {};
+  let camisetesTotal = 0;
+  pagats.forEach(o => shirtEntries(o).forEach(x => {
+    const k = normalizeSize(x.talla);
+    camisetesPerTalla[k] = (camisetesPerTalla[k] || 0) + x.q;
+    camisetesTotal += x.q;
+  }));
 
-    const camisetesPerTalla = {};
-    let camisetesTotal = 0;
-    pagats.forEach(o => shirtEntries(o).forEach(x => {
-      const k = normalizeSize(x.talla);
-      camisetesPerTalla[k] = (camisetesPerTalla[k] || 0) + x.q;
-      camisetesTotal += x.q;
-    }));
+  const perMunicipi = {};
+  pagats.forEach(o => {
+    const nom = payload(o).recollida_municipi_nom || payload(o).recollida_municipi;
+    if (nom) perMunicipi[nom] = (perMunicipi[nom] || 0) + 1;
+  });
 
-    const perMunicipi = {};
-    pagats.forEach(o => {
-      const nom = payload(o).recollida_municipi_nom || payload(o).recollida_municipi;
-      if (nom) perMunicipi[nom] = (perMunicipi[nom] || 0) + 1;
-    });
+  // El import de la donació es guarda a "payload.donacio_centims" — és el
+  // mateix camp que pricing.js llegeix a validarDonacio() per calcular
+  // donacioCentims/totalCentims. Ve en cèntims, per això es divideix
+  // entre 100.
+  const donatiusInscripcionsEur =
+    pagats.reduce((sum, o) => sum + (Number(payload(o).donacio_centims) || 0), 0) / 100;
 
-    // El import de la donació es guarda a "payload.donacio_centims" — és el
-    // mateix camp que pricing.js llegeix a validarDonacio() per calcular
-    // donacioCentims/totalCentims. Ve en cèntims, per això es divideix
-    // entre 100.
-    const donatiusInscripcionsEur =
-      pagats.reduce((sum, o) => sum + (Number(payload(o).donacio_centims) || 0), 0) / 100;
-
-    return json(200, {
+  return {
       ok: true,
       actualitzat: new Date().toISOString(),
       inscritsPagats: pagats.length,
@@ -128,9 +132,31 @@ exports.handler = async function handler(event) {
       camisetes: { total: camisetesTotal, perTalla: camisetesPerTalla },
       perMunicipi,
       donatiusInscripcionsEur,
-    });
+  };
+}
+
+exports.handler = async function handler(event) {
+  try {
+    if (event.httpMethod === 'OPTIONS') return json(204, {});
+    if (event.httpMethod !== 'GET') return json(405, { ok: false, error: 'Método no permitido' });
+
+    try {
+      const snap = await llegirSnapshot(SNAPSHOT_CLAU);
+      if (snap && snap.dades && Date.now() - new Date(snap.desat).getTime() < SNAPSHOT_MAX_EDAT_MS) {
+        return json(200, snap.dades);
+      }
+    } catch (e) {
+      console.error('[public-stats] snapshot', e);
+    }
+
+    const dades = await calcula();
+    try { await desarSnapshot(SNAPSHOT_CLAU, dades); } catch (e) { console.error('[public-stats] desar', e); }
+    return json(200, dades);
   } catch (err) {
     console.error('[public-stats]', err);
     return json(err.statusCode || 500, { ok: false, error: 'Error inesperado' });
   }
 };
+
+exports.calcula = calcula;
+exports.SNAPSHOT_CLAU = SNAPSHOT_CLAU;
