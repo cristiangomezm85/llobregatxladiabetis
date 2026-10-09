@@ -582,23 +582,41 @@
   // li posem un límit de temps propi perquè mai bloquegi la resta de la
   // pàgina — si no respon a temps, es tracta com a 0 (es reintentarà sol
   // la propera vegada que algú carregui la pàgina).
-  const PUBLIC_STATS_TIMEOUT_MS = 8000;
+  const PUBLIC_STATS_TIMEOUT_MS = 4000;
+  // Últim import conegut de donatius d'inscripcions, guardat al navegador:
+  // es pinta a l'instant mentre arriba el valor fresc, de manera que mai es
+  // veu el total "penjat" o sense els donatius. Si localStorage no hi és,
+  // tot funciona igual (només es perd aquest avantatge).
+  const DONATIUS_CACHE_KEY = 'llxd-donatius-inscripcions';
+  function llegirDonatiusCache(){
+    try {
+      const v = Number(localStorage.getItem(DONATIUS_CACHE_KEY));
+      return isFinite(v) && v > 0 ? v : 0;
+    } catch (e) { return 0; }
+  }
+  function desarDonatiusCache(v){
+    try { localStorage.setItem(DONATIUS_CACHE_KEY, String(v)); } catch (e) {}
+  }
+  // Retorna l'import, o null si no s'ha pogut obtenir (llavors es manté el
+  // valor guardat en comptes de tornar a 0).
   async function fetchDonatiusInscripcions(){
-    for (const url of PUBLIC_STATS_API_CANDIDATES) {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), PUBLIC_STATS_TIMEOUT_MS);
-      try {
-        const res = await fetch(url, {cache:'no-store', signal: controller.signal});
-        if (!res.ok) continue;
-        const data = await res.json();
-        return Number(data && data.donatiusInscripcionsEur) || 0;
-      } catch (err) {
-        // prova el següent candidat
-      } finally {
-        clearTimeout(timeoutId);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), PUBLIC_STATS_TIMEOUT_MS);
+    try {
+      for (const url of PUBLIC_STATS_API_CANDIDATES) {
+        try {
+          const res = await fetch(url, {signal: controller.signal});
+          if (!res.ok) continue;
+          const data = await res.json();
+          return Number(data && data.donatiusInscripcionsEur) || 0;
+        } catch (err) {
+          if (controller.signal.aborted) break;
+        }
       }
+    } finally {
+      clearTimeout(timeoutId);
     }
-    return 0;
+    return null;
   }
 
   // Servit per jsDelivr (CDN gratuïta sobre el repo públic de GitHub) en
@@ -652,19 +670,24 @@
       // tardan o fallan, se suman en cuanto lleguen (o se quedan en 0) sin
       // dejar la página entera colgada mientras tanto.
       DATA = await fetch(RETOS_JSON_URL, {cache:'no-store'}).then(r => r.json());
-      DATA.donatiusInscripcions = 0;
+      const baseTotal = Number(DATA.totalRecaudado) || 0;
+      const donatiusGuardats = llegirDonatiusCache();
+      DATA.donatiusInscripcions = donatiusGuardats;
       render();
 
-      const baseTotal = Number(DATA.totalRecaudado) || 0;
+      // Només hi ha "floritura" (número borrós) si no hi ha cap valor
+      // guardat i l'espera es nota; amb valor guardat el total ja és bo.
       let florituraActiva = false;
-      const esperaFloritura = setTimeout(() => {
+      const esperaFloritura = donatiusGuardats > 0 ? null : setTimeout(() => {
         florituraActiva = true;
         iniciarFlorituraContador(baseTotal);
       }, UMBRAL_FLORITURA_MS);
 
-      const donatiusInscripcions = await fetchDonatiusInscripcions();
-      clearTimeout(esperaFloritura);
+      const fresc = await fetchDonatiusInscripcions();
+      if (esperaFloritura) clearTimeout(esperaFloritura);
       if (!DATA) return;
+      const donatiusInscripcions = fresc === null ? donatiusGuardats : fresc;
+      if (fresc !== null) desarDonatiusCache(fresc);
       DATA.donatiusInscripcions = donatiusInscripcions;
       const totalFinal = baseTotal + donatiusInscripcions;
 
