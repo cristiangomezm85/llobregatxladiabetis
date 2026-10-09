@@ -37,6 +37,18 @@ function placesLastMinuteStore() {
   return getStore(opcionsStore("places-last-minute"));
 }
 
+// Còpies ja calculades de dades agregades que costa molt recalcular en
+// cada visita (p. ex. les estadístiques públiques).
+function snapshotsStore() {
+  return getStore(opcionsStore("snapshots"));
+}
+async function llegirSnapshot(clau) {
+  return snapshotsStore().get(clau, { type: "json" });
+}
+async function desarSnapshot(clau, dades) {
+  await snapshotsStore().setJSON(clau, { desat: new Date().toISOString(), dades });
+}
+
 function emailsPagatsStore() {
   return getStore(opcionsStore("emails-pagats"));
 }
@@ -155,4 +167,6 @@ module.exports = {
   emailJaRegistrat,
   canviarEmailPagat,
   marcarEmailPagat,
+  llegirSnapshot,
+  desarSnapshot,
 };
