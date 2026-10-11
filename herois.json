@@ -568,6 +568,36 @@
       "destacat": false
     },
     {
+      "id": "sandra",
+      "nom": "Sandra",
+      "poble": "Gandesa",
+      "modalitat": "corrent",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Heroïna",
+        "es": "Heroína",
+        "en": "Heroine"
+      },
+      "tram": {
+        "ca": "Monistrol a Olesa 12,7kma",
+        "es": "Monistrol a Olesa 12,7kma",
+        "en": "Monistrol to Olesa 12,7kma"
+      },
+      "motiu": {
+        "ca": "Soc la Sandra, de Gandesa, i mare d’un nen amb diabetis tipus 1 des dels 4 anys. Abans de ser mare corria per muntanya; la maternitat i després la diabetis em van frenar. Fa dos anys vaig decidir tornar a cuidar-me com cuido el meu fill. El 18 d’octubre correré de Monistrol de Montserrat a Olesa de Montserrat, 12,7 km, acompanyada del meu marit i amic, el Borja.",
+        "es": "Soy Sandra, de Gandesa, y madre de un niño con diabetes tipo 1 desde los 4 años. Antes de ser madre corría por montaña; la maternidad y después la diabetes me frenaron. Hace dos años decidí volver a cuidarme como cuido a mi hijo. El 18 de octubre correré de Monistrol de Montserrat a Olesa de Montserrat, 12,7 km, acompañada de mi marido y amigo, Borja.",
+        "en": "I’m Sandra, from Gandesa, and the mother of a boy who has lived with type 1 diabetes since he was 4. Before becoming a mother I ran trails; motherhood and then diabetes slowed me down. Two years ago I decided to start looking after myself the way I look after my son. On 18 October I’ll run from Monistrol de Montserrat to Olesa de Montserrat, 12.7 km, alongside my husband and friend, Borja."
+      },
+      "repte": {
+        "ca": "Superar-me cada dia i demostrar als meus fills que «els límits te’ls fiques tu». Fa sis anys, el diagnòstic del meu fill ens va canviar la vida. M’ha ensenyat molt de salut i nutrició, però sobretot m’ha fet conscient que hem de cuidar-nos i moure’ns cada dia. Avui, 12,7 km són una distància molt gran per a mi. Per això mateix els vull córrer.",
+        "es": "Superarme cada día y demostrar a mis hijos que «els límits te’ls fiques tu». Hace seis años, el diagnóstico de mi hijo nos cambió la vida. Me ha enseñado mucho sobre salud y nutrición, pero sobre todo me ha hecho consciente de que tenemos que cuidarnos y movernos cada día. Hoy, 12,7 km son una distancia muy grande para mí. Por eso mismo quiero correrlos.",
+        "en": "To push myself every day and show my children that «els límits te’ls fiques tu» (you set your own limits). Six years ago, my son’s diagnosis changed our lives. It taught me a lot about health and nutrition, but above all it made me aware that we need to look after ourselves and keep moving every day. Right now, 12.7 km is a big distance for me. That’s exactly why I want to run it."
+      },
+      "instagram": "@sangaro78",
+      "destacat": false,
+      "foto": "img/herois/sandra.webp"
+    },
+    {
       "id": "team-one",
       "nom": "Team One",
       "modalitat": "corrent",
