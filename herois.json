@@ -93,6 +93,36 @@
       "estat_publicacio": "publicat"
     },
     {
+      "id": "daniel-duran",
+      "nom": "Daniel Durán",
+      "poble": "Sant Feliu de Llobregat",
+      "modalitat": "corrent",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Heroi o Heroïna",
+        "es": "Héroe o Heroína",
+        "en": "Hero or Heroine"
+      },
+      "tram": {
+        "ca": "Sant Vicenç -> Mar",
+        "es": "Sant Vicenç -> Mar",
+        "en": "Sant Vicenç -> Sea"
+      },
+      "motiu": {
+        "ca": "Soc el Daniel, de Sant Feliu de Llobregat. El 18 d’octubre correré els últims 22 km del repte, des de Sant Vicenç dels Horts fins a la desembocadura del Llobregat. És el tram on el riu ja ensuma el mar, i jo també vull arribar-hi.",
+        "es": "Soy Daniel, de Sant Feliu de Llobregat. El 18 de octubre correré los últimos 22 km del reto, desde Sant Vicenç dels Horts hasta la desembocadura del Llobregat. Es el tramo donde el río ya huele el mar, y yo también quiero llegar allí.",
+        "en": "I'm Daniel, from Sant Feliu de Llobregat. On October 18th, I will be running the final 22 km of the challenge, from Sant Vicenç dels Horts to the mouth of the Llobregat river. This is the stretch where the river can already scent the sea, and I want to get there too."
+      },
+      "repte": {
+        "ca": "Arribar a la desembocadura completant els 22 km corrent, superant els meus propis límits per una bona causa. Ho faig per donar visibilitat a la diabetis, per donar suport a totes les persones que hi conviuen cada dia i per recaptar fons per a la investigació. Perquè cada quilòmetre suma, i junts arribem més lluny.",
+        "es": "Llegar a la desembocadura completando los 22 km corriendo, superando mis propios límites por una buena causa. Lo hago para dar visibilidad a la diabetes, para apoyar a todas las personas que conviven con ella cada día y para recaudar fondos para la investigación. Porque cada kilómetro suma, y juntos llegamos más lejos.",
+        "en": "Reaching the river mouth by completing the 22 km run, pushing past my own limits for a good cause. I am doing this to raise awareness for diabetes, to support everyone who lives with it every day, and to raise funds for research. Because every kilometer counts, and together we go further."
+      },
+      "instagram": "@danieldurandiaz",
+      "destacat": false,
+      "foto": "img/herois/daniel-duran.webp"
+    },
+    {
       "id": "d",
       "nom": "Daniel Sánchez",
       "poble": "Aranjuez, Madrid",
