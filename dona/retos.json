@@ -105,6 +105,15 @@
       "diasRestantes": 20
     },
     {
+      "slug": "team-one-x-la-diabetes",
+      "nombre": "Team One x la Diabetes",
+      "tipo": "heroe",
+      "foto": "fotos/TeamOne.jpg",
+      "url": "https://www.migranodearena.org/reto/team-one-x-la-diabetes",
+      "recaudado": 0,
+      "diasRestantes": 20
+    },
+    {
       "slug": "llobregat-x-la-diabetes",
       "nombre": "llobregat-x-la-diabetes",
       "tipo": "pendiente",
@@ -113,6 +122,7 @@
       "recaudado": 273,
       "diasRestantes": 20
     },
+    
     {
       "slug": "castellar-de-n-hug-x-la-diabetes",
       "nombre": "Castellar de n'Hug x la Diabetes",
