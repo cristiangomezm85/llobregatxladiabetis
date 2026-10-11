@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-09-10",
+  "actualitzat": "2026-10-11",
   "estat": "obert",
   "herois": [
     {
@@ -505,6 +505,30 @@
       },
       "instagram": "@rmonmany",
       "foto": "img/herois/ruben.webp",
+      "destacat": false
+    },
+    {
+      "id": "team-one",
+      "nom": "Team One",
+      "modalitat": "corrent",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Equip",
+        "es": "Equipo",
+        "en": "Team"
+      },
+      "tram": {
+        "ca": "diversos",
+        "es": "diversos",
+        "en": "diverse"
+      },
+      "motiu": {
+        "ca": "Som Team One, un equip unit per la mateixa causa: córrer per aquells que conviuen amb la diabetis tipus 1. Cadascú amb la seva distància i la seva història, però amb un mateix propòsit — del naixement del Llobregat fins al mar. Perquè junts arribem més lluny.",
+        "es": "Somos Team One, un equipo unido por la misma causa: correr por quienes conviven con la diabetes tipo 1. Cada uno con su distancia y su historia, pero con un mismo propósito — del nacimiento del Llobregat hasta el mar. Porque juntos llegamos más lejos.",
+        "en": "We are Team One, a team united by the same cause: running for those living with type 1 diabetes. Each with their own distance and story, but with a single purpose — from the source of the Llobregat to the sea. Because together, we go further."
+      },
+      "instagram": "@team_one_aedd",
+      "foto": "img/herois/team-one.webp",
       "destacat": false
     },
     {
