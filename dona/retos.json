@@ -96,6 +96,15 @@
       "diasRestantes": 7
     },
     {
+  "slug": "sandra-x-la-diabetis",
+  "nombre": "Sandra x la Diabetis",
+  "tipo": "heroe",
+  "foto": "fotos/Sandra.jpg",
+  "url": "https://www.migranodearena.org/reto/sandra-x-la-diabetis",
+  "recaudado": 0,
+  "diasRestantes": 20
+    },
+    {
       "slug": "llobregat-x-la-diabetes",
       "nombre": "llobregat-x-la-diabetes",
       "tipo": "pendiente",
