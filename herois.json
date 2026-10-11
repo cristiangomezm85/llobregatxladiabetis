@@ -424,9 +424,9 @@
       "modalitat": "corrent",
       "estat_publicacio": "publicat",
       "rol": {
-        "ca": "Heroi o Heroïna",
-        "es": "Héroe o Heroína",
-        "en": "Hero or Heroine"
+        "ca": "Heroi",
+        "es": "Héroe",
+        "en": "Hero"
       },
       "tram": {
         "ca": "Tot el tram - 180 kms",
