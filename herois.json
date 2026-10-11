@@ -529,7 +529,12 @@
       },
       "instagram": "@team_one_aedd",
       "foto": "img/herois/team-one.webp",
-      "destacat": false
+      "destacat": false,
+      "repte": {
+        "ca": "Perquè creiem que l'esport és una manera de donar visibilitat i de sumar. Correm per apropar, entre tots, la cura de la diabetis tipus 1, i per demostrar que cap meta és massa gran quan es comparteix en equip.",
+        "es": "Porque creemos que el deporte es una forma de dar visibilidad y de sumar. Corremos para acercar, entre todos, la cura de la diabetes tipo 1, y para demostrar que ninguna meta es demasiado grande cuando se persigue en equipo.",
+        "en": "Because we believe that sport is a way to raise awareness and make a difference. Together, we run to bring the cure for type 1 diabetes closer, and to prove that no goal is too big when pursued as a team."
+      }
     },
     {
       "id": "uri",
