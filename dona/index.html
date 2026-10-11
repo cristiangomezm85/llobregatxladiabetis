@@ -619,12 +619,16 @@
     return null;
   }
 
-  // Servit per jsDelivr (CDN gratuïta sobre el repo públic de GitHub) en
-  // comptes del propi Netlify: així el bot que actualitza retos.json cada
-  // 15 min NO dispara cap build/deploy a Netlify (que cobra crèdits per
-  // cada un). jsDelivr es purga automàticament des del propi workflow de
-  // GitHub Actions just després de cada commit.
-  const RETOS_JSON_URL = 'https://cdn.jsdelivr.net/gh/cristiangomezm85/llobregatxladiabetis@main/dona/retos.json';
+  // Es llegeix directament de GitHub (raw.githubusercontent.com, cau de ~5
+  // min) en comptes del propi Netlify: així el bot que actualitza retos.json
+  // cada 15 min NO dispara cap build/deploy a Netlify (que cobra crèdits per
+  // cada un). Abans es feia només via jsDelivr, però jsDelivr guarda en cau
+  // a quin commit apunta "@main" fins a 12 h i la purga no sempre ho
+  // refresca — per això ara jsDelivr queda només com a reserva si GitHub
+  // falla. Cal que netlify.toml permeti raw.githubusercontent.com a
+  // connect-src (CSP).
+  const RETOS_JSON_URL = 'https://raw.githubusercontent.com/cristiangomezm85/llobregatxladiabetis/main/dona/retos.json';
+  const RETOS_JSON_FALLBACK = 'https://cdn.jsdelivr.net/gh/cristiangomezm85/llobregatxladiabetis@main/dona/retos.json';
 
   // Efecto "contador" para el número grande del total: mientras esperamos
   // la cifra de inscripciones, se muestra la cifra parcial (solo Mi Grano de
@@ -669,7 +673,9 @@
       // hechos desde el formulario de inscripción se piden aparte y, si
       // tardan o fallan, se suman en cuanto lleguen (o se quedan en 0) sin
       // dejar la página entera colgada mientras tanto.
-      DATA = await fetch(RETOS_JSON_URL, {cache:'no-store'}).then(r => r.json());
+      DATA = await fetch(RETOS_JSON_URL, {cache:'no-store'})
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .catch(() => fetch(RETOS_JSON_FALLBACK, {cache:'no-store'}).then(r => r.json()));
       const baseTotal = Number(DATA.totalRecaudado) || 0;
       const donatiusGuardats = llegirDonatiusCache();
       DATA.donatiusInscripcions = donatiusGuardats;
