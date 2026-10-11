@@ -45,6 +45,18 @@
       "diasRestantes": 20
     },
     {
+      "slug": "daniel-x-la-diabetes",
+      "nombre": "Daniel x la Diabetes",
+      "tipo": "heroe",
+      "foto": "fotos/Daniel.jpg",
+      "url": {
+        "es": "https://www.migranodearena.org/reto/daniel-x-la-diabetes",
+        "ca": "https://www.migranodearena.org/ca/repte/daniel-x-la-diabetes"
+      },
+      "recaudado": 0,
+      "diasRestantes": 20
+    },
+    {
       "slug": "emi-x-la-diabetes",
       "nombre": "Emi x la Diabetes",
       "tipo": "heroe",
