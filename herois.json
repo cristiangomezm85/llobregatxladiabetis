@@ -418,6 +418,36 @@
       }
     },
     {
+      "id": "pedro",
+      "nom": "Pedro",
+      "poble": "Sant Joan Despí",
+      "modalitat": "corrent",
+      "estat_publicacio": "publicat",
+      "rol": {
+        "ca": "Heroi o Heroïna",
+        "es": "Héroe o Heroína",
+        "en": "Hero or Heroine"
+      },
+      "tram": {
+        "ca": "Tot el tram - 180 kms",
+        "es": "Todo el recorrido - 180 kms",
+        "en": "Whole track - 180ks"
+      },
+      "motiu": {
+        "ca": "Soc el Pedro, de Sant Joan Despí, i faré el repte sencer: 180 km corrent en 3 dies, des del naixement del Llobregat a Castellar de n’Hug fins al mar. Quan el riu passi per casa meva, ja hauré deixat enrere gairebé tot el camí.",
+        "es": "Soy Pedro, de Sant Joan Despí, y haré el reto completo: 180 km corriendo en 3 días, desde el nacimiento del Llobregat en Castellar de n’Hug hasta el mar. Cuando el río pase por mi casa, ya habré dejado atrás casi todo el camino.",
+        "en": "I’m Pedro, from Sant Joan Despí, and I’ll be running the full challenge: 180 km in 3 days, from the source of the Llobregat in Castellar de n’Hug all the way to the sea. By the time the river reaches my hometown, I’ll have left almost the whole journey behind me."
+      },
+      "repte": {
+        "ca": "Donar a conèixer la diabetis i aconseguir el màxim de donatius possible per a la investigació. M’agrada ajudar en tot el que puc a causes que valen la pena, i aquesta n’és una. Cada quilòmetre que corri és una crida perquè ningú no hi miri de lluny.",
+        "es": "Dar a conocer la diabetes y conseguir el mayor número posible de donativos para la investigación. Me gusta ayudar en todo lo que puedo a causas que merecen la pena, y esta es una de ellas. Cada kilómetro que corra es una llamada para que nadie la mire desde lejos.",
+        "en": "To raise awareness of diabetes and collect as many donations as possible for research. I like to help however I can with causes that are worth it, and this is one of them. Every kilometre I run is a call for no one to look at it from a distance."
+      },
+      "instagram": "@pedroaguadocalderon",
+      "destacat": false,
+      "foto": "img/herois/pedro.webp"
+    },
+    {
       "id": "pk-s-team",
       "nom": "PK's TEAM",
       "poble": "Castellar del Vallès",
