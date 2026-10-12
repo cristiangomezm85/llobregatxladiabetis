@@ -57,6 +57,15 @@
       "diasRestantes": 19
     },
     {
+  "slug": "david-x-la-diabetis",
+  "nombre": "David x la Diabetis",
+  "tipo": "heroe",
+  "foto": "fotos/David.jpg",
+  "url": "https://www.migranodearena.org/reto/david-x-la-diabetis",
+  "recaudado": 0,
+  "diasRestantes": 19
+    },
+    {
       "slug": "emi-x-la-diabetes",
       "nombre": "Emi x la Diabetes",
       "tipo": "heroe",
