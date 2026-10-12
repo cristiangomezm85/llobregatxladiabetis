@@ -12,6 +12,11 @@
   var burger = document.getElementById('burger');
   var wide = function () { return window.matchMedia('(min-width: 1101px)').matches; };
 
+  /* Ombra/línia inferior en fer scroll */
+  function onScroll() { nav.classList.toggle('scrolled', window.scrollY > 30); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
   /* ---------- Desplegables ---------- */
   function closeAll(except) {
     nav.querySelectorAll('.nav-dd.open').forEach(function (d) {

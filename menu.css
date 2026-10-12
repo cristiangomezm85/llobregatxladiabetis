@@ -1,10 +1,9 @@
 /* =====================================================================
    MENÚ COMÚ · Llobregat x la Diabetis
    Es carrega a totes les pàgines amb <link rel="stylesheet" href="menu.css">
-   i es complementa amb menu.js. Per canviar el menú: edita aquests dos
-   fitxers (estils/comportament) i el bloc <nav> (enllaços) de cada pàgina.
-   Variants: <nav class="nav"> (pàgines clares) i <nav class="nav nav--dark">
-   (pàgines fosques: inscripció, reglament, gràcies, briefing, normativa).
+   (a /dona/ amb "../menu.css") i es complementa amb menu.js.
+   Aquest fitxer defineix TOT l'aspecte del menú, perquè sigui idèntic a
+   totes les pàgines (clares o fosques) i no depengui dels estils de cada una.
    ===================================================================== */
 
 /* ---------- Idioma dins del menú ---------- */
@@ -16,42 +15,47 @@ html[data-lang="en"] nav.nav [lang="en"] { display: inline; }
 
 @media print { nav.nav { display: none !important; } }
 
-/* ---------- Base de la variant fosca (les clares ja tenen la seva base) ---------- */
-nav.nav--dark {
+/* ---------- Barra ---------- */
+nav.nav {
   position: sticky; top: 0; z-index: 50;
-  background: #15315F;
-  --mn-ink: #D7E3F5;
-  --mn-ink-strong: #FFFFFF;
-  --mn-fs: 0.88rem;
-}
-nav.nav--dark .nav-inner {
-  max-width: 1100px; margin: 0 auto; padding: 12px 20px;
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-}
-nav.nav--dark .brand {
-  display: flex; align-items: center; gap: 8px; color: #fff; text-decoration: none;
-  font-family: "Bricolage Grotesque", system-ui, sans-serif; font-weight: 700; font-size: 14px;
-}
-nav.nav--dark .brand img { height: 32px; width: 32px; border-radius: 50%; object-fit: cover; background: #fff; padding: 2px; }
-nav.nav--dark .brand span em { font-style: italic; color: #5AC0E6; font-weight: 500; }
-nav.nav--dark .nav-burger {
-  display: none; appearance: none; border: none; background: transparent; color: #fff; cursor: pointer;
-}
-
-/* Variables de la variant clara (amb valors de reserva) */
-nav.nav:not(.nav--dark) {
-  --mn-ink: var(--gris, #5A6478);
-  --mn-ink-strong: var(--blau-llobregat, #15315F);
+  background: rgba(250, 250, 246, 0.92);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s ease;
+  font-family: "Manrope", system-ui, sans-serif;
+  line-height: 1.5;
+  --mn-ink: #5A6478;
+  --mn-ink-strong: #15315F;
   --mn-fs: 0.95rem;
 }
+nav.nav.scrolled { border-bottom-color: rgba(21, 49, 95, 0.12); }
+nav.nav .nav-inner {
+  max-width: 1280px; width: auto; margin: 0 auto;
+  padding: 0.9rem clamp(1.25rem, 4vw, 3rem);
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+nav.nav .brand {
+  display: flex; align-items: center; gap: .6rem;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 700; font-size: 1.05rem; letter-spacing: -0.02em;
+  color: #15315F; text-decoration: none; white-space: nowrap;
+}
+nav.nav .brand img { width: 36px; height: 36px; padding: 0; background: none; border-radius: 50%; object-fit: cover; flex: none; }
+nav.nav .brand span { color: #15315F; font-size: inherit; }
+nav.nav .brand span em { color: #1E72D4; font-style: italic; font-weight: 500; }
+nav.nav .nav-burger {
+  display: none; appearance: none; border: 0; background: transparent; padding: 0;
+  color: #15315F; cursor: pointer;
+}
 
-/* ---------- Elements de l'escriptori ---------- */
+/* ---------- Elements ---------- */
 nav.nav .nav-links > a,
 nav.nav .nav-dd-btn {
   position: relative;
   font-family: inherit;
   font-size: var(--mn-fs);
   font-weight: 600;
+  line-height: 1.5;
   color: var(--mn-ink);
   padding: 0.3rem 0;
   text-decoration: none;
@@ -73,13 +77,13 @@ nav.nav .nav-dd-btn {
 nav.nav .nav-dd-btn svg { width: 12px; height: 12px; flex: none; transition: transform .2s ease; }
 nav.nav .nav-dd.open > .nav-dd-btn svg { transform: rotate(180deg); }
 
-/* Subratllat actiu (pàgina actual) */
+/* Subratllat de la pàgina actual */
+nav.nav .nav-links > a:not(.is-current)::after { display: none !important; }
 nav.nav .nav-links > a.is-current::after,
 nav.nav .nav-dd.has-current > .nav-dd-btn::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px;
-  background: #5AC0E6; transform: none;
+  content: ""; display: block; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px;
+  background: #5AC0E6; transform: none; width: auto;
 }
-nav.nav .nav-links > a:not(.is-current)::after { display: none; }
 
 /* Panell desplegable */
 nav.nav .nav-dd-menu {
@@ -93,7 +97,7 @@ nav.nav .nav-dd-menu::before { content: ""; position: absolute; left: 0; right: 
 nav.nav .nav-dd-menu a {
   display: block; padding: .62rem .85rem; border-radius: 9px;
   font-size: .92rem; font-weight: 600; line-height: 1.25;
-  color: #15315F; text-decoration: none;
+  color: #15315F; text-decoration: none; white-space: normal;
 }
 nav.nav .nav-dd-menu a::after { display: none !important; }
 nav.nav .nav-dd-menu a:hover { background: #F1F4FA; color: #1E72D4; }
@@ -106,7 +110,6 @@ nav.nav .nav-links > a.nav-ig {
   width: 38px; height: 38px; padding: 0; border-radius: 50%;
   border: 1.5px solid rgba(90,100,120,.35); color: var(--mn-ink);
 }
-nav.nav--dark .nav-links > a.nav-ig { border-color: rgba(255,255,255,.35); }
 nav.nav .nav-links > a.nav-ig:hover { color: #fff; background: #E1306C; border-color: #E1306C; }
 nav.nav .nav-ig svg { width: 18px; height: 18px; }
 nav.nav .nav-ig-txt { display: none !important; }
@@ -116,14 +119,14 @@ nav.nav .lang-toggle {
   display: inline-flex; gap: 2px; padding: 3px; border-radius: 999px; overflow: visible;
   background: rgba(21,49,95,.08);
 }
-nav.nav--dark .lang-toggle { background: rgba(255,255,255,.12); }
 nav.nav .lang-toggle button {
   appearance: none; border: 0; background: transparent; cursor: pointer;
-  padding: .3rem .7rem; border-radius: 999px;
-  font-family: "Manrope", system-ui, sans-serif; font-size: .78rem; font-weight: 700;
+  padding: .3rem .7rem; border-radius: 999px; margin: 0;
+  font-family: "Manrope", system-ui, sans-serif; font-size: .78rem; font-weight: 700; line-height: 1.5;
   color: var(--mn-ink); transition: background .2s ease, color .2s ease;
 }
 nav.nav .lang-toggle button.active,
+nav.nav .lang-toggle button.on,
 nav.nav .lang-toggle button[aria-pressed="true"] {
   background: #fff; color: #15315F; box-shadow: 0 1px 3px rgba(21,49,95,.18);
 }
@@ -159,14 +162,13 @@ nav.nav .nav-dona-total[hidden] { display: none; }
     position: absolute; top: 100%; left: 0; right: 0;
     display: flex; flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: .15rem;
     padding: 1rem 1.25rem 1.4rem;
-    background: var(--paper, #FAFAF6);
+    background: #FAFAF6;
     border-bottom: 1px solid rgba(21,49,95,.12);
     box-shadow: 0 20px 40px -20px rgba(14,27,54,.25);
     max-height: calc(100vh - 70px); max-height: calc(100dvh - 70px); overflow-y: auto;
     transform: translateY(-120%); visibility: hidden;
     transition: transform .3s ease, visibility 0s linear .3s;
   }
-  nav.nav--dark .nav-links { background: #15315F; border-bottom-color: rgba(255,255,255,.12); }
   nav.nav .nav-links.open {
     transform: translateY(0); visibility: visible; transition: transform .3s ease, visibility 0s;
   }
@@ -177,8 +179,6 @@ nav.nav .nav-dona-total[hidden] { display: none; }
   nav.nav .nav-dd.has-current > .nav-dd-btn::after { display: none; }
   nav.nav .nav-links > a.is-current,
   nav.nav .nav-dd.has-current > .nav-dd-btn { color: #1E72D4; }
-  nav.nav--dark .nav-links > a.is-current,
-  nav.nav--dark .nav-dd.has-current > .nav-dd-btn { color: #5AC0E6; }
 
   nav.nav .nav-dd-menu {
     position: static; min-width: 0; padding: 0 0 .5rem .9rem;
@@ -186,15 +186,11 @@ nav.nav .nav-dona-total[hidden] { display: none; }
     border-left: 2px solid rgba(90,192,230,.55); margin-left: .15rem;
   }
   nav.nav .nav-dd-menu::before { display: none; }
-  nav.nav .nav-dd-menu a { color: var(--mn-ink-strong); padding: .55rem .6rem; font-size: .98rem; }
-  nav.nav--dark .nav-dd-menu a { color: #D7E3F5; }
+  nav.nav .nav-dd-menu a { padding: .55rem .6rem; font-size: .98rem; }
   nav.nav .nav-dd-menu a:hover { background: rgba(30,114,212,.08); }
-  nav.nav--dark .nav-dd-menu a:hover,
-  nav.nav--dark .nav-dd-menu a.is-current { background: rgba(255,255,255,.1); color: #fff; }
 
   /* Dona primer (destacat), Instagram i idioma al final */
   nav.nav .nav-links > a.nav-dona { order: -3; margin: 0 0 .6rem; min-height: 50px; font-size: 1rem; }
-  nav.nav .nav-links > .nav-dd, nav.nav .nav-links > a:not(.nav-dona):not(.nav-ig) { order: 0; }
   nav.nav .nav-links > a.nav-ig {
     order: 5; width: auto; height: auto; border: 0; border-radius: 0; padding: .7rem 0;
     justify-content: flex-start; background: none;
