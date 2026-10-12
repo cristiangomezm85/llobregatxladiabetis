@@ -485,6 +485,34 @@
     .hero-meta strong { font-size: 0.92rem; margin-top: 0.15rem; }
   }
 
+  /* Resum d'inscrits a la home */
+  .home-inscrits .home-focus-copy h2 { max-width: none; }
+  .home-inscrits .hi-total { color: var(--coral); font-variant-numeric: tabular-nums; }
+  .home-inscrits .hi-total:empty { display: none; }
+  .hi-more { margin-top: 1.4rem; }
+  .hi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .85rem; }
+  .hi-grid[hidden] { display: none; }
+  .hi-card {
+    display: flex; flex-direction: column; gap: .3rem; padding: 1.1rem 1.15rem;
+    background: white; border: 1px solid var(--linia); border-radius: 16px; text-decoration: none;
+    box-shadow: 0 18px 40px -32px rgba(21,49,95,.38); transition: transform .2s ease, border-color .2s ease;
+  }
+  .hi-card:hover, .hi-card:focus-visible { transform: translateY(-2px); border-color: var(--blau-aigua); }
+  .hi-card b { font-family: var(--display); font-weight: 800; font-size: clamp(1.8rem, 3.4vw, 2.5rem); line-height: 1; color: var(--blau-llobregat); font-variant-numeric: tabular-nums; }
+  .hi-card > span { font-size: .84rem; color: var(--gris); }
+  .hi-days {
+    grid-column: 1 / -1; display: grid; gap: .7rem; padding: 1.15rem 1.25rem;
+    background: white; border: 1px solid var(--linia); border-radius: 16px;
+    box-shadow: 0 18px 40px -32px rgba(21,49,95,.38);
+  }
+  .hi-days > strong { font-family: var(--display); color: var(--blau-llobregat); font-size: 1.05rem; }
+  .hi-day { display: grid; grid-template-columns: minmax(130px, 220px) 1fr auto; gap: .8rem; align-items: center; font-size: .86rem; color: var(--gris); }
+  .hi-day i { display: block; height: 10px; border-radius: 99px; background: rgba(21,49,95,.08); overflow: hidden; }
+  .hi-day u { display: block; height: 100%; width: 0; border-radius: 99px; background: var(--blau-diabetis); transition: width .8s ease; }
+  .hi-day b { font-family: var(--display); font-weight: 800; color: var(--blau-llobregat); font-variant-numeric: tabular-nums; min-width: 3ch; text-align: right; }
+  @media (max-width: 980px) { .hi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .hi-day { grid-template-columns: 1fr auto; } .hi-day i { grid-column: 1 / -1; order: 3; } }
+
   /* Total recaptat a la home (enllaça a /dona) */
   .hero-raised {
     display: inline-flex; flex-direction: column; gap: 0.2rem;
@@ -3558,40 +3586,44 @@
 </header>
 
 <!-- ============================================
-     HOME SIMPLIFICADA · ACCESOS PRINCIPALES
+     PERSONES INSCRITES · resum + enllaç a /inscrits
      ============================================ -->
-<section class="home-focus" id="home-focus">
+<section class="home-focus home-inscrits" id="home-inscrits">
   <div class="container home-focus-inner">
     <div class="home-focus-copy">
       <span class="h-eyebrow">
-        <span lang="ca">En un cop d'ull</span>
-        <span lang="es">En un vistazo</span>
-        <span lang="en">At a glance</span>
+        <span lang="ca">Persones inscrites</span>
+        <span lang="es">Personas inscritas</span>
+        <span lang="en">Registered people</span>
       </span>
       <h2>
-        <span lang="ca">Tria com vols sumar-t'hi</span>
-        <span lang="es">Elige cómo quieres sumarte</span>
-        <span lang="en">Choose how to take part</span>
+        <span class="hi-total" id="hiTotal"></span>
+        <span lang="ca">persones al repte</span>
+        <span lang="es">personas en el reto</span>
+        <span lang="en">people in the challenge</span>
       </h2>
       <p>
-        <span lang="ca">La portada concentra el més important i deixa una sola acció clara: Suma-t'hi. Després podràs triar com vols participar.</span>
-        <span lang="es">La portada concentra lo más importante y deja una sola acción clara: Súmate. Después podrás elegir cómo quieres participar.</span>
-        <span lang="en">The homepage focuses on the essentials and leaves one clear action: Join in. Then you can choose how you want to take part.</span>
+        <span lang="ca">Caminant, corrent o en bici, del Berguedà fins al mar. Les inscripcions ja estan tancades: ara toca fer-ho possible.</span>
+        <span lang="es">Caminando, corriendo o en bici, del Berguedà hasta el mar. Las inscripciones ya están cerradas: ahora toca hacerlo posible.</span>
+        <span lang="en">Walking, running or cycling, from the Berguedà to the sea. Registration is now closed: time to make it happen.</span>
       </p>
+      <a href="inscrits.html" class="btn btn-dark btn-arrow hi-more">
+        <span lang="ca">Veure tots els inscrits</span>
+        <span lang="es">Ver todos los inscritos</span>
+        <span lang="en">See everyone registered</span>
+      </a>
     </div>
-    <div class="home-focus-grid home-focus-grid--single" aria-label="Acció principal">
-      <article class="home-focus-card">
-        <strong>
-          <span lang="ca">Un sol punt d'entrada</span>
-          <span lang="es">Un único punto de entrada</span>
-          <span lang="en">One single entry point</span>
-        </strong>
-        <p>
-          <span lang="ca">Prem Suma-t'hi i tria des del formulari si vols participar, ser Heroi/na, col·laborar, adherir un poble, patrocinar o rebre novetats.</span>
-          <span lang="es">Pulsa Súmate y elige desde el formulario si quieres participar, ser Héroe/Heroína, colaborar, adherir un pueblo, patrocinar o recibir novedades.</span>
-          <span lang="en">Tap Join in and choose in the form whether you want to take part, become a Hero/Heroine, collaborate, add a town, sponsor or receive updates.</span>
-        </p>
-      </article>
+    <div class="hi-grid" id="hiGrid" hidden>
+      <a class="hi-card" href="inscrits.html#estadistiques"><b id="hiCaminant">—</b><span><span lang="ca">Caminant</span><span lang="es">Caminando</span><span lang="en">Walking</span></span></a>
+      <a class="hi-card" href="inscrits.html#estadistiques"><b id="hiCorrent">—</b><span><span lang="ca">Corrent</span><span lang="es">Corriendo</span><span lang="en">Running</span></span></a>
+      <a class="hi-card" href="inscrits.html#estadistiques"><b id="hiBici">—</b><span><span lang="ca">En bici</span><span lang="es">En bici</span><span lang="en">Cycling</span></span></a>
+      <a class="hi-card" href="inscrits.html#estadistiques"><b id="hiAnimar">—</b><span><span lang="ca">Animen des de fora</span><span lang="es">Animan desde fuera</span><span lang="en">Cheering us on</span></span></a>
+      <div class="hi-days">
+        <strong><span lang="ca">Persones per dia</span><span lang="es">Personas por día</span><span lang="en">People per day</span></strong>
+        <div class="hi-day"><span><span lang="ca">Dv. 16 · Etapa 1</span><span lang="es">Vie. 16 · Etapa 1</span><span lang="en">Fri 16 · Stage 1</span></span><i><u id="hiBar1"></u></i><b id="hiDay1">—</b></div>
+        <div class="hi-day"><span><span lang="ca">Ds. 17 · Etapa 2</span><span lang="es">Sáb. 17 · Etapa 2</span><span lang="en">Sat 17 · Stage 2</span></span><i><u id="hiBar2"></u></i><b id="hiDay2">—</b></div>
+        <div class="hi-day"><span><span lang="ca">Dg. 18 · Etapa 3 i Cloenda</span><span lang="es">Dom. 18 · Etapa 3 y Clausura</span><span lang="en">Sun 18 · Stage 3 &amp; Closing</span></span><i><u id="hiBar3"></u></i><b id="hiDay3">—</b></div>
+      </div>
     </div>
   </div>
 </section>
@@ -5446,6 +5478,54 @@
     });
   }
   updateMgaLinks();
+
+
+  // ============================================
+  // RESUM D'INSCRITS (public-stats). Darrer valor conegut a l'instant;
+  // si res respon i no hi ha cap valor guardat, només es veu el títol
+  // amb el botó "Veure tots els inscrits".
+  // ============================================
+  (function resumInscrits() {
+    const grid = document.getElementById('hiGrid');
+    const totalEl = document.getElementById('hiTotal');
+    if (!grid || !totalEl) return;
+    const K = 'llxd-resum-inscrits';
+    const LOCALES = { ca: 'ca-ES', es: 'es-ES', en: 'en-GB' };
+    let last = null;
+    const fmt = n => new Intl.NumberFormat(LOCALES[document.documentElement.getAttribute('data-lang') || 'ca'] || 'ca-ES', { maximumFractionDigits: 0 }).format(n);
+    const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = fmt(v); };
+    function pinta(d) {
+      if (!d) return; last = d;
+      const m = d.modalitats || {}, dies = d.dies || {};
+      const total = (Number(d.inscritsPagats) || 0) - (Number(m.dorsal0) || 0);
+      if (!(total > 0)) return;
+      set('hiTotal', total);
+      set('hiCaminant', m.caminant || 0); set('hiCorrent', m.corrent || 0); set('hiBici', m.bici || 0); set('hiAnimar', m.animar || 0);
+      const max = Math.max(1, dies[1] || 0, dies[2] || 0, dies[3] || 0);
+      [1, 2, 3].forEach(i => {
+        set('hiDay' + i, dies[i] || 0);
+        const bar = document.getElementById('hiBar' + i);
+        if (bar) bar.style.width = Math.max(3, Math.round(((dies[i] || 0) / max) * 100)) + '%';
+      });
+      grid.hidden = false;
+    }
+    try { pinta(JSON.parse(localStorage.getItem(K))); } catch (e) {}
+    (async () => {
+      for (const url of ['/api/public-stats', '/.netlify/functions/public-stats']) {
+        const c = new AbortController(); const t = setTimeout(() => c.abort(), 8000);
+        try {
+          const r = await fetch(url, { signal: c.signal }); if (!r.ok) continue;
+          const d = await r.json();
+          if (d && d.ok !== false && d.inscritsPagats !== undefined) {
+            const slim = { inscritsPagats: d.inscritsPagats, modalitats: d.modalitats, dies: d.dies };
+            pinta(slim); try { localStorage.setItem(K, JSON.stringify(slim)); } catch (e) {}
+            return;
+          }
+        } catch (e) {} finally { clearTimeout(t); }
+      }
+    })();
+    new MutationObserver(() => pinta(last)).observe(document.documentElement, { attributes: true, attributeFilter: ['data-lang'] });
+  })();
 
   // ============================================
   // TOTAL RECAPTAT (mateixes fonts que /dona: retos.json + donatius
