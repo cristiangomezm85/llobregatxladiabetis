@@ -6,7 +6,7 @@
     "en": "https://www.migranodearena.org/en/cause/llobregat-x-la-diabetes"
   },
   "totalRecaudado": 5652,
-  "actualizado": "2026-10-12T08:15:43.736Z",
+  "actualizado": "2026-10-12T08:30:58.464Z",
   "retos": [
     {
       "slug": "astolfo-x-la-diabetes",
@@ -57,13 +57,13 @@
       "diasRestantes": 19
     },
     {
-  "slug": "david-x-la-diabetis",
-  "nombre": "David x la Diabetis",
-  "tipo": "heroe",
-  "foto": "fotos/David.jpg",
-  "url": "https://www.migranodearena.org/reto/david-x-la-diabetis",
-  "recaudado": 0,
-  "diasRestantes": 19
+      "slug": "david-x-la-diabetis",
+      "nombre": "David x la Diabetis",
+      "tipo": "heroe",
+      "foto": "fotos/David.jpg",
+      "url": "https://www.migranodearena.org/reto/david-x-la-diabetis",
+      "recaudado": 0,
+      "diasRestantes": 19
     },
     {
       "slug": "emi-x-la-diabetes",
@@ -75,13 +75,13 @@
       "diasRestantes": 19
     },
     {
-  "slug": "manu-x-la-diabetes",
-  "nombre": "Manu x la Diabetes",
-  "tipo": "heroe",
-  "foto": "fotos/Manu.jpg",
-  "url": "https://www.migranodearena.org/reto/manu-x-la-diabetes",
-  "recaudado": 0,
-  "diasRestantes": 19
+      "slug": "manu-x-la-diabetes",
+      "nombre": "Manu x la Diabetes",
+      "tipo": "heroe",
+      "foto": "fotos/Manu.jpg",
+      "url": "https://www.migranodearena.org/reto/manu-x-la-diabetes",
+      "recaudado": 0,
+      "diasRestantes": 19
     },
     {
       "slug": "pedro-x-la-diabetes",
