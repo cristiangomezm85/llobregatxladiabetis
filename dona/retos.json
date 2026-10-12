@@ -75,6 +75,15 @@
       "diasRestantes": 19
     },
     {
+  "slug": "manu-x-la-diabetes",
+  "nombre": "Manu x la Diabetes",
+  "tipo": "heroe",
+  "foto": "fotos/Manu.jpg",
+  "url": "https://www.migranodearena.org/reto/manu-x-la-diabetes",
+  "recaudado": 0,
+  "diasRestantes": 19
+    },
+    {
       "slug": "pedro-x-la-diabetes",
       "nombre": "Pedro x la Diabetes",
       "tipo": "heroe",
