@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="ca" data-lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>En directe · Llobregat x la Diabetis</title>
+<meta name="description" content="Segueix en directe la marxa general del Repte Llobregat x la Diabetis, del Berguedà fins al mar, del 16 al 18 d'octubre de 2026.">
+<link rel="icon" type="image/png" href="img/logo-small.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@10..48,300..800&family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --blau-llobregat: #15315F;
+    --blau-diabetis: #1E72D4;
+    --blau-aigua: #5AC0E6;
+    --coral: #FF6B47;
+    --paper: #FAFAF6;
+    --tinta: #0E1B36;
+    --gris: #5A6478;
+    --gris-clar: #C9CDD6;
+    --linia: rgba(21, 49, 95, 0.12);
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --body: "Manrope", system-ui, sans-serif;
+    --container: 1280px;
+    --pad-x: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    font-family: var(--body);
+    color: var(--tinta);
+    background: var(--paper);
+    line-height: 1.55;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  img { max-width: 100%; height: auto; display: block; }
+  a { color: inherit; text-decoration: none; }
+  ::selection { background: var(--blau-diabetis); color: white; }
+
+  [data-lang="ca"] [lang="es"],
+  [data-lang="ca"] [lang="en"],
+  [data-lang="es"] [lang="ca"],
+  [data-lang="es"] [lang="en"],
+  [data-lang="en"] [lang="ca"],
+  [data-lang="en"] [lang="es"] { display: none !important; }
+
+  h1, h2, h3, h4 {
+    font-family: var(--display);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--blau-llobregat);
+    margin: 0;
+  }
+
+  .container {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding-left: var(--pad-x);
+    padding-right: var(--pad-x);
+  }
+
+  /* ============================================
+     LANG SPLASH
+     ============================================ */
+  .lang-splash {
+    position: fixed; inset: 0;
+    display: none;
+    align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--blau-llobregat) 0%, var(--tinta) 100%);
+    z-index: 9999;
+    animation: splashFadeIn 0.4s ease-out;
+  }
+  .lang-splash--active { display: flex; }
+  .lang-splash--leaving { animation: splashFadeOut 0.4s ease-in forwards; }
+  .lang-splash-inner { text-align: center; padding: 2rem; max-width: 480px; }
+  .lang-splash-logo {
+    width: 92px; height: 92px;
+    margin: 0 auto 1.5rem;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: center;
+    padding: 12px;
+  }
+  .lang-splash-logo img { width: 100%; height: auto; }
+  .lang-splash-brand {
+    font-family: var(--display);
+    color: white;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    margin: 0 0 0.5rem;
+    font-weight: 700;
+  }
+  .lang-splash-brand em { color: var(--blau-aigua); font-style: italic; }
+  .lang-splash-claim { color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-bottom: 2rem; }
+  .lang-splash-prompt {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 1rem;
+  }
+  .lang-splash-buttons { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+  .lang-splash-buttons button {
+    appearance: none;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: white;
+    padding: 0.9rem 1.5rem;
+    border-radius: 12px;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 96px;
+  }
+  .lang-splash-buttons button:hover {
+    background: var(--blau-diabetis);
+    border-color: var(--blau-diabetis);
+    transform: translateY(-2px);
+  }
+  .lang-splash-buttons button small {
+    display: block;
+    font-family: var(--body);
+    font-weight: 400;
+    font-size: 0.72rem;
+    opacity: 0.7;
+    margin-top: 0.2rem;
+  }
+  @keyframes splashFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes splashFadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+  /* ============================================
+     NAV
+     ============================================ */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(250, 250, 246, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+  .nav.scrolled { border-bottom-color: var(--linia); }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 0.9rem; padding-bottom: 0.9rem;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 0.6rem;
+    font-family: var(--display);
+    font-weight: 700;
+    color: var(--blau-llobregat);
+    font-size: 1.05rem;
+  }
+  .brand img { width: 36px; height: 36px; }
+  .brand span em { color: var(--blau-diabetis); font-style: italic; font-weight: 500; }
+  .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+  .nav-links a {
+    position: relative;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--gris);
+    transition: color 0.2s ease;
+  }
+  .nav-links a::after {
+    content: ""; position: absolute; left: 0; bottom: -6px;
+    height: 2px; width: 100%;
+    background: var(--blau-diabetis);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+  .nav-links a:hover { color: var(--blau-llobregat); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-links a.is-current { color: var(--blau-llobregat); }
+  .nav-links a.is-current::after { transform: scaleX(1); }
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 138px;
+    background: var(--coral);
+    color: white !important;
+    padding: 0.65rem 1.3rem;
+    border: 2px solid var(--coral);
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    line-height: 1;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .nav-cta::after { display: none !important; }
+  .nav-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(255,107,71,0.32);
+  }
+  .lang-toggle {
+    display: inline-flex;
+    background: var(--linia);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .lang-toggle button {
+    appearance: none;
+    border: none;
+    background: transparent;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    font-family: var(--body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--gris);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .lang-toggle button.active {
+    background: white;
+    color: var(--blau-llobregat);
+    box-shadow: 0 1px 3px rgba(21,49,95,0.12);
+  }
+  .nav-burger {
+    display: none;
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--blau-llobregat);
+    cursor: pointer;
+  }
+  @media (max-width: 880px) {
+    .nav-links {
+      position: absolute;
+      top: 100%; left: 0; right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      background: var(--paper);
+      padding: 1.25rem var(--pad-x);
+      border-bottom: 1px solid var(--linia);
+      transform: translateY(-120%);
+      transition: transform 0.3s ease;
+      gap: 0.6rem;
+    }
+    .nav-links.open { transform: translateY(0); }
+    .nav-links a { padding: 0.5rem 0; font-size: 1rem; }
+    .nav-cta { text-align: center; margin-top: 0.5rem; }
+    .nav-burger { display: inline-flex; }
+  }
+
+  /* ============================================
+     HERO PÀGINA (versió compacta, sense imatge)
+     ============================================ */
+  .page-hero {
+    background: linear-gradient(180deg, var(--blau-llobregat) 0%, #1c3d70 100%);
+    color: white;
+    padding: clamp(3rem, 7vw, 4.5rem) 0 clamp(3rem, 7vw, 4rem);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .page-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 80% 20%, rgba(90,192,230,0.18) 0%, transparent 50%),
+      radial-gradient(ellipse at 10% 90%, rgba(30,114,212,0.22) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .page-hero-inner { position: relative; z-index: 1; }
+  .page-hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--blau-aigua);
+    margin-bottom: 1.1rem;
+  }
+  .page-hero-eyebrow::before {
+    content: ""; width: 32px; height: 2px; background: var(--blau-aigua);
+  }
+  .page-hero h1 {
+    color: white;
+    font-size: clamp(2.1rem, 5vw, 3.2rem);
+    margin-bottom: 1rem;
+    max-width: 20ch;
+  }
+  .page-hero h1 em {
+    color: var(--blau-aigua);
+    font-style: italic;
+    font-weight: 600;
+  }
+  .page-hero p.lead {
+    font-size: clamp(1.02rem, 2vw, 1.18rem);
+    color: rgba(255,255,255,0.78);
+    max-width: 62ch;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* ============================================
+     FOOTER
+     ============================================ */
+  footer {
+    background: var(--tinta);
+    color: white;
+    padding: clamp(3rem, 6vw, 4.5rem) 0 2rem;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+  @media (max-width: 960px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; } }
+  @media (max-width: 540px) { .footer-grid { grid-template-columns: 1fr; } }
+  .footer-brand { display: flex; align-items: center; gap: 0.8rem; }
+  .footer-brand img {
+    width: 56px; height: 56px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 6px;
+  }
+  .footer-brand-text {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: white;
+  }
+  .footer-brand-text em { color: var(--blau-aigua); font-style: italic; font-weight: 500; }
+  .footer-tagline { color: rgba(255,255,255,0.55); font-size: 0.85rem; }
+  footer h4 { color: white; font-size: 0.95rem; margin-bottom: 1rem; font-family: var(--display); }
+  footer ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+  footer ul a { color: rgba(255,255,255,0.65); font-size: 0.92rem; transition: color 0.2s ease; }
+  footer ul a:hover { color: var(--blau-aigua); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    color: rgba(255,255,255,0.45);
+    font-size: 0.85rem;
+  }
+  .footer-bottom a { color: rgba(255,255,255,0.65); transition: color 0.2s ease; }
+  .footer-bottom a:hover { color: var(--blau-aigua); }
+
+  /* ============================================
+     COOKIE BANNER
+     ============================================ */
+  .cookie-banner {
+    position: fixed;
+    left: max(1rem, env(safe-area-inset-left));
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 1rem 1.1rem;
+    background: rgba(14, 27, 54, 0.96);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 14px;
+    box-shadow: 0 18px 50px rgba(14,27,54,0.28);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .cookie-banner.is-visible { display: flex; }
+  .cookie-banner p { margin: 0; font: 500 0.9rem/1.45 var(--body); color: rgba(255,255,255,0.82); }
+  .cookie-banner a { color: var(--blau-aigua); text-decoration: underline; text-underline-offset: 2px; }
+  .cookie-banner button {
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 999px;
+    background: var(--coral);
+    color: white;
+    padding: 0.72rem 1.15rem;
+    font: 700 0.9rem var(--body);
+    cursor: pointer;
+  }
+  @media (max-width: 720px) {
+    .cookie-banner { flex-direction: column; align-items: stretch; }
+    .cookie-banner button { width: 100%; }
+  }
+
+  /* ============================================
+     INSCRITS — disclaimer de privacitat
+     ============================================ */
+  .insc-disclaimer {
+    display: flex; gap: .85rem; align-items: flex-start;
+    background: #EEF4FC; border: 1px solid rgba(30,114,212,0.24);
+    border-radius: 16px; padding: 1rem 1.2rem; margin: 2.5rem 0 2.5rem;
+    color: var(--blau-llobregat); font-size: 0.92rem; line-height: 1.5;
+  }
+  .insc-disclaimer svg { flex-shrink: 0; color: var(--blau-diabetis); margin-top: .15rem; }
+  .insc-disclaimer strong { color: var(--blau-diabetis); }
+
+  /* ============================================
+     INSCRITS — KPI + gràfics de barres
+     (mateix llenguatge visual que el panell d'admin)
+     ============================================ */
+  .insc-section { margin: 0 0 3rem; }
+  .insc-section-title { font-size: clamp(1.3rem, 2.6vw, 1.7rem); margin-bottom: .35rem; }
+  .insc-section-sub { color: var(--gris); font-size: .95rem; margin: 0 0 1.5rem; max-width: 68ch; }
+
+  .insc-kpis { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: .9rem; margin-bottom: 1.75rem; }
+  @media (max-width: 880px) { .insc-kpis { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  .insc-kpi {
+    border: 1px solid var(--linia); border-radius: 16px; padding: 1.1rem 1.25rem; background: #fff;
+  }
+  .insc-kpi strong { display: block; font-family: var(--display); font-size: 1.9rem; line-height: 1; color: var(--blau-llobregat); }
+  .insc-kpi span { display: block; margin-top: .4rem; color: var(--gris); font-size: .82rem; }
+
+  .insc-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1.1rem; }
+  @media (max-width: 880px) { .insc-grid { grid-template-columns: 1fr; } }
+  .insc-card { border: 1px solid var(--linia); border-radius: 16px; padding: 1.2rem 1.3rem; background: #fff; min-width: 0; }
+  .insc-card-wide { grid-column: 1 / -1; }
+  .insc-card h3 { font-size: 1.02rem; margin-bottom: .25rem; }
+  .insc-card-note { margin: .2rem 0 1rem; color: var(--gris); font-size: .8rem; line-height: 1.45; }
+
+  .bar-chart { display: grid; gap: .7rem; max-height: 340px; overflow: auto; padding-right: .2rem; }
+  .bar-row { display: flex; flex-direction: column; gap: .3rem; font-size: .84rem; padding: .15rem .3rem; border-radius: 8px; transition: background .15s ease; }
+  .bar-chart-hover .bar-row { cursor: default; }
+  .bar-chart-hover .bar-row:hover, .bar-chart-hover .bar-row.is-hovered { background: rgba(30,114,212,0.06); }
+  .bar-row-top { display: flex; align-items: baseline; justify-content: space-between; gap: .8rem; }
+  .bar-label { color: var(--tinta); line-height: 1.3; }
+  .bar-track { height: 8px; border-radius: 99px; background: #edf1f5; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 99px; background: var(--blau-diabetis); min-width: 2px; width: 0; transition: width .7s cubic-bezier(.22,.9,.3,1); }
+  .bar-chart-hover .bar-row:hover .bar-fill, .bar-chart-hover .bar-row.is-hovered .bar-fill { background: var(--blau-llobregat); }
+  .bar-value { font-weight: 700; flex-shrink: 0; color: var(--blau-llobregat); }
+  .insc-empty { padding: 1.1rem; border: 1px dashed var(--gris-clar); border-radius: 10px; color: var(--gris); font-size: .85rem; }
+
+  .municipi-chart-wrap { position: relative; height: 280px; }
+  .municipi-chart-wrap canvas { width: 100% !important; height: 100% !important; }
+  @media (max-width: 480px) { .municipi-chart-wrap { height: 230px; } }
+
+  /* ============================================
+     INSCRITS — donuts (Sexe / Relació / Modalitat)
+     ============================================ */
+  .donut-wrap { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+  .donut-chart { position: relative; width: 168px; height: 168px; flex-shrink: 0; }
+  .donut-chart svg { width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+  .donut-seg {
+    transition: stroke-width .18s ease, opacity .18s ease;
+    stroke-linecap: butt;
+    cursor: pointer;
+  }
+  .donut-seg:focus-visible { outline: 2px solid var(--blau-llobregat); outline-offset: 2px; }
+  .donut-chart.has-hover .donut-seg { opacity: .35; }
+  .donut-chart.has-hover .donut-seg.is-hovered { opacity: 1; }
+  .donut-center {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center; pointer-events: none;
+  }
+  .donut-center strong { display: block; font-family: var(--display); font-size: 1.6rem; line-height: 1; color: var(--blau-llobregat); }
+  .donut-center span { display: block; margin-top: .3rem; color: var(--gris); font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; }
+  .donut-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: .55rem; flex: 1; min-width: 160px; }
+  .donut-legend li {
+    display: flex; align-items: center; gap: .55rem; font-size: .85rem; padding: .2rem .3rem; border-radius: 8px;
+    cursor: pointer; transition: background .15s ease;
+  }
+  .donut-legend li:hover, .donut-legend li.is-hovered { background: rgba(30,114,212,0.06); }
+  .donut-swatch { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
+  .donut-legend-label { color: var(--tinta); flex: 1; line-height: 1.3; }
+  .donut-legend-value { font-weight: 700; color: var(--blau-llobregat); white-space: nowrap; }
+  .donut-legend-pct { color: var(--gris); font-size: .78rem; white-space: nowrap; min-width: 3ch; text-align: right; }
+  @media (max-width: 560px) {
+    .donut-wrap { justify-content: center; }
+    /* "width: 100%" per si sol no basta: quan .donut-legend te flex-basis 0%
+       (heretat de "flex: 1" a la regla base), el "width" es ignora en l'eix
+       principal d'un flex item i la llegenda es queda comprimida a l'espai
+       que li sobra al costat del donut (168px fixos), fent que les files
+       (nom + valor + %) desbordin la targeta per la dreta en mobil. Forçant
+       flex-basis a 100% amb flex-wrap:wrap del contenidor, la llegenda salta
+       a la seva pròpia fila i ja pot fer servir tot l'ample disponible. */
+    .donut-legend { min-width: 0; flex: 1 1 100%; width: 100%; }
+  }
+
+  /* ============================================
+     INSCRITS — columnes (Dia)
+     ============================================ */
+  .col-chart { display: flex; align-items: flex-end; justify-content: space-around; gap: 1rem; height: 190px; padding: .5rem .5rem 0; }
+  .col-item { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; flex: 1; max-width: 110px; cursor: pointer; }
+  .col-value { font-family: var(--display); font-weight: 700; font-size: 1.05rem; color: var(--blau-llobregat); margin-bottom: .4rem; transition: transform .15s ease; }
+  .col-bar-track { width: 100%; max-width: 64px; height: 130px; display: flex; align-items: flex-end; }
+  .col-bar {
+    width: 100%; height: 0; border-radius: 10px 10px 4px 4px; background: var(--blau-diabetis);
+    transition: height .7s cubic-bezier(.22,.9,.3,1), background .15s ease;
+  }
+  .col-item:hover .col-bar, .col-item.is-hovered .col-bar { background: var(--blau-llobregat); }
+  .col-item:hover .col-value, .col-item.is-hovered .col-value { transform: translateY(-2px); }
+  .col-label { margin-top: .6rem; font-size: .82rem; font-weight: 700; color: var(--gris); }
+
+  /* ============================================
+     INSCRITS — tooltip flotant compartit
+     ============================================ */
+  .insc-tooltip {
+    position: fixed; z-index: 200; pointer-events: none;
+    background: var(--tinta); color: #fff; padding: .5rem .7rem; border-radius: 10px;
+    font-size: .8rem; line-height: 1.35; box-shadow: 0 10px 28px rgba(14,27,54,0.28);
+    opacity: 0; transform: translate(-50%, calc(-100% - 10px)) scale(.96);
+    transition: opacity .12s ease, transform .12s ease; max-width: 220px;
+  }
+  .insc-tooltip.is-visible { opacity: 1; transform: translate(-50%, calc(-100% - 10px)) scale(1); }
+  .insc-tooltip strong { display: block; font-size: .92rem; }
+  .insc-tooltip span { color: rgba(255,255,255,0.7); }
+
+  /* ============================================
+     INSCRITS — taula alternativa (accessibilitat)
+     ============================================ */
+  .insc-table-toggle { margin-top: 1rem; }
+  .insc-table-toggle summary {
+    cursor: pointer; font-size: .78rem; font-weight: 700; color: var(--gris);
+    list-style: none;
+  }
+  .insc-table-toggle summary::-webkit-details-marker { display: none; }
+  .insc-table-toggle summary::before { content: "▸ "; }
+  .insc-table-toggle[open] summary::before { content: "▾ "; }
+  .chart-data-table { width: 100%; border-collapse: collapse; font-size: .82rem; margin-top: .6rem; }
+  .chart-data-table th, .chart-data-table td { padding: .4rem .5rem; border-bottom: 1px solid var(--linia); text-align: left; }
+  .chart-data-table td:last-child, .chart-data-table th:last-child { text-align: right; }
+  .chart-data-table td { font-weight: 700; color: var(--blau-llobregat); }
+
+  /* ============================================
+     INSCRITS — cercador
+     ============================================ */
+  .insc-search { position: relative; margin: 0 0 1.4rem; max-width: 480px; }
+  .insc-search input {
+    width: 100%; padding: .85rem 1.1rem .85rem 2.7rem; border: 1.5px solid var(--linia); border-radius: 999px;
+    font: 500 .95rem var(--body); color: var(--tinta); background: #fff;
+  }
+  .insc-search input:focus { outline: none; border-color: var(--blau-diabetis); }
+  .insc-search svg { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--gris); pointer-events: none; }
+  .insc-search-count { color: var(--gris); font-size: .85rem; margin: 0 0 1rem; }
+
+  /* ============================================
+     INSCRITS — taula de persones inscrites
+     ============================================ */
+  .insc-table-wrap { overflow-x: auto; border: 1px solid var(--linia); border-radius: 16px; }
+  table.insc-table { width: 100%; border-collapse: collapse; min-width: 720px; font-size: .92rem; }
+  table.insc-table th, table.insc-table td { text-align: left; padding: .65rem .9rem; border-bottom: 1px solid var(--linia); }
+  table.insc-table th { color: var(--gris); font-weight: 800; font-size: .74rem; text-transform: uppercase; letter-spacing: .05em; background: #F5F6FA; white-space: nowrap; }
+  table.insc-table tr:last-child td { border-bottom: none; }
+  table.insc-table td.insc-td-nom { font-weight: 800; color: var(--blau-llobregat); }
+  table.insc-table td.insc-td-num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  @media (max-width: 760px) {
+    .insc-table-wrap { overflow-x: visible; border: none; }
+    table.insc-table { min-width: 0; border: 1px solid var(--linia); border-radius: 16px; overflow: hidden; }
+    table.insc-table thead { display: none; }
+    table.insc-table, table.insc-table tbody, table.insc-table tr, table.insc-table td { display: block; width: 100%; }
+    table.insc-table tr { padding: .85rem 1rem .95rem; border-bottom: 1px solid var(--linia); }
+    table.insc-table tr:last-child { border-bottom: none; }
+    table.insc-table td { border-bottom: none; padding: .18rem 0; display: flex; gap: .5rem; align-items: baseline; }
+    table.insc-table td.insc-td-nom { font-size: 1rem; padding-top: .05rem; }
+    table.insc-table td:not(.insc-td-nom)::before {
+      content: attr(data-label); min-width: 92px; flex-shrink: 0; color: var(--gris);
+      font-weight: 700; font-size: .68rem; text-transform: uppercase; letter-spacing: .04em;
+    }
+  }
+
+  /* ============================================
+     INSCRITS — paginació del llistat
+     ============================================ */
+  .insc-pagination {
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+    margin-top: 1.2rem; flex-wrap: wrap;
+  }
+  .insc-page-btn {
+    display: inline-flex; align-items: center; gap: .35rem;
+    padding: .5rem .9rem; border-radius: 99px; border: 1px solid var(--linia);
+    background: #fff; color: var(--blau-llobregat); font-weight: 700; font-size: .85rem;
+    cursor: pointer; transition: background .15s ease, border-color .15s ease;
+  }
+  .insc-page-btn:hover:not(:disabled) { background: rgba(30,114,212,0.06); border-color: var(--blau-diabetis); }
+  .insc-page-btn:disabled { color: var(--gris-clar); cursor: not-allowed; opacity: .6; }
+  .insc-page-status { color: var(--gris); font-size: .85rem; white-space: nowrap; }
+  @media (max-width: 480px) {
+    .insc-pagination { gap: .6rem; }
+    .insc-page-btn { padding: .5rem .75rem; font-size: .8rem; }
+    .insc-page-status { width: 100%; text-align: center; order: -1; }
+  }
+</style>
+<link rel="stylesheet" href="menu.css">
+<style>
+  .live-wrap { padding-top: 3rem; padding-bottom: 5rem; }
+  .live-status {
+    display: flex; gap: 1.25rem; align-items: flex-start;
+    background: #fff; border: 1px solid var(--linia); border-radius: 22px;
+    padding: 1.75rem 1.75rem; box-shadow: 0 18px 40px -26px rgba(14,27,54,.35);
+    max-width: 880px;
+  }
+  .live-dot { flex: none; width: 14px; height: 14px; margin-top: .45rem; border-radius: 50%; background: var(--coral); position: relative; }
+  .live-dot::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--coral); opacity: .35; animation: live-pulse 2s ease-out infinite; }
+  @keyframes live-pulse { from { transform: scale(.6); opacity: .6; } to { transform: scale(1.5); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .live-dot::after { animation: none; } }
+  .live-status h2 { font-family: var(--display); font-size: clamp(1.35rem, 2.6vw, 1.75rem); color: var(--blau-llobregat); margin: 0 0 .5rem; letter-spacing: -.02em; }
+  .live-status p { margin: 0; color: var(--gris); line-height: 1.65; max-width: 62ch; }
+  .live-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.1rem; margin-top: 2rem; max-width: 880px; }
+  .live-card {
+    display: flex; flex-direction: column; gap: .35rem; text-decoration: none;
+    background: #fff; border: 1px solid var(--linia); border-radius: 18px; padding: 1.35rem 1.4rem;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .live-card:hover { transform: translateY(-3px); border-color: var(--blau-diabetis); box-shadow: 0 16px 34px -22px rgba(30,114,212,.55); }
+  .live-card strong { font-family: var(--display); font-size: 1.15rem; color: var(--blau-llobregat); }
+  .live-card span.t { color: var(--gris); font-size: .94rem; line-height: 1.55; }
+  .live-card .go { margin-top: .5rem; font-weight: 700; color: var(--blau-diabetis); font-size: .92rem; }
+  .live-card--dona { background: var(--coral); border-color: var(--coral); }
+  .live-card--dona strong, .live-card--dona span.t, .live-card--dona .go { color: #fff; }
+  .live-card--dona:hover { border-color: var(--coral); box-shadow: 0 16px 34px -18px rgba(255,107,71,.6); }
+  #liveMap[hidden] { display: none; }
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     LANG SPLASH
+     ============================================ -->
+<div class="lang-splash" id="langSplash" role="dialog" aria-modal="true" aria-labelledby="splashTitle">
+  <div class="lang-splash-inner">
+    <div class="lang-splash-logo"><img src="img/logo-small.png" alt="Llobregat x la Diabetis"></div>
+    <h2 class="lang-splash-brand" id="splashTitle">Llobregat <em>x la</em> Diabetis</h2>
+    <p class="lang-splash-claim">
+      <span lang="ca">180 km · 3 dies · un propòsit</span>
+      <span lang="es">180 km · 3 días · un propósito</span>
+      <span lang="en">180 km · 3 days · one purpose</span>
+    </p>
+    <p class="lang-splash-prompt">Tria idioma · Elige idioma · Choose language</p>
+    <div class="lang-splash-buttons">
+      <button type="button" data-splash-lang="ca">CA<small>Català</small></button>
+      <button type="button" data-splash-lang="es">ES<small>Español</small></button>
+      <button type="button" data-splash-lang="en">EN<small>English</small></button>
+    </div>
+  </div>
+</div>
+
+<nav class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="brand">
+      <img src="img/logo-small.png" alt="Llobregat x la Diabetis">
+      <span>Llobregat <em>x la</em> Diabetis</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true"><span lang="ca">El repte</span><span lang="es">El reto</span><span lang="en">The challenge</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+        <div class="nav-dd-menu">
+          <a href="el-repte.html"><span lang="ca">El repte i la causa</span><span lang="es">El reto y la causa</span><span lang="en">The challenge and the cause</span></a>
+          <a href="pobles.html"><span lang="ca">Pobles</span><span lang="es">Pueblos</span><span lang="en">Towns</span></a>
+          <a href="persones.html"><span lang="ca">Persones i Herois</span><span lang="es">Personas y Héroes</span><span lang="en">People and Heroes</span></a>
+          <a href="inscrits.html"><span lang="ca">Inscrits</span><span lang="es">Inscritos</span><span lang="en">Registered</span></a>
+        </div>
+      </div>
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true"><span lang="ca">Informació</span><span lang="es">Información</span><span lang="en">Information</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+        <div class="nav-dd-menu">
+          <a href="recorregut.html"><span lang="ca">Recorregut i etapes</span><span lang="es">Recorrido y etapas</span><span lang="en">Route and stages</span></a>
+          <a href="briefing.html"><span lang="ca">Briefing</span><span lang="es">Briefing</span><span lang="en">Briefing</span></a>
+          <a href="normativa.html"><span lang="ca">Normativa</span><span lang="es">Normativa</span><span lang="en">Rules</span></a>
+          <a href="recollida.html"><span lang="ca">Recollida de bossa i samarreta</span><span lang="es">Recogida de bolsa y camiseta</span><span lang="en">Bag and t-shirt collection</span></a>
+        </div>
+      </div>
+      <a href="en-directe.html" class="is-current" aria-current="page"><span lang="ca">En directe</span><span lang="es">En directo</span><span lang="en">Live</span></a>
+      <a href="https://www.instagram.com/llobregatxladiabetis/" class="nav-ig" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg><span class="nav-ig-txt">Instagram</span></a>
+      <div class="lang-toggle" role="group" aria-label="Llengua">
+        <button data-set-lang="ca" class="active" type="button">CA</button>
+        <button data-set-lang="es" type="button">ES</button>
+        <button data-set-lang="en" type="button">EN</button>
+      </div>
+      <a href="dona/" class="nav-dona"><span lang="ca">Dona</span><span lang="es">Dona</span><span lang="en">Donate</span><span class="nav-dona-total" hidden></span></a>
+    </div>
+    <button class="nav-burger" id="burger" aria-label="Menú" aria-expanded="false"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="container page-hero-inner">
+    <div class="page-hero-eyebrow">
+      <span lang="ca">Seguiment de la marxa</span>
+      <span lang="es">Seguimiento de la marcha</span>
+      <span lang="en">Follow the march</span>
+    </div>
+    <h1>
+      <span lang="ca">El repte, <em>en directe</em></span>
+      <span lang="es">El reto, <em>en directo</em></span>
+      <span lang="en">The challenge, <em>live</em></span>
+    </h1>
+    <p class="lead">
+      <span lang="ca">Del Berguedà fins al mar, del 16 al 18 d'octubre. Aquí podràs seguir la marxa general mentre avança pel riu.</span>
+      <span lang="es">Del Berguedà hasta el mar, del 16 al 18 de octubre. Aquí podrás seguir la marcha general mientras avanza por el río.</span>
+      <span lang="en">From the Berguedà to the sea, 16–18 October. Here you will be able to follow the main march as it makes its way down the river.</span>
+    </p>
+  </div>
+</header>
+
+<main>
+<div class="container live-wrap">
+
+  <div class="live-status" role="status">
+    <span class="live-dot" aria-hidden="true"></span>
+    <div>
+      <h2>
+        <span lang="ca">El seguiment en directe es publicarà aviat</span>
+        <span lang="es">El seguimiento en directo se publicará pronto</span>
+        <span lang="en">Live tracking will be published soon</span>
+      </h2>
+      <p>
+        <span lang="ca">Quan estigui actiu, veuràs aquí la posició de la marxa general sobre el mapa. Mentrestant, pots seguir-nos a Instagram, consultar el recorregut i les hores de pas, o fer un donatiu.</span>
+        <span lang="es">Cuando esté activo, verás aquí la posición de la marcha general sobre el mapa. Mientras tanto, puedes seguirnos en Instagram, consultar el recorrido y las horas de paso, o hacer un donativo.</span>
+        <span lang="en">Once it is active, you will see the position of the main march on the map here. In the meantime you can follow us on Instagram, check the route and passing times, or make a donation.</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Lloc reservat per al mapa de seguiment GPS (s'hi afegirà més endavant) -->
+  <div id="liveMap" hidden></div>
+
+  <div class="live-grid">
+    <a class="live-card" href="https://www.instagram.com/llobregatxladiabetis/" target="_blank" rel="noopener">
+      <strong>Instagram</strong>
+      <span class="t">
+        <span lang="ca">Fotos, vídeos i novetats de cada etapa, a @llobregatxladiabetis.</span>
+        <span lang="es">Fotos, vídeos y novedades de cada etapa, en @llobregatxladiabetis.</span>
+        <span lang="en">Photos, videos and updates from every stage, at @llobregatxladiabetis.</span>
+      </span>
+      <span class="go"><span lang="ca">Segueix-nos →</span><span lang="es">Síguenos →</span><span lang="en">Follow us →</span></span>
+    </a>
+    <a class="live-card" href="recorregut.html">
+      <strong>
+        <span lang="ca">Recorregut i hores de pas</span>
+        <span lang="es">Recorrido y horas de paso</span>
+        <span lang="en">Route and passing times</span>
+      </strong>
+      <span class="t">
+        <span lang="ca">Etapes, pobles i hores estimades de pas de la marxa general.</span>
+        <span lang="es">Etapas, pueblos y horas estimadas de paso de la marcha general.</span>
+        <span lang="en">Stages, towns and estimated passing times of the main march.</span>
+      </span>
+      <span class="go"><span lang="ca">Veure recorregut →</span><span lang="es">Ver recorrido →</span><span lang="en">See the route →</span></span>
+    </a>
+    <a class="live-card live-card--dona" href="dona/">
+      <strong><span lang="ca">Fes un donatiu</span><span lang="es">Haz un donativo</span><span lang="en">Make a donation</span></strong>
+      <span class="t">
+        <span lang="ca">El 100% va a la recerca de la diabetis tipus 1 d'AREDI.</span>
+        <span lang="es">El 100% va a la investigación de la diabetes tipo 1 de AREDI.</span>
+        <span lang="en">100% goes to AREDI's type 1 diabetes research.</span>
+      </span>
+      <span class="go"><span lang="ca">Dona ara →</span><span lang="es">Dona ahora →</span><span lang="en">Donate now →</span></span>
+    </a>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img src="img/logo-footer-white.png" alt="Llobregat x la Diabetis">
+          <div>
+            <div class="footer-brand-text">Llobregat <em>x la</em> Diabetis</div>
+            <span class="footer-tagline">180 km · 3 <span lang="ca">dies</span><span lang="es">días</span><span lang="en">days</span> · <span lang="ca">un propòsit</span><span lang="es">un propósito</span><span lang="en">one purpose</span></span>
+          </div>
+        </div>
+        <p style="color: rgba(255,255,255,0.55); font-size: 0.92rem; max-width: 38ch; margin-top: 1rem;">
+          <span lang="ca">Repte solidari pel riu Llobregat per visibilitzar la diabetis tipus 1 i recaptar fons per a AREDI.</span>
+          <span lang="es">Reto solidario por el río Llobregat para visibilizar la diabetes tipo 1 y recaudar fondos para AREDI.</span><span lang="en">Charity challenge along the Llobregat river to raise awareness of type 1 diabetes and funds for AREDI.</span>
+        </p>
+      </div>
+      <div>
+        <h4>
+          <span lang="ca">El repte</span>
+          <span lang="es">El reto</span><span lang="en">The challenge</span>
+        </h4>
+        <ul>
+          <li><a href="index.html#repte"><span lang="ca">El repte</span><span lang="es">El reto</span><span lang="en">The challenge</span></a></li>
+          <li><a href="recorregut.html"><span lang="ca">Recorregut</span><span lang="es">Recorrido</span><span lang="en">Route</span></a></li>
+          <li><a href="el-repte.html#corredor"><span lang="ca">Impulsor</span><span lang="es">Impulsor</span><span lang="en">Founder</span></a></li>
+          <li><a href="index.html#causa"><span lang="ca">La causa</span><span lang="es">La causa</span><span lang="en">The cause</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>
+          <span lang="ca">Suma-t'hi</span>
+          <span lang="es">Súmate</span><span lang="en">Join in</span>
+        </h4>
+        <ul>
+          <li><a href="persones.html"><span lang="ca">Persones</span><span lang="es">Personas</span><span lang="en">People</span></a></li>
+          <li><a href="pobles.html"><span lang="ca">Pobles</span><span lang="es">Pueblos</span><span lang="en">Towns</span></a></li>
+          <li><a href="inscrits.html"><span lang="ca">Inscrits</span><span lang="es">Inscritos</span><span lang="en">Registered</span></a></li>
+          <li><a href="patrocina.html"><span lang="ca">Patrocina el repte</span><span lang="es">Patrocina el reto</span><span lang="en">Sponsor the challenge</span></a></li>
+          <li><a href="patrocinadors.html"><span lang="ca">Patrocinadors</span><span lang="es">Patrocinadores</span><span lang="en">Sponsors</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>
+          <span lang="ca">Contacte</span>
+          <span lang="es">Contacto</span><span lang="en">Contact</span>
+        </h4>
+        <ul>
+          <li><a href="https://www.instagram.com/llobregatxladiabetis/" target="_blank" rel="noopener">@llobregatxladiabetis</a></li>
+          <li><a href="mailto:info@llobregat.org">info@llobregat.org</a></li>
+          <li><a href="https://www.arediabetis.org" target="_blank" rel="noopener">arediabetis.org</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Llobregat x la Diabetis · <span lang="ca">Tots els fons a AREDI</span><span lang="es">Todos los fondos a AREDI</span><span lang="en">All funds go to AREDI</span> · <a href="privacitat.html"><span lang="ca">Política de privacitat</span><span lang="es">Política de privacidad</span><span lang="en">Privacy policy</span></a></span>
+      <span>#LlobregatXLaDiabetis · #LxD2026 · #UnPropòsit</span>
+    </div>
+  </div>
+</footer>
+
+<div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Cookie notice">
+  <p>
+    <span lang="ca">Fem servir cookies tècniques i emmagatzematge local per recordar l'idioma i millorar l'experiència. No utilitzem cookies de seguiment. Consulta la <a href="privacitat.html">política de privacitat</a>.</span>
+    <span lang="es">Usamos cookies técnicas y almacenamiento local para recordar el idioma y mejorar la experiencia. No utilizamos cookies de seguimiento. Consulta la <a href="privacitat.html">política de privacidad</a>.</span>
+    <span lang="en">We use technical cookies and local storage to remember the language and improve the experience. We do not use tracking cookies. See the <a href="privacitat.html">privacy policy</a>.</span>
+  </p>
+  <button type="button" id="cookieAccept">
+    <span lang="ca">Acceptar</span>
+    <span lang="es">Aceptar</span>
+    <span lang="en">Accept</span>
+  </button>
+</div>
+
+<script>
+  // ============================================
+  // IDIOMA — comparteix localStorage 'llxd-lang' amb la resta del lloc
+  // ============================================
+  const html = document.documentElement;
+  const langButtons = document.querySelectorAll('[data-set-lang]');
+
+  function setLang(lang) {
+    html.setAttribute('data-lang', lang);
+    html.setAttribute('lang', lang);
+    langButtons.forEach(b => b.classList.toggle('active', b.dataset.setLang === lang));
+    try { localStorage.setItem('llxd-lang', lang); } catch(e) {}
+    const titles = {
+      ca: 'En directe · Llobregat x la Diabetis',
+      es: 'En directo · Llobregat x la Diabetes',
+      en: 'Live · Llobregat for Diabetes',
+    };
+    document.title = titles[lang] || titles.ca;
+    document.dispatchEvent(new CustomEvent('llxd:langchange', { detail: { lang } }));
+  }
+  langButtons.forEach(b => b.addEventListener('click', () => setLang(b.dataset.setLang)));
+
+  // ============================================
+  // LANG SPLASH — només si NO hi ha idioma triat prèviament
+  // ============================================
+  const splash = document.getElementById('langSplash');
+  function closeSplash(lang) {
+    setLang(lang);
+    splash.classList.add('lang-splash--leaving');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      splash.classList.remove('lang-splash--active');
+      splash.classList.remove('lang-splash--leaving');
+    }, 450);
+  }
+  let savedLang = null;
+  try { savedLang = localStorage.getItem('llxd-lang'); } catch(e) {}
+  if (savedLang && ['ca','es','en'].includes(savedLang)) {
+    setLang(savedLang);
+  } else {
+    setLang('ca');
+    splash.classList.add('lang-splash--active');
+    document.body.style.overflow = 'hidden';
+    splash.querySelectorAll('[data-splash-lang]').forEach(btn => {
+      btn.addEventListener('click', () => closeSplash(btn.dataset.splashLang));
+    });
+  }
+
+  // ============================================
+  // NAV — burger + scroll
+  // ============================================
+  const burger = document.getElementById('burger');
+  const navLinks = document.getElementById('navLinks');
+  if (burger && navLinks) {
+    burger.addEventListener('click', () => navLinks.classList.toggle('open'));
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
+  }
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    if (nav) nav.classList.toggle('scrolled', window.scrollY > 4);
+  }, { passive: true });
+</script>
+
+<script>
+  (function initCookieConsent() {
+    const banner = document.getElementById('cookieBanner');
+    const accept = document.getElementById('cookieAccept');
+    if (!banner || !accept) return;
+    let ok = false;
+    try { ok = localStorage.getItem('llxd-cookie-ok') === '1'; } catch(e) {}
+    if (!ok) banner.classList.add('is-visible');
+    accept.addEventListener('click', () => {
+      try { localStorage.setItem('llxd-cookie-ok', '1'); } catch(e) {}
+      banner.classList.remove('is-visible');
+    });
+  })();
+</script>
+<script src="menu.js" defer></script>
+</body>
+</html>

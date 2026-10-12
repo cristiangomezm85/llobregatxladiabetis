@@ -1209,6 +1209,7 @@
   }
 </style>
 <link rel="stylesheet" href="assets/lxd-drawer.css?v=forms-v6">
+<link rel="stylesheet" href="menu.css">
 </head>
 <body>
 
@@ -1239,23 +1240,34 @@
       <span>Llobregat <em>x la</em> Diabetis</span>
     </a>
     <div class="nav-links" id="navLinks">
-      <a href="index.html"><span lang="ca">Home</span><span lang="es">Inicio</span><span lang="en">Home</span></a>
-      <a href="el-repte.html"><span lang="ca">El Repte</span><span lang="es">El Reto</span><span lang="en">The Challenge</span></a>
-      <a href="persones.html"><span lang="ca">Persones</span><span lang="es">Personas</span><span lang="en">People</span></a>
-      <a href="pobles.html"><span lang="ca">Pobles</span><span lang="es">Pueblos</span><span lang="en">Towns</span></a>
-      <a href="recorregut.html"><span lang="ca">Recorregut</span><span lang="es">Recorrido</span><span lang="en">Route</span></a>
-      <a href="inscrits.html"><span lang="ca">Inscrits</span><span lang="es">Inscritos</span><span lang="en">Registered</span></a>
-      <a href="patrocina.html" class="is-current"><span lang="ca">Patrocina</span><span lang="es">Patrocina</span><span lang="en">Sponsor</span></a>
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true"><span lang="ca">El repte</span><span lang="es">El reto</span><span lang="en">The challenge</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+        <div class="nav-dd-menu">
+          <a href="el-repte.html"><span lang="ca">El repte i la causa</span><span lang="es">El reto y la causa</span><span lang="en">The challenge and the cause</span></a>
+          <a href="pobles.html"><span lang="ca">Pobles</span><span lang="es">Pueblos</span><span lang="en">Towns</span></a>
+          <a href="persones.html"><span lang="ca">Persones i Herois</span><span lang="es">Personas y Héroes</span><span lang="en">People and Heroes</span></a>
+          <a href="inscrits.html"><span lang="ca">Inscrits</span><span lang="es">Inscritos</span><span lang="en">Registered</span></a>
+        </div>
+      </div>
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true"><span lang="ca">Informació</span><span lang="es">Información</span><span lang="en">Information</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+        <div class="nav-dd-menu">
+          <a href="recorregut.html"><span lang="ca">Recorregut i etapes</span><span lang="es">Recorrido y etapas</span><span lang="en">Route and stages</span></a>
+          <a href="briefing.html"><span lang="ca">Briefing</span><span lang="es">Briefing</span><span lang="en">Briefing</span></a>
+          <a href="normativa.html"><span lang="ca">Normativa</span><span lang="es">Normativa</span><span lang="en">Rules</span></a>
+          <a href="recollida.html"><span lang="ca">Recollida de bossa i samarreta</span><span lang="es">Recogida de bolsa y camiseta</span><span lang="en">Bag and t-shirt collection</span></a>
+        </div>
+      </div>
+      <a href="en-directe.html"><span lang="ca">En directe</span><span lang="es">En directo</span><span lang="en">Live</span></a>
+      <a href="https://www.instagram.com/llobregatxladiabetis/" class="nav-ig" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg><span class="nav-ig-txt">Instagram</span></a>
       <div class="lang-toggle" role="group" aria-label="Llengua">
         <button data-set-lang="ca" class="active" type="button">CA</button>
         <button data-set-lang="es" type="button">ES</button>
         <button data-set-lang="en" type="button">EN</button>
       </div>
-      <a href="inscripcio.html" class="nav-cta"><span lang="ca">Inscripcions</span><span lang="es">Inscripciones</span><span lang="en">Registration</span></a>
+      <a href="dona/" class="nav-dona"><span lang="ca">Dona</span><span lang="es">Dona</span><span lang="en">Donate</span><span class="nav-dona-total" hidden></span></a>
     </div>
-    <button class="nav-burger" id="burger" aria-label="Menú">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
-    </button>
+    <button class="nav-burger" id="burger" aria-label="Menú" aria-expanded="false"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
   </div>
 </nav>
 
@@ -3854,5 +3866,6 @@
 <script src="assets/lxd-drawer.js?v=forms-v4" defer></script>
 <script src="assets/lxd-universal-form.js?v=universal-v3" defer></script>
 <script src="assets/lxd-lang-sync.js?v=lang-form-v3" defer></script>
+<script src="menu.js" defer></script>
 </body>
 </html>
