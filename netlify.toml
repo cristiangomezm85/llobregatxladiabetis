@@ -47,6 +47,22 @@
   to = "/inscripcio.html"
   status = 200
 
+# Pàgines d'informació i seguiment (URL curtes: llobregat.org/briefing, etc.)
+[[redirects]]
+  from = "/briefing"
+  to = "/briefing.html"
+  status = 200
+
+[[redirects]]
+  from = "/normativa"
+  to = "/normativa.html"
+  status = 200
+
+[[redirects]]
+  from = "/en-directe"
+  to = "/en-directe.html"
+  status = 200
+
 # Evita exponer bandejas privadas, código de apoyo y configuración si se publica la raíz.
 [[redirects]]
   from = "/admin/*.json"

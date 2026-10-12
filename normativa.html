@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Normativa del repte · Llobregat x la Diabetis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: banda navy de capçalera amb la marca de llobregat.org, franja de dades clau, i un document d'una columna amb seccions numerades (es citen entre elles). */
+:root{
+  --navy:#15315F; --blau:#1E72D4; --aigua:#5AC0E6; --coral:#FF6B47;
+  --bg:#FAFAF6; --surface:#FFFFFF; --ink:#0E1B36; --muted:#5A6478; --line:rgba(21,49,95,.14);
+  --band:#15315F; --band-ink:#FFFFFF; --band-soft:#5AC0E6; --row:rgba(30,114,212,.05);
+  --display:"Bricolage Grotesque", system-ui, sans-serif;
+  --body:"Manrope", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B1730; --surface:#11223F; --ink:#E9EEF7; --muted:#9AA8C2; --line:rgba(154,168,194,.2);
+  --band:#0E1B36; --band-ink:#FFFFFF; --band-soft:#5AC0E6; --blau:#5AA6F0; --row:rgba(90,192,230,.06); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1730; --surface:#11223F; --ink:#E9EEF7; --muted:#9AA8C2; --line:rgba(154,168,194,.2);
+  --band:#0E1B36; --band-ink:#FFFFFF; --band-soft:#5AC0E6; --blau:#5AA6F0; --row:rgba(90,192,230,.06); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;margin:0}
+.wrap{max-width:860px;margin:0 auto;padding-inline:clamp(16px,4vw,40px)}
+
+/* Capçalera */
+.band{background:var(--band);color:var(--band-ink)}
+.band .wrap{padding-block:28px 40px}
+.brand{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:700;font-size:1.05rem}
+.brand img{width:40px;height:40px;border-radius:50%}
+.brand em{font-style:italic;font-weight:400;color:var(--band-soft)}
+.eyebrow{margin:44px 0 10px;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--band-soft);display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:28px;height:2px;background:var(--coral)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2.4rem,7vw,4.2rem);line-height:.95;letter-spacing:-.03em;margin:0 0 18px;text-wrap:balance}
+h1 em{font-style:italic;font-weight:400;color:var(--band-soft)}
+.lead{max-width:62ch;margin:0;color:rgba(255,255,255,.86);font-size:1.05rem}
+
+/* Dades clau */
+.keys{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:-22px 0 8px;position:relative}
+.key{background:var(--surface);padding:16px 18px;min-width:0}
+.key span{display:block;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.key strong{display:block;font-family:var(--display);font-size:1.35rem;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:2px}
+.key small{color:var(--muted);font-size:.85rem}
+.key.accent strong{color:var(--coral)}
+@media (max-width:620px){.keys{grid-template-columns:1fr}}
+
+/* Seccions */
+main .wrap{padding-block:24px 56px}
+section{padding-block:30px;border-top:1px solid var(--line)}
+section:first-of-type{border-top:0}
+h2{font-family:var(--display);font-weight:800;font-size:1.6rem;letter-spacing:-.015em;margin:0 0 12px;display:flex;align-items:baseline;gap:12px;text-wrap:balance}
+.annex{border-top:2px solid var(--navy)}
+.annex ol{margin:0;padding-left:1.3rem;display:grid;gap:12px;max-width:72ch}
+.annex li::marker{color:var(--coral);font-weight:700}
+h2 .n{font-size:.95rem;color:var(--coral);font-variant-numeric:tabular-nums;font-weight:700}
+h3{font-family:var(--display);font-size:1.05rem;font-weight:700;margin:26px 0 8px;color:var(--blau)}
+p{margin:0 0 12px;max-width:68ch}
+ul{margin:0;padding-left:1.15rem;display:grid;gap:8px;max-width:72ch}
+ul ul{margin-top:8px;gap:4px}
+li::marker{color:var(--aigua)}
+b{font-weight:700}
+a{color:var(--blau);text-underline-offset:2px}
+a:focus-visible{outline:2px solid var(--coral);outline-offset:2px;border-radius:2px}
+.rule{background:var(--row);border-left:3px solid var(--coral);padding:14px 18px;border-radius:0 10px 10px 0;margin:4px 0 18px;font-weight:600;max-width:72ch}
+
+.tbl{overflow-x:auto;margin:16px 0 6px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem;font-variant-numeric:tabular-nums}
+th{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;font-weight:700;padding:10px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.num{white-space:nowrap}
+tr.stage td{background:var(--row);font-family:var(--display);font-weight:700;color:var(--blau);font-size:.85rem;letter-spacing:.02em}
+tr.end td{font-weight:700}
+.note{font-size:.85rem;color:var(--muted);margin-top:8px}
+
+footer{border-top:1px solid var(--line)}
+footer .wrap{padding-block:28px;display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center;justify-content:space-between;font-size:.88rem;color:var(--muted)}
+.foot-brand{display:flex;align-items:center;gap:12px}
+.foot-brand img{width:44px;height:44px;border-radius:8px;background:#fff}
+
+.toprow{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.langs{display:flex;gap:4px;background:rgba(255,255,255,.1);padding:4px;border-radius:999px}
+.langs button{font:700 .78rem var(--body);letter-spacing:.08em;border:0;border-radius:999px;padding:6px 14px;cursor:pointer;background:transparent;color:var(--band-ink)}
+.langs button[aria-pressed="true"]{background:var(--band-ink);color:var(--navy)}
+.langs button:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
+.toc{display:flex;flex-wrap:wrap;gap:6px 8px;margin:18px 0 0;padding:0;list-style:none}
+.toc a{display:inline-block;font-size:.82rem;font-weight:600;text-decoration:none;color:var(--blau);background:var(--row);padding:5px 10px;border-radius:999px}
+.toc a:hover{text-decoration:underline}
+
+/* Logos (una sola còpia de la imatge) */
+.logo{display:inline-block;background-size:cover;background-position:center;flex:none}
+.logo-llxd{width:40px;height:40px;border-radius:50%;background-image:url(data:image/webp;base64,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)}
+.logo-aredi{width:44px;height:44px;border-radius:8px;background-color:#fff;background-size:contain;background-repeat:no-repeat;background-image:url(data:image/webp;base64,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)}
+/* Idioma: es mostra només el bloc de l'idioma actiu (html[data-lang]) */
+.lang-block{display:none}
+html[data-lang="ca"] .lang-block[data-lang="ca"],html[data-lang="es"] .lang-block[data-lang="es"],html[data-lang="en"] .lang-block[data-lang="en"]{display:block}
+html[data-lang="ca"] .langs button[data-set="ca"],html[data-lang="es"] .langs button[data-set="es"],html[data-lang="en"] .langs button[data-set="en"]{background:var(--band-ink);color:var(--navy)}
+/* Selector d'idioma inicial (quan no n'hi ha cap de triat) */
+.lang-splash{position:fixed;inset:0;z-index:9999;background:var(--navy);display:none;align-items:center;justify-content:center;padding:2rem;transition:opacity .4s ease}
+html[data-ask] .lang-splash{display:flex}
+.lang-splash.leaving{opacity:0;pointer-events:none}
+.lang-splash-inner{text-align:center;max-width:480px;width:100%;color:#fff}
+.lang-splash .logo-llxd{width:110px;height:110px;margin:0 auto 2rem;box-shadow:0 20px 50px -15px rgba(0,0,0,.4);border:8px solid #fff}
+.lang-splash-brand{display:block;font-family:var(--display);font-weight:700;font-size:clamp(1.75rem,4vw,2.5rem);letter-spacing:-.02em;line-height:1.05;margin:0 0 .5rem}
+.lang-splash-brand em{font-style:italic;font-weight:400;color:var(--band-soft)}
+.lang-splash-prompt{font-size:.78rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.7);margin:2rem 0 1.25rem;max-width:none}
+.lang-splash-buttons{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.lang-splash-buttons button{font-family:var(--body);font-weight:600;font-size:1rem;padding:1rem 2.5rem;border-radius:100px;border:1.5px solid rgba(255,255,255,.4);background:transparent;color:#fff;cursor:pointer;letter-spacing:.04em;transition:background .2s,border-color .2s,transform .15s;min-width:140px}
+.lang-splash-buttons button:hover,.lang-splash-buttons button:focus-visible{background:#fff;border-color:#fff;color:var(--navy);transform:translateY(-2px);outline:none}
+.lang-splash-buttons button small{display:block;font-size:.7rem;font-weight:500;letter-spacing:.12em;margin-top:.25rem;opacity:.7}
+@media print{.langs,.lang-splash{display:none!important}}
+</style>
+<script>
+(function(){var V=['ca','es','en'],l=null,ask=false;
+try{var q=new URLSearchParams(location.search),u=String(q.get('lang')||q.get('idioma')||'').toLowerCase().slice(0,2);if(V.indexOf(u)>-1)l=u}catch(e){}
+if(!l){var m=/^#(ca|es|en)-/.exec(location.hash||'');if(m)l=m[1]}
+if(l){try{localStorage.setItem('llxd-lang',l)}catch(e){}}
+else{try{var s=localStorage.getItem('llxd-lang');if(V.indexOf(s)>-1)l=s}catch(e){}}
+if(!l){ask=true;l='ca'}
+var d=document.documentElement;d.setAttribute('data-lang',l);d.setAttribute('lang',l);if(ask)d.setAttribute('data-ask','1');
+})();
+</script>
+<noscript><style>.lang-block[data-lang="ca"]{display:block}</style></noscript>
+<link rel="stylesheet" href="menu.css">
+</head>
+<body>
+<div class="lang-splash" id="langSplash" role="dialog" aria-modal="true" aria-labelledby="splashTitle">
+  <div class="lang-splash-inner">
+    <span class="logo logo-llxd" aria-hidden="true"></span>
+    <h2 class="lang-splash-brand" id="splashTitle">Llobregat <em>x la</em> Diabetis</h2>
+    <p class="lang-splash-prompt">Tria idioma &middot; Elige idioma &middot; Choose language</p>
+    <div class="lang-splash-buttons">
+      <button type="button" data-splash-lang="ca">Català<small>CA</small></button>
+      <button type="button" data-splash-lang="es">Español<small>ES</small></button>
+      <button type="button" data-splash-lang="en">English<small>EN</small></button>
+    </div>
+  </div>
+</div>
+<nav class="nav nav--dark" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <img src="img/logo-small.png" alt="Llobregat x la Diabetis">
+      <span>Llobregat <em>x la</em> Diabetis</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true"><span lang="ca">El repte</span><span lang="es">El reto</span><span lang="en">The challenge</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+        <div class="nav-dd-menu">
+          <a href="el-repte.html"><span lang="ca">El repte i la causa</span><span lang="es">El reto y la causa</span><span lang="en">The challenge and the cause</span></a>
+          <a href="pobles.html"><span lang="ca">Pobles</span><span lang="es">Pueblos</span><span lang="en">Towns</span></a>
+          <a href="persones.html"><span lang="ca">Persones i Herois</span><span lang="es">Personas y Héroes</span><span lang="en">People and Heroes</span></a>
+          <a href="inscrits.html"><span lang="ca">Inscrits</span><span lang="es">Inscritos</span><span lang="en">Registered</span></a>
+        </div>
+      </div>
+      <div class="nav-dd has-current">
+        <button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true"><span lang="ca">Informació</span><span lang="es">Información</span><span lang="en">Information</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+        <div class="nav-dd-menu">
+          <a href="recorregut.html"><span lang="ca">Recorregut i etapes</span><span lang="es">Recorrido y etapas</span><span lang="en">Route and stages</span></a>
+          <a href="briefing.html"><span lang="ca">Briefing</span><span lang="es">Briefing</span><span lang="en">Briefing</span></a>
+          <a href="normativa.html" class="is-current" aria-current="page"><span lang="ca">Normativa</span><span lang="es">Normativa</span><span lang="en">Rules</span></a>
+          <a href="recollida.html"><span lang="ca">Recollida de bossa i samarreta</span><span lang="es">Recogida de bolsa y camiseta</span><span lang="en">Bag and t-shirt collection</span></a>
+        </div>
+      </div>
+      <a href="en-directe.html"><span lang="ca">En directe</span><span lang="es">En directo</span><span lang="en">Live</span></a>
+      <a href="https://www.instagram.com/llobregatxladiabetis/" class="nav-ig" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg><span class="nav-ig-txt">Instagram</span></a>
+      <div class="lang-toggle langs" role="group" aria-label="Idioma / Idioma / Language">
+        <button data-set="ca" type="button" aria-label="Català">CA</button>
+        <button data-set="es" type="button" aria-label="Español">ES</button>
+        <button data-set="en" type="button" aria-label="English">EN</button>
+      </div>
+      <a href="dona/" class="nav-dona"><span lang="ca">Dona</span><span lang="es">Dona</span><span lang="en">Donate</span><span class="nav-dona-total" hidden></span></a>
+    </div>
+    <button class="nav-burger" id="burger" aria-label="Menú" aria-expanded="false"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
+  </div>
+</nav>
+<div class="lang-block" data-lang="ca" lang="ca">
+<header class="band"><div class="wrap">
+<p class="eyebrow">Normativa general · 16–18 octubre 2026</p>
+<h1>Normes <em>del</em> repte</h1>
+<p class="lead">Llobregat x la Diabetis és una activitat solidària no competitiva que recorre el Llobregat en 3 etapes. Aquest document concreta el <a href="https://llobregat.org/reglament.html" target="_blank" rel="noopener" style="color:inherit">reglament</a> acceptat a la inscripció i recull les normes que s'apliquen a l'organització, a les autoritats i a les persones participants.</p></div></header>
+<div class="wrap">
+  <div class="keys">
+    <div class="key"><span>Inici</span><strong>Dv. 16 · 08:00</strong><small>Castellar de n'Hug</small></div>
+    <div class="key accent"><span>Tancament diari</span><strong>19:00</strong><small>Els tres dies</small></div>
+    <div class="key"><span>Final</span><strong>Dg. 18 · 19:00</strong><small>El Prat de Llobregat</small></div>
+  </div>
+</div>
+<main><div class="wrap">
+
+<section id="ca-naturalesa">
+  <h2><span class="n">1</span>Naturalesa de l'activitat</h2>
+  <ul>
+    <li><b>Entitat organitzadora:</b> AREDI (Associació Ajuda a la Recerca en Diabetis), entitat beneficiària de tots els fons.</li>
+    <li><b>Tipus:</b> marxa solidària no competitiva. No hi ha cronometratge, classificació, marca de temps ni premis.</li>
+    <li><b>Modalitats:</b> corrent, caminant o en bicicleta, l'etapa sencera o només un tram.</li>
+    <li><b>Recorregut:</b> track oficial, una adaptació del GR-270, d'uns 200 km, de Castellar de n'Hug a la desembocadura del Llobregat al Prat.</li>
+    <li><b>Ús de la via:</b> sense talls generals de trànsit. Els participants circulen com a vianants o ciclistes i compleixen les normes de circulació.</li>
+    <li><b>Participació:</b> cal inscripció prèvia a llobregat.org, que inclou l'assegurança i el distintiu d'accés als avituallaments.</li>
+    <li><b>Exclusions per la PPA:</b> Castellbisbal, el Papiol, Molins de Rei i Sant Feliu de Llobregat no formen part del repte ni del recorregut. Les restriccions per la Pesta Porcina Africana han obligat a modificar el GR-270: des d'Esparreguera, el recorregut va sempre pel marge dret del riu (en el sentit del corrent) fins a Sant Boi de Llobregat, on es creua al marge esquerre per passar a Sant Joan Despí.</li>
+  </ul>
+</section>
+
+<section id="ca-horari">
+  <h2><span class="n">2</span>Horari oficial</h2>
+  <p>El repte comença divendres 16 d'octubre a les 08:00 a Castellar de n'Hug i acaba diumenge 18 d'octubre a les 19:00 al Prat de Llobregat. Cada dia, l'activitat organitzada va de la sortida oficial de l'etapa fins a les 19:00.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Dia</th><th>Etapa</th><th>Km</th><th>Sortida oficial</th><th>Arribada estimada</th><th>Tancament</th></tr></thead>
+    <tbody>
+      <tr><td class="num">Dv. 16</td><td>1 · Castellar de n'Hug → Gironella</td><td class="num">60,3</td><td class="num">08:00</td><td class="num">18:00</td><td class="num">19:00</td></tr>
+      <tr><td class="num">Ds. 17</td><td>2 · Gironella → Monistrol de Montserrat</td><td class="num">76,5</td><td class="num">07:30</td><td class="num">18:23</td><td class="num">19:00</td></tr>
+      <tr><td class="num">Dg. 18</td><td>3 · Monistrol de Montserrat → el Prat</td><td class="num">66,7</td><td class="num">07:00</td><td class="num">17:00</td><td class="num">19:00</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li>Les hores de pas per cada municipi són estimades i provisionals. Es publiquen a <a href="https://llobregat.org/recorregut" target="_blank" rel="noopener">llobregat.org/recorregut</a> i poden variar per logística, meteorologia o el ritme del grup.</li>
+    <li><b>Cloenda (dg. 18, el Prat):</b> 16:00 sortida de la caminada (4,3 km) des del pàrquing Cal Tet; 17:00 arribada de la marxa general al Mirador del Semàfor; tornada conjunta a Cal Tet; 19:00 final de la cloenda i del repte.</li>
+  </ul>
+</section>
+
+<section id="ca-responsabilitat">
+  <h2><span class="n">3</span>Àmbit i responsabilitat</h2>
+  <p class="rule">Dins l'horari oficial, el track oficial i l'etapa del dia, la persona participa en el repte. Fora d'aquests límits, ho fa sota la seva responsabilitat.</p>
+  <ul>
+    <li><b>Dins del repte:</b> el tram de l'etapa del dia, des de la sortida oficial fins a les 19:00, sobre el track oficial i amb inscripció vàlida.</li>
+    <li><b>Etapa del dia:</b> cada dia té la seva etapa, amb un inici i un final diferents. Només queden dins del repte els trams de l'etapa que correspon a aquell dia. Per exemple, córrer de Castellar de n'Hug a Berga el diumenge 18 no hi queda inclòs, perquè aquest tram és de l'etapa 1 (divendres 16).</li>
+    <li><b>Fora del repte, sota responsabilitat pròpia:</b>
+      <ul>
+        <li>sortir abans de l'hora oficial de l'etapa;</li>
+        <li>continuar després de les 19:00;</li>
+        <li>desviar-se del track oficial;</li>
+        <li>fer un tram en un dia que no és el de la seva etapa.</li>
+      </ul>
+    </li>
+    <li><b>Tancament de les 19:00:</b> a aquesta hora s'acaba l'activitat organitzada i la cobertura de l'organització, com quan passa el cotxe escombra en una cursa. Qui continuï ho fa a títol particular.</li>
+    <li><b>Qui se suma en un punt de pas:</b> participa des que s'incorpora fins al final del seu tram o, com a molt tard, fins a les 19:00. Si comença abans que passi la marxa general però dins l'horari oficial i pel track, continua dins del repte. El retorn a casa va a càrrec seu.</li>
+    <li><b>Retirada:</b> qui no pugui arribar al final d'etapa abans de les 19:00 s'ha de retirar al darrer municipi on sigui possible.</li>
+    <li><b>Acceptació:</b> en inscriure's, cada participant ha acceptat el <a href="https://llobregat.org/reglament.html" target="_blank" rel="noopener">reglament</a>. Aquestes normes el concreten i es comunicaran a totes les persones inscrites.</li>
+  </ul>
+</section>
+
+<section id="ca-transit">
+  <h2><span class="n">4</span>Trànsit i via pública</h2>
+  <p>L'activitat no talla carreteres: els participants circulen com a vianants o ciclistes i han de complir el Reglament General de Circulació. L'únic acompanyament sol·licitat a les autoritats és el de la C-55 a Olesa de Montserrat.</p>
+  <h3>Normes per als participants</h3>
+  <ul>
+    <li>Seguir sempre el track oficial i les indicacions dels voluntaris.</li>
+    <li>En trams de carretera, anar en fila índia i pel lateral que correspongui (vianants per l'esquerra, ciclistes per la dreta).</li>
+    <li>Creuar només pels punts indicats i quan ho autoritzi el voluntari.</li>
+    <li>Ciclistes: casc obligatori en tot moment i llums si circulen amb poca visibilitat.</li>
+    <li>Grup de màxim 50 persones fins a Martorell. De Martorell al Prat el recorregut és tot de camí de terra, sense creuaments de carretera.</li>
+  </ul>
+  <h3>Punts sensibles i mesures</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Dia i hora aprox.</th><th>Punt</th><th>Mesura</th></tr></thead>
+    <tbody>
+      <tr><td class="num">Dv. 16 · 11:30</td><td>Guardiola de Berguedà → Cercs (sortida de vehicles de la C-16)</td><td>Visibilitat reforçada i equip de suport atent</td></tr>
+      <tr><td class="num">Ds. 17 · 13:15</td><td>Navarcles, pont sota la N-141c</td><td>Senyalització sol·licitada a l'Ajuntament i voluntaris indicant el pas</td></tr>
+      <tr><td class="num">Ds. 17 · 15:30–15:45</td><td>BV-1225 al pont de Vilomara</td><td>Fila índia amb vehicle de suport</td></tr>
+      <tr><td class="num">Dg. 18 · 08:15–08:45</td><td>C-55 a Olesa de Montserrat (km 7)</td><td>Tràmit amb Mossos d'Esquadra: tall temporal i acompanyament</td></tr>
+      <tr><td class="num">Dg. 18 · 08:50</td><td>Creuament C-1414, Olesa → Esparreguera</td><td>Cotxes voluntaris al creuament</td></tr>
+      <tr><td class="num">Dg. 18 · 09:30</td><td>Creuament C-1414, Esparreguera → Abrera</td><td>Cotxes voluntaris al creuament</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Comunicacions fetes</h3>
+  <ul>
+    <li>Servei Català de Trànsit: comunicat. Les marxes ciclistes no competitives per vies interurbanes que afecten el trànsit requereixen autorització prèvia del SCT (<a href="https://tramits.gencat.cat/ca/tramits/tramits-temes/6076_-_Proves-esportives-que-afecten-les-vies-interurbanes" target="_blank" rel="noopener">tràmit</a>); cal confirmar que la modalitat en bicicleta hi queda inclosa.</li>
+    <li>Mossos d'Esquadra: en contacte, amb el tràmit del tall i l'acompanyament a la C-55 d'Olesa. Se'ls comunica l'horari oficial de la secció 2.</li>
+    <li>Ajuntaments: instàncies presentades on cal (Gironella, Manresa, Sant Vicenç de Castellet, Sant Joan Despí, Cornellà de Llobregat, l'Hospitalet de Llobregat i el Prat de Llobregat).</li>
+    <li>Les persones que surtin abans de l'horari oficial no consten en aquestes comunicacions i circulen pel seu compte.</li>
+  </ul>
+</section>
+
+<section id="ca-assegurances">
+  <h2><span class="n">5</span>Assegurances</h2>
+  <p>La inscripció inclou una assegurança de responsabilitat civil i una d'accidents per al dia o dies en què es participa. La gestiona AREDI.</p>
+  <ul>
+    <li><b>Cobertura:</b> només dins l'àmbit del repte (secció 3). Fora de l'horari o del track oficial, l'organització no en respon.</li>
+    <li><b>Federats:</b> les persones federades en atletisme, muntanya o triatló poden indicar la llicència, que pot oferir cobertura addicional.</li>
+    <li><b>Menors:</b> coberts amb la inscripció i el consentiment del pare, mare o tutor legal.</li>
+  </ul>
+</section>
+
+<section id="ca-assistencia">
+  <h2><span class="n">6</span>Assistència i seguretat</h2>
+  <p>L'assistència es basa en vehicles de suport amb personal d'infermeria, un DEA mòbil i seguiment GPS. En una emergència, sempre s'avisa el 112.</p>
+  <ul>
+    <li><b>Vehicles de suport:</b> acompanyen la marxa amb voluntaris titulats en infermeria.</li>
+    <li><b>DEA mòbil:</b> viatja amb l'equip de suport.</li>
+    <li><b>Telèfon de l'organització:</b> 628 29 40 78, provisional. És el telèfon de Cristian Gómez, participant i impulsor del repte; s'està buscant una tercera persona de l'organització que faci de pont durant l'esdeveniment.</li>
+    <li><b>Seguiment GPS:</b> aplicació per a grups i persones individuals, obligatòria de Castellar de n'Hug a Martorell i opcional de Martorell al Prat.</li>
+    <li><b>Protocol d'incidència:</b> 112 en cas d'emergència, després avís a l'organització. Davant d'una lesió lleu, avisar l'organització i retirar-se al municipi més proper.</li>
+  </ul>
+</section>
+
+<section id="ca-participants">
+  <h2><span class="n">7</span>Participants</h2>
+  <p>Cada participant és responsable de la seva salut, de complir les normes establertes i de vetllar per la seva seguretat (en el cas dels menors, la responsabilitat és del pare, la mare o el tutor legal), i de triar una distància i una modalitat que pugui completar dins l'horari oficial.</p>
+  <ul>
+    <li><b>Inscripció:</b> obligatòria, també per a trams parcials. Dona dret a l'assegurança i al distintiu.</li>
+    <li><b>Distintiu:</b> s'ha de portar visible; dona accés als avituallaments.</li>
+    <li><b>Menors d'edat:</b> cal el consentiment del pare, mare o tutor legal a la inscripció. Es recomana que vagin sempre acompanyats d'una persona adulta.</li>
+    <li><b>Material obligatori:</b> mòbil carregat amb el telèfon de l'organització desat; track oficial (.gpx) al rellotge o al mòbil, com a mínim una persona per grup i sempre qui vagi sol (recomanat a tothom); frontal sempre que no hi hagi llum natural; aigua i menjar entre avituallaments, i seguiment GPS en temps real actiu fins a Martorell.</li>
+    <li><b>Material recomanat:</b> armilla reflectant si es preveu córrer o caminar amb poca llum, roba d'abric, impermeable i bateria externa (power bank) per a llargues distàncies.</li>
+    <li><b>Caminar etapes senceres:</b> en la majoria de casos no és possible fer-ho dins l'horari oficial. Es recomanen trams parcials. Qui surti abans de l'hora oficial ho fa sota la seva responsabilitat (secció 3).</li>
+    <li><b>Caminar sol:</b> dins l'horari oficial és possible, perquè es va dins el flux de la marxa. Fora d'horari es desaconsella. Si es fa, cal portar el GPS actiu i avisar l'organització de l'hora de sortida.</li>
+    <li><b>Respecte a l'entorn:</b> no deixar residus, respectar propietats i bestiar, i no entrar a les zones restringides per la PPA.</li>
+  </ul>
+</section>
+
+<section id="ca-avituallaments">
+  <h2><span class="n">8</span>Avituallaments</h2>
+  <p>Cada avituallament està disponible, com a mínim, de 30 minuts abans a 30 minuts després de l'hora estimada d'arribada al municipi. Cada ajuntament pot ampliar la franja.</p>
+  <ul>
+    <li>Accés només amb el distintiu de la inscripció.</li>
+    <li>Els voluntaris de suport atenen els ritmes més lents de la marxa general dins del que sigui possible.</li>
+    <li>Fora de l'horari oficial l'avituallament pot estar tancat o sense muntar: cal anar autosuficient.</li>
+  </ul>
+  <div class="tbl"><table>
+    <thead><tr><th>Municipi</th><th>Km</th><th>Arribada estimada</th><th>Franja mínima</th></tr></thead>
+    <tbody>
+      <tr class="stage"><td colspan="4">Etapa 1 · Divendres 16 · sortida 08:00 de Castellar de n'Hug</td></tr>
+      <tr><td>La Pobla de Lillet</td><td class="num">8,4</td><td class="num">09:20</td><td class="num">08:50–09:50</td></tr>
+      <tr><td>Guardiola de Berguedà</td><td class="num">21,6</td><td class="num">11:10</td><td class="num">10:40–11:40</td></tr>
+      <tr><td>Sant Jordi de Cercs</td><td class="num">36,7</td><td class="num">14:15</td><td class="num">13:45–14:45</td></tr>
+      <tr><td>Berga</td><td class="num">47,7</td><td class="num">16:08</td><td class="num">15:38–16:38</td></tr>
+      <tr><td>Cal Rosal (Olvan)</td><td class="num">56,2</td><td class="num">17:17</td><td class="num">16:47–17:47</td></tr>
+      <tr class="end"><td>Gironella</td><td class="num">60,3</td><td class="num">18:00</td><td class="num">17:30–18:30</td></tr>
+      <tr class="stage"><td colspan="4">Etapa 2 · Dissabte 17 · sortida 07:30 de Gironella</td></tr>
+      <tr><td>Puig-reig</td><td class="num">8,5</td><td class="num">08:34</td><td class="num">08:04–09:04</td></tr>
+      <tr><td>Navàs</td><td class="num">21</td><td class="num">10:18</td><td class="num">09:48–10:48</td></tr>
+      <tr><td>Balsareny</td><td class="num">27</td><td class="num">11:13</td><td class="num">10:43–11:43</td></tr>
+      <tr><td>Sallent</td><td class="num">33,5</td><td class="num">12:12</td><td class="num">11:42–12:42</td></tr>
+      <tr><td>Navarcles</td><td class="num">43,8</td><td class="num">13:39</td><td class="num">13:09–14:09</td></tr>
+      <tr><td>Manresa</td><td class="num">56,1</td><td class="num">15:21</td><td class="num">14:51–15:51</td></tr>
+      <tr><td>Sant Vicenç de Castellet</td><td class="num">64,3</td><td class="num">16:32</td><td class="num">16:02–17:02</td></tr>
+      <tr><td>Castellbell i el Vilar (per confirmar)</td><td class="num">72,2</td><td class="num">17:41</td><td class="num">17:11–18:11</td></tr>
+      <tr class="end"><td>Monistrol de Montserrat</td><td class="num">76,5</td><td class="num">18:23</td><td class="num">17:53–18:53</td></tr>
+      <tr class="stage"><td colspan="4">Etapa 3 · Diumenge 18 · sortida 07:00 de Monistrol de Montserrat</td></tr>
+      <tr><td>Olesa de Montserrat</td><td class="num">12,7</td><td class="num">08:35</td><td class="num">08:05–09:05</td></tr>
+      <tr><td>Esparreguera</td><td class="num">15,7</td><td class="num">09:07</td><td class="num">08:37–09:37</td></tr>
+      <tr><td>Martorell</td><td class="num">30,7</td><td class="num">11:09</td><td class="num">10:39–11:39</td></tr>
+      <tr><td>Sant Andreu de la Barca</td><td class="num">36,7</td><td class="num">12:04</td><td class="num">11:34–12:34</td></tr>
+      <tr><td>Pallejà</td><td class="num">41,1</td><td class="num">12:47</td><td class="num">12:17–13:17</td></tr>
+      <tr><td>Sant Vicenç dels Horts</td><td class="num">45,1</td><td class="num">13:27</td><td class="num">12:57–13:57</td></tr>
+      <tr><td>Santa Coloma de Cervelló</td><td class="num">49,5</td><td class="num">14:00</td><td class="num">13:30–14:30</td></tr>
+      <tr><td>Sant Boi de Llobregat</td><td class="num">52,5</td><td class="num">14:32</td><td class="num">14:02–15:02</td></tr>
+      <tr><td>Sant Joan Despí</td><td class="num">53,5</td><td class="num">14:50</td><td class="num">14:20–15:20</td></tr>
+      <tr><td>Cornellà de Llobregat</td><td class="num">55,8</td><td class="num">15:27</td><td class="num">14:57–15:57</td></tr>
+      <tr><td>L'Hospitalet de Llobregat</td><td class="num">59,9</td><td class="num">15:58</td><td class="num">15:28–16:28</td></tr>
+      <tr class="end"><td>Desembocadura (el Prat)</td><td class="num">66,7</td><td class="num">17:00</td><td>Meta</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Font: pobles.json de llobregat.org, actualitzat el 29/09/2026.</p>
+</section>
+
+<section id="ca-annex" class="annex"><h2>Annex · Declaració i acceptació de condicions</h2><ol><li><b>Caràcter no competitiu:</b> Entenc i accepto que aquest esdeveniment és una activitat solidària, participativa i no competitiva. L&#x27;objectiu principal és la recaptació de fons o la visibilització d&#x27;una causa benèfica, per la qual cosa no hi ha classificacions oficials ni premis per rendiment esportiu.</li><li><b>Aptitud física i salut:</b> Declaro que em trobo en òptimes condicions físiques i psíquiques per participar de manera segura en aquesta activitat. No pateixo cap malaltia, lesió o condició mèdica que posi en risc la meva salut o la dels altres assistents durant el desenvolupament de l&#x27;esdeveniment.</li><li><b>Autoresponsabilitat i autonomia:</b> Assumeixo la total responsabilitat dels meus actes, decisions i la meva pròpia seguretat durant tot el recorregut. Em comprometo a respectar les indicacions de l&#x27;organització, del personal voluntari i, si escau, les normes bàsiques de seguretat viària i de respecte a l&#x27;entorn natural o urbà.</li><li><b>Exempció de responsabilitat:</b> Eximeixo de tota responsabilitat l&#x27;organització, les entitats col·laboradores, els patrocinadors i els voluntaris davant de qualsevol dany material, pèrdua d&#x27;objectes personals o lesions físiques que pogués patir o causar a tercers per negligència pròpia o per causes fortuïtes alienes al control directe de l&#x27;organització.</li><li><b>Drets d&#x27;imatge (opcional):</b> Autoritzo l&#x27;organització a utilitzar imatges o vídeos presos durant l&#x27;esdeveniment exclusivament per a la difusió, promoció o memòria de la causa solidària en mitjans de comunicació, xarxes socials o pàgines web oficials, sense finalitats lucratives comercials.</li><li><b>Protecció de dades:</b> Les meves dades personals seran tractades d&#x27;acord amb la normativa vigent de protecció de dades, únicament per a la gestió d&#x27;aquest esdeveniment, i no seran cedides a tercers sense el meu consentiment explícit.</li><li><b>Acceptació tàcita:</b> Aquest document s&#x27;entendrà acceptat en la seva totalitat si el participant no comunica per escrit a l&#x27;organització la seva disconformitat abans de l&#x27;inici de l&#x27;esdeveniment. La participació en l&#x27;esdeveniment implicarà l&#x27;acceptació de les condicions aquí recollides.</li></ol></section>
+</div></main>
+<footer><div class="wrap"><div class="foot-brand"><span class="logo logo-aredi" role="img" aria-label="AREDI"></span><span>Tots els fons a AREDI · arediabetis.org</span></div><span>info@llobregat.org · #LxD2026 · Versió 12/10/2026</span></footer>
+</div>
+<div class="lang-block" data-lang="es" lang="es">
+<header class="band"><div class="wrap">
+<p class="eyebrow">Normativa general · 16–18 octubre 2026</p>
+<h1>Normas <em>del</em> reto</h1>
+<p class="lead">Llobregat x la Diabetis es una actividad solidaria no competitiva que recorre el Llobregat en 3 etapas. Este documento concreta el <a href="https://llobregat.org/reglament.html" target="_blank" rel="noopener" style="color:inherit">reglamento</a> aceptado en la inscripción y recoge las normas que se aplican a la organización, a las autoridades y a las personas participantes.</p></div></header>
+<div class="wrap">
+  <div class="keys">
+<div class="key"><span>Inicio</span><strong>Vie. 16 · 08:00</strong><small>Castellar de n'Hug</small></div>
+<div class="key accent"><span>Cierre diario</span><strong>19:00</strong><small>Los tres días</small></div>
+<div class="key"><span>Final</span><strong>Dom. 18 · 19:00</strong><small>El Prat de Llobregat</small></div>
+  </div>
+</div>
+<main><div class="wrap">
+<section id="es-naturalesa">
+  <h2><span class="n">1</span>Naturaleza de la actividad</h2>
+  <ul>
+    <li><b>Entidad organizadora:</b> AREDI (Associació Ajuda a la Recerca en Diabetis), entidad beneficiaria de todos los fondos.</li>
+    <li><b>Tipo:</b> marcha solidaria no competitiva. No hay cronometraje, clasificación, marca de tiempo ni premios.</li>
+    <li><b>Modalidades:</b> corriendo, caminando o en bicicleta, la etapa entera o solo un tramo.</li>
+    <li><b>Recorrido:</b> track oficial, una adaptación del GR-270, de unos 200 km, de Castellar de n'Hug a la desembocadura del Llobregat en El Prat.</li>
+    <li><b>Uso de la vía:</b> sin cortes generales de tráfico. Los participantes circulan como peatones o ciclistas y cumplen las normas de circulación.</li>
+    <li><b>Participación:</b> es necesaria la inscripción previa en llobregat.org, que incluye el seguro y el distintivo de acceso a los avituallamientos.</li>
+    <li><b>Exclusiones por la PPA:</b> Castellbisbal, El Papiol, Molins de Rei y Sant Feliu de Llobregat no forman parte del reto ni del recorrido. Las restricciones por la Peste Porcina Africana han obligado a modificar el GR-270: desde Esparreguera, el recorrido va siempre por la margen derecha del río (en el sentido de la corriente) hasta Sant Boi de Llobregat, donde se cruza a la margen izquierda para pasar a Sant Joan Despí.</li>
+  </ul>
+</section>
+
+<section id="es-horari">
+  <h2><span class="n">2</span>Horario oficial</h2>
+  <p>El reto empieza el viernes 16 de octubre a las 08:00 en Castellar de n'Hug y termina el domingo 18 de octubre a las 19:00 en El Prat de Llobregat. Cada día, la actividad organizada va desde la salida oficial de la etapa hasta las 19:00.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Día</th><th>Etapa</th><th>Km</th><th>Salida oficial</th><th>Llegada estimada</th><th>Cierre</th></tr></thead>
+    <tbody>
+      <tr><td class="num">Vie. 16</td><td>1 · Castellar de n'Hug → Gironella</td><td class="num">60,3</td><td class="num">08:00</td><td class="num">18:00</td><td class="num">19:00</td></tr>
+      <tr><td class="num">Sáb. 17</td><td>2 · Gironella → Monistrol de Montserrat</td><td class="num">76,5</td><td class="num">07:30</td><td class="num">18:23</td><td class="num">19:00</td></tr>
+      <tr><td class="num">Dom. 18</td><td>3 · Monistrol de Montserrat → El Prat</td><td class="num">66,7</td><td class="num">07:00</td><td class="num">17:00</td><td class="num">19:00</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li>Las horas de paso por cada municipio son estimadas y provisionales. Se publican en <a href="https://llobregat.org/recorregut" target="_blank" rel="noopener">llobregat.org/recorregut</a> y pueden variar por logística, meteorología o el ritmo del grupo.</li>
+    <li><b>Clausura (dom. 18, El Prat):</b> 16:00 salida de la caminata (4,3 km) desde el parking Cal Tet; 17:00 llegada de la marcha general al Mirador del Semàfor; vuelta conjunta a Cal Tet; 19:00 final de la clausura y del reto.</li>
+  </ul>
+</section>
+
+<section id="es-responsabilitat">
+  <h2><span class="n">3</span>Ámbito y responsabilidad</h2>
+  <p class="rule">Dentro del horario oficial, el track oficial y la etapa del día, la persona participa en el reto. Fuera de estos límites, lo hace bajo su responsabilidad.</p>
+  <ul>
+    <li><b>Dentro del reto:</b> el tramo de la etapa del día, desde la salida oficial hasta las 19:00, sobre el track oficial y con inscripción válida.</li>
+    <li><b>Etapa del día:</b> cada día tiene su etapa, con un inicio y un final distintos. Solo quedan dentro del reto los tramos de la etapa que corresponde a ese día. Por ejemplo, correr de Castellar de n'Hug a Berga el domingo 18 no queda incluido, porque ese tramo es de la etapa 1 (viernes 16).</li>
+    <li><b>Fuera del reto, bajo responsabilidad propia:</b>
+      <ul>
+        <li>salir antes de la hora oficial de la etapa;</li>
+        <li>continuar después de las 19:00;</li>
+        <li>desviarse del track oficial;</li>
+        <li>hacer un tramo en un día que no es el de su etapa.</li>
+      </ul>
+    </li>
+    <li><b>Cierre de las 19:00:</b> a esa hora termina la actividad organizada y la cobertura de la organización, como cuando pasa el coche escoba en una carrera. Quien continúe lo hace a título particular.</li>
+    <li><b>Quien se suma en un punto de paso:</b> participa desde que se incorpora hasta el final de su tramo o, como muy tarde, hasta las 19:00. Si empieza antes de que pase la marcha general pero dentro del horario oficial y por el track, sigue dentro del reto. La vuelta a casa corre de su cuenta.</li>
+    <li><b>Retirada:</b> quien no pueda llegar al final de etapa antes de las 19:00 debe retirarse en el último municipio donde sea posible.</li>
+    <li><b>Aceptación:</b> al inscribirse, cada participante ha aceptado el <a href="https://llobregat.org/reglament.html" target="_blank" rel="noopener">reglamento</a>. Estas normas lo concretan y se comunicarán a todas las personas inscritas.</li>
+  </ul>
+</section>
+
+<section id="es-transit">
+  <h2><span class="n">4</span>Tráfico y vía pública</h2>
+  <p>La actividad no corta carreteras: los participantes circulan como peatones o ciclistas y deben cumplir el Reglamento General de Circulación. El único acompañamiento solicitado a las autoridades es el de la C-55 en Olesa de Montserrat.</p>
+  <h3>Normas para los participantes</h3>
+  <ul>
+    <li>Seguir siempre el track oficial y las indicaciones de los voluntarios.</li>
+    <li>En tramos de carretera, ir en fila india y por el lado que corresponda (peatones por la izquierda, ciclistas por la derecha).</li>
+    <li>Cruzar solo por los puntos indicados y cuando lo autorice el voluntario.</li>
+    <li>Ciclistas: casco obligatorio en todo momento y luces si circulan con poca visibilidad.</li>
+    <li>Grupo de máximo 50 personas hasta Martorell. De Martorell a El Prat el recorrido es todo por camino de tierra, sin cruces de carretera.</li>
+  </ul>
+  <h3>Puntos sensibles y medidas</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Día y hora aprox.</th><th>Punto</th><th>Medida</th></tr></thead>
+    <tbody>
+      <tr><td class="num">Vie. 16 · 11:30</td><td>Guardiola de Berguedà → Cercs (salida de vehículos de la C-16)</td><td>Visibilidad reforzada y equipo de apoyo atento</td></tr>
+      <tr><td class="num">Sáb. 17 · 13:15</td><td>Navarcles, puente bajo la N-141c</td><td>Señalización solicitada al Ayuntamiento y voluntarios indicando el paso</td></tr>
+      <tr><td class="num">Sáb. 17 · 15:30–15:45</td><td>BV-1225 en El Pont de Vilomara</td><td>Fila india con vehículo de apoyo</td></tr>
+      <tr><td class="num">Dom. 18 · 08:15–08:45</td><td>C-55 en Olesa de Montserrat (km 7)</td><td>Trámite con Mossos d'Esquadra: corte temporal y acompañamiento</td></tr>
+      <tr><td class="num">Dom. 18 · 08:50</td><td>Cruce C-1414, Olesa → Esparreguera</td><td>Coches voluntarios en el cruce</td></tr>
+      <tr><td class="num">Dom. 18 · 09:30</td><td>Cruce C-1414, Esparreguera → Abrera</td><td>Coches voluntarios en el cruce</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Comunicaciones realizadas</h3>
+  <ul>
+    <li>Servei Català de Trànsit: comunicado. Las marchas ciclistas no competitivas por vías interurbanas que afectan al tráfico requieren autorización previa del SCT (<a href="https://tramits.gencat.cat/ca/tramits/tramits-temes/6076_-_Proves-esportives-que-afecten-les-vies-interurbanes" target="_blank" rel="noopener">trámite</a>); hay que confirmar que la modalidad en bicicleta queda incluida.</li>
+    <li>Mossos d'Esquadra: en contacto, con el trámite del corte y el acompañamiento en la C-55 de Olesa. Se les comunica el horario oficial de la sección 2.</li>
+    <li>Ayuntamientos: instancias presentadas donde corresponde (Gironella, Manresa, Sant Vicenç de Castellet, Sant Joan Despí, Cornellà de Llobregat, L'Hospitalet de Llobregat y El Prat de Llobregat).</li>
+    <li>Las personas que salgan antes del horario oficial no constan en estas comunicaciones y circulan por su cuenta.</li>
+  </ul>
+</section>
+
+<section id="es-assegurances">
+  <h2><span class="n">5</span>Seguros</h2>
+  <p>La inscripción incluye un seguro de responsabilidad civil y uno de accidentes para el día o días en que se participa. Lo gestiona AREDI.</p>
+  <ul>
+    <li><b>Cobertura:</b> solo dentro del ámbito del reto (sección 3). Fuera del horario o del track oficial, la organización no responde.</li>
+    <li><b>Federados:</b> las personas federadas en atletismo, montaña o triatlón pueden indicar su licencia, que puede ofrecer cobertura adicional.</li>
+    <li><b>Menores:</b> cubiertos con la inscripción y el consentimiento del padre, madre o tutor legal.</li>
+  </ul>
+</section>
+
+<section id="es-assistencia">
+  <h2><span class="n">6</span>Asistencia y seguridad</h2>
+  <p>La asistencia se basa en vehículos de apoyo con personal de enfermería, un DEA móvil y seguimiento GPS. En una emergencia, siempre se avisa al 112.</p>
+  <ul>
+    <li><b>Vehículos de apoyo:</b> acompañan la marcha con voluntarios titulados en enfermería.</li>
+    <li><b>DEA móvil:</b> viaja con el equipo de apoyo.</li>
+    <li><b>Teléfono de la organización:</b> 628 29 40 78, provisional. Es el teléfono de Cristian Gómez, participante e impulsor del reto; se está buscando a una tercera persona de la organización que haga de puente durante el evento.</li>
+    <li><b>Seguimiento GPS:</b> aplicación para grupos y personas individuales, obligatoria de Castellar de n'Hug a Martorell y opcional de Martorell a El Prat.</li>
+    <li><b>Protocolo de incidencia:</b> 112 en caso de emergencia, después aviso a la organización. Ante una lesión leve, avisar a la organización y retirarse en el municipio más cercano.</li>
+  </ul>
+</section>
+
+<section id="es-participants">
+  <h2><span class="n">7</span>Participantes</h2>
+  <p>Cada participante es responsable de su salud, de cumplir las normas establecidas y de velar por su seguridad (en el caso de los menores, la responsabilidad es del padre, la madre o el tutor legal), y de elegir una distancia y una modalidad que pueda completar dentro del horario oficial.</p>
+  <ul>
+    <li><b>Inscripción:</b> obligatoria, también para tramos parciales. Da derecho al seguro y al distintivo.</li>
+    <li><b>Distintivo:</b> debe llevarse visible; da acceso a los avituallamientos.</li>
+    <li><b>Menores de edad:</b> se necesita el consentimiento del padre, madre o tutor legal en la inscripción. Se recomienda que vayan siempre acompañados de una persona adulta.</li>
+    <li><b>Material obligatorio:</b> móvil cargado con el teléfono de la organización guardado; track oficial (.gpx) en el reloj o el móvil, como mínimo una persona por grupo y siempre quien vaya solo (recomendado a todos); frontal siempre que no haya luz natural; agua y comida entre avituallamientos, y seguimiento GPS en tiempo real activo hasta Martorell.</li>
+    <li><b>Material recomendado:</b> chaleco reflectante si se prevé correr o caminar con poca luz, ropa de abrigo, impermeable y batería externa (power bank) para largas distancias.</li>
+    <li><b>Caminar etapas enteras:</b> en la mayoría de casos no es posible hacerlo dentro del horario oficial. Se recomiendan tramos parciales. Quien salga antes de la hora oficial lo hace bajo su responsabilidad (sección 3).</li>
+    <li><b>Caminar solo:</b> dentro del horario oficial es posible, porque se va dentro del flujo de la marcha. Fuera de horario se desaconseja. Si se hace, hay que llevar el GPS activo y avisar a la organización de la hora de salida.</li>
+    <li><b>Respeto al entorno:</b> no dejar residuos, respetar propiedades y ganado, y no entrar en las zonas restringidas por la PPA.</li>
+  </ul>
+</section>
+
+<section id="es-avituallaments">
+  <h2><span class="n">8</span>Avituallamientos</h2>
+  <p>Cada avituallamiento está disponible, como mínimo, desde 30 minutos antes hasta 30 minutos después de la hora estimada de llegada al municipio. Cada ayuntamiento puede ampliar la franja.</p>
+  <ul>
+    <li>Acceso solo con el distintivo de la inscripción.</li>
+    <li>Los voluntarios de apoyo atienden a los ritmos más lentos de la marcha general en la medida de lo posible.</li>
+    <li>Fuera del horario oficial el avituallamiento puede estar cerrado o sin montar: hay que ir autosuficiente.</li>
+  </ul>
+  <div class="tbl"><table>
+    <thead><tr><th>Municipio</th><th>Km</th><th>Llegada estimada</th><th>Franja mínima</th></tr></thead>
+    <tbody>
+      <tr class="stage"><td colspan="4">Etapa 1 · Viernes 16 · salida 08:00 de Castellar de n'Hug</td></tr>
+      <tr><td>La Pobla de Lillet</td><td class="num">8,4</td><td class="num">09:20</td><td class="num">08:50–09:50</td></tr>
+      <tr><td>Guardiola de Berguedà</td><td class="num">21,6</td><td class="num">11:10</td><td class="num">10:40–11:40</td></tr>
+      <tr><td>Sant Jordi de Cercs</td><td class="num">36,7</td><td class="num">14:15</td><td class="num">13:45–14:45</td></tr>
+      <tr><td>Berga</td><td class="num">47,7</td><td class="num">16:08</td><td class="num">15:38–16:38</td></tr>
+      <tr><td>Cal Rosal (Olvan)</td><td class="num">56,2</td><td class="num">17:17</td><td class="num">16:47–17:47</td></tr>
+      <tr class="end"><td>Gironella</td><td class="num">60,3</td><td class="num">18:00</td><td class="num">17:30–18:30</td></tr>
+      <tr class="stage"><td colspan="4">Etapa 2 · Sábado 17 · salida 07:30 de Gironella</td></tr>
+      <tr><td>Puig-reig</td><td class="num">8,5</td><td class="num">08:34</td><td class="num">08:04–09:04</td></tr>
+      <tr><td>Navàs</td><td class="num">21</td><td class="num">10:18</td><td class="num">09:48–10:48</td></tr>
+      <tr><td>Balsareny</td><td class="num">27</td><td class="num">11:13</td><td class="num">10:43–11:43</td></tr>
+      <tr><td>Sallent</td><td class="num">33,5</td><td class="num">12:12</td><td class="num">11:42–12:42</td></tr>
+      <tr><td>Navarcles</td><td class="num">43,8</td><td class="num">13:39</td><td class="num">13:09–14:09</td></tr>
+      <tr><td>Manresa</td><td class="num">56,1</td><td class="num">15:21</td><td class="num">14:51–15:51</td></tr>
+      <tr><td>Sant Vicenç de Castellet</td><td class="num">64,3</td><td class="num">16:32</td><td class="num">16:02–17:02</td></tr>
+      <tr><td>Castellbell i el Vilar (por confirmar)</td><td class="num">72,2</td><td class="num">17:41</td><td class="num">17:11–18:11</td></tr>
+      <tr class="end"><td>Monistrol de Montserrat</td><td class="num">76,5</td><td class="num">18:23</td><td class="num">17:53–18:53</td></tr>
+      <tr class="stage"><td colspan="4">Etapa 3 · Domingo 18 · salida 07:00 de Monistrol de Montserrat</td></tr>
+      <tr><td>Olesa de Montserrat</td><td class="num">12,7</td><td class="num">08:35</td><td class="num">08:05–09:05</td></tr>
+      <tr><td>Esparreguera</td><td class="num">15,7</td><td class="num">09:07</td><td class="num">08:37–09:37</td></tr>
+      <tr><td>Martorell</td><td class="num">30,7</td><td class="num">11:09</td><td class="num">10:39–11:39</td></tr>
+      <tr><td>Sant Andreu de la Barca</td><td class="num">36,7</td><td class="num">12:04</td><td class="num">11:34–12:34</td></tr>
+      <tr><td>Pallejà</td><td class="num">41,1</td><td class="num">12:47</td><td class="num">12:17–13:17</td></tr>
+      <tr><td>Sant Vicenç dels Horts</td><td class="num">45,1</td><td class="num">13:27</td><td class="num">12:57–13:57</td></tr>
+      <tr><td>Santa Coloma de Cervelló</td><td class="num">49,5</td><td class="num">14:00</td><td class="num">13:30–14:30</td></tr>
+      <tr><td>Sant Boi de Llobregat</td><td class="num">52,5</td><td class="num">14:32</td><td class="num">14:02–15:02</td></tr>
+      <tr><td>Sant Joan Despí</td><td class="num">53,5</td><td class="num">14:50</td><td class="num">14:20–15:20</td></tr>
+      <tr><td>Cornellà de Llobregat</td><td class="num">55,8</td><td class="num">15:27</td><td class="num">14:57–15:57</td></tr>
+      <tr><td>L'Hospitalet de Llobregat</td><td class="num">59,9</td><td class="num">15:58</td><td class="num">15:28–16:28</td></tr>
+      <tr class="end"><td>Desembocadura (El Prat)</td><td class="num">66,7</td><td class="num">17:00</td><td>Meta</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Fuente: pobles.json de llobregat.org, actualizado el 29/09/2026.</p>
+</section>
+
+<section id="es-annex" class="annex"><h2>Anexo · Declaración y aceptación de condiciones</h2><ol><li><b>Carácter no competitivo:</b> Entiendo y acepto que este evento es una actividad solidaria, participativa y no competitiva. El objetivo principal es la recaudación de fondos o la visibilización de una causa benéfica, por lo que no existen clasificaciones oficiales ni premios por rendimiento deportivo.</li><li><b>Aptitud física y salud:</b> Declaro que me encuentro en óptimas condiciones físicas y psíquicas para participar de manera segura en esta actividad. No padezco ninguna enfermedad, lesión o condición médica que ponga en riesgo mi salud o la de los demás asistentes durante el desarrollo del evento.</li><li><b>Autorresponsabilidad y autonomía:</b> Asumo la total responsabilidad de mis actos, decisiones y mi propia seguridad durante todo el recorrido. Me comprometo a respetar las indicaciones de la organización, del personal voluntario y, si aplica, las normas básicas de seguridad vial y de respeto al entorno natural o urbano.</li><li><b>Exención de responsabilidad:</b> Eximo de toda responsabilidad a la organización, entidades colaboradoras, patrocinadores y voluntarios ante cualquier daño material, pérdida de objetos personales o lesiones físicas que pudiera sufrir o causar a terceros por negligencia propia o por causas fortuitas ajenas al control directo de la organización.</li><li><b>Derechos de imagen (opcional):</b> Autorizo a la organización a utilizar imágenes o vídeos tomados durante el evento exclusivamente para la difusión, promoción o memoria de la causa solidaria en medios de comunicación, redes sociales o páginas web oficiales, sin fines lucrativos comerciales.</li><li><b>Protección de datos:</b> Mis datos personales serán tratados conforme a la normativa vigente de protección de datos, únicamente para la gestión de este evento, y no serán cedidos a terceros sin mi consentimiento explícito.</li><li><b>Aceptación tácita:</b> Este documento se entenderá aceptado en su totalidad si el participante no comunica por escrito a la organización su disconformidad antes del inicio del evento. La participación en el mismo implicará la aceptación de las condiciones aquí recogidas.</li></ol></section>
+</div></main>
+<footer><div class="wrap"><div class="foot-brand"><span class="logo logo-aredi" role="img" aria-label="AREDI"></span><span>Todos los fondos para AREDI · arediabetis.org</span></div><span>info@llobregat.org · #LxD2026 · Versión 12/10/2026</span></footer>
+</div>
+<div class="lang-block" data-lang="en" lang="en">
+<header class="band"><div class="wrap">
+<p class="eyebrow">General rules · 16–18 October 2026</p>
+<h1>Challenge <em>rules</em></h1>
+<p class="lead">Llobregat x la Diabetis is a non-competitive charity event that follows the Llobregat river in 3 stages. This document spells out the <a href="https://llobregat.org/reglament.html" target="_blank" rel="noopener" style="color:inherit">regulations</a> accepted at registration and sets out the rules that apply to the organisation, the authorities and the participants.</p></div></header>
+<div class="wrap">
+  <div class="keys">
+<div class="key"><span>Start</span><strong>Fri 16 · 08:00</strong><small>Castellar de n'Hug</small></div>
+<div class="key accent"><span>Daily cut-off</span><strong>19:00</strong><small>All three days</small></div>
+<div class="key"><span>Finish</span><strong>Sun 18 · 19:00</strong><small>El Prat de Llobregat</small></div>
+  </div>
+</div>
+<main><div class="wrap">
+<section id="en-naturalesa">
+  <h2><span class="n">1</span>Nature of the event</h2>
+  <ul>
+    <li><b>Organising body:</b> AREDI (Associació Ajuda a la Recerca en Diabetis), the beneficiary of all funds.</li>
+    <li><b>Type:</b> non-competitive charity march. There is no timing, ranking, time record or prizes.</li>
+    <li><b>Categories:</b> running, walking or cycling, the whole stage or just a section.</li>
+    <li><b>Route:</b> official track, an adaptation of the GR-270, of about 200 km, from Castellar de n'Hug to the mouth of the Llobregat in El Prat.</li>
+    <li><b>Use of the road:</b> no general traffic closures. Participants travel as pedestrians or cyclists and follow the traffic rules.</li>
+    <li><b>Participation:</b> prior registration at llobregat.org is required, which includes insurance and the badge that gives access to the aid stations.</li>
+    <li><b>ASF exclusions:</b> Castellbisbal, El Papiol, Molins de Rei and Sant Feliu de Llobregat are not part of the challenge or the route. African Swine Fever (ASF) restrictions have forced a change to the GR-270: from Esparreguera, the route always follows the right bank of the river (in the direction of the current) as far as Sant Boi de Llobregat, where it crosses to the left bank to continue to Sant Joan Despí.</li>
+  </ul>
+</section>
+
+<section id="en-horari">
+  <h2><span class="n">2</span>Official schedule</h2>
+  <p>The challenge starts on Friday 16 October at 08:00 in Castellar de n'Hug and ends on Sunday 18 October at 19:00 in El Prat de Llobregat. Each day, the organised activity runs from the official start of the stage until 19:00.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Day</th><th>Stage</th><th>Km</th><th>Official start</th><th>Estimated arrival</th><th>Cut-off</th></tr></thead>
+    <tbody>
+      <tr><td class="num">Fri 16</td><td>1 · Castellar de n'Hug → Gironella</td><td class="num">60.3</td><td class="num">08:00</td><td class="num">18:00</td><td class="num">19:00</td></tr>
+      <tr><td class="num">Sat 17</td><td>2 · Gironella → Monistrol de Montserrat</td><td class="num">76.5</td><td class="num">07:30</td><td class="num">18:23</td><td class="num">19:00</td></tr>
+      <tr><td class="num">Sun 18</td><td>3 · Monistrol de Montserrat → El Prat</td><td class="num">66.7</td><td class="num">07:00</td><td class="num">17:00</td><td class="num">19:00</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li>Passing times for each town are estimated and provisional. They are published at <a href="https://llobregat.org/recorregut" target="_blank" rel="noopener">llobregat.org/recorregut</a> and may change because of logistics, weather or the pace of the group.</li>
+    <li><b>Closing event (Sun 18, El Prat):</b> 16:00 the walk (4.3 km) sets off from the Cal Tet car park; 17:00 the general march arrives at the Mirador del Semàfor; joint return to Cal Tet; 19:00 end of the closing event and of the challenge.</li>
+  </ul>
+</section>
+
+<section id="en-responsabilitat">
+  <h2><span class="n">3</span>Scope and responsibility</h2>
+  <p class="rule">Within the official hours, on the official track and on the stage of the day, the participant is taking part in the challenge. Outside those limits, they do so at their own responsibility.</p>
+  <ul>
+    <li><b>Within the challenge:</b> the section of the stage of the day, from the official start until 19:00, on the official track and with a valid registration.</li>
+    <li><b>Stage of the day:</b> each day has its own stage, with a different start and finish. Only the sections of the stage that corresponds to that day are within the challenge. For example, running from Castellar de n'Hug to Berga on Sunday 18 is not included, because that section belongs to stage 1 (Friday 16).</li>
+    <li><b>Outside the challenge, at your own responsibility:</b>
+      <ul>
+        <li>starting before the official time of the stage;</li>
+        <li>carrying on after 19:00;</li>
+        <li>leaving the official track;</li>
+        <li>doing a section on a day that is not the day of its stage.</li>
+      </ul>
+    </li>
+    <li><b>19:00 cut-off:</b> at that time the organised activity and the organisation's cover end, as when the sweep car passes in a race. Anyone who carries on does so in a private capacity.</li>
+    <li><b>Joining at a checkpoint:</b> you take part from the moment you join until the end of your section or, at the latest, until 19:00. If you start before the general march passes but within the official hours and on the track, you remain within the challenge. Getting home is your own responsibility.</li>
+    <li><b>Withdrawal:</b> anyone who cannot reach the end of the stage before 19:00 must withdraw at the last town where it is possible.</li>
+    <li><b>Acceptance:</b> by registering, each participant has accepted the <a href="https://llobregat.org/reglament.html" target="_blank" rel="noopener">regulations</a>. These rules spell them out and will be communicated to everyone registered.</li>
+  </ul>
+</section>
+
+<section id="en-transit">
+  <h2><span class="n">4</span>Traffic and public roads</h2>
+  <p>The event does not close roads: participants travel as pedestrians or cyclists and must follow the General Traffic Regulations. The only escort requested from the authorities is on the C-55 at Olesa de Montserrat.</p>
+  <h3>Rules for participants</h3>
+  <ul>
+    <li>Always follow the official track and the volunteers' instructions.</li>
+    <li>On road sections, go in single file and on the correct side (pedestrians on the left, cyclists on the right).</li>
+    <li>Cross only at the indicated points and when the volunteer allows it.</li>
+    <li>Cyclists: helmet compulsory at all times and lights when visibility is poor.</li>
+    <li>Groups of 50 people at most as far as Martorell. From Martorell to El Prat the route is entirely on dirt paths, with no road crossings.</li>
+  </ul>
+  <h3>Sensitive points and measures</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Day and approx. time</th><th>Location</th><th>Measure</th></tr></thead>
+    <tbody>
+      <tr><td class="num">Fri 16 · 11:30</td><td>Guardiola de Berguedà → Cercs (vehicle exit from the C-16)</td><td>Increased visibility and an alert support team</td></tr>
+      <tr><td class="num">Sat 17 · 13:15</td><td>Navarcles, underpass beneath the N-141c</td><td>Signage requested from the Town Council and volunteers marking the crossing</td></tr>
+      <tr><td class="num">Sat 17 · 15:30–15:45</td><td>BV-1225 at El Pont de Vilomara</td><td>Single file with a support vehicle</td></tr>
+      <tr><td class="num">Sun 18 · 08:15–08:45</td><td>C-55 at Olesa de Montserrat (km 7)</td><td>Procedure with the Mossos d'Esquadra: temporary stop and escort</td></tr>
+      <tr><td class="num">Sun 18 · 08:50</td><td>C-1414 crossing, Olesa → Esparreguera</td><td>Volunteer cars at the crossing</td></tr>
+      <tr><td class="num">Sun 18 · 09:30</td><td>C-1414 crossing, Esparreguera → Abrera</td><td>Volunteer cars at the crossing</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Notifications made</h3>
+  <ul>
+    <li>Servei Català de Trànsit (Catalan Traffic Service): notified. Non-competitive cycling events on intercity roads that affect traffic require prior authorisation from the SCT (<a href="https://tramits.gencat.cat/ca/tramits/tramits-temes/6076_-_Proves-esportives-que-afecten-les-vies-interurbanes" target="_blank" rel="noopener">procedure</a>); we need to confirm that the cycling category is included.</li>
+    <li>Mossos d'Esquadra: in contact, handling the stop procedure and the escort on the C-55 at Olesa. They are given the official schedule from section 2.</li>
+    <li>Town councils: requests submitted where required (Gironella, Manresa, Sant Vicenç de Castellet, Sant Joan Despí, Cornellà de Llobregat, L'Hospitalet de Llobregat and El Prat de Llobregat).</li>
+    <li>People who set off before the official hours are not covered by these notifications and travel on their own account.</li>
+  </ul>
+</section>
+
+<section id="en-assegurances">
+  <h2><span class="n">5</span>Insurance</h2>
+  <p>Registration includes civil liability insurance and accident insurance for the day or days you take part. It is managed by AREDI.</p>
+  <ul>
+    <li><b>Cover:</b> only within the scope of the challenge (section 3). Outside the official hours or track, the organisation is not liable.</li>
+    <li><b>Licensed athletes:</b> people with an athletics, mountain or triathlon federation licence can state their licence number, which may provide additional cover.</li>
+    <li><b>Minors:</b> covered with registration and the consent of the parent or legal guardian.</li>
+  </ul>
+</section>
+
+<section id="en-assistencia">
+  <h2><span class="n">6</span>Assistance and safety</h2>
+  <p>Assistance is based on support vehicles with nursing staff, a mobile AED and GPS tracking. In an emergency, always call 112.</p>
+  <ul>
+    <li><b>Support vehicles:</b> they accompany the march with volunteers qualified in nursing.</li>
+    <li><b>Mobile AED:</b> travels with the support team.</li>
+    <li><b>Organisation phone:</b> 628 29 40 78, provisional. It is the phone of Cristian Gómez, participant and driving force of the challenge; a third person from the organisation is being sought to act as a link during the event.</li>
+    <li><b>GPS tracking:</b> app for groups and individuals, compulsory from Castellar de n'Hug to Martorell and optional from Martorell to El Prat.</li>
+    <li><b>Incident protocol:</b> 112 in an emergency, then notify the organisation. For a minor injury, notify the organisation and withdraw at the nearest town.</li>
+  </ul>
+</section>
+
+<section id="en-participants">
+  <h2><span class="n">7</span>Participants</h2>
+  <p>Each participant is responsible for their own health, for following the established rules and for looking after their own safety (in the case of minors, responsibility lies with the parent or legal guardian), and for choosing a distance and category they can complete within the official hours.</p>
+  <ul>
+    <li><b>Registration:</b> compulsory, including for partial sections. It entitles you to insurance and the badge.</li>
+    <li><b>Badge:</b> must be worn visibly; it gives access to the aid stations.</li>
+    <li><b>Minors:</b> the consent of the parent or legal guardian is required at registration. It is recommended that they are always accompanied by an adult.</li>
+    <li><b>Required gear:</b> charged phone with the organisation's number saved; official track (.gpx) on a watch or phone, at least one person per group and always anyone on their own (recommended for everyone); headlamp whenever there is no natural light; water and food between aid stations, and real-time GPS tracking active as far as Martorell.</li>
+    <li><b>Recommended gear:</b> reflective vest if you expect to run or walk in low light, warm clothing, waterproof jacket and a power bank for long distances.</li>
+    <li><b>Walking whole stages:</b> in most cases this is not possible within the official hours. Partial sections are recommended. Anyone who sets off before the official time does so at their own responsibility (section 3).</li>
+    <li><b>Walking alone:</b> within the official hours it is possible, because you travel within the flow of the march. Outside those hours it is discouraged. If you do, keep GPS active and tell the organisation your start time.</li>
+    <li><b>Respect for the environment:</b> leave no litter, respect property and livestock, and do not enter areas restricted because of ASF.</li>
+  </ul>
+</section>
+
+<section id="en-avituallaments">
+  <h2><span class="n">8</span>Aid stations</h2>
+  <p>Each aid station is open, at a minimum, from 30 minutes before to 30 minutes after the estimated arrival time at the town. Each town council may extend the window.</p>
+  <ul>
+    <li>Access only with the badge from registration.</li>
+    <li>Support volunteers look after the slower paces of the general march as far as possible.</li>
+    <li>Outside the official hours the aid station may be closed or not set up: you must be self-sufficient.</li>
+  </ul>
+  <div class="tbl"><table>
+    <thead><tr><th>Town</th><th>Km</th><th>Estimated arrival</th><th>Minimum window</th></tr></thead>
+    <tbody>
+      <tr class="stage"><td colspan="4">Stage 1 · Friday 16 · 08:00 start from Castellar de n'Hug</td></tr>
+      <tr><td>La Pobla de Lillet</td><td class="num">8.4</td><td class="num">09:20</td><td class="num">08:50–09:50</td></tr>
+      <tr><td>Guardiola de Berguedà</td><td class="num">21.6</td><td class="num">11:10</td><td class="num">10:40–11:40</td></tr>
+      <tr><td>Sant Jordi de Cercs</td><td class="num">36.7</td><td class="num">14:15</td><td class="num">13:45–14:45</td></tr>
+      <tr><td>Berga</td><td class="num">47.7</td><td class="num">16:08</td><td class="num">15:38–16:38</td></tr>
+      <tr><td>Cal Rosal (Olvan)</td><td class="num">56.2</td><td class="num">17:17</td><td class="num">16:47–17:47</td></tr>
+      <tr class="end"><td>Gironella</td><td class="num">60.3</td><td class="num">18:00</td><td class="num">17:30–18:30</td></tr>
+      <tr class="stage"><td colspan="4">Stage 2 · Saturday 17 · 07:30 start from Gironella</td></tr>
+      <tr><td>Puig-reig</td><td class="num">8.5</td><td class="num">08:34</td><td class="num">08:04–09:04</td></tr>
+      <tr><td>Navàs</td><td class="num">21</td><td class="num">10:18</td><td class="num">09:48–10:48</td></tr>
+      <tr><td>Balsareny</td><td class="num">27</td><td class="num">11:13</td><td class="num">10:43–11:43</td></tr>
+      <tr><td>Sallent</td><td class="num">33.5</td><td class="num">12:12</td><td class="num">11:42–12:42</td></tr>
+      <tr><td>Navarcles</td><td class="num">43.8</td><td class="num">13:39</td><td class="num">13:09–14:09</td></tr>
+      <tr><td>Manresa</td><td class="num">56.1</td><td class="num">15:21</td><td class="num">14:51–15:51</td></tr>
+      <tr><td>Sant Vicenç de Castellet</td><td class="num">64.3</td><td class="num">16:32</td><td class="num">16:02–17:02</td></tr>
+      <tr><td>Castellbell i el Vilar (to be confirmed)</td><td class="num">72.2</td><td class="num">17:41</td><td class="num">17:11–18:11</td></tr>
+      <tr class="end"><td>Monistrol de Montserrat</td><td class="num">76.5</td><td class="num">18:23</td><td class="num">17:53–18:53</td></tr>
+      <tr class="stage"><td colspan="4">Stage 3 · Sunday 18 · 07:00 start from Monistrol de Montserrat</td></tr>
+      <tr><td>Olesa de Montserrat</td><td class="num">12.7</td><td class="num">08:35</td><td class="num">08:05–09:05</td></tr>
+      <tr><td>Esparreguera</td><td class="num">15.7</td><td class="num">09:07</td><td class="num">08:37–09:37</td></tr>
+      <tr><td>Martorell</td><td class="num">30.7</td><td class="num">11:09</td><td class="num">10:39–11:39</td></tr>
+      <tr><td>Sant Andreu de la Barca</td><td class="num">36.7</td><td class="num">12:04</td><td class="num">11:34–12:34</td></tr>
+      <tr><td>Pallejà</td><td class="num">41.1</td><td class="num">12:47</td><td class="num">12:17–13:17</td></tr>
+      <tr><td>Sant Vicenç dels Horts</td><td class="num">45.1</td><td class="num">13:27</td><td class="num">12:57–13:57</td></tr>
+      <tr><td>Santa Coloma de Cervelló</td><td class="num">49.5</td><td class="num">14:00</td><td class="num">13:30–14:30</td></tr>
+      <tr><td>Sant Boi de Llobregat</td><td class="num">52.5</td><td class="num">14:32</td><td class="num">14:02–15:02</td></tr>
+      <tr><td>Sant Joan Despí</td><td class="num">53.5</td><td class="num">14:50</td><td class="num">14:20–15:20</td></tr>
+      <tr><td>Cornellà de Llobregat</td><td class="num">55.8</td><td class="num">15:27</td><td class="num">14:57–15:57</td></tr>
+      <tr><td>L'Hospitalet de Llobregat</td><td class="num">59.9</td><td class="num">15:58</td><td class="num">15:28–16:28</td></tr>
+      <tr class="end"><td>River mouth (El Prat)</td><td class="num">66.7</td><td class="num">17:00</td><td>Finish</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Source: pobles.json from llobregat.org, updated 29/09/2026.</p>
+</section>
+
+<section id="en-annex" class="annex"><h2>Annex · Declaration and acceptance of conditions</h2><ol><li><b>Non-competitive nature:</b> I understand and accept that this event is a charity, participatory and non-competitive activity. Its main purpose is to raise funds or raise awareness of a charitable cause, so there are no official rankings or prizes for sporting performance.</li><li><b>Fitness and health:</b> I declare that I am in good physical and mental condition to take part safely in this activity. I do not suffer from any illness, injury or medical condition that puts my health or that of other attendees at risk during the event.</li><li><b>Personal responsibility and autonomy:</b> I take full responsibility for my actions, decisions and my own safety throughout the route. I undertake to follow the instructions of the organisation and the volunteer staff and, where applicable, the basic rules of road safety and respect for the natural or urban environment.</li><li><b>Exemption from liability:</b> I release the organisation, collaborating entities, sponsors and volunteers from all liability for any material damage, loss of personal belongings or physical injury that I may suffer or cause to third parties through my own negligence or through chance events beyond the direct control of the organisation.</li><li><b>Image rights (optional):</b> I authorise the organisation to use images or videos taken during the event exclusively for the dissemination, promotion or record of the charitable cause in the media, social networks or official websites, with no commercial profit-making purpose.</li><li><b>Data protection:</b> My personal data will be processed in accordance with current data protection legislation, solely for the management of this event, and will not be passed on to third parties without my explicit consent.</li><li><b>Tacit acceptance:</b> This document will be understood to be accepted in full if the participant does not notify the organisation in writing of their disagreement before the start of the event. Taking part in the event will imply acceptance of the conditions set out here.</li></ol></section>
+</div></main>
+<footer><div class="wrap"><div class="foot-brand"><span class="logo logo-aredi" role="img" aria-label="AREDI"></span><span>All funds go to AREDI · arediabetis.org</span></div><span>info@llobregat.org · #LxD2026 · Version 12 Oct 2026</span></footer>
+</div>
+<script>
+(function(){
+  var V=['ca','es','en'],T={"ca": "Normativa del repte · Llobregat x la Diabetis", "es": "Normas del reto · Llobregat x la Diabetis", "en": "Challenge rules · Llobregat x la Diabetis"},de=document.documentElement;
+  function paint(l){
+    document.title=T[l];
+    document.querySelectorAll('.langs button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.set===l?'true':'false')});
+  }
+  function apply(l,fromUser){
+    de.setAttribute('data-lang',l);de.setAttribute('lang',l);de.removeAttribute('data-ask');
+    paint(l);
+    try{localStorage.setItem('llxd-lang',l)}catch(e){}
+    if(fromUser){
+      var h=location.hash||'';
+      if(/^#(ca|es|en)-/.test(h)){var nh='#'+l+h.slice(3);history.replaceState(null,'',location.pathname+location.search+nh);var el=document.getElementById(nh.slice(1));if(el)el.scrollIntoView()}
+      else window.scrollTo(0,0);
+    }
+  }
+  var cur=de.getAttribute('data-lang')||'ca';
+  paint(cur);
+  document.querySelectorAll('.langs button').forEach(function(b){b.addEventListener('click',function(){apply(b.dataset.set,true)})});
+  var sp=document.getElementById('langSplash');
+  if(de.hasAttribute('data-ask')&&sp){
+    document.body.style.overflow='hidden';
+    sp.querySelectorAll('[data-splash-lang]').forEach(function(b){b.addEventListener('click',function(){
+      apply(b.dataset.splashLang,false);sp.classList.add('leaving');document.body.style.overflow='';
+      setTimeout(function(){sp.classList.remove('leaving')},450);
+    })});
+  }
+  // ancora de la URL (#es-3...) un cop carregat
+  var m=/^#((ca|es|en)-.+)$/.exec(location.hash||'');if(m){var e=document.getElementById(m[1]);if(e)e.scrollIntoView()}
+})();
+</script>
+<script src="menu.js" defer></script>
+</body>
+</html>
