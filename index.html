@@ -485,6 +485,34 @@
     .hero-meta strong { font-size: 0.92rem; margin-top: 0.15rem; }
   }
 
+  /* Total recaptat a la home (enllaça a /dona) */
+  .hero-raised {
+    display: inline-flex; flex-direction: column; gap: 0.2rem;
+    margin: 0 0 1.4rem; padding: 0.95rem 1.3rem 1rem;
+    border-radius: 16px; color: white; text-decoration: none;
+    background: rgba(14, 27, 54, 0.55);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    transition: transform .2s ease, border-color .2s ease;
+  }
+  .hero-raised[hidden] { display: none; }
+  .hero-raised:hover, .hero-raised:focus-visible { transform: translateY(-2px); border-color: var(--blau-aigua); }
+  .hero-raised-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blau-aigua); }
+  .hero-raised-amount {
+    font-family: var(--display); font-weight: 800; line-height: 1;
+    font-size: clamp(2.3rem, 6vw, 3.5rem); letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums; text-shadow: 0 2px 14px rgba(14, 27, 54, 0.6);
+  }
+  .hero-raised-cta { font-size: 0.86rem; color: rgba(255, 255, 255, 0.9); }
+  @media (min-width: 721px) {
+    /* a l'ordinador: a la dreta del títol, visible sense fer scroll */
+    .hero-raised { position: absolute; top: 3.75rem; right: var(--pad-x); margin: 0; text-align: right; align-items: flex-end; }
+  }
+  @media (max-width: 720px) {
+    .hero-raised { margin-bottom: 1rem; padding: 0.7rem 1rem 0.8rem; width: 100%; }
+    .hero-raised-amount { font-size: 2.3rem; }
+  }
+
   /* ============================================
      COUNTDOWN SECTION (entre hero i repte)
      ============================================ */
@@ -3472,7 +3500,6 @@
         <button data-set-lang="es" type="button">ES</button>
         <button data-set-lang="en" type="button">EN</button>
       </div>
-      <a href="inscripcio.html" class="nav-cta"><span lang="ca">Inscripcions</span><span lang="es">Inscripciones</span><span lang="en">Registration</span></a>
       <a href="dona/" data-mga-link class="nav-cta-dona"><span lang="ca">Dona</span><span lang="es">Dona</span><span lang="en">Donate</span></a>
     </div>
     <button class="nav-burger" id="burger" aria-label="Menú">
@@ -3489,7 +3516,6 @@
     <span lang="ca">Repte solidari</span>
     <span lang="es">Reto solidario</span><span lang="en">Charity challenge</span>
     <strong>16–18 octubre 2026</strong>
-    <strong><span lang="ca">Inscripcions obertes</span><span lang="es">Inscripciones abiertas</span><span lang="en">Registration open</span></strong>
   </div>
   <div class="container hero-content">
     <span class="h-eyebrow" lang="ca">Del Berguedà al mar · 180 km</span>
@@ -3510,16 +3536,22 @@
       <span lang="es">Una travesía solidaria que va del nacimiento del Llobregat, en Castellar de n'Hug, hasta la desembocadura en El Prat. Para visibilizar la diabetes tipo 1 y recaudar fondos para AREDI.</span><span lang="en">A charity ultra-distance run along the Llobregat river, from its source in Castellar de n'Hug to its mouth in El Prat. To raise awareness of type 1 diabetes and funds for AREDI.</span>
     </p>
 
+    <a href="dona/" data-mga-link class="hero-raised" id="heroRaised" hidden>
+      <span class="hero-raised-label"><span lang="ca">Recaptat fins ara</span><span lang="es">Recaudado hasta ahora</span><span lang="en">Raised so far</span></span>
+      <span class="hero-raised-amount" id="heroRaisedAmount">—</span>
+      <span class="hero-raised-cta"><span lang="ca">Dona i suma't al repte &rarr;</span><span lang="es">Dona y súmate al reto &rarr;</span><span lang="en">Donate and join the challenge &rarr;</span></span>
+    </a>
+
     <div class="hero-actions">
-      <a href="inscripcio.html" class="btn btn-primary btn-arrow">
-        <span lang="ca">Inscripcions</span>
-        <span lang="es">Inscripciones</span>
-        <span lang="en">Registration</span>
-      </a>
-      <a href="dona/" data-mga-link class="btn btn-ghost btn-arrow">
+      <a href="dona/" data-mga-link class="btn btn-primary btn-arrow">
         <span lang="ca">Dona</span>
         <span lang="es">Dona</span>
         <span lang="en">Donate</span>
+      </a>
+      <a href="recorregut.html" class="btn btn-ghost btn-arrow">
+        <span lang="ca">Recorregut</span>
+        <span lang="es">Recorrido</span>
+        <span lang="en">Route</span>
       </a>
     </div>
   </div>
@@ -5414,6 +5446,51 @@
     });
   }
   updateMgaLinks();
+
+  // ============================================
+  // TOTAL RECAPTAT (mateixes fonts que /dona: retos.json + donatius
+  // d'inscripcions de public-stats). Es pinta el darrer valor conegut a
+  // l'instant i s'actualitza quan arriba el fresc; si res respon, la
+  // targeta queda amagada i la resta de la home no es veu afectada.
+  // ============================================
+  (function totalRecaptat() {
+    const box = document.getElementById('heroRaised');
+    const amountEl = document.getElementById('heroRaisedAmount');
+    if (!box || !amountEl) return;
+    const RETOS_URL = 'https://cdn.jsdelivr.net/gh/cristiangomezm85/llobregatxladiabetis@main/dona/retos.json';
+    const STATS_URLS = ['/api/public-stats', '/.netlify/functions/public-stats'];
+    const K_DON = 'llxd-donatius-inscripcions';   // compartit amb /dona
+    const K_TOT = 'llxd-total-home';
+    const LOCALES = { ca: 'ca-ES', es: 'es-ES', en: 'en-GB' };
+    let total = 0;
+    function lsGet(k) { try { const v = Number(localStorage.getItem(k)); return isFinite(v) && v > 0 ? v : 0; } catch (e) { return 0; } }
+    function lsSet(k, v) { try { localStorage.setItem(k, String(v)); } catch (e) {} }
+    function pinta() {
+      if (!(total > 0)) return;
+      const lang = document.documentElement.getAttribute('data-lang') || 'ca';
+      const f = new Intl.NumberFormat(LOCALES[lang] || 'ca-ES', { maximumFractionDigits: 0 }).format(total);
+      amountEl.textContent = lang === 'en' ? '\u20AC' + f : f + '\u20AC';
+      box.hidden = false;
+    }
+    async function getJson(url, ms) {
+      const c = new AbortController(); const t = setTimeout(() => c.abort(), ms);
+      try { const r = await fetch(url, { signal: c.signal }); if (!r.ok) return null; return await r.json(); }
+      catch (e) { return null; } finally { clearTimeout(t); }
+    }
+    async function getStats() {
+      for (const u of STATS_URLS) { const d = await getJson(u, 6000); if (d && d.donatiusInscripcionsEur !== undefined) return Number(d.donatiusInscripcionsEur) || 0; }
+      return null;
+    }
+    total = lsGet(K_TOT); pinta();
+    Promise.all([getJson(RETOS_URL, 6000), getStats()]).then(([retos, don]) => {
+      if (!retos || !isFinite(Number(retos.totalRecaudado))) return;      // sense base fiable: no toquem res
+      const donatius = don === null ? lsGet(K_DON) : don;
+      if (don !== null && don > 0) lsSet(K_DON, don);
+      total = Number(retos.totalRecaudado) + donatius;
+      lsSet(K_TOT, total); pinta();
+    });
+    new MutationObserver(pinta).observe(document.documentElement, { attributes: true, attributeFilter: ['data-lang'] });
+  })();
 
   // ============================================
   // FORMULARI TABS
