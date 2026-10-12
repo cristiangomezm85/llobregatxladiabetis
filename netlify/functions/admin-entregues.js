@@ -8,12 +8,17 @@
 //   POST {action:"reenviar", id, email?}
 //        -> reenvia el correu del QR a una persona; si porta "email", abans en
 //           corregeix el correu de la comanda
+//   POST {action:"canviar-punt", id, punt}
+//        -> canvia el punt de recollida d'UNA comanda pagada, SENSE el límit de data
+//           del perfil (només admin). No toca el correu: cal "Reenviar correu" perquè
+//           la persona rebi el QR amb el punt nou. No serveix per a les llistes
+//           especials (Club Bàsquet Sant Just), que tenen prioritat.
 //   POST {action:"enviar-qr", punt, aplicar, limit}
 //        -> envia el correu del QR a les comandes pagades d'UNA zona que encara
 //           no l'han rebut (per lots). Si la zona ja està enviada, ho rebutja.
 
 const { llistarOrdres, obtenirOrdre, actualitzarOrdre, canviarEmailPagat } = require("./lib/store");
-const { PUNTS, ALTRES, puntPerId, normalitzar } = require("./lib/punts");
+const { PUNTS, ALTRES, puntPerId, normalitzar, esPuntExcepcio } = require("./lib/punts");
 const E = require("./lib/entregues");
 const AVIS = require("./lib/avis-club");
 
@@ -24,6 +29,9 @@ function resp(statusCode, body) {
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const netDni = (s) => String(s || "").replace(/[^a-z0-9]/gi, "").toUpperCase();
 const correuDe = (o) => String(o.email_contacte || (o.payload || {}).email_contacte || "").trim();
+
+// Punts que es poden triar (els mateixos que al perfil), per al desplegable de l'admin.
+const PUNTS_TRIABLES = PUNTS.filter((p) => p.seleccionable).map((p) => ({ id: p.id, nom: p.nom.ca }));
 
 // Comandes pagades d'una zona que tenen alguna cosa a recollir.
 function deLaZona(ordres, estats, puntId) {
@@ -60,6 +68,8 @@ async function cerca(q) {
       modalitat: o.modalitat || p.modalitat || "", estat: o.estat || "", pagada: E.estaPagada(o),
       club: p.club_nom || "", punt: { id: E.puntEfectiu(o, est), nom: nomPunt(E.puntEfectiu(o, est)) },
       te_elements: E.elementsComanda(o).res,
+      punt_bloquejat: esPuntExcepcio(E.puntEfectiu(o, est)),
+      punts_triables: PUNTS_TRIABLES,
       qr_enviat: est.qr_enviat || null,
       entrega: { complet: cl.complet, alguna: cl.items.some((i) => i.entregat), items: cl.items },
     };
@@ -156,6 +166,24 @@ exports.handler = async (event) => {
           try { await require("./lib/index-cerca").reconstruir(); } catch (e) { console.error("[admin-entregues] reindexar:", e); }
         }
         return resp(200, { ok: true, email: correuDe(ordre), canviat });
+      }
+
+      if (b.action === "canviar-punt") {
+        if (!E.idValid(b.id)) return resp(400, { ok: false, error: "id invàlid" });
+        const nou = puntPerId(String(b.punt || ""));
+        if (!nou || !nou.seleccionable) return resp(400, { ok: false, error: "Punt no vàlid" });
+        const ordre = await obtenirOrdre(b.id);
+        if (!ordre) return resp(404, { ok: false, error: "Comanda no trobada" });
+        if (!E.estaPagada(ordre)) return resp(400, { ok: false, error: "Aquesta inscripció no està pagada." });
+        let estat = await E.obtenirEstat(b.id);
+        if (esPuntExcepcio(E.puntEfectiu(ordre, estat))) {
+          return resp(409, { ok: false, error: "Aquesta persona és a una llista especial de l'organització (p. ex. Club Bàsquet Sant Just): el punt no es pot canviar des d'aquí." });
+        }
+        const cl = E.checklist(ordre, estat);
+        if (!cl.items.length) return resp(409, { ok: false, error: "Aquesta inscripció no té res a recollir." });
+        if (cl.complet) return resp(409, { ok: false, error: "Ja ho ha recollit tot: no té sentit canviar el punt." });
+        estat = await E.canviarPunt(b.id, nou.id);
+        return resp(200, { ok: true, punt: { id: nou.id, nom: nou.nom.ca }, qr_enviat: estat.qr_enviat || null });
       }
 
       if (b.action === "enviar-avis-club") {
