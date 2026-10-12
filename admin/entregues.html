@@ -124,7 +124,13 @@ function pinta(persones){var R=$('res');R.textContent='';
    var capsa=el('div');capsa.hidden=true;var inp=el('input');inp.type='text';inp.value=p.email;inp.placeholder='correu correcte';
    var b3=el('button','g','Desar i enviar');b3.onclick=function(){reenvia(p,inp.value.trim(),msg,b3)};capsa.appendChild(inp);capsa.appendChild(b3);d.appendChild(capsa);
    b2.onclick=function(){capsa.hidden=!capsa.hidden;if(!capsa.hidden)inp.focus()};
-   var b4=el('button','r','Desfer lliurament');b4.disabled=!p.entrega.alguna;b4.onclick=function(){desfes(p,msg,b4)};acc.appendChild(b4)}
+   var b4=el('button','r','Desfer lliurament');b4.disabled=!p.entrega.alguna;b4.onclick=function(){desfes(p,msg,b4)};acc.appendChild(b4);
+   if(!p.punt_bloquejat&&!p.entrega.complet&&p.punts_triables){
+    var b5=el('button',null,'Canviar punt');acc.appendChild(b5);
+    var capsaP=el('div');capsaP.hidden=true;var sel=el('select');
+    p.punts_triables.forEach(function(x){var o=el('option',null,x.nom);o.value=x.id;if(x.id===p.punt.id)o.selected=true;sel.appendChild(o)});
+    var b6=el('button','g','Desar punt');b6.onclick=function(){canviaPunt(p,sel,msg,b6,d)};capsaP.appendChild(sel);capsaP.appendChild(b6);d.appendChild(capsaP);
+    b5.onclick=function(){capsaP.hidden=!capsaP.hidden}}}
   var a=el('a',null,'Obrir perfil');a.href='/perfil?id='+encodeURIComponent(p.id);a.target='_blank';a.rel='noopener';a.style.marginLeft='6px';a.style.fontSize='13px';acc.appendChild(a);
   R.appendChild(d)})}
 function reenvia(p,email,msg,bt){
@@ -134,6 +140,16 @@ function reenvia(p,email,msg,bt){
  crida('POST',{action:'reenviar',id:p.id,email:email||undefined}).then(function(j){bt.disabled=false;
   msg.textContent=j.ok?('Enviat a '+j.email+(j.canviat?' (correu de la inscripció actualitzat)':'')+'.'):('Error: '+(j.error||''));
   if(j.ok){carregaZones()}}).catch(function(){bt.disabled=false;msg.textContent='Error de connexió'})}
+function canviaPunt(p,sel,msg,bt,card){
+ var id=sel.value,nom=sel.options[sel.selectedIndex].text;
+ if(id===p.punt.id){msg.textContent='Ja té aquest punt.';return}
+ if(!confirm('Canviar el punt de recollida de '+((p.nom+' '+p.cognoms).trim())+' a:\n\n'+nom+'\n\n(Aquest canvi ignora el límit de data del perfil.)'))return;
+ bt.disabled=true;msg.textContent='Desant…';
+ crida('POST',{action:'canviar-punt',id:p.id,punt:id}).then(function(j){bt.disabled=false;
+  if(!j.ok){msg.textContent='Error: '+(j.error||'');return}
+  p.punt=j.punt;msg.textContent='Punt canviat a «'+j.punt.nom+'». Ara fes «Reenviar correu» perquè rebi el QR amb el punt nou.';
+  var ls=card.querySelectorAll('.l');for(var i=0;i<ls.length;i++){if(ls[i].textContent.indexOf('Punt: ')===0)ls[i].textContent='Punt: '+j.punt.nom}
+  carregaZones()}).catch(function(){bt.disabled=false;msg.textContent='Error de connexió'})}
 function desfes(p,msg,bt){
  if(!confirm('Desfer els lliuraments de '+((p.nom+' '+p.cognoms).trim())+'? Tornarà a constar com a pendent de tot (l\'historial es conserva).'))return;
  bt.disabled=true;msg.textContent='Desfent…';
