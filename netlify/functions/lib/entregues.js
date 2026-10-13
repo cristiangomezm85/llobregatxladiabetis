@@ -44,6 +44,7 @@ function parseEv(clau) {
   const [t, cid, elems] = parts;
   if (!t || !cid || elems === undefined) return null;
   if (elems === "!desfer") return { clau, t, cid, tipus: "desfer", items: [] };
+  if (elems.startsWith("!treure_")) return { clau, t, cid, tipus: "treure", items: itemsDeCodi(elems.slice(8)) };
   return { clau, t, cid, tipus: "entrega", items: itemsDeCodi(elems) };
 }
 
@@ -52,6 +53,12 @@ function aplicaEvents(estat, events) {
   events.forEach((ev) => {
     if (ev.tipus === "desfer") {
       ent.bossa = ent.pulsera = ent.glucody = false; ent.samarretes = {};
+    } else if (ev.tipus === "treure") {
+      // Desmarcat d'elements concrets (error del voluntari): l'historial es conserva.
+      ev.items.forEach((c) => {
+        if (c.startsWith("samarreta:")) delete ent.samarretes[c.slice(10)];
+        else if (c in ent && c !== "samarretes") ent[c] = false;
+      });
     } else {
       ev.items.forEach((c) => {
         if (c.startsWith("samarreta:")) ent.samarretes[c.slice(10)] = true;
@@ -160,26 +167,39 @@ function checklist(ordre, estat) {
 function nouCid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
 const CID_RE = /^[a-z0-9-]{6,40}$/i;
 
-// Aplica una entrega: només es poden MARCAR elements. Escriu un esdeveniment
-// NOU (mai reescriu res). Idempotent: si arriba dues vegades el mateix "cid"
-// (reintent per mala cobertura), la segona no fa res i diu que ja estava.
-async function registrarEntrega(orderId, ordre, claus, meta, estatPrevi) {
+// Aplica una entrega: marca elements (claus) i, opcionalment, DESMARCA els que
+// s'havien marcat per error (treure). Escriu esdeveniments NOUS (mai reescriu
+// res; l'historial es conserva). Idempotent: si arriba dues vegades el mateix
+// "cid" (reintent per mala cobertura), la segona no fa res i diu que ja estava.
+async function registrarEntrega(orderId, ordre, claus, meta, estatPrevi, treure) {
   const store = entreguesStore();
   const estat = estatPrevi || (await obtenirEstat(orderId));
   const cid = CID_RE.test(String(meta.cid || "")) ? String(meta.cid) : nouCid();
-  const repetit = estat.historial.find((e) => e.cid === cid);
-  if (repetit) return { estat, aplicats: repetit.items, duplicats: [], repetit: true };
+  const cidTreure = (cid + "-x").slice(0, 40);
+  const repetit = estat.historial.find((e) => e.cid === cid || e.cid === cidTreure);
+  if (repetit) return { estat, aplicats: repetit.tipus === "entrega" ? repetit.items : [], duplicats: [], repetit: true };
 
   const cl = checklist(ordre, estat);
   const valides = new Set(cl.items.filter((i) => !i.entregat).map((i) => i.clau));
   const aplicats = (claus || []).filter((c) => valides.has(c));
-  if (!aplicats.length) return { estat, aplicats: [], duplicats: [] };
+  const entregats = new Set(cl.items.filter((i) => i.entregat).map((i) => i.clau));
+  const tretes = (treure || []).filter((c) => entregats.has(c));
+  if (!aplicats.length && !tretes.length) return { estat, aplicats: [], duplicats: [], tretes: [] };
 
   let t = new Date().toISOString();
   const tc = meta.t ? new Date(meta.t) : null;
   if (tc && !isNaN(tc) && Math.abs(tc - Date.now()) < 24 * 3600 * 1000) t = tc.toISOString();
-  const clau = `ev/${orderId}/${t}~${cid}~${codiItems(aplicats)}`;
-  await store.setJSON(clau, { tipus: "entrega", data: new Date().toISOString(), mesa: meta.mesa, voluntari: meta.voluntari });
+  const extra = {};
+  if (meta.admin) extra.admin = true;
+  let clau = null;
+  if (aplicats.length) {
+    clau = `ev/${orderId}/${t}~${cid}~${codiItems(aplicats)}`;
+    await store.setJSON(clau, { tipus: "entrega", data: new Date().toISOString(), mesa: meta.mesa, voluntari: meta.voluntari, ...extra });
+  }
+  if (tretes.length) {
+    await store.setJSON(`ev/${orderId}/${t}~${cidTreure}~!treure_${codiItems(tretes)}`,
+      { tipus: "treure", data: new Date().toISOString(), mesa: meta.mesa, voluntari: meta.voluntari, ...extra });
+  }
 
   // Detecció de duplicats: esdeveniments d'altres voluntaris que han aparegut
   // DESPRÉS de la nostra primera lectura i inclouen el mateix element.
@@ -191,7 +211,7 @@ async function registrarEntrega(orderId, ordre, claus, meta, estatPrevi) {
     if (e.clau === clau || coneguts.has(e.clau) || e.tipus !== "entrega") return;
     e.items.forEach((c) => { if (aplicats.includes(c) && !duplicats.includes(c)) duplicats.push(c); });
   });
-  return { estat: aplicaEvents(estat, events), aplicats, duplicats };
+  return { estat: aplicaEvents(estat, events), aplicats, duplicats, tretes };
 }
 
 // Desfer (només admin): nou esdeveniment; l'historial es conserva.
