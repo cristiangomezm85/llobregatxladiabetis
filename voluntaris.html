@@ -118,18 +118,19 @@
 (function(){
   var API='/.netlify/functions/voluntari';
   var $=function(i){return document.getElementById(i)};
-  var S={codi:'',nom:'',mesa:null,mesas:[]};
+  var S={codi:'',nom:'',mesa:null,mesas:[],admin:false};
   var cam={stream:null,raf:0,actiu:false};
   var actual=null;
 
-  try{var g=JSON.parse(sessionStorage.getItem('lxd-vol')||'null');if(g){S.codi=g.codi;S.nom=g.nom;S.mesa=g.mesa}}catch(e){}
-  function desa(){try{sessionStorage.setItem('lxd-vol',JSON.stringify({codi:S.codi,nom:S.nom,mesa:S.mesa}))}catch(e){}}
+  try{var g=JSON.parse(sessionStorage.getItem('lxd-vol')||'null');if(g){S.codi=g.codi;S.nom=g.nom;S.mesa=g.mesa;S.admin=!!g.admin}}catch(e){}
+  function desa(){try{sessionStorage.setItem('lxd-vol',JSON.stringify({codi:S.codi,nom:S.nom,mesa:S.mesa,admin:S.admin}))}catch(e){}}
 
   var VISTES=['vLogin','vMesa','vInici','vCamera','vCerca','vResultat'];
   function mostra(v){
     if(v!=='vCamera')paraCamera();
     VISTES.forEach(function(x){$(x).hidden=(x!==v)});
-    $('canviaMesa').hidden=(v==='vLogin'||v==='vMesa');
+    $('canviaMesa').hidden=(v==='vLogin'||v==='vMesa'||S.admin);
+    $('capcalera').textContent=S.admin?'Voluntaris · ADMIN':'Voluntaris';
     window.scrollTo(0,0);
   }
 
@@ -137,7 +138,7 @@
     return fetch(API,{method:'POST',headers:{'content-type':'application/json','x-voluntari-code':S.codi},body:JSON.stringify(cos)})
       .then(function(r){return r.json().catch(function(){return {ok:false,codi:'resposta'}}).then(function(j){j._http=r.status;return j})});
   }
-  function esAuth(j){if(j&&(j._http===401||j.codi==='codi_incorrecte')){S.codi='';desa();mostra('vLogin');$('msgLogin').textContent='El codi ja no és vàlid. Torna a entrar.';return true}return false}
+  function esAuth(j){if(j&&(j._http===401||j.codi==='codi_incorrecte')){S.codi='';S.admin=false;desa();mostra('vLogin');$('msgLogin').textContent='El codi ja no és vàlid. Torna a entrar.';return true}return false}
 
   /* ---- Accés ---- */
   $('entra').onclick=function(){
@@ -146,7 +147,7 @@
     S.codi=codi;S.nom=nom;$('msgLogin').textContent='';$('entra').disabled=true;
     crida({action:'login'}).then(function(j){
       $('entra').disabled=false;
-      if(j.ok){S.mesas=j.mesas;desa();vesAMesa()}
+      if(j.ok){S.mesas=j.mesas;S.admin=!!j.admin;if(S.admin)S.mesa=null;desa();if(S.admin)vesAInici();else vesAMesa()}
       else if(j._http===503)$('msgLogin').textContent='El sistema encara no està configurat.';
       else $('msgLogin').textContent='Codi incorrecte.';
     }).catch(function(){$('entra').disabled=false;$('msgLogin').textContent='Sense connexió. Torna-ho a provar.'});
@@ -164,7 +165,8 @@
 
   function vesAInici(){
     var m=S.mesas.filter(function(x){return x.id===S.mesa})[0];
-    $('mesaNom').textContent=m?m.nom.ca:S.mesa;$('mesaQuan').textContent=m?m.quan.ca:'';
+    if(S.admin){$('mesaNom').textContent='Mode administrador';$('mesaQuan').textContent='Pots atendre persones de qualsevol taula.'}
+    else{$('mesaNom').textContent=m?m.nom.ca:S.mesa;$('mesaQuan').textContent=m?m.quan.ca:''}
     $('opcions').hidden=true;$('bBuscar').hidden=false;
     mostra('vInici');
   }
@@ -250,31 +252,44 @@
         case 'sense_entrega':banner('warn','Res a recollir',nom+' no té cap material per recollir.');break;
         case 'altra_mesa':banner('err','Aquesta persona NO és d\'aquesta taula',nom+' — taula assignada: '+(j.assignada?j.assignada.nom.ca+' ('+j.assignada.quan.ca+')':'cap')+'.');break;
         case 'ja_entregat':
-          banner('fet','Ja ha recollit tot',nom+(j.darrera_entrega?' — '+dataTxt(j.darrera_entrega.data)+' per '+(j.darrera_entrega.voluntari||'?'):''));break;
+          banner('fet','Ja ha recollit tot',nom+(j.darrera_entrega?' — '+dataTxt(j.darrera_entrega.data)+' per '+(j.darrera_entrega.voluntari||'?'):'')+'. Si t\'has equivocat, desmarca l\'element i prem Desar.');
+          if(j.items&&j.items.length)mostraFitxa(j,true);break;
         case 'ok':mostraFitxa(j);break;
         default:banner('err','Resposta inesperada');
       }
     }).catch(function(){$('bannerRes').textContent='';banner('err','Sense connexió','Torna-ho a provar quan tinguis cobertura.')});
   }
 
-  function mostraFitxa(j){
+  function mostraFitxa(j,jaEntregat){
     actual=j;
     $('pNom').textContent=((j.nom||'')+' '+(j.cognoms||'')).trim();
-    $('pSub').textContent=j.modalitat||'';
+    $('pSub').textContent=[j.modalitat||'',(S.admin&&j.assignada)?('Taula: '+j.assignada.nom.ca):''].filter(Boolean).join(' · ');
     var ll=$('llista');ll.textContent='';
     j.items.forEach(function(it){
-      /* Una fila per unitat (3 samarretes L = 3 files); les files d'una mateixa talla es marquen juntes. */
-      var n=NOM[it.clau]?1:Math.max(1,parseInt(it.quantitat,10)||1),grup=[];
-      for(var k=0;k<n;k++){
-        var row=document.createElement('label');row.className='item'+(it.entregat?' fet':'');row.style.margin='0';
-        var cb=document.createElement('input');cb.type='checkbox';cb.value=it.clau;cb.checked=!!it.entregat;cb.disabled=!!it.entregat;
-        var sp=document.createElement('span');sp.textContent=etiqueta(it)+(it.entregat?' (ja entregat)':'');
-        row.appendChild(cb);row.appendChild(sp);ll.appendChild(row);grup.push(cb);
-        if(n>1)cb.onchange=(function(g){return function(){var v=this.checked;g.forEach(function(x){x.checked=v})}})(grup);
+      /* Una fila per unitat (3 samarretes L = 3 files); les files d'una mateixa talla es marquen juntes.
+         Tot es pot marcar i desmarcar: el que ja constava entregat surt marcat; si el desmarques i
+         prems Desar, es treu de l'entrega (l'historial es conserva al servidor). */
+      var n=NOM[it.clau]?1:Math.max(1,parseInt(it.quantitat,10)||1),grup=[],files=[];
+      function pinta(){
+        var v=grup[0].checked,canvi=(v!==!!it.entregat);
+        files.forEach(function(f){
+          f.row.className='item'+(it.entregat&&v?' fet':'');
+          f.sp.textContent=etiqueta(it)+(it.entregat&&v?' (ja entregat)':(it.entregat&&!v?' (es desmarcarà)':''));
+          f.row.style.background=canvi&&it.entregat&&!v?'#FFF4E0':'';
+        });
       }
+      for(var k=0;k<n;k++){
+        var row=document.createElement('label');row.className='item';row.style.margin='0';
+        var cb=document.createElement('input');cb.type='checkbox';cb.value=it.clau;cb.checked=!!it.entregat;cb.dataset.entregat=it.entregat?'1':'';
+        var sp=document.createElement('span');
+        row.appendChild(cb);row.appendChild(sp);ll.appendChild(row);grup.push(cb);files.push({row:row,sp:sp});
+        cb.onchange=(function(g){return function(){var v=this.checked;g.forEach(function(x){x.checked=v});pinta()}})(grup);
+      }
+      pinta();
     });
     var jaAlguna=j.items.some(function(i){return i.entregat});
-    $('pAvis').textContent=jaAlguna&&j.darrera_entrega?('Entrega parcial anterior: '+dataTxt(j.darrera_entrega.data)+' per '+(j.darrera_entrega.voluntari||'?')):'';
+    $('pAvis').textContent=jaAlguna&&j.darrera_entrega?((jaEntregat?'Darrera entrega: ':'Entrega parcial anterior: ')+dataTxt(j.darrera_entrega.data)+' per '+(j.darrera_entrega.voluntari||'?')):'';
+    $('bLlest').textContent=jaAlguna?'Desar':'Llest';
     $('fitxa').hidden=false;$('bLlest').disabled=false;
   }
 
@@ -296,7 +311,7 @@
   function envia(){
     if(enviant||!cua.length||!S.codi)return;
     enviant=true;var it=cua[0];
-    crida({action:'entrega',mesa:it.mesa,voluntari:it.voluntari,id:it.id,items:it.items,cid:it.cid,t:it.t}).then(function(j){
+    crida({action:'entrega',mesa:it.mesa,voluntari:it.voluntari,id:it.id,items:it.items||[],treure:it.treure||[],cid:it.cid,t:it.t}).then(function(j){
       enviant=false;
       if(j.ok){
         if(j.duplicats&&j.duplicats.length)alerta('ATENCIÓ: '+it.nom+' — un altre voluntari ha entregat el mateix alhora ('+j.duplicats.length+' element/s duplicat/s). Avisa el responsable.');
@@ -318,16 +333,24 @@
 
   $('bLlest').onclick=function(){
     if(!actual)return;
-    var marcats=[].slice.call(document.querySelectorAll('#llista input:checked:not(:disabled)')).map(function(c){return c.value}).filter(function(c,i,a){return a.indexOf(c)===i});
-    var pendentsAra=actual.items.filter(function(i){return !i.entregat}).length;
-    if(!marcats.length){$('msgRes').style.color='var(--err)';$('msgRes').textContent='Marca què has entregat.';return}
+    /* Estat final de cada element (una casella per clau: les d'una mateixa talla van juntes). */
+    var estat={};
+    [].slice.call(document.querySelectorAll('#llista input')).forEach(function(c){if(!(c.value in estat))estat[c.value]=c.checked});
+    var marcats=[],treure=[],queden=0;
+    actual.items.forEach(function(i){
+      var ara=!!estat[i.clau];
+      if(ara&&!i.entregat)marcats.push(i.clau);
+      if(!ara&&i.entregat)treure.push(i.clau);
+      if(!ara)queden++;
+    });
+    if(!marcats.length&&!treure.length){$('msgRes').style.color='var(--err)';$('msgRes').textContent=actual.items.some(function(i){return i.entregat})?'No has canviat res.':'Marca què has entregat.';return}
     $('bLlest').disabled=true;$('msgRes').textContent='';
     var nom=((actual.nom||'')+' '+(actual.cognoms||'')).trim();
-    cua.push({cid:cid(),id:actual.id,mesa:S.mesa,voluntari:S.nom,items:marcats,t:new Date().toISOString(),nom:nom});
+    cua.push({cid:cid(),id:actual.id,mesa:S.admin?'':S.mesa,voluntari:S.nom,items:marcats,treure:treure,t:new Date().toISOString(),nom:nom});
     desaCua();envia();
     $('fitxa').hidden=true;$('bannerRes').textContent='';
-    var falten=pendentsAra-marcats.length;
-    banner(falten>0?'warn':'fet','Registrat',falten>0?('Queden '+falten+' elements pendents per entregar a aquesta persona.'):'Entrega completa.');
+    var detall=treure.length?(' Desmarcat: '+treure.length+' element'+(treure.length>1?'s':'')+'.'):'';
+    banner(queden>0?'warn':'fet','Registrat',(queden>0?('Queden '+queden+' elements pendents per entregar a aquesta persona.'):'Entrega completa.')+detall);
     actual=null;
   };
   $('resTorna').onclick=vesAInici;
@@ -335,8 +358,8 @@
   /* ---- Arrencada ---- */
   if(S.codi&&S.nom){
     crida({action:'login'}).then(function(j){
-      if(j.ok){S.mesas=j.mesas;if(S.mesa&&S.mesas.some(function(m){return m.id===S.mesa}))vesAInici();else vesAMesa()}
-      else{S.codi='';mostra('vLogin')}
+      if(j.ok){S.mesas=j.mesas;S.admin=!!j.admin;desa();if(S.admin||(S.mesa&&S.mesas.some(function(m){return m.id===S.mesa})))vesAInici();else vesAMesa()}
+      else{S.codi='';S.admin=false;mostra('vLogin')}
     }).catch(function(){mostra('vLogin')});
   }else mostra('vLogin');
 })();
