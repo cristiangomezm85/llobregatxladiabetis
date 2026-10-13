@@ -5549,7 +5549,10 @@
     const box = document.getElementById('heroRaised');
     const amountEl = document.getElementById('heroRaisedAmount');
     if (!box || !amountEl) return;
-    const RETOS_URL = 'https://cdn.jsdelivr.net/gh/cristiangomezm85/llobregatxladiabetis@main/dona/retos.json';
+    // Igual que /dona: primer GitHub (cau de ~5 min) i jsDelivr només de reserva
+    // (jsDelivr pot servir "@main" desfasat fins a 12 h).
+    const RETOS_URL = 'https://raw.githubusercontent.com/cristiangomezm85/llobregatxladiabetis/main/dona/retos.json';
+    const RETOS_FALLBACK = 'https://cdn.jsdelivr.net/gh/cristiangomezm85/llobregatxladiabetis@main/dona/retos.json';
     const STATS_URLS = ['/api/public-stats', '/.netlify/functions/public-stats'];
     const K_DON = 'llxd-donatius-inscripcions';   // compartit amb /dona
     const K_TOT = 'llxd-total-home';
@@ -5566,15 +5569,20 @@
     }
     async function getJson(url, ms) {
       const c = new AbortController(); const t = setTimeout(() => c.abort(), ms);
-      try { const r = await fetch(url, { signal: c.signal }); if (!r.ok) return null; return await r.json(); }
+      try { const r = await fetch(url, { signal: c.signal, cache: 'no-store' }); if (!r.ok) return null; return await r.json(); }
       catch (e) { return null; } finally { clearTimeout(t); }
+    }
+    async function getRetos() {
+      const d = await getJson(RETOS_URL, 6000);
+      if (d && isFinite(Number(d.totalRecaudado))) return d;
+      return getJson(RETOS_FALLBACK, 6000);
     }
     async function getStats() {
       for (const u of STATS_URLS) { const d = await getJson(u, 6000); if (d && d.donatiusInscripcionsEur !== undefined) return Number(d.donatiusInscripcionsEur) || 0; }
       return null;
     }
     total = lsGet(K_TOT); pinta();
-    Promise.all([getJson(RETOS_URL, 6000), getStats()]).then(([retos, don]) => {
+    Promise.all([getRetos(), getStats()]).then(([retos, don]) => {
       if (!retos || !isFinite(Number(retos.totalRecaudado))) return;      // sense base fiable: no toquem res
       const donatius = don === null ? lsGet(K_DON) : don;
       if (don !== null && don > 0) lsSet(K_DON, don);

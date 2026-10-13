@@ -75,7 +75,9 @@
   (function totalDona() {
     var el = nav.querySelector('.nav-dona-total');
     if (!el) return;
-    var RETOS_URL = 'https://cdn.jsdelivr.net/gh/cristiangomezm85/llobregatxladiabetis@main/dona/retos.json';
+    /* Igual que /dona: primer GitHub (cau de ~5 min); jsDelivr només de reserva (pot anar desfasat fins a 12 h). */
+    var RETOS_URL = 'https://raw.githubusercontent.com/cristiangomezm85/llobregatxladiabetis/main/dona/retos.json';
+    var RETOS_FALLBACK = 'https://cdn.jsdelivr.net/gh/cristiangomezm85/llobregatxladiabetis@main/dona/retos.json';
     var STATS_URLS = ['/api/public-stats', '/.netlify/functions/public-stats'];
     var K_DON = 'llxd-donatius-inscripcions';   // compartit amb /dona i la portada
     var K_TOT = 'llxd-total-home';
@@ -93,7 +95,7 @@
     function getJson(url, ms) {
       var c = new AbortController();
       var t = setTimeout(function () { c.abort(); }, ms);
-      return fetch(url, { signal: c.signal })
+      return fetch(url, { signal: c.signal, cache: 'no-store' })
         .then(function (r) { return r.ok ? r.json() : null; })
         .catch(function () { return null; })
         .then(function (d) { clearTimeout(t); return d; });
@@ -110,7 +112,9 @@
       return next();
     }
     total = lsGet(K_TOT); pinta();
-    Promise.all([getJson(RETOS_URL, 6000), getStats()]).then(function (r) {
+    Promise.all([getJson(RETOS_URL, 6000).then(function (d) {
+      return d && isFinite(Number(d.totalRecaudado)) ? d : getJson(RETOS_FALLBACK, 6000);
+    }), getStats()]).then(function (r) {
       var retos = r[0], don = r[1];
       if (!retos || !isFinite(Number(retos.totalRecaudado))) return;   // sense base fiable: no toquem res
       var donatius = don === null ? lsGet(K_DON) : don;
