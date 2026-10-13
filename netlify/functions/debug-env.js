@@ -22,6 +22,8 @@ exports.handler = async () => {
 
   const body = {
     ADMIN_TOKEN: check("ADMIN_TOKEN"),
+    VOLUNTARI_CODE: check("VOLUNTARI_CODE"),
+    VOLUNTARI_ADMIN_CODE: check("VOLUNTARI_ADMIN_CODE"),
     BLOBS_SITE_ID: check("BLOBS_SITE_ID"),
     BLOBS_TOKEN: check("BLOBS_TOKEN"),
     nodeVersion: process.version,
