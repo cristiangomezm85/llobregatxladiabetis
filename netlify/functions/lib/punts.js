@@ -8,7 +8,7 @@
 // El punt escollit per cada participant NO es guarda a la comanda (blob
 // "ordres"), sinó a part, al store "entregues" (vegeu lib/entregues.js).
 
-const { ORDRES: ORDRES_SANT_JUST, es912, esSantJust } = require("./recollida-especial");
+const { ORDRES: ORDRES_SANT_JUST, es912, esSantJust, PUNT_MANUAL } = require("./recollida-especial");
 
 // Últim moment per canviar de punt: 11/10/2026 23:59:59 hora de Madrid
 // (CEST = UTC+2). A partir del 12/10 ja no es pot canviar.
@@ -152,6 +152,7 @@ function puntPerDefecte(ordre) {
   const exc = puntExcepcio(ordre);
   if (exc) return exc;
   if (es912(ordre)) return "912-runners"; // per defecte; el participant el pot canviar
+  if (PUNT_MANUAL && PUNT_MANUAL.has(ordre.order_id) && PER_ID.get(PUNT_MANUAL.get(ordre.order_id))) return PUNT_MANUAL.get(ordre.order_id);
   const p = ordre.payload || {};
   // Inscripcions noves: el participant ja ha triat un punt concret al formulari.
   const triat = p.recollida_punt && PER_ID.get(String(p.recollida_punt));

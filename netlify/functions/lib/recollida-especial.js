@@ -22,10 +22,17 @@ function es912(ordre) {
 
 // Comandes afegides A MÀ al grup Club Bàsquet Sant Just (no són a la llista
 // de l'organització de sota). Per afegir-ne una: el seu order_id i un comentari.
-const AFEGITS = [
-  ["b7344a32-47ed-49cd-962a-2887304ee8f4", "Ricard Anguera Camos"],
-  ["f7ed757f-3349-41db-8565-0ff859e24c7a", "Nerea López Paz"],
-];
+// (Buit: el club són NOMÉS les 90 comandes de la llista de l'organització.
+// Ricard Anguera Camos i Nerea López Paz se'n van treure.)
+const AFEGITS = [];
+
+// Punt de recollida per DEFECTE assignat a mà a comandes concretes (order_id ->
+// id de punt). No és una excepció bloquejada: la persona el pot canviar des del
+// perfil. S'aplica a lib/punts.js (puntPerDefecte).
+const PUNT_MANUAL = new Map([
+  ["b7344a32-47ed-49cd-962a-2887304ee8f4", "biblioteca-sjd"], // Ricard Anguera Camos
+  ["f7ed757f-3349-41db-8565-0ff859e24c7a", "biblioteca-sjd"], // Nerea López Paz
+]);
 
 // order_id de la llista de l'organització (90 comandes pagades).
 // "similitud" = el nom no coincidia exactament i es va proposar per semblança.
@@ -138,4 +145,4 @@ function recollidaPerExportar(ordre, puntTriatNom) {
   return (esSantJust(ordre) ? LLOC_ESPECIAL : null) || (es912(ordre) ? (puntTriatNom || LLOC_912) : original);
 }
 
-module.exports = { recollidaPerExportar, LLOC_ESPECIAL, LLOC_912, ORDRES, es912, esSantJust, AFEGITS };
+module.exports = { recollidaPerExportar, LLOC_ESPECIAL, LLOC_912, ORDRES, es912, esSantJust, AFEGITS, PUNT_MANUAL };
