@@ -36,6 +36,12 @@ button.s{background:#556}
 <table id="t" hidden><thead><tr><th>Punt</th><th class="n">Assignats</th><th class="n">Complets</th><th class="n">Parcials</th><th class="n">Pendents</th><th class="n">QR enviat</th></tr></thead><tbody></tbody></table>
 <div class="m" id="mRes"></div></div>
 
+<div class="card"><h2>Qui fa què: activitat dels voluntaris</h2>
+<p class="mut" style="margin:0 0 6px">Per voluntari i taula: persones ateses (cada lliurament registrat), elements entregats i primera i última hora. El nom és el que escriu cada voluntari en entrar. «Admin» = lliurat amb el codi d'administrador.</p>
+<button id="bVol">Actualitzar voluntaris</button>
+<table id="tv" hidden><thead><tr><th>Voluntari</th><th>Taula</th><th class="n">Persones</th><th class="n">Elements</th><th class="n">Desmarcats</th><th>Primera</th><th>Última</th></tr></thead><tbody></tbody></table>
+<div class="m" id="mVol"></div></div>
+
 <div class="card"><h2>Índex de cerca dels voluntaris</h2>
 <p>Cal reconstruir-lo abans de l'esdeveniment i després de les últimes inscripcions, perquè el buscador manual vagi ràpid.</p>
 <button id="bIx">Reconstruir índex</button><div class="m" id="mIx"></div></div>
@@ -101,6 +107,16 @@ function enviaZona(p,bt){
 $('bAvis').onclick=function(){var n=$('bAvis').dataset.n;if(!confirm('Enviar l\'aclariment (amb el QR i el punt correcte) a '+n+' persones?'))return;
  $('bAvis').disabled=true;$('mAvis').textContent='Enviant…';
  crida('POST',{action:'enviar-avis-club',aplicar:true}).then(function(j){$('mAvis').textContent=j.ok?('Enviats '+j.enviats+'.'+(j.queden?(' Queden '+j.queden+'.'):'')):('Error: '+(j.error||''));carregaZones()}).catch(function(){$('mAvis').textContent='Error de connexió';carregaZones()})};
+function hora(t){try{return new Date(t).toLocaleString('ca-ES',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Madrid'})}catch(e){return t||''}}
+$('bVol').onclick=function(){$('mVol').textContent='Carregant… (pot trigar uns segons)';
+ fetch(API+'?vista=voluntaris',{headers:tok()?{authorization:'Bearer '+tok()}:{}}).then(function(r){return r.json()}).then(function(j){
+  if(!j.ok){$('mVol').textContent='Error: '+(j.error||'');return}
+  var tb=$('tv').tBodies[0];tb.textContent='';$('tv').hidden=false;var tp=0,te=0;
+  j.voluntaris.forEach(function(v){var r=tb.insertRow();r.insertCell().textContent=v.voluntari+(v.admin?' (admin)':'');r.insertCell().textContent=v.mesa;
+   [v.persones,v.elements,v.desmarcats].forEach(function(x){var d=r.insertCell();d.className='n';d.textContent=x});
+   r.insertCell().textContent=hora(v.primera);r.insertCell().textContent=hora(v.darrera);tp+=v.persones;te+=v.elements});
+  $('mVol').textContent=j.voluntaris.length?('Total: '+tp+' lliuraments, '+te+' elements.'):'Encara no hi ha cap lliurament registrat.'
+ }).catch(function(){$('mVol').textContent='Error de connexió'})};
 $('bZones').onclick=carregaZones;$('bRes').onclick=carregaZones;
 
 var NOM_MOD={caminant:'Caminant',corrent:'Corredor/a',bici:'Bici',dorsal0:'Dorsal 0',animar:'Animar'};
