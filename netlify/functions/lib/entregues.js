@@ -115,7 +115,8 @@ async function llistarEstats() {
 }
 
 // Què ha de rebre cada comanda. Regles:
-//  - bossa i pulsera: només participants (caminant / corrent / bici).
+//  - pulsera: només participants (caminant / corrent / bici).
+//  - bossa: participants i també "animar" (compra de samarretes).
 //  - pack Glucody: qui té diabetis tipus 1 o un familiar/amic (relacio
 //    "tinc" o "familiar"), de qualsevol modalitat excepte dorsal 0.
 //  - samarretes: les de payload.samarretes (talla + quantitat); si no n'hi ha,
@@ -129,7 +130,7 @@ function elementsComanda(ordre) {
   const relacio = String(p.relacio || "").toLowerCase();
   const glucody = mod !== "dorsal0" && (relacio === "tinc" || relacio === "familiar");
   const samarretes = samarretesDeComanda(ordre);
-  const e = { bossa: participant, pulsera: participant, glucody, samarretes };
+  const e = { bossa: participant || mod === "animar", pulsera: participant, glucody, samarretes };
   e.res = e.bossa || e.pulsera || e.glucody || e.samarretes.length > 0;
   return e;
 }
@@ -248,7 +249,42 @@ async function marcarQrEnviat(orderId) {
 async function llegirIndex() { return entreguesStore().get("index/cerca", { type: "json" }); }
 async function desarIndex(ix) { await entreguesStore().setJSON("index/cerca", ix); }
 
+// Activitat dels voluntaris (admin): llegeix TOTS els esdeveniments d'entrega /
+// desmarcat i els agrupa per voluntari i taula. Un esdeveniment = una persona
+// atesa (o un desmarcat). No modifica res.
+async function activitatVoluntaris() {
+  const store = entreguesStore();
+  const { blobs } = await store.list();
+  const evs = blobs.filter((b) => b.key.startsWith("ev/")).map((b) => ({ key: b.key, ev: parseEv(b.key) }))
+    .filter((x) => x.ev && (x.ev.tipus === "entrega" || x.ev.tipus === "treure"));
+  const dades = [];
+  for (let i = 0; i < evs.length; i += 50) {
+    const lot = await Promise.all(evs.slice(i, i + 50).map(async (x) => {
+      const v = (await store.get(x.key, { type: "json" })) || {};
+      return { id: x.key.split("/")[1], ev: x.ev, v };
+    }));
+    dades.push(...lot);
+  }
+  const grups = new Map();
+  dades.forEach(({ id, ev, v }) => {
+    const nom = String(v.voluntari || "(sense nom)").trim();
+    const mesa = String(v.mesa || "?");
+    const k = nom.toLowerCase() + "|" + mesa;
+    const g = grups.get(k) || { voluntari: nom, mesa, persones: new Set(), elements: 0, treballs: 0, admin: false, primera: null, darrera: null };
+    if (ev.tipus === "entrega") { g.persones.add(id); g.elements += ev.items.length; }
+    else g.treballs++;
+    if (v.admin) g.admin = true;
+    const t = ev.t;
+    if (!g.primera || t < g.primera) g.primera = t;
+    if (!g.darrera || t > g.darrera) g.darrera = t;
+    grups.set(k, g);
+  });
+  return Array.from(grups.values()).map((g) => ({ voluntari: g.voluntari, mesa: g.mesa, persones: g.persones.size,
+    elements: g.elements, desmarcats: g.treballs, admin: g.admin, primera: g.primera, darrera: g.darrera }))
+    .sort((a, b) => b.persones - a.persones);
+}
+
 module.exports = {
   idValid, obtenirEstat, llistarEstats, elementsComanda, estaPagada,
-  puntEfectiu, checklist, entregat, registrarEntrega, desferEntrega, canviarPunt, marcarQrEnviat, marcarAvis, avisosEnviats, llegirIndex, desarIndex,
+  puntEfectiu, checklist, entregat, registrarEntrega, desferEntrega, canviarPunt, marcarQrEnviat, marcarAvis, avisosEnviats, llegirIndex, desarIndex, activitatVoluntaris,
 };
