@@ -3,6 +3,7 @@
 // Panell d'administració de les entregues. Protegit amb ADMIN_TOKEN
 // (Authorization: Bearer ...), igual que admin-inscripcions.js.
 //   GET                          -> resum per zona/punt: assignats, lliurats, QR enviats i pendents d'enviar
+//   GET ?vista=voluntaris        -> activitat per voluntari i taula (persones ateses, elements, primera/última hora)
 //   GET ?q=text                  -> cerca de persones (nom, cognoms, correu, DNI, club, id de comanda)
 //   POST {action:"desfer", id}   -> desfà el lliurament d'una comanda (queda a l'historial)
 //   POST {action:"reenviar", id, email?}
@@ -85,6 +86,7 @@ exports.handler = async (event) => {
   try {
     if (event.httpMethod === "GET") {
       const q = String((event.queryStringParameters && event.queryStringParameters.q) || "").trim();
+      if ((event.queryStringParameters || {}).vista === "voluntaris") return resp(200, { ok: true, voluntaris: await E.activitatVoluntaris() });
       if (q) {
         if (q.length < 3) return resp(400, { ok: false, error: "Escriu almenys 3 caràcters" });
         return resp(200, { ok: true, persones: await cerca(q) });
