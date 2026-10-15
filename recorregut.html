@@ -924,7 +924,7 @@
       </div>
     </div>
 
-    <div class="rec-map" id="map-etapa1" data-gpx="gpx/etapa-1-castellar-gironella.gpx" data-dia="1">
+    <div class="rec-map" id="map-etapa1" data-gpx="gpx/etapa-1-castellar-gironella.gpx?v=20261015" data-dia="1">
       <div class="rec-map-loading">
         <span lang="ca">Carregant mapa…</span><span lang="es">Cargando mapa…</span><span lang="en">Loading map…</span>
       </div>
@@ -978,7 +978,7 @@
       </div>
     </div>
 
-    <div class="rec-map" id="map-etapa2" data-gpx="gpx/etapa-2-gironella-monistrol.gpx" data-dia="2">
+    <div class="rec-map" id="map-etapa2" data-gpx="gpx/etapa-2-gironella-monistrol.gpx?v=20261015" data-dia="2">
       <div class="rec-map-loading">
         <span lang="ca">Carregant mapa…</span><span lang="es">Cargando mapa…</span><span lang="en">Loading map…</span>
       </div>
@@ -1032,7 +1032,7 @@
       </div>
     </div>
 
-    <div class="rec-map" id="map-etapa3" data-gpx="gpx/etapa-3-monistrol-prat.gpx" data-dia="3">
+    <div class="rec-map" id="map-etapa3" data-gpx="gpx/etapa-3-monistrol-prat.gpx?v=20261015" data-dia="3">
       <div class="rec-map-loading">
         <span lang="ca">Carregant mapa…</span><span lang="es">Cargando mapa…</span><span lang="en">Loading map…</span>
       </div>
@@ -1096,7 +1096,7 @@
       <span lang="en">Open to participants, volunteers, families and organisations. Starting from the <strong id="cloenda-punt-text-en">Cal Tet car park</strong><span id="cloenda-maps-link-en"></span>, up to Mirador del Semàfor and back — the main march closing the challenge also finishes there.</span>
     </p>
 
-    <div class="rec-map" id="map-cloenda" data-gpx="gpx/caminada-cloenda-el-prat.gpx">
+    <div class="rec-map" id="map-cloenda" data-gpx="gpx/caminada-cloenda-el-prat.gpx?v=20261015">
       <div class="rec-map-loading">
         <span lang="ca">Carregant mapa…</span><span lang="es">Cargando mapa…</span><span lang="en">Loading map…</span>
       </div>
@@ -1300,7 +1300,7 @@
 
   // ---------- GPX: fetch + decimate trkpts into a lightweight polyline ----------
   async function loadGpxLatLngs(url, maxPoints) {
-    const res = await fetch(url, { cache: 'force-cache' });
+    const res = await fetch(url, { cache: 'no-cache' });
     if (!res.ok) throw new Error('GPX ' + res.status);
     const text = await res.text();
     const xml = new DOMParser().parseFromString(text, 'application/xml');
