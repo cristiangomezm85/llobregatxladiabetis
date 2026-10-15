@@ -263,7 +263,7 @@
       <div id="kmlabel">0.0 / 0.0 KM</div>
     </div>
     <div id="timelabel">⏱ —</div>
-    <a id="hudDonateBtn" class="donateBtn" href="https://www.migranodearena.org/reto/llobregat-x-la-diabetes" target="_blank" rel="noopener">🪙 Dona a Mi Grano de Arena</a>
+    <a id="hudDonateBtn" class="donateBtn" href="https://www.migranodearena.org/ca/repte/llobregat-x-la-diabetis" target="_blank" rel="noopener">🪙 Dona a Mi Grano de Arena</a>
     <div id="nextcp">Proper punt: <b>—</b></div>
   </div>
 
@@ -320,7 +320,7 @@
       <img src="assets/gold-coins.png" class="coin-icon" alt="">
       <span id="townModalGoldAmount">0 €</span>
     </div>
-    <a id="townModalDonateBtn" class="donateBtn" href="https://www.migranodearena.org/reto/llobregat-x-la-diabetes" target="_blank" rel="noopener">Dona per aquest municipi</a>
+    <a id="townModalDonateBtn" class="donateBtn" href="https://www.migranodearena.org/ca/repte/llobregat-x-la-diabetis" target="_blank" rel="noopener">Dona per aquest municipi</a>
   </div>
 </div>
 
@@ -362,7 +362,7 @@
     </div>
     <div id="bottleCaption"></div>
     <div id="bottleCta">💧 Ajuda'ns a omplir l'ampolla</div>
-    <a id="bottleDonateBtn" class="donateBtn" href="https://www.migranodearena.org/reto/llobregat-x-la-diabetes" target="_blank" rel="noopener">🪙 Dona a Mi Grano de Arena</a>
+    <a id="bottleDonateBtn" class="donateBtn" href="https://www.migranodearena.org/ca/repte/llobregat-x-la-diabetis" target="_blank" rel="noopener">🪙 Dona a Mi Grano de Arena</a>
   </div>
 </div>
 
@@ -651,7 +651,7 @@ function openTownInfo(c){
   // TODO: quan cada municipi tingui el seu propi subrepte a Mi Grano
   // de Arena, canviar aquest href per l'URL específica de c (per ara
   // tots apunten a la pàgina principal).
-  document.getElementById('townModalDonateBtn').href = (allMunicipisGps[c.name] && allMunicipisGps[c.name].donate) || 'https://www.migranodearena.org/reto/llobregat-x-la-diabetes';
+  document.getElementById('townModalDonateBtn').href = (allMunicipisGps[c.name] && allMunicipisGps[c.name].donate) || 'https://www.migranodearena.org/ca/repte/llobregat-x-la-diabetis';
   document.getElementById('townModalDonateBtn').textContent = `Dona per ${c.name || 'aquest municipi'}`;
 
   // Avatar del poble: opcional, ve del mateix municipis-gps.json
