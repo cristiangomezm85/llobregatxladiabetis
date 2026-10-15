@@ -3,37 +3,37 @@
     "lat": 42.285,
     "lng": 2.0189,
     "photo": "assets/pobles/castellar-de-nhug.jpg",
-    "donate": "https://www.migranodearena.org/reto/castellar-de-n-hug-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/castellar-de-n-hug-x-la-diabetes"
   },
   "La Pobla de Lillet": {
     "lat": 42.244,
     "lng": 1.975,
-    "donate": "https://www.migranodearena.org/reto/la-pobla-de-lillet-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/la-pobla-de-lillet-x-la-diabetes"
   },
   "Guardiola de Berguedà": {
     "lat": 42.235,
     "lng": 1.8811,
-    "donate": "https://www.migranodearena.org/reto/guardiola-de-bergueda-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/guardiola-de-bergueda-x-la-diabetes"
   },
   "Cercs": {
     "lat": 42.1481,
     "lng": 1.8619,
-    "donate": "https://www.migranodearena.org/reto/sant-jordi-de-cercs-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/sant-jordi-de-cercs-x-la-diabetes"
   },
   "Berga": {
     "lat": 42.1011,
     "lng": 1.8439,
-    "donate": "https://www.migranodearena.org/reto/berga-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/berga-x-la-diabetes"
   },
   "Gironella": {
     "lat": 42.033,
     "lng": 1.883,
-    "donate": "https://www.migranodearena.org/reto/gironella-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/gironella-x-la-diabetes"
   },
   "Navarcles": {
     "lat": 41.7536,
     "lng": 1.9063,
-    "donate": "https://www.migranodearena.org/reto/navarcles-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/navarcles-x-la-diabetes"
   },
   "El Pont de Vilomara i Rocafort": {
     "lat": 41.7009,
@@ -42,69 +42,69 @@
   "Sant Vicenç de Castellet": {
     "lat": 41.6678,
     "lng": 1.8633,
-    "donate": "https://www.migranodearena.org/reto/sant-vicen-de-castellet-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/sant-vicen-de-castellet-x-la-diabetes"
   },
   "Castellbell i el Vilar": {
     "lat": 41.6291,
     "lng": 1.8642,
-    "donate": "https://www.migranodearena.org/reto/castellbell-i-el-vilar-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/castellbell-i-el-vilar-x-la-diabetes"
   },
   "Monistrol de Montserrat": {
     "lat": 41.6108,
     "lng": 1.8434,
-    "donate": "https://www.migranodearena.org/reto/monistrol-de-montserrat-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/monistrol-de-montserrat-x-la-diabetes"
   },
   "Martorell": {
     "lat": 41.477,
     "lng": 1.928,
     "photo": "../dona/fotos/Martorell.png",
-    "donate": "https://www.migranodearena.org/reto/martorell-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/martorell-x-la-diabetes"
   },
   "Sant Andreu de la Barca": {
     "lat": 41.4478,
     "lng": 1.9769,
-    "donate": "https://www.migranodearena.org/reto/sant-andreu-de-la-barca-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/sant-andreu-de-la-barca-x-la-diabetes"
   },
   "Pallejà": {
     "lat": 41.4242,
     "lng": 1.9978,
     "photo": "../dona/fotos/Pallejà.png",
-    "donate": "https://www.migranodearena.org/reto/palleja-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/palleja-x-la-diabetes"
   },
   "Sant Vicenç dels Horts": {
     "lat": 41.3953,
     "lng": 2.0108,
-    "donate": "https://www.migranodearena.org/reto/sant-vicen-dels-horts-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/sant-vicen-dels-horts-x-la-diabetes"
   },
   "Sant Boi de Llobregat": {
     "lat": 41.336,
     "lng": 2.043,
     "photo": "../dona/fotos/Sant Boi de Llobregat.png",
-    "donate": "https://www.migranodearena.org/reto/sant-boi-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/sant-boi-x-la-diabetes"
   },
   "Sant Joan Despí": {
     "lat": 41.365,
     "lng": 2.048,
     "photo": "../dona/fotos/Sant Joan Despí.png",
-    "donate": "https://www.migranodearena.org/reto/sant-joan-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/sant-joan-x-la-diabetes"
   },
   "Cornellà de Llobregat": {
     "lat": 41.3574,
     "lng": 2.07,
     "photo": "../dona/fotos/Cornellà de Llobregat.png",
-    "donate": "https://www.migranodearena.org/reto/cornella-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/cornella-x-la-diabetes"
   },
   "L'Hospitalet de Llobregat": {
     "lat": 41.3449,
     "lng": 2.1042,
     "photo": "../dona/fotos/Hospitalet de Llobregat.png",
-    "donate": "https://www.migranodearena.org/reto/hospitalet-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/hospitalet-x-la-diabetes"
   },
   "El Prat de Llobregat": {
     "lat": 41.333,
     "lng": 2.1,
     "photo": "../dona/fotos/El Prat de Llobregat.png",
-    "donate": "https://www.migranodearena.org/reto/el-prat-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/el-prat-x-la-diabetes"
   },
   "Desembocadura": {
     "lat": 41.2981,
@@ -115,26 +115,26 @@
   "Cal Rosal": {
     "lat": 42.0732,
     "lng": 1.8703,
-    "donate": "https://www.migranodearena.org/reto/cal-rosal-olvan-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/cal-rosal-olvan-x-la-diabetes"
   },
   "Puig-reig": {
     "lat": 41.9742,
     "lng": 1.8806,
-    "donate": "https://www.migranodearena.org/reto/puig-reig-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/puig-reig-x-la-diabetes"
   },
   "Navàs": {
     "lat": 41.9,
     "lng": 1.8864,
-    "donate": "https://www.migranodearena.org/reto/navas-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/navas-x-la-diabetes"
   },
   "Balsareny": {
     "lat": 41.8658,
     "lng": 1.8769,
-    "donate": "https://www.migranodearena.org/reto/balsareny-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/balsareny-x-la-diabetes"
   },
   "Sallent": {
     "lat": 41.8242,
     "lng": 1.8945,
-    "donate": "https://www.migranodearena.org/reto/sallent-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/sallent-x-la-diabetes"
   }
 }
