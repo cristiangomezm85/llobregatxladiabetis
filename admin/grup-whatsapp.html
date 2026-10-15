@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ca"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Grup WhatsApp etapa 1 — admin</title>
+<style>
+body{font:15px/1.5 system-ui,sans-serif;margin:0;padding:20px;background:#f4f6fa;color:#1a2233}
+.w{max-width:760px;margin:0 auto}.card{background:#fff;border-radius:12px;padding:18px;margin-bottom:16px;box-shadow:0 2px 10px #0001}
+h1{margin:0 0 10px;font-size:22px}h2{margin:0 0 8px;font-size:17px}
+button{padding:9px 16px;border:0;border-radius:8px;background:#1E72D4;color:#fff;font:600 14px inherit;cursor:pointer;margin:6px 8px 0 0}
+button.g{background:#1A8A3C}button.s{background:#556}button:disabled{opacity:.4}
+input[type=password],input[type=text],input[type=email]{padding:8px 10px;border:1px solid #bbc;border-radius:8px;font:inherit;width:100%;max-width:520px}
+.m{margin-top:10px;font-weight:600}.mut{color:#667;font-size:13px}
+table{border-collapse:collapse;font-size:14px;margin-top:8px}td{border-bottom:1px solid #e3e6ee;padding:5px 14px 5px 0}
+</style></head><body><div class="w">
+<h1>Invitació al grup de WhatsApp de l'etapa 1</h1>
+<div class="card"><label>Token d'admin <small class="mut">(es fa servir el de l'admin si ja hi has entrat)</small></label><br><input type="password" id="tok" autocomplete="off"></div>
+
+<div class="card"><h2>1. Enllaç del grup</h2>
+<input type="text" id="enllac" value="https://chat.whatsapp.com/KxIzZznPpQoGi5OcvV1ucw">
+<p class="mut" style="margin:6px 0 0">Correu en català i castellà, amb aquest enllaç. Va a les persones que fan l'etapa 1 (caminant, corrent o bici, inscripció pagada), un correu per adreça.</p></div>
+
+<div class="card"><h2>2. Simulació</h2>
+<button id="bSim">Veure a qui s'enviaria</button>
+<table id="tSim" hidden><tbody></tbody></table>
+<div class="m" id="mSim"></div></div>
+
+<div class="card"><h2>3. Correu de prova</h2>
+<input type="email" id="provaMail" placeholder="el-teu-correu@exemple.com">
+<br><button id="bProva" class="s">Enviar-me una prova</button>
+<div class="m" id="mProva"></div></div>
+
+<div class="card"><h2>4. Enviar</h2>
+<p class="mut" style="margin:0">Envia per lots als que encara no l'han rebut; no repeteix mai. Comprova abans la prova.</p>
+<button id="bEnv" class="g">Enviar la invitació</button>
+<div class="m" id="mEnv"></div></div>
+
+<div class="card"><h2>Llista de persones</h2>
+<p class="mut" style="margin:0">Nom, telèfon i tram de qui ha de ser al grup (CSV per obrir amb Excel).</p>
+<button id="bCsv" class="s">Descarregar llista (CSV)</button><div class="m" id="mCsv"></div></div>
+</div>
+<script>
+var API='/.netlify/functions/admin-grup-whatsapp',$=function(i){return document.getElementById(i)};
+function tok(){var t=$('tok').value.trim();if(t)return t;try{return sessionStorage.getItem('lxd-admin-token')||localStorage.getItem('lxd-admin-token')||''}catch(e){return ''}}
+function h(){var x={'content-type':'application/json'},t=tok();if(t)x.authorization='Bearer '+t;return x}
+function get(q){return fetch(API+(q||''),{headers:h()}).then(function(r){return r.json().catch(function(){return {ok:false,error:'Resposta no vàlida (HTTP '+r.status+')'}})})}
+function post(b){return fetch(API,{method:'POST',headers:h(),body:JSON.stringify(b)}).then(function(r){return r.json().catch(function(){return {ok:false,error:'Resposta no vàlida (HTTP '+r.status+')'}})})}
+function enl(){return $('enllac').value.trim()}
+$('bSim').onclick=function(){$('mSim').textContent='Carregant…';get().then(function(j){
+ if(!j.ok){$('mSim').textContent='Error: '+(j.error||'');return}
+ var tb=$('tSim').tBodies[0];tb.textContent='';$('tSim').hidden=false;
+ [['Participants pagats',j.participants_pagats],['Fan l\'etapa 1 (inscripcions)',j.dins],['Correus diferents',j.correus_unics],['Ja enviats',j.ja_enviats],['Pendents d\'enviar',j.pendents],['Sense correu vàlid',j.sense_correu.length],['Sense etapes definides',j.sense_etapa.length]].forEach(function(f){var r=tb.insertRow();r.insertCell().textContent=f[0];var c=r.insertCell();c.textContent=f[1];c.style.fontWeight='700'});
+ $('mSim').textContent=(j.sense_etapa.length?'Atenció: hi ha inscripcions sense etapes definides; cal revisar-les abans d\'enviar.':'')}).catch(function(){$('mSim').textContent='Error de connexió'})};
+$('bProva').onclick=function(){var m=$('provaMail').value.trim();if(!m){$('mProva').textContent='Escriu un correu.';return}
+ $('mProva').textContent='Enviant…';post({action:'prova',enllac:enl(),email:m}).then(function(j){$('mProva').textContent=j.ok?('Prova enviada a '+j.enviat_a+'.'):('Error: '+(j.error||''))}).catch(function(){$('mProva').textContent='Error de connexió'})};
+$('bEnv').onclick=function(){
+ $('mEnv').textContent='Comprovant…';
+ post({action:'enviar',enllac:enl(),aplicar:false}).then(function(j){
+  if(!j.ok){$('mEnv').textContent='Error: '+(j.error||'');return}
+  if(!confirm('Enviar la invitació a '+j.pendents_total+' adreces de correu?\n\nNo es pot desfer.'))return;
+  $('bEnv').disabled=true;var tot=0;
+  (function seg(){post({action:'enviar',enllac:enl(),aplicar:true,limit:80}).then(function(r){
+    if(!r.ok){$('mEnv').textContent='Error: '+(r.error||'')+(tot?(' (ja enviats: '+tot+')'):'');$('bEnv').disabled=false;return}
+    tot+=r.enviats;$('mEnv').textContent='Enviats '+tot+'. Queden '+r.queden+'…';
+    if(r.queden>0&&r.enviats>0)setTimeout(seg,1500);else{$('mEnv').textContent='Fet: '+tot+' correus enviats.';$('bEnv').disabled=false}
+  }).catch(function(){$('mEnv').textContent='Error de connexió. Torna a simular per veure què ha sortit.';$('bEnv').disabled=false})})();
+ }).catch(function(){$('mEnv').textContent='Error de connexió'})};
+function csv(c){c=String(c==null?'':c);return /[",;\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}
+$('bCsv').onclick=function(){$('mCsv').textContent='Carregant…';get('?llista=1').then(function(j){
+ if(!j.ok){$('mCsv').textContent='Error: '+(j.error||'');return}
+ var L=['Nom;Cognoms;Telèfon;Correu;Inici;Final'].concat(j.persones.map(function(p){return [p.nom,p.cognoms,p.telefon,p.email,p.inici,p.final].map(csv).join(';')}));
+ var b=new Blob(['﻿'+L.join('\n')],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='participants-etapa1.csv';a.click();
+ $('mCsv').textContent=j.persones.length+' persones.'}).catch(function(){$('mCsv').textContent='Error de connexió'})};
+</script></body></html>
