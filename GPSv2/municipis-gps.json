@@ -2,53 +2,62 @@
   "Castellar de n'Hug": {
     "lat": 42.285,
     "lng": 2.0189,
-    "photo": "assets/pobles/castellar-de-nhug.jpg",
+    "photo": "../dona/fotos/Castellar de nHug.png",
     "donate": "https://www.migranodearena.org/ca/repte/castellar-de-n-hug-x-la-diabetes"
   },
   "La Pobla de Lillet": {
     "lat": 42.244,
     "lng": 1.975,
-    "donate": "https://www.migranodearena.org/ca/repte/la-pobla-de-lillet-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/la-pobla-de-lillet-x-la-diabetes",
+    "photo": "../dona/fotos/La Poble de Lillet.png"
   },
   "Guardiola de Berguedà": {
     "lat": 42.235,
     "lng": 1.8811,
-    "donate": "https://www.migranodearena.org/ca/repte/guardiola-de-bergueda-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/guardiola-de-bergueda-x-la-diabetes",
+    "photo": "../dona/fotos/Guardiola de Bergueda.png"
   },
   "Cercs": {
     "lat": 42.1481,
     "lng": 1.8619,
-    "donate": "https://www.migranodearena.org/ca/repte/sant-jordi-de-cercs-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/sant-jordi-de-cercs-x-la-diabetes",
+    "photo": "../dona/fotos/Cercs.png"
   },
   "Berga": {
     "lat": 42.1011,
     "lng": 1.8439,
-    "donate": "https://www.migranodearena.org/ca/repte/berga-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/berga-x-la-diabetes",
+    "photo": "../dona/fotos/Berga.png"
   },
   "Gironella": {
     "lat": 42.033,
     "lng": 1.883,
-    "donate": "https://www.migranodearena.org/ca/repte/gironella-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/gironella-x-la-diabetes",
+    "photo": "../dona/fotos/Gironella.png"
   },
   "Navarcles": {
     "lat": 41.7536,
     "lng": 1.9063,
-    "donate": "https://www.migranodearena.org/ca/repte/navarcles-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/navarcles-x-la-diabetes",
+    "photo": "../dona/fotos/Navarcles.png"
   },
   "Sant Vicenç de Castellet": {
     "lat": 41.6678,
     "lng": 1.8633,
-    "donate": "https://www.migranodearena.org/ca/repte/sant-vicen-de-castellet-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/sant-vicen-de-castellet-x-la-diabetes",
+    "photo": "../dona/fotos/Sant Vicenç de Castellet.png"
   },
   "Castellbell i el Vilar": {
     "lat": 41.6291,
     "lng": 1.8642,
-    "donate": "https://www.migranodearena.org/ca/repte/castellbell-i-el-vilar-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/castellbell-i-el-vilar-x-la-diabetes",
+    "photo": "../dona/fotos/Castellbell i el Vilar.png"
   },
   "Monistrol de Montserrat": {
     "lat": 41.6108,
     "lng": 1.8434,
-    "donate": "https://www.migranodearena.org/ca/repte/monistrol-de-montserrat-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/monistrol-de-montserrat-x-la-diabetes",
+    "photo": "../dona/fotos/Monistrol.png"
   },
   "Martorell": {
     "lat": 41.477,
@@ -59,7 +68,8 @@
   "Sant Andreu de la Barca": {
     "lat": 41.4478,
     "lng": 1.9769,
-    "donate": "https://www.migranodearena.org/ca/repte/sant-andreu-de-la-barca-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/sant-andreu-de-la-barca-x-la-diabetes",
+    "photo": "../dona/fotos/Sant Andreu de la Barca.png"
   },
   "Pallejà": {
     "lat": 41.4242,
@@ -70,7 +80,8 @@
   "Sant Vicenç dels Horts": {
     "lat": 41.3953,
     "lng": 2.0108,
-    "donate": "https://www.migranodearena.org/ca/repte/sant-vicen-dels-horts-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/sant-vicen-dels-horts-x-la-diabetes",
+    "photo": "../dona/fotos/Sant Vicençs dels Horts.png"
   },
   "Sant Boi de Llobregat": {
     "lat": 41.336,
@@ -111,27 +122,32 @@
   "Cal Rosal": {
     "lat": 42.0732,
     "lng": 1.8703,
-    "donate": "https://www.migranodearena.org/ca/repte/cal-rosal-olvan-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/cal-rosal-olvan-x-la-diabetes",
+    "photo": "../dona/fotos/Cal Rosal.png"
   },
   "Puig-reig": {
     "lat": 41.9742,
     "lng": 1.8806,
-    "donate": "https://www.migranodearena.org/ca/repte/puig-reig-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/puig-reig-x-la-diabetes",
+    "photo": "../dona/fotos/Puig-Reig.png"
   },
   "Navàs": {
     "lat": 41.9,
     "lng": 1.8864,
-    "donate": "https://www.migranodearena.org/ca/repte/navas-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/navas-x-la-diabetes",
+    "photo": "../dona/fotos/navàs.png"
   },
   "Balsareny": {
     "lat": 41.8658,
     "lng": 1.8769,
-    "donate": "https://www.migranodearena.org/ca/repte/balsareny-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/balsareny-x-la-diabetes",
+    "photo": "../dona/fotos/Balsareny.png"
   },
   "Sallent": {
     "lat": 41.8242,
     "lng": 1.8945,
-    "donate": "https://www.migranodearena.org/ca/repte/sallent-x-la-diabetes"
+    "donate": "https://www.migranodearena.org/ca/repte/sallent-x-la-diabetes",
+    "photo": "../dona/fotos/Sallent.png"
   },
   "Manresa": {
     "lat": 41.7009,
