@@ -31,6 +31,7 @@
   #mapwrap{flex:1; position:relative; overflow-y:auto; overflow-x:hidden; background:#0a1220;}
   #mapinner{ position:relative; width:100%; }
   #mapimg{ display:block; width:100%; height:auto; }
+  #mapinner.loadingMap{ min-height:70vh; }
   #loading{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--aigua); }
 
   #mapOverlayBar{
@@ -468,6 +469,59 @@ function findStage(stageId){
   return rawConfig.stages[0];
 }
 
+
+/* Càrrega robusta del mapa: versionada (per no quedar-nos amb una còpia
+   antiga a la memòria cau), amb indicador de càrrega, reintents si falla
+   i precàrrega del mapa de l'altre moment del dia (dia/nit) perquè el
+   canvi sigui instantani. */
+let mapLoadToken = 0;
+function versionedMapSrc(src, retry){
+  if (!src || src.startsWith('data:')) return src || '';
+  const sep = src.includes('?') ? '&' : '?';
+  const v = (typeof rawConfig !== 'undefined' && rawConfig && rawConfig.updatedAt) ? rawConfig.updatedAt : 0;
+  return `${src}${sep}v=${v}${retry ? '&r=' + retry : ''}`;
+}
+function loadMapImage(src, otherSrc){
+  const mapimg = document.getElementById('mapimg');
+  const loading = document.getElementById('loading');
+  const inner = document.getElementById('mapinner');
+  const token = ++mapLoadToken;
+  if (!src) { loading.style.display = 'none'; mapimg.removeAttribute('src'); return; }
+
+  const finalSrc = versionedMapSrc(src, 0);
+  if (mapimg.getAttribute('src') === finalSrc && mapimg.complete && mapimg.naturalWidth > 0) {
+    loading.style.display = 'none'; inner.classList.remove('loadingMap'); return;
+  }
+  loading.style.display = 'flex';
+  loading.style.cursor = '';
+  loading.textContent = 'Carregant mapa...';
+  loading.onclick = null;
+  inner.classList.add('loadingMap');
+
+  const attempt = (n) => {
+    const probe = new Image();
+    const url = versionedMapSrc(src, n);
+    probe.onload = () => {
+      if (token !== mapLoadToken) return;
+      mapimg.src = url;
+      loading.style.display = 'none';
+      inner.classList.remove('loadingMap');
+      if (otherSrc && otherSrc !== src) setTimeout(() => { if (token === mapLoadToken) new Image().src = versionedMapSrc(otherSrc, 0); }, 2500);
+    };
+    probe.onerror = () => {
+      if (token !== mapLoadToken) return;
+      if (n < 4) { loading.textContent = `Carregant mapa... (reintent ${n + 1})`; setTimeout(() => { if (token === mapLoadToken) attempt(n + 1); }, 1200 * (n + 1)); }
+      else {
+        loading.textContent = '⚠ No s\'ha pogut carregar el mapa. Toca aquí per tornar-ho a provar';
+        loading.style.cursor = 'pointer';
+        loading.onclick = () => loadMapImage(src, otherSrc);
+      }
+    };
+    probe.src = url;
+  };
+  attempt(0);
+}
+
 function applyStage(stageId, isNight){
   const stage = findStage(stageId);
   if (!stage) {
@@ -491,8 +545,8 @@ function applyStage(stageId, isNight){
     return (isNight ? stage.mapImageDay : stage.mapImageNight) || '';
   }
   const mapSrc = resolveMapSrc(isNight);
-  document.getElementById('mapimg').src = mapSrc || '';
-  document.getElementById('loading').style.display = 'none';
+  const otherSrc = resolveMapSrc(!isNight);
+  loadMapImage(mapSrc, otherSrc);
 
   fullPath = (stage.points || []).map(p => ({ xPct: p.xPct, yPct: p.yPct }));
   const arclen = arcLengthTable(fullPath);
@@ -628,7 +682,8 @@ function openTownInfo(c){
   document.getElementById('townModalDesc').textContent = c.description && c.description.trim()
     ? c.description
     : 'Encara no hi ha descripció d\'aquest poble.';
-  const money = Number(c.moneyRaised) || 0;
+  const td = townDonation(c.name);
+  const money = td ? td.recaudado : (Number(c.moneyRaised) || 0);
   document.getElementById('townModalGoldAmount').textContent = money.toLocaleString('ca-ES') + ' €';
 
   // Hora: si el poble és un checkpoint de l'etapa activa, mostrem la
@@ -651,7 +706,7 @@ function openTownInfo(c){
   // TODO: quan cada municipi tingui el seu propi subrepte a Mi Grano
   // de Arena, canviar aquest href per l'URL específica de c (per ara
   // tots apunten a la pàgina principal).
-  document.getElementById('townModalDonateBtn').href = (allMunicipisGps[c.name] && allMunicipisGps[c.name].donate) || 'https://www.migranodearena.org/ca/repte/llobregat-x-la-diabetis';
+  document.getElementById('townModalDonateBtn').href = (td && td.url) || (allMunicipisGps[c.name] && allMunicipisGps[c.name].donate) || 'https://www.migranodearena.org/ca/repte/llobregat-x-la-diabetis';
   document.getElementById('townModalDonateBtn').textContent = `Dona per ${c.name || 'aquest municipi'}`;
 
   // Avatar del poble: opcional, ve del mateix municipis-gps.json
@@ -740,8 +795,10 @@ function renderBottle(){
   document.getElementById('bottleFill').style.height = pct + '%';
   document.getElementById('bottleCaption').textContent = `${pages.length} / ${checkpoints.length} pobles · ${pct}% plena`;
 
-  const raised = pages.reduce((sum, i) => sum + (Number(checkpoints[i].moneyRaised) || 0), 0);
-  const remaining = checkpoints.reduce((sum, c, i) => pages.includes(i) ? sum : sum + (Number(c.moneyRaised) || 0), 0);
+  const amtOf = (c) => { const t = townDonation(c.name); return t ? t.recaudado : (Number(c.moneyRaised) || 0); };
+  const raisedTowns = pages.reduce((sum, i) => sum + amtOf(checkpoints[i]), 0);
+  const raised = donations.total != null ? donations.total : raisedTowns;
+  const remaining = checkpoints.reduce((sum, c, i) => pages.includes(i) ? sum : sum + amtOf(c), 0);
   document.getElementById('bottleRaisedValue').textContent = raised.toLocaleString('ca-ES') + ' €';
   document.getElementById('bottleRemainingValue').textContent = remaining.toLocaleString('ca-ES') + ' €';
 }
@@ -782,7 +839,7 @@ function render(km){
   // criteri que fem servir per al llibre i l'ampolla.
   const reachedIdx = bookAvailablePages();
   const goldTotal = reachedIdx.reduce((sum, i) => sum + (Number(checkpoints[i].moneyRaised) || 0), 0);
-  document.getElementById('goldAmount').textContent = goldTotal.toLocaleString('ca-ES') + ' €';
+  document.getElementById('goldAmount').textContent = (donations.total != null ? donations.total : goldTotal).toLocaleString('ca-ES') + ' €';
 
   renderElapsedTime();
 
@@ -1222,9 +1279,82 @@ async function setGpsMode(on){
 
 document.getElementById('modetoggle').addEventListener('click', () => setGpsMode(!gpsMode));
 
+/* =========================================================
+   DONATIUS EN VIU — mateixa font i mateixa suma que llobregat.org/dona:
+   total = retos.json (totalRecaudado, el que actualitza el bot des de
+   Mi Grano de Arena) + donatius d'inscripcions (/api/public-stats).
+   Cada poble s'enllaça pel "slug" de la seva URL de Mi Grano de Arena.
+   Si res respon, es manté l'últim valor guardat (mai es torna a 0).
+   ========================================================= */
+const RETOS_JSON_URL = 'https://raw.githubusercontent.com/cristiangomezm85/llobregatxladiabetis/main/dona/retos.json';
+const RETOS_JSON_FALLBACK = 'https://cdn.jsdelivr.net/gh/cristiangomezm85/llobregatxladiabetis@main/dona/retos.json';
+const PUBLIC_STATS_URLS = ['/api/public-stats', '/.netlify/functions/public-stats', 'https://llobregat.org/api/public-stats'];
+const DON_CACHE_KEY = 'llxd-gps-donations';
+let donations = { total: null, byTown: {} };   // byTown: slugBase -> { recaudado, url }
+
+try {
+  const c = JSON.parse(localStorage.getItem(DON_CACHE_KEY) || 'null');
+  if (c && typeof c.total === 'number') donations = c;
+} catch (e) {}
+
+function fetchJsonTimeout(url, ms = 6000){
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), ms);
+  return fetch(url, { cache: 'no-store', signal: ctl.signal })
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .finally(() => clearTimeout(t));
+}
+// "…/ca/repte/berga-x-la-diabetis" i "…/reto/berga-x-la-diabetes" → "berga-x-la-diabetes"
+function slugBase(url){
+  if (!url || typeof url !== 'string') return '';
+  return url.split('?')[0].replace(/\/+$/, '').split('/').pop().replace(/-diabetis$/, '-diabetes');
+}
+function pickCatUrl(u){
+  if (!u) return null;
+  if (typeof u === 'string') return u;
+  return u.ca || u.es || u.en || Object.values(u).find(Boolean) || null;
+}
+function townDonation(name){
+  const info = allMunicipisGps && allMunicipisGps[name];
+  return (info && donations.byTown[slugBase(info.donate)]) || null;
+}
+function fmtEur(n){ return (Number(n) || 0).toLocaleString('ca-ES') + ' €'; }
+
+async function loadDonations(){
+  let retos = null;
+  try { retos = await fetchJsonTimeout(RETOS_JSON_URL); }
+  catch (e) { try { retos = await fetchJsonTimeout(RETOS_JSON_FALLBACK); } catch (e2) { retos = null; } }
+
+  let inscr = null;
+  for (const u of PUBLIC_STATS_URLS) {
+    try { const d = await fetchJsonTimeout(u, 5000); inscr = Number(d && d.donatiusInscripcionsEur) || 0; break; } catch (e) {}
+  }
+
+  if (retos) {
+    const byTown = {};
+    (retos.retos || []).filter(r => r.tipo === 'poble').forEach(r => {
+      byTown[slugBase(pickCatUrl(r.url))] = { recaudado: Number(r.recaudado) || 0, url: pickCatUrl(r.url) };
+    });
+    const prevInscr = (donations.inscr != null) ? donations.inscr : 0;
+    const useInscr = inscr != null ? inscr : prevInscr;
+    donations = { base: Number(retos.totalRecaudado) || 0, inscr: useInscr, total: (Number(retos.totalRecaudado) || 0) + useInscr, byTown };
+    try { localStorage.setItem(DON_CACHE_KEY, JSON.stringify(donations)); } catch (e) {}
+  } else if (inscr != null && donations.base != null) {
+    donations.inscr = inscr; donations.total = donations.base + inscr;
+    try { localStorage.setItem(DON_CACHE_KEY, JSON.stringify(donations)); } catch (e) {}
+  }
+  if (typeof checkpoints !== 'undefined' && checkpoints.length && typeof serverState !== 'undefined' && serverState) {
+    render(currentKmFromState(serverState));
+    try { renderBottle(); } catch (e) {}
+  }
+}
+
+
 (async () => {
   await fetchConfig();
   await loadMunicipisGps();
+  loadDonations();
+  setInterval(loadDonations, 60000);
   if (!rawConfig.stages || rawConfig.stages.length === 0) {
     document.getElementById('loading').textContent = '⚠ Encara no hi ha cap etapa configurada al servidor';
     document.getElementById('status-line').textContent = '⚠ Sense configuració al servidor';
