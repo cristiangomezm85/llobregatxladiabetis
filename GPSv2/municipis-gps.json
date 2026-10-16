@@ -35,10 +35,6 @@
     "lng": 1.9063,
     "donate": "https://www.migranodearena.org/ca/repte/navarcles-x-la-diabetes"
   },
-  "El Pont de Vilomara i Rocafort": {
-    "lat": 41.7009,
-    "lng": 1.8708
-  },
   "Sant Vicenç de Castellet": {
     "lat": 41.6678,
     "lng": 1.8633,
@@ -136,5 +132,11 @@
     "lat": 41.8242,
     "lng": 1.8945,
     "donate": "https://www.migranodearena.org/ca/repte/sallent-x-la-diabetes"
+  },
+  "Manresa": {
+    "lat": 41.7009,
+    "lng": 1.868,
+    "photo": "../dona/fotos/Manresa.png",
+    "donate": "https://www.migranodearena.org/ca/repte/manresa-x-la-diabetis"
   }
 }
