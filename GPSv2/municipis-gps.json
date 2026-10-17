@@ -154,5 +154,17 @@
     "lng": 1.868,
     "photo": "../dona/fotos/Manresa.png",
     "donate": "https://www.migranodearena.org/ca/repte/manresa-x-la-diabetis"
+  },
+  "Olesa de Montserrat": {
+    "lat": 41.545,
+    "lng": 1.8944,
+    "photo": "../dona/fotos/Olesa.png",
+    "donate": "https://www.migranodearena.org/ca/repte/olesa-de-montserrat-x-la-diabetes"
+  },
+  "Esparreguera": {
+    "lat": 41.5381,
+    "lng": 1.8692,
+    "photo": "../dona/fotos/Esparraguera Op1.png",
+    "donate": "https://www.migranodearena.org/ca/repte/esparreguera-x-la-diabetes"
   }
 }
