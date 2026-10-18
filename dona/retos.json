@@ -5,8 +5,8 @@
     "es": "https://www.migranodearena.org/reto/llobregat-x-la-diabetes",
     "en": "https://www.migranodearena.org/en/cause/llobregat-x-la-diabetes"
   },
-  "totalRecaudado": 8573,
-  "actualizado": "2026-10-18T15:45:41.048Z",
+  "totalRecaudado": 8598,
+  "actualizado": "2026-10-18T16:01:09.301Z",
   "retos": [
     {
       "slug": "astolfo-x-la-diabetes",
@@ -53,7 +53,7 @@
         "es": "https://www.migranodearena.org/reto/daniel-x-la-diabetes",
         "ca": "https://www.migranodearena.org/ca/repte/daniel-x-la-diabetes"
       },
-      "recaudado": 185,
+      "recaudado": 210,
       "diasRestantes": 13
     },
     {
@@ -550,6 +550,15 @@
       "url": "https://www.migranodearena.org/reto/david-x-la-diabetis",
       "recaudado": 0,
       "diasRestantes": 13
+    },
+    {
+      "slug": "un-vehiculo-para-afa-palencia",
+      "nombre": "un-vehiculo-para-afa-palencia",
+      "tipo": "pendiente",
+      "foto": null,
+      "url": "https://www.migranodearena.org/reto/un-vehiculo-para-afa-palencia",
+      "recaudado": 0,
+      "diasRestantes": 44
     }
   ]
 }
