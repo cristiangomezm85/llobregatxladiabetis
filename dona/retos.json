@@ -5,8 +5,8 @@
     "es": "https://www.migranodearena.org/reto/llobregat-x-la-diabetes",
     "en": "https://www.migranodearena.org/en/cause/llobregat-x-la-diabetes"
   },
-  "totalRecaudado": 8158,
-  "actualizado": "2026-10-18T08:01:09.996Z",
+  "totalRecaudado": 8208,
+  "actualizado": "2026-10-18T08:15:46.408Z",
   "retos": [
     {
       "slug": "astolfo-x-la-diabetes",
@@ -23,7 +23,7 @@
       "tipo": "heroe",
       "foto": "fotos/clubbasquetesplugues.jpeg",
       "url": "https://www.migranodearena.org/reto/club-basquet-sant-just-amb-llobregat-x-la-diabetis",
-      "recaudado": 1019,
+      "recaudado": 1069,
       "diasRestantes": 13
     },
     {
@@ -494,7 +494,7 @@
       "tipo": "pendiente",
       "foto": null,
       "url": "https://www.migranodearena.org/reto/club-basquet-sant-just-amb-llobregat-x-la-diabetis",
-      "recaudado": 1019,
+      "recaudado": 1069,
       "diasRestantes": 13
     },
     {
