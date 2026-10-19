@@ -39,7 +39,7 @@ const OUT_PATH = new URL('../dona/donaciones.json', import.meta.url);
 const DUMP = process.argv.includes('--dump');
 const PAUSA_MS = 400;
 
-const RE_DONANTES = /^(donantes|donants|donors)\s*\((\d+)\)/i;
+const RE_DONANTES = /^(donantes|donants|donors|donaciones|donacions|donations)\s*\((\d+)\)/i;
 const RE_COMENTARIOS = /^(comentarios|comentaris|comments)\s*\((\d+)\)/i;
 const RE_IMPORTE = /^([\d.]+(?:,\d+)?)\s*€$|^€\s*([\d.]+(?:,\d+)?)$/;
 const RE_OCULTA = /^(donaci[oó]n oculta|donaci[oó] oculta|hidden donation)$/i;
@@ -56,7 +56,7 @@ async function main() {
   let maxOrden = previo.donaciones.reduce((m, d) => Math.max(m, d.orden || 0), 0);
 
   const nuevas = [];
-  let retosConDinero = 0, reconocidas = 0, actualizadas = 0;
+  let retosConDinero = 0, reconocidas = 0, actualizadas = 0, diagnosticoDado = false;
 
   for (const reto of retosJson.retos) {
     if (!(reto.recaudado > 0)) continue;
@@ -67,6 +67,9 @@ async function main() {
     const html = await fetchText(base);
     const { donantes, comentarios, totalDonantes, totalComentarios, tokens } = parsear(html);
     if (DUMP) volcar(reto.slug, tokens, donantes, comentarios, totalDonantes, totalComentarios);
+    // Resumen por reto (queda en dona/_log-donaciones.txt para poder diagnosticar sin entrar a Actions).
+    console.log(`${reto.slug}: donantes ${donantes.length}/${totalDonantes ?? '?'} · comentarios ${comentarios.length}/${totalComentarios ?? '?'} · textos ${tokens.length}`);
+    if (totalDonantes == null && !diagnosticoDado) { diagnosticoDado = true; diagnostico(reto.slug, html, tokens); }
     if (totalDonantes != null && donantes.length < totalDonantes)
       console.warn(`⚠️  ${reto.slug}: la página dice ${totalDonantes} donantes pero se leyeron ${donantes.length} (¿paginación por JS?)`);
     if (totalComentarios != null && comentarios.length < totalComentarios)
@@ -198,13 +201,22 @@ export function aproximarFecha(rel, ahora = new Date()) {
   const s = rel.toLowerCase();
   if (/hoy|avui|today/.test(s)) return new Date(base).toISOString();
   if (/ayer|ahir|yesterday/.test(s)) return new Date(base - 864e5).toISOString();
-  const m = s.match(/(\d+|un|una)\s*(minut|min|hora|hour|d[ií]a|dia|day|semana|setman|week|mes|month|a[ñn]o|any|year)/);
+  const m = s.match(/(\d+|un|una)\s*(minut|min|hor|hour|d[ií]a|die|dia|day|semana|setman|week|mes|month|a[ñn]o|any|year)/);
   if (!m) return new Date(base).toISOString();
   const n = /^\d+$/.test(m[1]) ? Number(m[1]) : 1;
   const u = m[2];
-  const ms = /^min/.test(u) ? 6e4 : /^(hora|hour)/.test(u) ? 36e5 : /^(d[ií]a|dia|day)/.test(u) ? 864e5
+  const ms = /^min/.test(u) ? 6e4 : /^(hor|hour)/.test(u) ? 36e5 : /^(d[ií]a|die|dia|day)/.test(u) ? 864e5
     : /^(semana|setman|week)/.test(u) ? 7 * 864e5 : /^(mes|month)/.test(u) ? 30 * 864e5 : 365 * 864e5;
   return new Date(base - n * ms).toISOString();
+}
+
+function diagnostico(slug, html, tokens) {
+  console.log(`--- DIAGNÓSTICO ${slug}: no se encontró el encabezado "Donantes (N)" ---`);
+  console.log(`HTML: ${html.length} caracteres · <title>: ${(html.match(/<title>([^<]*)/i) || [])[1] || '(sin título)'}`);
+  console.log('Primeros textos:', JSON.stringify(tokens.slice(0, 25)));
+  const hits = [];
+  tokens.forEach((t, i) => { if (/donan|donor|donat|coment|comment/i.test(t) && hits.length < 8) hits.push([i, tokens.slice(Math.max(0, i - 1), i + 4)]); });
+  console.log('Textos con donan/coment:', JSON.stringify(hits));
 }
 
 function volcar(slug, tokens, donantes, comentarios, td, tc) {
@@ -216,7 +228,7 @@ function volcar(slug, tokens, donantes, comentarios, td, tc) {
 
 const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
 async function fetchText(url) {
-  const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; LlobregatDonaBot/1.0)' } });
+  const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; LlobregatDonaBot/1.0)', 'Accept-Language': 'es-ES,es;q=0.9,ca;q=0.8,en;q=0.5' } });
   if (!res.ok) throw new Error(`No se pudo descargar ${url} (HTTP ${res.status})`);
   return res.text();
 }
