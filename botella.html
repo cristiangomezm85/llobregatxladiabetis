@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ca" data-lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La botella de l'esperança · Llobregat x la Diabetis</title>
+<meta name="description" content="Cada donació és una gota. Mira com s'omple la botella de l'esperança amb els missatges de qui ha donat suport al repte.">
+<link rel="icon" type="image/png" href="img/logo-small.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blau-llobregat: #15315F;
+    --blau-diabetis: #1E72D4;
+    --blau-aigua: #5AC0E6;
+    --coral: #FF6B47;
+    --paper: #FAFAF6;
+    --tinta: #0E1B36;
+    --gris: #5A6478;
+    --linia: rgba(21, 49, 95, 0.12);
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --body: "Manrope", system-ui, sans-serif;
+    --pad-x: clamp(1.25rem, 4vw, 3rem);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; font-family: var(--body); color: var(--tinta); background: var(--paper); line-height: 1.55; font-size: 17px; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+
+  [data-lang="ca"] [lang="es"], [data-lang="ca"] [lang="en"],
+  [data-lang="es"] [lang="ca"], [data-lang="es"] [lang="en"],
+  [data-lang="en"] [lang="ca"], [data-lang="en"] [lang="es"] { display: none !important; }
+
+  /* ---------- Capçalera ---------- */
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .8rem var(--pad-x); background: rgba(250,250,246,.92); border-bottom: 1px solid var(--linia); position: sticky; top: 0; z-index: 20; backdrop-filter: blur(8px); }
+  .brand { display: flex; align-items: center; gap: .6rem; font-family: var(--display); font-weight: 700; color: var(--blau-llobregat); font-size: 1.05rem; }
+  .brand img { width: 34px; height: 34px; border-radius: 50%; }
+  .brand i { font-weight: 400; color: var(--blau-diabetis); }
+  .top-right { display: flex; align-items: center; gap: .6rem; }
+  .langs { display: flex; gap: .15rem; }
+  .langs button { font: 600 .78rem var(--body); border: 0; background: transparent; color: var(--gris); padding: .35rem .5rem; border-radius: 6px; cursor: pointer; }
+  .langs button[aria-pressed="true"] { background: var(--blau-llobregat); color: #fff; }
+  .btn { display: inline-flex; align-items: center; gap: .5rem; font: 600 .95rem var(--body); padding: .7rem 1.3rem; border-radius: 100px; border: 0; cursor: pointer; transition: transform .15s, box-shadow .2s; }
+  .btn-coral { background: var(--coral); color: #fff; box-shadow: 0 6px 20px rgba(255,107,71,.3); }
+  .btn-coral:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(255,107,71,.42); }
+  .btn-line { background: transparent; color: var(--blau-llobregat); border: 1.5px solid var(--linia); }
+  .btn-line:hover { border-color: var(--blau-llobregat); }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: clamp(1.5rem, 4vw, 3rem) var(--pad-x) 0; max-width: 1180px; margin: 0 auto; text-align: center; }
+  .eyebrow { font: 700 .75rem var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--blau-diabetis); }
+  h1 { font-family: var(--display); font-weight: 800; color: var(--blau-llobregat); font-size: clamp(2rem, 5.5vw, 3.6rem); line-height: 1.05; margin: .4rem 0 .8rem; letter-spacing: -.02em; }
+  h1 em { font-style: normal; color: var(--coral); }
+  .lead { max-width: 640px; margin: 0 auto; color: var(--gris); }
+
+  /* ---------- Ampolla + panell ---------- */
+  .stage { display: grid; grid-template-columns: minmax(280px, 440px) 1fr; gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; max-width: 1180px; margin: 0 auto; padding: clamp(1.5rem, 4vw, 3rem) var(--pad-x); }
+  @media (max-width: 860px) { .stage { grid-template-columns: 1fr; } }
+  .bottle-wrap { position: relative; width: 100%; max-width: 440px; margin: 0 auto; }
+  #bottle { width: 100%; height: auto; display: block; overflow: visible; }
+  .bubble { cursor: pointer; transition: transform .2s; transform-box: fill-box; transform-origin: center; outline: none; }
+  .bubble:hover, .bubble:focus-visible { transform: scale(1.35); }
+  .bubble.is-active { transform: scale(1.5); }
+  .bubble.is-active circle.b-body { stroke: #fff; stroke-width: 3; filter: drop-shadow(0 0 5px rgba(21,49,95,.7)); }
+  .falling { opacity: 0; }
+  .falling.go { animation: fall 1.5s cubic-bezier(.5, 0, .9, .6) forwards; }
+  @keyframes fall { 0% { opacity: 0; transform: translateY(0); } 12% { opacity: 1; } 100% { opacity: 1; transform: translateY(var(--dy, 300px)); } }
+  .wave1 { animation: wave 6s linear infinite; }
+  .wave2 { animation: wave 9s linear infinite reverse; opacity: .55; }
+  @keyframes wave { from { transform: translateX(0); } to { transform: translateX(-120px); } }
+  .pop-in { animation: pop .5s ease-out; }
+  @keyframes pop { 0% { transform: scale(.2); opacity: 0; } 60% { transform: scale(1.25); opacity: 1; } 100% { transform: scale(1); } }
+
+  .tip { position: absolute; z-index: 10; width: min(270px, 80vw); background: #fff; border: 1px solid var(--linia); border-radius: 14px; padding: .8rem .95rem; box-shadow: 0 14px 40px rgba(14,27,54,.2); pointer-events: none; opacity: 0; transform: translateY(6px); transition: opacity .15s, transform .15s; font-size: .9rem; }
+  .tip.show { opacity: 1; transform: none; }
+  .tip b { font-family: var(--display); font-size: 1rem; color: var(--blau-llobregat); }
+  .tip .t-reto { display: block; font-size: .76rem; color: var(--blau-diabetis); font-weight: 700; letter-spacing: .02em; margin-bottom: .25rem; }
+  .tip p { margin: .35rem 0 0; color: var(--tinta); }
+  .tip .t-meta { color: var(--gris); font-size: .76rem; margin-top: .4rem; display: block; }
+
+  .panel h2 { font-family: var(--display); font-size: clamp(1.3rem, 3vw, 1.8rem); color: var(--blau-llobregat); margin: 0 0 .3rem; line-height: 1.15; }
+  .counters { display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 1rem 0 1.4rem; }
+  .counter b { display: block; font-family: var(--display); font-size: clamp(2rem, 5vw, 3rem); line-height: 1; color: var(--blau-llobregat); }
+  .counter span { font-size: .82rem; color: var(--gris); }
+  .live { background: #fff; border: 1px solid var(--linia); border-radius: 18px; padding: 1.1rem 1.25rem; min-height: 132px; box-shadow: 0 8px 30px rgba(21,49,95,.06); }
+  .live .l-label { font: 700 .72rem var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--coral); }
+  .live blockquote { margin: .45rem 0 .5rem; font-family: var(--display); font-size: clamp(1.1rem, 2.4vw, 1.4rem); line-height: 1.3; color: var(--tinta); font-weight: 600; }
+  .live .l-who { font-size: .86rem; color: var(--gris); }
+  .legend { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; font-size: .8rem; color: var(--gris); }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: .35rem; vertical-align: -1px; }
+  .actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.4rem; }
+
+  /* ---------- Mur de missatges ---------- */
+  .wall { max-width: 1180px; margin: 0 auto; padding: 1rem var(--pad-x) 4rem; }
+  .wall-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem; }
+  .wall-head h2 { font-family: var(--display); font-size: clamp(1.4rem, 3vw, 2rem); color: var(--blau-llobregat); margin: 0; }
+  .wall-head select { font: 500 .9rem var(--body); padding: .55rem .8rem; border-radius: 10px; border: 1.5px solid var(--linia); background: #fff; color: var(--tinta); max-width: 100%; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+  .card { background: #fff; border: 1px solid var(--linia); border-radius: 16px; padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: .35rem; cursor: pointer; transition: transform .15s, box-shadow .2s; text-align: left; font: inherit; color: inherit; }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(21,49,95,.1); }
+  .card .c-reto { font: 700 .72rem var(--body); color: var(--blau-diabetis); letter-spacing: .03em; }
+  .card .c-msg { font-size: .98rem; margin: 0; }
+  .card .c-msg.none { color: var(--gris); font-style: italic; }
+  .card .c-who { font-weight: 700; font-size: .88rem; margin-top: auto; color: var(--blau-llobregat); }
+  .card .c-date { font-size: .76rem; color: var(--gris); }
+  .more { display: block; margin: 1.6rem auto 0; }
+  .empty, .demo { text-align: center; color: var(--gris); padding: 1rem; }
+  .demo { background: #FFF3E0; color: #8a4b00; border-radius: 10px; margin: 0 auto 1rem; max-width: 1180px; font-size: .85rem; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (prefers-reduced-motion: reduce) { .wave1, .wave2, .pop-in, .falling.go { animation: none !important; } .falling.go { opacity: 0; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="index.html"><img src="img/logo-small.png" alt=""><span>Llobregat <i>x la</i> Diabetis</span></a>
+  <div class="top-right">
+    <div class="langs" role="group" aria-label="Idioma">
+      <button type="button" data-set-lang="ca" aria-pressed="true">CA</button>
+      <button type="button" data-set-lang="es" aria-pressed="false">ES</button>
+      <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+    </div>
+    <a class="btn btn-coral" href="dona/"><span lang="ca">Dona</span><span lang="es">Dona</span><span lang="en">Donate</span></a>
+  </div>
+</header>
+
+<div id="demoBanner" class="demo" hidden>
+  <span lang="ca">Dades de prova: aquests noms i missatges no són reals.</span>
+  <span lang="es">Datos de prueba: estos nombres y mensajes no son reales.</span>
+  <span lang="en">Sample data: these names and messages are not real.</span>
+</div>
+
+<section class="hero">
+  <div class="eyebrow"><span lang="ca">Una gota, una persona</span><span lang="es">Una gota, una persona</span><span lang="en">One drop, one person</span></div>
+  <h1><span lang="ca">La botella de <em>l'esperança</em></span><span lang="es">La botella de la <em>esperanza</em></span><span lang="en">The bottle of <em>hope</em></span></h1>
+  <p class="lead">
+    <span lang="ca">Cada donació al repte és una gota. Toca una gota per llegir el missatge de qui l'ha deixada.</span>
+    <span lang="es">Cada donación al reto es una gota. Toca una gota para leer el mensaje de quien la dejó.</span>
+    <span lang="en">Every donation to the challenge is a drop. Tap a drop to read the message left by the donor.</span>
+  </p>
+</section>
+
+<section class="stage">
+  <div class="bottle-wrap" id="bottleWrap">
+    <svg id="bottle" viewBox="0 0 360 560" role="img" aria-labelledby="bTitle">
+      <title id="bTitle">La botella de l'esperança</title>
+      <defs>
+        <clipPath id="clipBottle"><path id="bottlePath" d="M138 26 L222 26 Q232 26 232 36 L232 118 C232 152 304 162 308 220 L308 494 Q308 538 264 538 L96 538 Q52 538 52 494 L52 220 C56 162 128 152 128 118 L128 36 Q128 26 138 26 Z"/></clipPath>
+        <linearGradient id="gWater" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#5AC0E6"/><stop offset="1" stop-color="#1E72D4"/>
+        </linearGradient>
+        <linearGradient id="gGlass" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".18" stop-color="#fff" stop-opacity=".05"/>
+          <stop offset=".85" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity=".5"/>
+        </linearGradient>
+        <radialGradient id="gDrop" cx=".35" cy=".3" r=".8">
+          <stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".5" stop-color="#9fdcf3"/><stop offset="1" stop-color="#4DB4E0"/>
+        </radialGradient>
+        <radialGradient id="gDropMsg" cx=".35" cy=".3" r=".8">
+          <stop offset="0" stop-color="#cfe6ff"/><stop offset=".5" stop-color="#3F8FE6"/><stop offset="1" stop-color="#15315F"/>
+        </radialGradient>
+      </defs>
+      <!-- ombra -->
+      <ellipse cx="180" cy="546" rx="130" ry="9" fill="#15315F" opacity=".12"/>
+      <!-- interior buit -->
+      <path d="M138 26 L222 26 Q232 26 232 36 L232 118 C232 152 304 162 308 220 L308 494 Q308 538 264 538 L96 538 Q52 538 52 494 L52 220 C56 162 128 152 128 118 L128 36 Q128 26 138 26 Z" fill="#EAF6FC" opacity=".55"/>
+      <g clip-path="url(#clipBottle)">
+        <g id="water" pointer-events="none">
+          <rect id="waterBody" x="0" y="538" width="360" height="560" fill="url(#gWater)" opacity=".92"/>
+          <g id="waveG" transform="translate(0,538)">
+            <path class="wave2" id="wave2" d="" fill="#5AC0E6"/>
+            <path class="wave1" id="wave1" d="" fill="url(#gWater)"/>
+          </g>
+        </g>
+        <g id="drops"></g>
+      </g>
+      <!-- vidre -->
+      <path d="M138 26 L222 26 Q232 26 232 36 L232 118 C232 152 304 162 308 220 L308 494 Q308 538 264 538 L96 538 Q52 538 52 494 L52 220 C56 162 128 152 128 118 L128 36 Q128 26 138 26 Z" fill="url(#gGlass)" stroke="#15315F" stroke-opacity=".35" stroke-width="3" pointer-events="none"/>
+      <!-- rosca del coll -->
+      <g fill="none" stroke="#15315F" stroke-opacity=".3" stroke-width="2.5" stroke-linecap="round" pointer-events="none">
+        <path d="M130 48 H230"/><path d="M130 66 H230"/><path d="M130 84 H230"/>
+      </g>
+      <!-- reflex -->
+      <path d="M78 250 C74 330 74 420 80 488" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="7" stroke-linecap="round" pointer-events="none"/>
+      <!-- gota que cau -->
+      <g id="fallLayer" pointer-events="none"><circle id="fallDrop" class="falling" cx="180" cy="16" r="9" fill="url(#gDropMsg)"/></g>
+    </svg>
+    <div class="tip" id="tip" role="tooltip"></div>
+  </div>
+
+  <div class="panel">
+    <h2><span lang="ca">Gotes que ja omplen la botella</span><span lang="es">Gotas que ya llenan la botella</span><span lang="en">Drops already filling the bottle</span></h2>
+    <div class="counters">
+      <div class="counter"><b id="cDrops">0</b><span><span lang="ca">gotes (donacions)</span><span lang="es">gotas (donaciones)</span><span lang="en">drops (donations)</span></span></div>
+      <div class="counter"><b id="cMsgs">0</b><span><span lang="ca">amb missatge</span><span lang="es">con mensaje</span><span lang="en">with a message</span></span></div>
+      <div class="counter"><b id="cPct">0%</b><span><span lang="ca">de la botella</span><span lang="es">de la botella</span><span lang="en">of the bottle</span></span></div>
+    </div>
+    <div class="live" aria-live="polite">
+      <div class="l-label"><span lang="ca">Acaba de caure una gota</span><span lang="es">Acaba de caer una gota</span><span lang="en">A drop just fell</span></div>
+      <blockquote id="liveMsg">…</blockquote>
+      <div class="l-who" id="liveWho"></div>
+    </div>
+    <div class="legend">
+      <span><i style="background:#1E72D4"></i><span lang="ca">Gota amb missatge</span><span lang="es">Gota con mensaje</span><span lang="en">Drop with a message</span></span>
+      <span><i style="background:#7fd0ee"></i><span lang="ca">Gota sense missatge</span><span lang="es">Gota sin mensaje</span><span lang="en">Drop without a message</span></span>
+    </div>
+    <div class="actions">
+      <a class="btn btn-coral" href="dona/"><span lang="ca">Afegeix la teva gota</span><span lang="es">Añade tu gota</span><span lang="en">Add your drop</span></a>
+      <a class="btn btn-line" href="index.html"><span lang="ca">Tornar a l'inici</span><span lang="es">Volver al inicio</span><span lang="en">Back home</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="wall">
+  <div class="wall-head">
+    <h2><span lang="ca">Els missatges, de més nou a més antic</span><span lang="es">Los mensajes, del más nuevo al más antiguo</span><span lang="en">Messages, newest first</span></h2>
+    <label><span class="sr">Filtre</span>
+      <select id="fReto"></select>
+    </label>
+  </div>
+  <div class="cards" id="cards"></div>
+  <p class="empty" id="empty" hidden>
+    <span lang="ca">Encara no hi ha gotes. Sigues la primera!</span>
+    <span lang="es">Todavía no hay gotas. ¡Sé la primera persona!</span>
+    <span lang="en">No drops yet. Be the first!</span>
+  </p>
+  <button type="button" class="btn btn-line more" id="more" hidden>
+    <span lang="ca">Mostra'n més</span><span lang="es">Mostrar más</span><span lang="en">Show more</span>
+  </button>
+</section>
+
+<script>
+(function () {
+  'use strict';
+
+  // ============ Configuració ============
+  // Gotes necessàries per omplir la botella si el JSON no porta "objectiuGotes".
+  var OBJECTIU_PER_DEFECTE = 250;
+  // Per privacitat NO es mostra l'import de cada donació.
+  var URLS = [
+    'https://raw.githubusercontent.com/cristiangomezm85/llobregatxladiabetis/main/dona/donaciones.json',
+    'https://cdn.jsdelivr.net/gh/cristiangomezm85/llobregatxladiabetis@main/dona/donaciones.json'
+  ];
+  var DEMO = /[?&]demo=1/.test(location.search);
+  var PAGE = 24;
+
+  // ============ Idioma (mateix mecanisme que la resta del web) ============
+  var LOCALES = { ca: 'ca-ES', es: 'es-ES', en: 'en-GB' };
+  var T = {
+    ca: { anon: 'Anònim', noMsg: 'Sense missatge', all: 'Tots els reptes', event: 'Repte general' },
+    es: { anon: 'Anónimo', noMsg: 'Sin mensaje', all: 'Todos los retos', event: 'Reto general' },
+    en: { anon: 'Anonymous', noMsg: 'No message', all: 'All challenges', event: 'General challenge' }
+  };
+  function lang() { return document.documentElement.getAttribute('data-lang') || 'ca'; }
+  function setLang(l) {
+    document.documentElement.setAttribute('data-lang', l);
+    document.documentElement.setAttribute('lang', l);
+    try { localStorage.setItem('llxd-lang', l); } catch (e) {}
+    document.querySelectorAll('[data-set-lang]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.setLang === l ? 'true' : 'false'); });
+    renderStatic(); buildSelect(); renderCards(true);
+  }
+  (function initLang() {
+    var l = 'ca';
+    try { l = localStorage.getItem('llxd-lang') || 'ca'; } catch (e) {}
+    if (!LOCALES[l]) l = 'ca';
+    document.documentElement.setAttribute('data-lang', l);
+    document.documentElement.setAttribute('lang', l);
+    document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.dataset.setLang === l ? 'true' : 'false');
+      b.addEventListener('click', function () { setLang(b.dataset.setLang); });
+    });
+  })();
+
+  // ============ Estat ============
+  var $ = function (id) { return document.getElementById(id); };
+  var NS = 'http://www.w3.org/2000/svg';
+  var data = { donaciones: [], objectiu: OBJECTIU_PER_DEFECTE };
+  var geo = null;            // geometria calculada
+  var shown = PAGE;
+  var filtre = '';
+  var activeId = null;
+  var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function hash(str) { var h = 2166136261; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; }
+  function nomDe(d) { return d.anonimo || !d.nombre ? T[lang()].anon : d.nombre; }
+  function retoDe(d) { return d.retoNombre || T[lang()].event; }
+  function fmtData(d) {
+    if (!d.fecha) return '';
+    var t = new Date(d.fecha); if (isNaN(t)) return '';
+    return new Intl.DateTimeFormat(LOCALES[lang()], { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }).format(t);
+  }
+
+  // ============ Dades ============
+  async function getJson(url, ms) {
+    var c = new AbortController(); var to = setTimeout(function () { c.abort(); }, ms || 7000);
+    try { var r = await fetch(url, { signal: c.signal, cache: 'no-store' }); if (!r.ok) return null; return await r.json(); }
+    catch (e) { return null; } finally { clearTimeout(to); }
+  }
+  async function carrega() {
+    var j = null;
+    if (DEMO) j = await getJson('dona/donaciones.demo.json');
+    else { for (var i = 0; i < URLS.length && !j; i++) { var x = await getJson(URLS[i]); if (x && Array.isArray(x.donaciones)) j = x; } }
+    if (!j || !Array.isArray(j.donaciones)) j = { donaciones: [] };
+    // L'ordre és el de "orden" (1 = la primera donació). Si falta, es manté l'ordre de l'array.
+    var arr = j.donaciones.map(function (d, i) { d._i = i; return d; });
+    arr.sort(function (a, b) { var oa = a.orden != null ? a.orden : a._i, ob = b.orden != null ? b.orden : b._i; return oa - ob; });
+    arr.forEach(function (d, i) { d.id = d.id || ('d' + i); });
+    data.donaciones = arr;
+    data.objectiu = Math.max(1, Number(j.objectiuGotes) || OBJECTIU_PER_DEFECTE);
+    $('demoBanner').hidden = !(DEMO || j.demo === true);
+  }
+
+  // ============ Ampolla ============
+  // Les gotes s'apilen de baix a dalt seguint l'ordre de les donacions.
+  function calcGeo() {
+    var n = data.donaciones.length;
+    var cap = Math.max(data.objectiu, n);
+    var X0 = 62, X1 = 298, YB = 530, YT = 200;     // zona útil del cos
+    var W = X1 - X0, H = YB - YT;
+    var s = Math.sqrt(W * H / cap);                // costat de la "cel·la" de cada gota
+    var cols = Math.max(1, Math.floor(W / s));
+    var cw = W / cols;
+    var rows = Math.ceil(cap / cols);
+    var rh = H / rows;
+    return { n: n, cap: cap, X0: X0, YB: YB, YT: YT, cols: cols, cw: cw, rh: rh, r: Math.max(3.2, Math.min(cw, rh) * 0.43) };
+  }
+  function posGota(i) {
+    var g = geo; var row = Math.floor(i / g.cols), col = i % g.cols;
+    var off = (row % 2) ? g.cw / 2 : 0;
+    var jx = (hash('x' + i) - .5) * g.cw * .25, jy = (hash('y' + i) - .5) * g.rh * .25;
+    var x = g.X0 + g.cw / 2 + col * g.cw + off + jx;
+    var y = g.YB - g.rh / 2 - row * g.rh + jy;
+    x = Math.min(g.X0 + (g.cols * g.cw) - g.r, Math.max(g.X0 + g.r, x));
+    return { x: x, y: y, row: row };
+  }
+  function wavePath(w, amp, phase) {
+    // Ona horitzontal repetible (període 120) sobre 600 d'amplada
+    var p = 'M-120 ' + 0, x;
+    for (x = -120; x <= 480; x += 10) p += ' L' + x + ' ' + (Math.sin((x + phase) / 120 * Math.PI * 2) * amp).toFixed(2);
+    p += ' L480 600 L-120 600 Z';
+    return p;
+  }
+  function pinta() {
+    geo = calcGeo();
+    var g = geo, n = g.n;
+    var layer = $('drops'); layer.innerHTML = '';
+    var rowsUsed = n ? Math.floor((n - 1) / g.cols) + 1 : 0;
+    var nivell = n ? Math.max(g.YT - 18, g.YB - rowsUsed * g.rh - g.rh * .55) : 538;
+    if (n >= g.cap) nivell = g.YT - 18;
+    // Aigua
+    $('waveG').setAttribute('transform', 'translate(0,' + nivell.toFixed(1) + ')');
+    $('wave1').setAttribute('d', wavePath(0, 3.2, 0));
+    $('wave2').setAttribute('d', wavePath(0, 4.2, 40));
+    $('waterBody').setAttribute('y', (nivell + 2).toFixed(1));
+    // Gotes
+    var frag = document.createDocumentFragment();
+    data.donaciones.forEach(function (d, i) {
+      var p = posGota(i), msg = !!(d.mensaje && String(d.mensaje).trim());
+      var gEl = document.createElementNS(NS, 'g');
+      gEl.setAttribute('class', 'bubble'); gEl.setAttribute('tabindex', '0'); gEl.setAttribute('role', 'button');
+      gEl.setAttribute('data-id', d.id);
+      gEl.setAttribute('aria-label', nomDe(d) + (msg ? ': ' + d.mensaje : ''));
+      var c = document.createElementNS(NS, 'circle');
+      c.setAttribute('class', 'b-body'); c.setAttribute('cx', p.x.toFixed(1)); c.setAttribute('cy', p.y.toFixed(1)); c.setAttribute('r', g.r.toFixed(1));
+      c.setAttribute('fill', msg ? 'url(#gDropMsg)' : 'url(#gDrop)'); c.setAttribute('stroke', '#fff'); c.setAttribute('stroke-opacity', '.8'); c.setAttribute('stroke-width', '1');
+      var h = document.createElementNS(NS, 'circle');
+      h.setAttribute('cx', (p.x - g.r * .3).toFixed(1)); h.setAttribute('cy', (p.y - g.r * .35).toFixed(1)); h.setAttribute('r', (g.r * .22).toFixed(1)); h.setAttribute('fill', '#fff'); h.setAttribute('opacity', '.9');
+      gEl.appendChild(c); gEl.appendChild(h);
+      gEl.addEventListener('mouseenter', function () { mostraTip(d, gEl); });
+      gEl.addEventListener('mouseleave', amagaTip);
+      gEl.addEventListener('focus', function () { mostraTip(d, gEl); });
+      gEl.addEventListener('blur', amagaTip);
+      gEl.addEventListener('click', function (ev) { ev.stopPropagation(); mostraTip(d, gEl, true); });
+      frag.appendChild(gEl);
+    });
+    layer.appendChild(frag);
+    renderStatic();
+  }
+  function renderStatic() {
+    var n = data.donaciones.length;
+    var m = data.donaciones.filter(function (d) { return d.mensaje && String(d.mensaje).trim(); }).length;
+    var cap = geo ? geo.cap : data.objectiu;
+    $('cDrops').textContent = n.toLocaleString(LOCALES[lang()]);
+    $('cMsgs').textContent = m.toLocaleString(LOCALES[lang()]);
+    $('cPct').textContent = Math.min(100, Math.round(n / cap * 100)) + '%';
+  }
+
+  // ============ Tooltip ============
+  var tipEl = $('tip'), tipTimer = null;
+  function contingutTip(d) {
+    var msg = d.mensaje && String(d.mensaje).trim();
+    return '<span class="t-reto">' + esc(retoDe(d)) + '</span><b>' + esc(nomDe(d)) + '</b>' +
+      '<p>' + (msg ? '&ldquo;' + esc(msg) + '&rdquo;' : '<i style="color:var(--gris)">' + esc(T[lang()].noMsg) + '</i>') + '</p>' +
+      (fmtData(d) ? '<span class="t-meta">' + esc(fmtData(d)) + '</span>' : '');
+  }
+  function mostraTip(d, el, sticky) {
+    clearTimeout(tipTimer);
+    tipEl.innerHTML = contingutTip(d);
+    var wr = $('bottleWrap').getBoundingClientRect(), r = el.getBoundingClientRect();
+    var w = tipEl.offsetWidth || 260, hgt = tipEl.offsetHeight || 100;
+    var x = r.left + r.width / 2 - wr.left - w / 2;
+    x = Math.max(0, Math.min(wr.width - w, x));
+    var y = r.top - wr.top - hgt - 10;
+    if (y < 0) y = r.bottom - wr.top + 10;
+    tipEl.style.left = x + 'px'; tipEl.style.top = y + 'px';
+    tipEl.classList.add('show');
+    marca(d.id);
+    if (sticky) tipTimer = setTimeout(amagaTip, 4500);
+  }
+  function amagaTip() { tipEl.classList.remove('show'); marca(null); }
+  document.addEventListener('click', amagaTip);
+  function marca(id) {
+    document.querySelectorAll('.bubble.is-active').forEach(function (b) { b.classList.remove('is-active'); });
+    activeId = id;
+    if (id) { var b = document.querySelector('.bubble[data-id="' + (window.CSS && CSS.escape ? CSS.escape(id) : id) + '"]'); if (b) b.classList.add('is-active'); }
+  }
+
+  // ============ Gota que cau (rotació de missatges) ============
+  var cua = [], cuaPos = 0, cicle = null;
+  function iniciaCicle() {
+    clearTimeout(cicle);
+    var amb = data.donaciones.filter(function (d) { return d.mensaje && String(d.mensaje).trim(); });
+    // Comença per la més recent i va tornant enrere en l'ordre de les donacions.
+    cua = amb.slice().reverse(); cuaPos = 0;
+    if (!cua.length) { $('liveMsg').textContent = '—'; $('liveWho').textContent = ''; return; }
+    seguent();
+  }
+  function seguent() {
+    if (!cua.length) return;
+    var d = cua[cuaPos % cua.length]; cuaPos++;
+    $('liveMsg').innerHTML = '&ldquo;' + esc(d.mensaje) + '&rdquo;';
+    $('liveWho').textContent = nomDe(d) + ' · ' + retoDe(d);
+    var idx = data.donaciones.indexOf(d), el = document.querySelector('.bubble[data-id="' + (window.CSS && CSS.escape ? CSS.escape(d.id) : d.id) + '"]');
+    if (!reduced && idx >= 0) {
+      var p = posGota(idx), f = $('fallDrop');
+      f.classList.remove('go'); void f.getBoundingClientRect();
+      f.style.setProperty('--dy', Math.max(40, p.y - 16) + 'px');
+      f.classList.add('go');
+      setTimeout(function () { if (el) { el.classList.add('pop-in'); setTimeout(function () { el.classList.remove('pop-in'); }, 600); } }, 1400);
+    }
+    cicle = setTimeout(seguent, 6500);
+  }
+
+  // ============ Mur de missatges ============
+  function buildSelect() {
+    var sel = $('fReto'), vist = {}, ops = [];
+    data.donaciones.forEach(function (d) { var k = d.reto || ''; if (!vist[k]) { vist[k] = 1; ops.push([k, retoDe(d)]); } });
+    ops.sort(function (a, b) { return a[1].localeCompare(b[1], LOCALES[lang()]); });
+    sel.innerHTML = '<option value="">' + esc(T[lang()].all) + '</option>' + ops.map(function (o) { return '<option value="' + esc(o[0]) + '">' + esc(o[1]) + '</option>'; }).join('');
+    sel.value = filtre;
+  }
+  function renderCards(reset) {
+    if (reset) shown = PAGE;
+    var llista = data.donaciones.filter(function (d) { return !filtre || (d.reto || '') === filtre; }).slice().reverse();
+    $('empty').hidden = data.donaciones.length > 0;
+    $('cards').innerHTML = llista.slice(0, shown).map(function (d) {
+      var msg = d.mensaje && String(d.mensaje).trim();
+      return '<button type="button" class="card" data-id="' + esc(d.id) + '">' +
+        '<span class="c-reto">' + esc(retoDe(d)) + '</span>' +
+        '<p class="c-msg' + (msg ? '' : ' none') + '">' + (msg ? '&ldquo;' + esc(msg) + '&rdquo;' : esc(T[lang()].noMsg)) + '</p>' +
+        '<span class="c-who">' + esc(nomDe(d)) + '</span>' +
+        (fmtData(d) ? '<span class="c-date">' + esc(fmtData(d)) + '</span>' : '') + '</button>';
+    }).join('');
+    $('more').hidden = llista.length <= shown;
+  }
+  $('cards').addEventListener('click', function (ev) {
+    var b = ev.target.closest('.card'); if (!b) return;
+    var el = document.querySelector('.bubble[data-id="' + (window.CSS && CSS.escape ? CSS.escape(b.dataset.id) : b.dataset.id) + '"]');
+    var d = data.donaciones.filter(function (x) { return x.id === b.dataset.id; })[0];
+    if (!el || !d) return;
+    $('bottleWrap').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+    setTimeout(function () { mostraTip(d, el, true); }, reduced ? 0 : 450);
+  });
+  $('more').addEventListener('click', function () { shown += PAGE; renderCards(false); });
+  $('fReto').addEventListener('change', function (e) { filtre = e.target.value; renderCards(true); });
+
+  // ============ Arrencada ============
+  carrega().then(function () { pinta(); buildSelect(); renderCards(true); iniciaCicle(); });
+  // Refresc suau cada 5 minuts (el JSON s'actualitza cada ~15 min des de GitHub).
+  setInterval(function () { if (document.hidden || DEMO) return; var abans = data.donaciones.length; carrega().then(function () { if (data.donaciones.length !== abans) { pinta(); buildSelect(); renderCards(true); iniciaCicle(); } }); }, 300000);
+})();
+</script>
+</body>
+</html>
