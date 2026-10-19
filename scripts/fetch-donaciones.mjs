@@ -1,113 +1,127 @@
 // scripts/fetch-donaciones.mjs
 //
-// Genera dona/donaciones.json con las donaciones INDIVIDUALES de cada reto
-// de Mi Grano de Arena (nombre, comentario, importe, fecha, reto) para la
-// página /botella ("la botella de la esperanza").
+// Genera dona/donaciones.json con las donaciones de cada reto de Mi Grano
+// de Arena (MGA), para la página /botella ("la botella de la esperanza").
 //
-// MGA no tiene API pública: igual que scripts/fetch-retos.mjs, esto hace
-// scraping. Lee dona/retos.json (que mantiene fetch-retos.mjs) para saber
-// qué retos hay, y visita la página de cada uno.
+// Qué muestra MGA en la página de cada reto (verificado a mano en
+// /reto/carlos-912runners-x-la-diabetes):
+//   · "Donantes (N)"    -> lista de: nombre, importe (o "Donación oculta") y
+//                          fecha RELATIVA ("Hace 2 días"), la más reciente primero.
+//   · "Comentarios (M)" -> lista de: nombre, fecha relativa y texto.
+//   Los comentarios NO llevan importe ni enlace al donante: se emparejan por
+//   nombre. Un comentario sin donante con ese nombre se guarda como gota propia.
 //
-// ⚠️ La extracción (función extraerDonaciones) está escrita SIN haber visto
-// el HTML real de la lista de donaciones de MGA. Antes de fiarse del
-// resultado hay que ejecutar con --dump y ajustar SELECTORES (ver abajo):
+// Como no dependemos de nombres de clase CSS (no los conocemos y pueden
+// cambiar), el parser trabaja con el TEXTO de la página, localizando los
+// encabezados "Donantes (N)" y "Comentarios (M)" y clasificando cada trozo
+// de texto (importe, "Donación oculta", fecha relativa, resto).
 //
-//   node scripts/fetch-donaciones.mjs --dump
+// Seguridad:
+//  - Si hay retos con dinero pero no se reconoce NINGUNA donación, falla
+//    (exit 1) y NO toca donaciones.json.
+//  - Si se leen menos donantes que el "(N)" del encabezado, avisa en el log
+//    (puede haber una paginación "Ver más donantes" por JS).
+//  - Nunca borra donaciones ya guardadas; la fecha se fija la primera vez que
+//    se ve una donación (la fecha relativa de MGA cambia cada día).
 //
-// Imprime, para el primer reto con dinero recaudado, el HTML que rodea a la
-// lista de donaciones. Con eso se ajustan los selectores en 5 minutos.
+// Depuración:  node scripts/fetch-donaciones.mjs --dump   (no escribe nada)
 //
-// Garantías de seguridad:
-//  - Si no se reconoce NINGUNA donación pero hay retos con dinero, el
-//    script falla (exit 1) y NO toca donaciones.json.
-//  - Nunca borra donaciones ya guardadas; solo añade las nuevas.
-//
-// ORDEN: cada donación tiene "orden" (1 = la primera que llegó). MGA lista
-// la más reciente primero; las nuevas se numeran de la más antigua a la más
-// nueva, para que la botella se llene en el orden real de llegada.
+// ORDEN: cada donación tiene "orden" (1 = la primera que llegó). Las nuevas
+// se numeran de la más antigua a la más reciente.
 
 import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
+import { pathToFileURL } from 'node:url';
 import * as cheerio from 'cheerio';
 
 const RETOS_PATH = new URL('../dona/retos.json', import.meta.url);
 const OUT_PATH = new URL('../dona/donaciones.json', import.meta.url);
 const DUMP = process.argv.includes('--dump');
-const MAX_PAGES_POR_RETO = 20;
-const PAUSA_MS = 400; // cortesía con el servidor
+const PAUSA_MS = 400;
 
-// ---------------------------------------------------------------------
-// SELECTORES — AJUSTAR tras ver el HTML real (--dump).
-// Cada uno puede ser una lista de alternativas separadas por coma.
-// ---------------------------------------------------------------------
-const SELECTORES = {
-  item:    '.donation, .donor, .donacion, [class*="donation"] li, [class*="donor"] li, [class*="donacion"] li',
-  nombre:  '.name, .donor-name, [class*="name"]',
-  mensaje: '.message, .comment, .donor-message, [class*="message"], [class*="comment"]',
-  importe: '.amount, [class*="amount"], [class*="importe"]',
-  fecha:   'time, .date, [class*="date"], [class*="fecha"]',
-  anonimo: /an[oòó]nim|anonym/i,
-};
+const RE_DONANTES = /^(donantes|donants|donors)\s*\((\d+)\)/i;
+const RE_COMENTARIOS = /^(comentarios|comentaris|comments)\s*\((\d+)\)/i;
+const RE_IMPORTE = /^([\d.]+(?:,\d+)?)\s*€$|^€\s*([\d.]+(?:,\d+)?)$/;
+const RE_OCULTA = /^(donaci[oó]n oculta|donaci[oó] oculta|hidden donation)$/i;
+const RE_ANON = /^(an[oòó]nim[oa]?|anonymous)$/i;
+const RE_VERMAS = /^(ver m[aá]s|veure'n m[eé]s|veure m[eé]s|show more|ver todos)/i;
+const RE_FIN_SECCION = /^(patrocin|sponsor|col[·.]?labora|newsletter|suscr[ií]b|subscr|©|aviso legal|avís legal|pol[ií]tica|cookies|compart|comparteix|share)/i;
+const RE_FECHA = /^(hace|fa|hace\s+un[ao]?|hoy|avui|ayer|ahir|today|yesterday)\b|\bago$/i;
 
 async function main() {
   const retosJson = JSON.parse(await readFile(RETOS_PATH, 'utf8'));
   let previo = { donaciones: [] };
   try { previo = JSON.parse(await readFile(OUT_PATH, 'utf8')); } catch {}
-  const vistos = new Map(previo.donaciones.map(d => [d.id, d]));
+  const guardadas = new Map(previo.donaciones.map(d => [d.id, d]));
   let maxOrden = previo.donaciones.reduce((m, d) => Math.max(m, d.orden || 0), 0);
 
   const nuevas = [];
-  let retosConDinero = 0;
-  let donacionesReconocidas = 0;
+  let retosConDinero = 0, reconocidas = 0, actualizadas = 0;
 
   for (const reto of retosJson.retos) {
     if (!(reto.recaudado > 0)) continue;
-    retosConDinero++;
     const base = typeof reto.url === 'string' ? reto.url : reto.url?.es;
     if (!base) continue;
+    retosConDinero++;
 
-    const delReto = [];
-    for (let page = 1; page <= MAX_PAGES_POR_RETO; page++) {
-      const url = page === 1 ? base : `${base}${base.includes('?') ? '&' : '?'}page=${page}`;
-      const html = await fetchText(url);
-      if (DUMP && retosConDinero === 1 && page === 1) volcar(reto.slug, html);
-      const items = extraerDonaciones(html);
-      if (!items.length) break;
-      // Si la página 2 repite la 1 (MGA ignora ?page), paramos.
-      const firma = items.map(i => i.mensaje + i.nombre + i.importe).join('|');
-      if (delReto._ultimaFirma === firma) break;
-      delReto._ultimaFirma = firma;
-      delReto.push(...items);
-      await pausa();
+    const html = await fetchText(base);
+    const { donantes, comentarios, totalDonantes, totalComentarios, tokens } = parsear(html);
+    if (DUMP) volcar(reto.slug, tokens, donantes, comentarios, totalDonantes, totalComentarios);
+    if (totalDonantes != null && donantes.length < totalDonantes)
+      console.warn(`⚠️  ${reto.slug}: la página dice ${totalDonantes} donantes pero se leyeron ${donantes.length} (¿paginación por JS?)`);
+    if (totalComentarios != null && comentarios.length < totalComentarios)
+      console.warn(`⚠️  ${reto.slug}: la página dice ${totalComentarios} comentarios pero se leyeron ${comentarios.length}`);
+
+    // Emparejar comentarios con donantes por nombre (sin tener en cuenta mayúsculas/tildes).
+    const libres = comentarios.map(c => ({ ...c, usado: false }));
+    const items = donantes.map(d => {
+      const c = libres.find(x => !x.usado && norm(x.nombre) === norm(d.nombre));
+      if (c) c.usado = true;
+      return { ...d, mensaje: c ? c.texto : '', _fechaRel: d.fechaRel };
+    });
+    for (const c of libres) {
+      if (!c.usado) items.push({ nombre: c.nombre, anonimo: RE_ANON.test(c.nombre), importe: null, mensaje: c.texto, _fechaRel: c.fechaRel, soloComentario: true });
     }
-    donacionesReconocidas += delReto.length;
 
-    // Identificador estable (con contador para donaciones idénticas).
-    const contador = new Map();
-    for (const it of delReto) {
-      const clave = [reto.slug, it.nombre, it.importe, it.mensaje, it.fechaTexto].join('|');
-      const n = (contador.get(clave) || 0) + 1; contador.set(clave, n);
+    // Ids estables: sin fecha (cambia cada día) y sin mensaje (puede llegar después).
+    // El contador de repetidos se cuenta desde el final (lo más antiguo) para que
+    // las donaciones nuevas, que entran por arriba, no cambien los ids de las viejas.
+    const cont = new Map();
+    for (const it of items.slice().reverse()) {
+      const clave = [reto.slug, it.soloComentario ? 'c' : 'd', norm(it.nombre), it.importe ?? 'x', it.soloComentario ? it.mensaje : ''].join('|');
+      const n = (cont.get(clave) || 0) + 1; cont.set(clave, n);
       it.id = createHash('sha1').update(clave + '#' + n).digest('hex').slice(0, 12);
-      it.reto = reto.slug; it.retoNombre = reto.nombre;
     }
-    // delReto viene "más reciente primero" -> la damos la vuelta (antigua primero).
-    for (const it of delReto.slice().reverse()) {
-      if (!vistos.has(it.id)) nuevas.push(it);
+    reconocidas += items.length;
+
+    for (const it of items.slice().reverse()) {
+      const ya = guardadas.get(it.id);
+      if (ya) {
+        // Un comentario puede llegar después de la donación.
+        if (!ya.mensaje && it.mensaje) { ya.mensaje = it.mensaje; actualizadas++; }
+        continue;
+      }
+      nuevas.push({
+        id: it.id, reto: reto.slug, retoNombre: reto.nombre,
+        nombre: it.anonimo ? null : it.nombre, anonimo: !!it.anonimo,
+        importe: it.importe, mensaje: it.mensaje || '',
+        fecha: aproximarFecha(it._fechaRel)
+      });
     }
+    await pausa();
   }
 
-  if (DUMP) { console.log('\nReconocidas:', donacionesReconocidas); return; }
+  if (DUMP) { console.log('\nReconocidas:', reconocidas); return; }
 
-  if (retosConDinero > 0 && donacionesReconocidas === 0) {
-    console.error('❌ Hay retos con dinero pero no se reconoció ninguna donación. Revisa SELECTORES (node scripts/fetch-donaciones.mjs --dump). No se modifica donaciones.json.');
+  if (retosConDinero > 0 && reconocidas === 0) {
+    console.error('❌ Hay retos con dinero pero no se reconoció ninguna donación (¿cambió el HTML de MGA?). Ejecuta: node scripts/fetch-donaciones.mjs --dump. No se modifica donaciones.json.');
     process.exit(1);
   }
 
-  // Entre retos distintos: por fecha si la hay, si no se mantiene el orden de recogida.
   nuevas.sort((a, b) => (a.fecha && b.fecha) ? a.fecha.localeCompare(b.fecha) : 0);
-  for (const it of nuevas) { it.orden = ++maxOrden; vistos.set(it.id, limpiar(it)); }
+  for (const it of nuevas) { it.orden = ++maxOrden; guardadas.set(it.id, it); }
 
-  const donaciones = [...vistos.values()].sort((a, b) => a.orden - b.orden);
+  const donaciones = [...guardadas.values()].sort((a, b) => a.orden - b.orden);
   const salida = {
     objectiuGotes: previo.objectiuGotes || 250,
     actualizado: new Date().toISOString(),
@@ -115,49 +129,92 @@ async function main() {
     donaciones
   };
   await writeFile(OUT_PATH, JSON.stringify(salida, null, 2) + '\n', 'utf8');
-  console.log(`✅ donaciones.json — ${donaciones.length} donaciones (${nuevas.length} nuevas)`);
+  console.log(`✅ donaciones.json — ${donaciones.length} donaciones (${nuevas.length} nuevas, ${actualizadas} con comentario añadido)`);
 }
 
-function extraerDonaciones(html) {
+// ---------------------------------------------------------------------
+// Parser basado en texto
+// ---------------------------------------------------------------------
+export function parsear(html) {
   const $ = cheerio.load(html);
-  const out = [];
-  $(SELECTORES.item).each((_, el) => {
-    const $el = $(el);
-    const txt = (sel) => $el.find(sel).first().text().replace(/\s+/g, ' ').trim();
-    const importeTxt = txt(SELECTORES.importe) || ($el.text().match(/([\d.,]+)\s*€/) || [])[1] || '';
-    const nombre = txt(SELECTORES.nombre);
-    const mensaje = txt(SELECTORES.mensaje);
-    if (!importeTxt && !nombre && !mensaje) return;
-    const t = $el.find(SELECTORES.fecha).first();
-    const fechaTexto = (t.attr('datetime') || t.text() || '').replace(/\s+/g, ' ').trim();
-    const fecha = fechaTexto && !isNaN(Date.parse(fechaTexto)) ? new Date(fechaTexto).toISOString() : null;
-    out.push({
-      nombre: nombre || null,
-      anonimo: !nombre || SELECTORES.anonimo.test(nombre),
-      importe: parseImporte(importeTxt),
-      mensaje,
-      fecha, fechaTexto
+  $('script, style, noscript, template').remove();
+  const tokens = [];
+  const visita = (nodo) => {
+    nodo.contents().each((_, n) => {
+      if (n.type === 'text') {
+        const t = (n.data || '').replace(/\s+/g, ' ').trim();
+        if (t) tokens.push(t);
+      } else if (n.type === 'tag') visita($(n));
     });
-  });
+  };
+  visita($('body').length ? $('body') : $.root());
+
+  const iD = tokens.findIndex(t => RE_DONANTES.test(t));
+  const iC = tokens.findIndex((t, i) => i > iD && RE_COMENTARIOS.test(t));
+  const totalDonantes = iD >= 0 ? Number(tokens[iD].match(RE_DONANTES)[2]) : null;
+  const totalComentarios = iC >= 0 ? Number(tokens[iC].match(RE_COMENTARIOS)[2]) : null;
+
+  const tramoDon = iD < 0 ? [] : tokens.slice(iD + 1, iC >= 0 ? iC : undefined);
+  const tramoCom = iC < 0 ? [] : tokens.slice(iC + 1);
+  return { donantes: parsearDonantes(tramoDon), comentarios: parsearComentarios(tramoCom), totalDonantes, totalComentarios, tokens };
+}
+
+function parsearDonantes(t) {
+  // Patrón: NOMBRE, IMPORTE|"Donación oculta", FECHA — ancla en cada IMPORTE/OCULTA.
+  const out = [];
+  for (let i = 1; i < t.length; i++) {
+    const esImp = RE_IMPORTE.test(t[i]), esOcu = RE_OCULTA.test(t[i]);
+    if (!esImp && !esOcu) continue;
+    const nombre = t[i - 1];
+    if (RE_IMPORTE.test(nombre) || RE_OCULTA.test(nombre) || RE_FECHA.test(nombre) || RE_VERMAS.test(nombre)) continue;
+    const fechaRel = RE_FECHA.test(t[i + 1] || '') ? t[i + 1] : null;
+    out.push({ nombre, anonimo: RE_ANON.test(nombre), importe: esImp ? parseImporte(t[i]) : null, fechaRel });
+  }
   return out;
 }
 
-function limpiar(it) {
-  // fechaTexto solo sirve para generar el id; no se publica.
-  const { fechaTexto, ...resto } = it;
-  return resto;
+function parsearComentarios(t) {
+  // Patrón: NOMBRE, FECHA, TEXTO... — ancla en cada FECHA relativa.
+  const idx = [];
+  for (let i = 1; i < t.length; i++) if (RE_FECHA.test(t[i]) && !RE_FECHA.test(t[i - 1])) idx.push(i);
+  const out = [];
+  idx.forEach((i, k) => {
+    const sig = k + 1 < idx.length ? idx[k + 1] - 1 : t.length;   // el nombre del siguiente va justo antes de su fecha
+    let texto = [];
+    for (let j = i + 1; j < sig; j++) {
+      if (RE_FIN_SECCION.test(t[j]) || RE_VERMAS.test(t[j])) break;
+      texto.push(t[j]);
+      if (k + 1 >= idx.length && texto.length >= 4) break;       // último comentario: sin delimitador fiable
+    }
+    out.push({ nombre: t[i - 1], fechaRel: t[i], texto: texto.join(' ').trim() });
+  });
+  return out.filter(c => c.texto);
 }
 
-function volcar(slug, html) {
-  const $ = cheerio.load(html);
+// "Hace 2 días" / "Hace un mes" / "Fa 3 hores" / "2 days ago" -> fecha ISO aproximada.
+export function aproximarFecha(rel, ahora = new Date()) {
+  const base = ahora.getTime();
+  if (!rel) return new Date(base).toISOString();
+  const s = rel.toLowerCase();
+  if (/hoy|avui|today/.test(s)) return new Date(base).toISOString();
+  if (/ayer|ahir|yesterday/.test(s)) return new Date(base - 864e5).toISOString();
+  const m = s.match(/(\d+|un|una)\s*(minut|min|hora|hour|d[ií]a|dia|day|semana|setman|week|mes|month|a[ñn]o|any|year)/);
+  if (!m) return new Date(base).toISOString();
+  const n = /^\d+$/.test(m[1]) ? Number(m[1]) : 1;
+  const u = m[2];
+  const ms = /^min/.test(u) ? 6e4 : /^(hora|hour)/.test(u) ? 36e5 : /^(d[ií]a|dia|day)/.test(u) ? 864e5
+    : /^(semana|setman|week)/.test(u) ? 7 * 864e5 : /^(mes|month)/.test(u) ? 30 * 864e5 : 365 * 864e5;
+  return new Date(base - n * ms).toISOString();
+}
+
+function volcar(slug, tokens, donantes, comentarios, td, tc) {
   console.log(`\n===== DUMP ${slug} =====`);
-  const candidatos = $('*').filter((_, el) => /don(ac|or)|donat/i.test($(el).attr('class') || '') || /don(ac|or)|donat/i.test($(el).attr('id') || ''));
-  console.log('Elementos con "donac/donor/donat" en class/id:', candidatos.length);
-  candidatos.slice(0, 6).each((_, el) => console.log('\n---', el.tagName, $(el).attr('class') || '', '\n' + $.html(el).slice(0, 1500)));
-  console.log('\nTrozos con "€":');
-  $('*:contains("€")').filter((_, el) => $(el).children().length === 0).slice(0, 8).each((_, el) => console.log(' ', $(el).parent().html()?.slice(0, 300)));
+  console.log(`Encabezados: Donantes(${td}) Comentarios(${tc}) · tokens de texto: ${tokens.length}`);
+  console.log('Donantes leídos:', donantes.length); donantes.slice(0, 5).forEach(d => console.log('  ', JSON.stringify(d)));
+  console.log('Comentarios leídos:', comentarios.length); comentarios.slice(0, 5).forEach(c => console.log('  ', JSON.stringify(c)));
 }
 
+const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
 async function fetchText(url) {
   const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; LlobregatDonaBot/1.0)' } });
   if (!res.ok) throw new Error(`No se pudo descargar ${url} (HTTP ${res.status})`);
@@ -165,8 +222,10 @@ async function fetchText(url) {
 }
 const pausa = () => new Promise(r => setTimeout(r, PAUSA_MS));
 function parseImporte(s) {
-  const n = parseFloat(String(s).replace(/\./g, '').replace(',', '.'));
+  const n = parseFloat(String(s).replace(/[€\s]/g, '').replace(/\./g, '').replace(',', '.'));
   return Number.isFinite(n) ? n : null;
 }
 
-main().catch(err => { console.error('❌', err.message); process.exit(1); });
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch(err => { console.error('❌', err.message); process.exit(1); });
+}
