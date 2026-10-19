@@ -23,12 +23,22 @@ jobs:
       - name: Ejecutar scraper
         run: node scripts/fetch-retos.mjs
 
+      # Donaciones individuales para la página /botella. Si el scraper no
+      # reconoce nada (cambio de HTML de MGA) falla y NO toca el JSON; con
+      # continue-on-error el resto del flujo (retos.json) sigue funcionando.
+      - name: Ejecutar scraper de donaciones
+        continue-on-error: true
+        run: node scripts/fetch-donaciones.mjs
+
       - name: Commit si hay cambios
         id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add dona/retos.json
+          # donaciones.json puede no existir aún (primer arranque o scraper sin reconocer nada):
+          # un 'git add' de un fichero inexistente abortaría el paso y bloquearía retos.json.
+          if [ -f dona/donaciones.json ]; then git add dona/donaciones.json; fi
           if git diff --staged --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
@@ -45,3 +55,4 @@ jobs:
         if: steps.commit.outputs.changed == 'true'
         run: |
           curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@main/dona/retos.json"
+          curl -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@main/dona/donaciones.json"
