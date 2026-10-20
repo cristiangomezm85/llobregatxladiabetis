@@ -364,6 +364,9 @@
     .hero-desc { font-size: 0.94rem; margin-bottom: 1.2rem; max-width: 38ch; line-height: 1.45; }
     .hero-actions { gap: 0.65rem; }
     .hero-actions .btn { flex: 1 1 100%; justify-content: center; }
+    /* mòbil: sense text llarg ni botó Recorregut, perquè es vegi el recaptat i Dona en carregar */
+    .hero-desc, .hero-actions .btn-ghost { display: none; }
+    .hero-subtitle { margin-bottom: 1.1rem; }
   }
   @media (max-height: 680px) {
     .hero { padding-top: 3.2rem; padding-bottom: 1.1rem; }
