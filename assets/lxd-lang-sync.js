@@ -18,6 +18,30 @@
   const CODE_TO_LANG = { CA: 'ca', ES: 'es', EN: 'en' };
 
   const SEO = {
+    'botella.html': {
+      title: {
+        ca: "L'ampolla de l'esperança · Llobregat x la Diabetis",
+        es: 'La botella de la esperanza · Llobregat x la Diabetes',
+        en: 'The bottle of hope · Llobregat for Diabetes',
+      },
+      desc: {
+        ca: "Cada donació és una gota. Mira com s'omple l'ampolla de l'esperança amb els missatges de qui ha donat suport al repte.",
+        es: 'Cada donación es una gota. Mira cómo se llena la botella de la esperanza con los mensajes de quienes han apoyado el reto.',
+        en: 'Every donation is a drop. Watch the bottle of hope fill up with messages from everyone backing the challenge.',
+      },
+    },
+    'botella': {
+      title: {
+        ca: "L'ampolla de l'esperança · Llobregat x la Diabetis",
+        es: 'La botella de la esperanza · Llobregat x la Diabetes',
+        en: 'The bottle of hope · Llobregat for Diabetes',
+      },
+      desc: {
+        ca: "Cada donació és una gota. Mira com s'omple l'ampolla de l'esperança amb els missatges de qui ha donat suport al repte.",
+        es: 'Cada donación es una gota. Mira cómo se llena la botella de la esperanza con los mensajes de quienes han apoyado el reto.',
+        en: 'Every donation is a drop. Watch the bottle of hope fill up with messages from everyone backing the challenge.',
+      },
+    },
     'index.html': {
       title: {
         ca: 'Llobregat x la Diabetis · Repte solidari · 16–18 octubre 2026',
