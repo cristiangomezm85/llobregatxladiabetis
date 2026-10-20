@@ -250,11 +250,16 @@
   .hero .bt-overlay{ position:absolute; inset:0; width:100%; height:100%; z-index:0; display:block; }
   .hero .hero-content{ pointer-events:none; }
   .hero .hero-content a{ pointer-events:auto; }
-  .hero .hero-photo{ object-position:var(--bt-px,50%) 58%; }
-  @media (max-width:1100px){ .hero{ --bt-px:8%; } }
+  .hero .hero-photo{ object-position:var(--bt-px,50%) var(--bt-py,25%); }
+  /* Escriptori: hero més alt (la foto s'ha retallat i queda més ampla) i lema a dalt a l'esquerra,
+     perquè no tapi ni l'ampolla ni el logo d'AREDI. */
+  .hero{ min-height:clamp(560px,56vw,680px); align-items:flex-start; }
+  .hero .hero-content{ width:62%; padding-top:1.75rem; }
+  @media (max-width:1100px){ .hero{ --bt-px:0%; --bt-py:58%; } }
   @media (max-width:1000px){
-    .hero{ min-height:clamp(560px,74vw,640px); align-items:flex-start; }
-    .hero .hero-content{ padding-top:1.5rem; }
+    .hero{ min-height:clamp(560px,74vw,640px); }
+    .hero .hero-content{ width:100%; padding-top:1.5rem; }
+    @media (min-width:700px){ .hero .hero-content{ width:58%; } }
   }
   .bt-cta-row{ display:flex; flex-wrap:wrap; gap:.8rem; justify-content:center; margin:1.4rem 0 0; }
   .bt-note{ text-align:center; margin:.9rem auto 0; }
@@ -262,7 +267,6 @@
   .bt-bubble:hover, .bt-bubble:focus-visible{ transform:scale(1.35); }
   .bt-bubble.is-active{ transform:scale(1.5); }
   .bt-bubble.is-active circle.b-body{ stroke:#fff; stroke-width:2.5; stroke-opacity:1; }
-  #btDrops{ filter:drop-shadow(0 1px 1.5px rgba(8,28,66,.55)); }
   .bt-falling{ opacity:0; }
   .bt-falling.go{ animation:btFall 1.7s cubic-bezier(.45,0,.85,.55) forwards; }
   @keyframes btFall{
@@ -384,35 +388,54 @@
 
 <div class="container hero-wrap" id="donaTop">
   <div class="hero" id="btHero">
-    <img class="hero-photo" id="btPhoto" src="../img/hero-dona.jpg" alt="Llobregat x la Diabetis — del riu a la cura">
+    <img class="hero-photo" id="btPhoto" src="../img/hero-dona-ampolla.jpg" alt="Llobregat x la Diabetis — del riu a la cura">
     <!-- Les gotes (donacions) cauen DINS l'ampolla de la foto: aigua i gotes semitransparents, el vidre és el de la imatge -->
-    <svg id="btSvg" class="bt-overlay" viewBox="0 0 1774 887" preserveAspectRatio="none" role="img" aria-labelledby="btSvgT">
+    <svg id="btSvg" class="bt-overlay" viewBox="0 0 1274 887" preserveAspectRatio="none" role="img" aria-labelledby="btSvgT">
       <title id="btSvgT">L'ampolla de l'esperança</title>
+      <!-- L'ampolla, exactament com a botella.html, sobre la foto (el JS la col·loca i l'escala) -->
+      <g id="btBottleG">
       <defs>
-        <clipPath id="btClip"><path d="M308 385 L436 385 C440 425 456 445 470 520 L470 545 L458 650 L446 770 L158 770 L175 670 L200 555 L227 485 C245 450 290 420 308 385 Z"/></clipPath>
+        <clipPath id="btClip"><path id="btClipPath" d="M138 26 L222 26 Q232 26 232 36 L232 118 C232 150 282 162 284 220 L284 494 Q284 538 246 538 L114 538 Q76 538 76 494 L76 220 C78 162 128 150 128 118 L128 36 Q128 26 138 26 Z"/></clipPath>
         <linearGradient id="btgWater" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#5AC0E6" stop-opacity=".16"/><stop offset="1" stop-color="#1E72D4" stop-opacity=".3"/>
+          <stop offset="0" stop-color="#5AC0E6"/><stop offset="1" stop-color="#1E72D4"/>
+        </linearGradient>
+        <linearGradient id="btgGlass" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".18" stop-color="#fff" stop-opacity=".05"/>
+          <stop offset=".85" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity=".5"/>
         </linearGradient>
         <radialGradient id="btgDrop" cx=".35" cy=".3" r=".8">
-          <stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".5" stop-color="#9fdcf3" stop-opacity=".55"/><stop offset="1" stop-color="#3a9fd6" stop-opacity=".6"/>
+          <stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".5" stop-color="#9fdcf3"/><stop offset="1" stop-color="#4DB4E0"/>
         </radialGradient>
         <radialGradient id="btgDropMsg" cx=".35" cy=".3" r=".8">
-          <stop offset="0" stop-color="#cfe6ff" stop-opacity=".92"/><stop offset=".5" stop-color="#3F8FE6" stop-opacity=".86"/><stop offset="1" stop-color="#15315F" stop-opacity=".9"/>
+          <stop offset="0" stop-color="#cfe6ff"/><stop offset=".5" stop-color="#3F8FE6"/><stop offset="1" stop-color="#15315F"/>
         </radialGradient>
-        <linearGradient id="btgFade" gradientUnits="userSpaceOnUse" x1="0" y1="700" x2="0" y2="768"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
-        <mask id="btFade" maskUnits="userSpaceOnUse" x="0" y="0" width="1774" height="887"><rect x="0" y="0" width="1774" height="887" fill="url(#btgFade)"/></mask>
       </defs>
-      <g clip-path="url(#btClip)" mask="url(#btFade)">
+      <!-- ombra -->
+      <ellipse cx="180" cy="546" rx="100" ry="9" fill="#15315F" opacity=".12"/>
+      <!-- interior buit -->
+      <path d="M138 26 L222 26 Q232 26 232 36 L232 118 C232 150 282 162 284 220 L284 494 Q284 538 246 538 L114 538 Q76 538 76 494 L76 220 C78 162 128 150 128 118 L128 36 Q128 26 138 26 Z" fill="#EAF6FC" opacity=".55"/>
+      <g clip-path="url(#btClip)">
         <g id="btWater" pointer-events="none">
-          <rect id="btWaterBody" x="0" y="780" width="900" height="400" fill="url(#btgWater)"/>
-          <g id="btWaveG" transform="translate(0,780)">
-            <path class="bt-wave2" id="btWave2" d="" fill="#7fd0ee" fill-opacity=".25"/>
-            <path class="bt-wave1" id="btWave1" d="" fill="url(#btgWater)" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/>
+          <rect id="btWaterBody" x="0" y="538" width="360" height="560" fill="url(#btgWater)" opacity=".92"/>
+          <g id="btWaveG" transform="translate(0,538)">
+            <path class="bt-wave2" id="btWave2" d="" fill="#5AC0E6"/>
+            <path class="bt-wave1" id="btWave1" d="" fill="url(#btgWater)"/>
           </g>
         </g>
         <g id="btDrops"></g>
       </g>
-      <g id="btFallLayer" pointer-events="none"><circle id="btFall" class="bt-falling" cx="372" cy="392" r="9" fill="url(#btgDropMsg)" stroke="#fff" stroke-opacity=".8" stroke-width="1"/></g>
+      <!-- vidre -->
+      <path d="M138 26 L222 26 Q232 26 232 36 L232 118 C232 150 282 162 284 220 L284 494 Q284 538 246 538 L114 538 Q76 538 76 494 L76 220 C78 162 128 150 128 118 L128 36 Q128 26 138 26 Z" fill="url(#btgGlass)" stroke="#15315F" stroke-opacity=".35" stroke-width="3" pointer-events="none"/>
+      <!-- rosca del coll -->
+      <g fill="none" stroke="#15315F" stroke-opacity=".3" stroke-width="2.5" stroke-linecap="round" pointer-events="none">
+        <path d="M132 48 H228"/><path d="M132 66 H228"/><path d="M132 84 H228"/>
+      </g>
+      <!-- reflex -->
+      <path d="M98 250 C95 330 95 420 100 488" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="7" stroke-linecap="round" pointer-events="none"/>
+      <!-- gota que cau -->
+      <g id="btFallLayer" pointer-events="none"><circle id="btFall" class="bt-falling" cx="180" cy="16" r="9" fill="url(#btgDropMsg)"/></g>
+    
+      </g>
     </svg>
     <div class="bt-tip" id="btTip" role="tooltip"></div>
     <div class="hero-content">
@@ -1039,47 +1062,37 @@
   // Coordenades de la foto del hero (1774 x 887). L'ampolla de la imatge està inclinada;
   // les gotes s'apilen en files horitzontals (com l'aigua) dins del contorn del vidre,
   // de baix a dalt, seguint l'ordre de les donacions.
-  var IMG_W = 1774, IMG_H = 887;
-  var LEFT = [[308, 385], [250, 455], [227, 485], [200, 555], [175, 670], [158, 770]];
-  var RIGHT = [[436, 385], [450, 470], [470, 520], [470, 545], [458, 650], [446, 770]];
-  var YB = 752, YT = 410, FULL = 400;   // fons, límit superior de les gotes, nivell "ampolla plena"
-  function xAt(pts, y) {
-    for (var i = 0; i < pts.length - 1; i++) {
-      var a = pts[i], b = pts[i + 1];
-      if (y >= a[1] && y <= b[1]) return a[0] + (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]);
-    }
-    return y < pts[0][1] ? pts[0][0] : pts[pts.length - 1][0];
-  }
-  function buildSlots(r) {
-    var rh = r * 1.8, cw = r * 2.15, slots = [], rows = [];
-    for (var y = YB - r, k = 0; y - r >= YT; y -= rh, k++) {
-      var xl = Math.max(xAt(LEFT, y), xAt(LEFT, y - r)) + r + 3, xr = Math.min(xAt(RIGHT, y), xAt(RIGHT, y - r)) - r - 3;
-      var off = (k % 2) ? cw / 2 : 0;
-      var n = Math.floor((xr - xl - off) / cw) + 1;
-      if (n < 1) continue;
-      var step = n > 1 ? (xr - xl - off) / (n - 1) : 0;
-      rows.push(y);
-      for (var c = 0; c < n; c++) slots.push({ x: xl + off + c * step, y: y, row: rows.length - 1 });
-    }
-    return { slots: slots, rows: rows, rh: rh, r: r };
-  }
+  var IMG_W = 1274, IMG_H = 887;   // foto del hero recortada (sense l'ampolla de suro de la imatge original)
+  // L'ampolla és la mateixa de botella.html (coordenades locals 0..360 x 0..560); aquí només es
+  // col·loca sobre la foto: peu al punt (BX,BY) de la imatge i escalada BS.
+  var BX = 275, BY = 736, BS = 1.05;
+  var BTF = 'translate(' + BX + ' ' + BY + ') scale(' + BS + ') translate(-180 -538)';
+  // Zona útil del cos (igual que botella.html)
   function calcGeo() {
-    var n = data.donaciones.length, cap = Math.max(data.objectiu, n);
-    var r = 13, g = buildSlots(r);
-    while (g.slots.length < cap && r > 3) { r -= .5; g = buildSlots(r); }
-    g.n = n; g.cap = cap;
-    return g;
+    var n = data.donaciones.length;
+    var cap = Math.max(data.objectiu, n);
+    var X0 = 86, X1 = 274, YB = 530, YT = 200;
+    var W = X1 - X0, H = YB - YT;
+    var s = Math.sqrt(W * H / cap);
+    var cols = Math.max(1, Math.floor(W / s));
+    var cw = W / cols;
+    var rows = Math.ceil(cap / cols);
+    var rh = H / rows;
+    return { n: n, cap: cap, X0: X0, YB: YB, YT: YT, cols: cols, cw: cw, rh: rh, r: Math.max(3.2, Math.min(cw, rh) * 0.43) };
   }
   function posGota(i) {
-    var g = geo, s = g.slots[Math.min(i, g.slots.length - 1)];
-    var jx = (hash('x' + i) - .5) * g.r * .35, jy = (hash('y' + i) - .5) * g.r * .35;
-    return { x: s.x + jx, y: s.y + jy };
+    var g = geo; var row = Math.floor(i / g.cols), col = i % g.cols;
+    var off = (row % 2) ? g.cw / 2 : 0;
+    var jx = (hash('x' + i) - .5) * g.cw * .25, jy = (hash('y' + i) - .5) * g.rh * .25;
+    var x = g.X0 + g.cw / 2 + col * g.cw + off + jx;
+    var y = g.YB - g.rh / 2 - row * g.rh + jy;
+    x = Math.min(g.X0 + (g.cols * g.cw) - g.r, Math.max(g.X0 + g.r, x));
+    return { x: x, y: y, row: row };
   }
-  function wavePath(amp, phase) {
-    // Ona repetible (període 120). L'animació la desplaça 120 -> bucle continu.
-    var p = 'M0 0', x;
-    for (x = 0; x <= 840; x += 10) p += ' L' + x + ' ' + (Math.sin((x + phase) / 120 * Math.PI * 2) * amp).toFixed(2);
-    p += ' L840 500 L0 500 Z';
+  function wavePath(w, amp, phase) {
+    var p = 'M-120 ' + 0, x;
+    for (x = -120; x <= 480; x += 10) p += ' L' + x + ' ' + (Math.sin((x + phase) / 120 * Math.PI * 2) * amp).toFixed(2);
+    p += ' L480 600 L-120 600 Z';
     return p;
   }
   // La capa SVG ha de coincidir amb la foto (object-fit: cover + object-position): s'ajusta el viewBox.
@@ -1087,23 +1100,24 @@
     var hero = $('btHero'), img = $('btPhoto'), svg = $('btSvg');
     var W = hero.clientWidth, H = hero.clientHeight; if (!W || !H) return;
     var sc = Math.max(W / IMG_W, H / IMG_H), vw = W / sc, vh = H / sc;
-    var pos = (getComputedStyle(img).objectPosition || '50% 58%').split(' ');
+    var pos = (getComputedStyle(img).objectPosition || '50% 25%').split(' ');
     var px = parseFloat(pos[0]) / 100, py = parseFloat(pos[1]) / 100;
-    if (!isFinite(px)) px = .5; if (!isFinite(py)) py = .58;
+    if (!isFinite(px)) px = .5; if (!isFinite(py)) py = .25;
     svg.setAttribute('viewBox', ((IMG_W - vw) * px).toFixed(1) + ' ' + ((IMG_H - vh) * py).toFixed(1) + ' ' + vw.toFixed(1) + ' ' + vh.toFixed(1));
   }
   if (window.ResizeObserver) new ResizeObserver(fitView).observe($('btHero')); else window.addEventListener('resize', fitView);
   fitView();
+  $('btBottleG').setAttribute('transform', BTF);
   function pinta() {
     geo = calcGeo();
     var g = geo, n = g.n;
     var layer = $('btDrops'); layer.innerHTML = '';
-    var lastRow = n ? g.slots[Math.min(n, g.slots.length) - 1].row : -1;
-    var nivell = n ? Math.max(FULL, g.rows[lastRow] - g.r - 4) : 790;
-    if (n >= g.cap) nivell = FULL;
+    var rowsUsed = n ? Math.floor((n - 1) / g.cols) + 1 : 0;
+    var nivell = n ? Math.max(g.YT - 18, g.YB - rowsUsed * g.rh - g.rh * .55) : 538;
+    if (n >= g.cap) nivell = g.YT - 18;
     $('btWaveG').setAttribute('transform', 'translate(0,' + nivell.toFixed(1) + ')');
-    $('btWave1').setAttribute('d', wavePath(4, 0));
-    $('btWave2').setAttribute('d', wavePath(6, 40));
+    $('btWave1').setAttribute('d', wavePath(0, 3.2, 0));
+    $('btWave2').setAttribute('d', wavePath(0, 4.2, 40));
     $('btWaterBody').setAttribute('y', (nivell + 2).toFixed(1));
     var frag = document.createDocumentFragment();
     data.donaciones.forEach(function (d, i) {
@@ -1180,8 +1194,8 @@
     if (!reduced && idx >= 0) {
       var p = posGota(idx), f = $('btFall');
       f.classList.remove('go'); void f.getBoundingClientRect();
-      f.style.setProperty('--dx', (p.x - 372) + 'px');
-      f.style.setProperty('--dy', Math.max(20, p.y - 392) + 'px');
+      f.style.setProperty('--dx', (p.x - 180) + 'px');
+      f.style.setProperty('--dy', Math.max(40, p.y - 16) + 'px');
       f.classList.add('go');
       setTimeout(function () { if (el) { el.classList.add('bt-pop'); setTimeout(function () { el.classList.remove('bt-pop'); }, 600); } }, 1500);
     }
