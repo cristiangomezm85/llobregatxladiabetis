@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="ca" data-lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dona · Llobregat x la Diabetis</title>
+<meta name="description" content="Cada donatiu és una gota que arrossega el riu Llobregat una mica més lluny. El 100% va directe a la recerca d'AREDI per trobar la cura de la diabetis tipus 1.">
+<link rel="icon" type="image/png" href="../img/logo-small.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,600;12..96,700;12..96,800&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ============================================
+     LLOBREGAT x LA DIABETIS · BRAND CSS
+     Mateixa paleta, tipografies i bilingüisme que index.html
+     ============================================ */
+  :root{
+    --blau-llobregat:#15315F;
+    --blau-diabetis:#1E72D4;
+    --blau-aigua:#5AC0E6;
+    --coral:#FF6B47;
+    --paper:#FAFAF6;
+    --tinta:#0E1B36;
+    --gris:#5A6478;
+    --gris-clar:#C9CDD6;
+    --linia:rgba(21, 49, 95, 0.12);
+    --display:"Bricolage Grotesque", system-ui, sans-serif;
+    --body:"Manrope", system-ui, sans-serif;
+    --container:1280px;
+    --pad-x:clamp(1.25rem, 4vw, 3rem);
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    font-family:var(--body);
+    font-weight:400;
+    color:var(--tinta);
+    background:var(--paper);
+    line-height:1.55;
+    font-size:17px;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+  img{max-width:100%;height:auto;display:block;}
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--blau-diabetis);color:white;}
+
+  /* Bilingüisme — visibilitat per llengua activa (idèntic a index.html) */
+  [data-lang="ca"] [lang="es"],
+  [data-lang="ca"] [lang="en"],
+  [data-lang="es"] [lang="ca"],
+  [data-lang="es"] [lang="en"],
+  [data-lang="en"] [lang="ca"],
+  [data-lang="en"] [lang="es"] { display: none !important; }
+
+  h1,h2,h3,h4,.display{font-family:var(--display);font-weight:700;line-height:1.05;letter-spacing:-0.02em;color:var(--blau-llobregat);margin:0;}
+  .h-eyebrow{font-family:var(--body);font-weight:600;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blau-diabetis);display:inline-flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+  .h-eyebrow::before{content:"";width:32px;height:1.5px;background:var(--blau-aigua);}
+  .lead{font-family:var(--body);font-size:clamp(1rem, 1.4vw, 1.15rem);line-height:1.55;color:var(--tinta);max-width:60ch;font-weight:400;}
+  .lead-quiet{color:var(--gris);}
+
+  .container{max-width:var(--container);margin:0 auto;padding-left:var(--pad-x);padding-right:var(--pad-x);}
+
+  /* ============================================
+     NAV — còpia exacta d'index.html
+     ============================================ */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(250,250,246,0.92);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid transparent;
+    transition:border-color .2s ease;
+  }
+  .nav.scrolled{border-bottom-color:var(--linia);}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding-top:.9rem;padding-bottom:.9rem;}
+  .brand{display:flex;align-items:center;gap:.6rem;font-family:var(--display);font-weight:700;color:var(--blau-llobregat);font-size:1.05rem;letter-spacing:-0.02em;}
+  .brand img{width:36px;height:36px;border-radius:50%;object-fit:cover;}
+  .brand span em{color:var(--blau-diabetis);font-style:italic;font-weight:500;}
+  .nav-links{display:flex;align-items:center;gap:1.5rem;}
+  .nav-links a{position:relative;font-size:.95rem;font-weight:500;color:var(--gris);transition:color .2s ease;padding:.3rem 0;}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;height:2px;width:100%;background:var(--blau-diabetis);transform:scaleX(0);transform-origin:left;transition:transform .25s ease;}
+  .nav-links a:hover{color:var(--blau-llobregat);}
+  .nav-links a:hover::after{transform:scaleX(1);}
+  .nav-links a.is-current{color:var(--blau-llobregat);}
+  .nav-links a.is-current::after{transform:scaleX(1);}
+  .nav-links a.nav-cta{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:168px;min-height:48px;
+    background:var(--coral);color:white !important;
+    padding:.65rem 1.3rem;border:2px solid var(--coral);border-radius:999px;
+    font-weight:700;font-size:.92rem;line-height:1;text-align:center;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .nav-cta::after{display:none !important;}
+  .nav-links a.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(255,107,71,.32);color:white !important;}
+  .lang-toggle{display:inline-flex;background:var(--linia);border-radius:999px;padding:3px;gap:2px;overflow:visible;}
+  .lang-toggle button{appearance:none;border:none;background:transparent;padding:.3rem .7rem;border-radius:999px;font-family:var(--body);font-size:.78rem;font-weight:600;color:var(--gris);cursor:pointer;transition:all .2s ease;}
+  .lang-toggle button.active{background:white;color:var(--blau-llobregat);box-shadow:0 1px 3px rgba(21,49,95,.12);}
+  .nav-burger{display:none;appearance:none;border:none;background:transparent;color:var(--blau-llobregat);cursor:pointer;}
+  @media (max-width:880px){
+    .nav-links{
+      position:absolute;top:100%;left:0;right:0;
+      flex-direction:column;align-items:stretch;
+      background:var(--paper);padding:1.25rem var(--pad-x);
+      border-bottom:1px solid var(--linia);
+      transform:translateY(-120%);transition:transform .3s ease;
+      gap:.6rem;box-shadow:0 20px 40px -20px rgba(14,27,54,.15);
+    }
+    .nav-links.open{transform:translateY(0);}
+    .nav-links a{padding:.5rem 0;font-size:1rem;}
+    .nav-cta{text-align:center;margin-top:.5rem;}
+    .nav-burger{display:inline-flex;}
+  }
+
+  /* ============================================
+     HERO — resum de donatius + lema
+     ============================================ */
+  .wrap{max-width:960px;margin:0 auto;padding:0 var(--pad-x) 60px;}
+  /* La foto del header usa el .container ample (1280px, el mateix que el
+     nav i el footer) en comptes del .wrap estret (960px) de la resta del
+     text — així a desktop es veu més horitzontal i el logo/microscopi de
+     la vora dreta de la imatge ja no queda tallat. */
+  .hero-wrap{padding-top:2.5rem;}
+  .hero{
+    position:relative;
+    isolation:isolate;
+    overflow:hidden;
+    border-radius:18px;
+    margin-bottom:2rem;
+    box-shadow:0 30px 60px -30px rgba(14,27,54,.35);
+    min-height:clamp(420px, 48vw, 560px);
+    display:flex;
+    align-items:flex-end;
+    color:white;
+    text-align:center;
+  }
+  .hero .hero-photo{
+    position:absolute;inset:0;z-index:-1;
+    width:100%;height:100%;object-fit:cover;object-position:center 58%;
+    filter:saturate(1.08) contrast(1.03);
+  }
+  .hero .hero-content{
+    position:relative;
+    width:100%;
+    padding:1.75rem 1.5rem 2.25rem;
+  }
+  .hero .eyebrow{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;opacity:.9;margin:0 0 14px;font-weight:600;text-shadow:0 1px 5px rgba(0,0,0,.55);}
+  .hero .lema{font-family:var(--display);font-weight:600;font-style:italic;font-size:clamp(1.05rem, 2.6vw, 1.35rem);line-height:1.4;max-width:36ch;margin:0 auto 22px;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.6);}
+  .hero .total{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem, 6vw, 3rem);margin:0 0 22px;letter-spacing:-0.02em;text-shadow:0 2px 14px rgba(0,0,0,.6);font-variant-numeric:tabular-nums;}
+  /* Mientras se confirma el importe de inscripciones (unos segundos, solo en
+     la primera carga), el número "cuenta" rápido y difuminado en vez de
+     saltar de golpe a la cifra final. */
+  .hero .total.counting{filter:blur(1.5px);opacity:.85;}
+  .cta{display:inline-block;background:var(--coral);color:white;text-decoration:none;font-weight:700;font-size:1rem;padding:14px 34px;border-radius:999px;box-shadow:0 6px 20px rgba(255,107,71,.4);transition:transform .15s, box-shadow .2s;}
+  .cta:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,107,71,.5);}
+  .total-breakdown{font-size:.82rem;color:var(--gris);text-align:center;margin:.9rem 0 0;}
+
+  h2{font-family:var(--display);font-weight:800;font-size:1.35rem;color:var(--blau-llobregat);margin:0 0 4px;letter-spacing:-0.01em;}
+  .section-head{margin-bottom:1.75rem;}
+  .section-sub{font-size:.9rem;color:var(--gris);margin:.4rem 0 0;max-width:56ch;}
+
+  /* ============================================
+     LA CAUSA — riu + cura, entrellaçats
+     ============================================ */
+  .causa-intro{margin-bottom:1.5rem;}
+  .causa{
+    display:flex;align-items:center;gap:1.25rem;
+    background:white;border:1px solid var(--linia);border-radius:16px;
+    padding:1.5rem;margin-bottom:3rem;
+  }
+  .causa img{width:64px;height:64px;object-fit:contain;flex-shrink:0;}
+  .causa .causa-text small{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gris);font-weight:600;display:block;margin-bottom:.3rem;}
+  .causa .causa-text strong{font-family:var(--display);font-weight:700;color:var(--blau-llobregat);font-size:1.05rem;letter-spacing:-0.01em;display:block;}
+  .causa-stats{display:flex;gap:1.5rem;margin-top:.75rem;}
+  .causa-stats .stat{display:flex;align-items:baseline;gap:.4rem;}
+  .causa-stats .stat strong{font-family:var(--display);font-weight:800;color:var(--blau-diabetis);font-size:1.3rem;letter-spacing:-0.01em;}
+  .causa-stats .stat span{font-size:.8rem;color:var(--gris);font-weight:600;}
+  @media (max-width:560px){ .causa{flex-direction:column;text-align:center;} .causa-stats{justify-content:center;} }
+
+  .tabs{display:flex;gap:12px;margin-bottom:24px;}
+  .tab{
+    flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+    text-align:center;padding:16px 12px;border-radius:14px;
+    background:white;color:var(--blau-llobregat);
+    font-weight:800;font-size:15px;cursor:pointer;
+    border:2px solid var(--linia);font-family:var(--body);
+    transition:transform .15s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease, color .2s ease;
+  }
+  .tab .tab-icon{font-size:1.25em;line-height:1;}
+  .tab:hover{transform:translateY(-2px);border-color:var(--blau-diabetis);}
+  .tab.active{color:white;border-color:transparent;box-shadow:0 12px 26px -10px rgba(21,49,95,.5);}
+  .tab[data-tipo="poble"].active{background:var(--blau-diabetis);}
+  .tab[data-tipo="heroe"].active{background:var(--coral);}
+
+  .grid{display:grid;grid-template-columns:1fr;gap:16px;}
+  @media (min-width:640px){.grid{grid-template-columns:1fr 1fr;}}
+  .card{
+    position:relative;aspect-ratio:4/5;border-radius:16px;overflow:hidden;
+    background:#e7eef3;display:flex;flex-direction:column;isolation:isolate;
+  }
+  .card .foto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+  .card .scrim{position:absolute;inset:0;background:linear-gradient(to bottom, rgba(11,32,54,.55) 0%, rgba(11,32,54,0) 32%, rgba(11,32,54,0) 55%, rgba(11,32,54,.9) 100%);z-index:1;}
+  .card .badge{
+    position:relative;z-index:2;align-self:flex-start;margin:12px 0 0 12px;
+    display:inline-block;font-size:10.5px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.04em;padding:4px 10px;border-radius:999px;
+  }
+  .badge.poble{background:var(--blau-diabetis);color:white;}
+  .badge.heroe{background:var(--coral);color:white;}
+  .card .info{position:relative;z-index:2;margin-top:auto;display:flex;flex-direction:column;gap:5px;padding:16px;}
+  .card .nombre{font-family:var(--display);font-weight:800;font-size:17px;color:white;line-height:1.2;text-shadow:0 1px 6px rgba(0,0,0,.55), 0 1px 2px rgba(0,0,0,.7);}
+  .card .amount{font-family:var(--display);font-weight:800;font-size:24px;color:white;text-shadow:0 1px 6px rgba(0,0,0,.55), 0 1px 2px rgba(0,0,0,.7);}
+  .card .dias{font-size:12px;color:#e4edf3;text-shadow:0 1px 4px rgba(0,0,0,.6);}
+  .card a.donar{margin-top:6px;text-align:center;background:var(--coral);color:white;text-decoration:none;font-weight:700;font-size:14px;padding:11px;border-radius:8px;}
+
+  .empty,.error{font-size:13px;color:var(--gris);padding:20px;text-align:center;}
+  .updated-note{font-size:11px;color:var(--gris-clar);text-align:center;margin-top:28px;}
+
+  /* ============================================
+     FOOTER — còpia exacta d'index.html
+     ============================================ */
+  footer{background:var(--blau-llobregat);color:rgba(255,255,255,0.7);padding:4rem 0 2rem;font-size:.95rem;}
+  .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;}
+  @media (max-width:900px){ .footer-grid{grid-template-columns:1fr 1fr;gap:2.5rem;} }
+  @media (max-width:540px){ .footer-grid{grid-template-columns:1fr;} }
+  .footer-brand{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem;}
+  .footer-brand img{width:56px;height:56px;background:rgba(255,255,255,0.06);border-radius:12px;padding:6px;object-fit:contain;}
+  .footer-brand-text{font-family:var(--display);font-weight:700;color:white;font-size:1.1rem;letter-spacing:-0.01em;line-height:1.2;}
+  .footer-brand-text em{font-style:italic;color:var(--blau-aigua);font-weight:400;}
+  .footer-tagline{color:rgba(255,255,255,0.55);font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.4rem;display:block;}
+  footer h4{font-family:var(--display);color:white;font-size:.85rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;margin-bottom:1.25rem;}
+  footer ul{list-style:none;padding:0;margin:0;}
+  footer li{margin-bottom:.6rem;}
+  footer a{color:rgba(255,255,255,0.7);transition:color .15s;}
+  footer a:hover{color:var(--blau-aigua);}
+  .footer-bottom{border-top:1px solid rgba(255,255,255,0.12);padding-top:1.5rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;font-size:.85rem;color:rgba(255,255,255,.6);}
+
+  /* ============================================
+     L'AMPOLLA DE L'ESPERANÇA — gotes (donacions) dins la foto de l'ampolla
+     Tots els selectors porten prefix "bt-" per no xocar amb la resta de la pàgina.
+     ============================================ */
+  :root{ --esperanca:#4DB5E3; }
+  #ampolla, #tria{ scroll-margin-top:90px; }
+  .bt-sec{ max-width:1180px; margin:0 auto; padding:clamp(2.2rem,5vw,3.8rem) var(--pad-x) 0; }
+  .bt-stage{ display:grid; grid-template-columns:minmax(240px,320px) 1fr; gap:clamp(1.5rem,4vw,3.5rem); align-items:center; }
+  @media (max-width:860px){ .bt-stage{ grid-template-columns:1fr; } }
+  .bt-fig{ position:relative; width:100%; max-width:320px; margin:0 auto; }
+  #btSvg{ width:100%; height:auto; display:block; overflow:visible; }
+  .bt-bubble{ cursor:pointer; transition:transform .2s; transform-box:fill-box; transform-origin:center; outline:none; }
+  .bt-bubble:hover, .bt-bubble:focus-visible{ transform:scale(1.35); }
+  .bt-bubble.is-active{ transform:scale(1.5); }
+  .bt-bubble.is-active circle.b-body{ stroke:#fff; stroke-width:2.5; stroke-opacity:1; }
+  .bt-falling{ opacity:0; }
+  .bt-falling.go{ animation:btFall 1.7s cubic-bezier(.45,0,.85,.55) forwards; }
+  @keyframes btFall{
+    0%{ opacity:0; transform:translate(0,0); }
+    10%{ opacity:1; }
+    60%{ opacity:1; transform:translate(0,calc(var(--dy,300px) * .62)); }
+    100%{ opacity:1; transform:translate(var(--dx,0px),var(--dy,300px)); }
+  }
+  .bt-wave1{ animation:btWave 6s linear infinite; }
+  .bt-wave2{ animation:btWave 9s linear infinite reverse; opacity:.55; }
+  @keyframes btWave{ from{ transform:translateX(0); } to{ transform:translateX(-120px); } }
+  .bt-pop{ animation:btPop .5s ease-out; }
+  @keyframes btPop{ 0%{ transform:scale(.2); opacity:0; } 60%{ transform:scale(1.25); opacity:1; } 100%{ transform:scale(1); } }
+  @media (prefers-reduced-motion:reduce){ .bt-wave1,.bt-wave2,.bt-pop,.bt-falling.go{ animation:none !important; } .bt-falling.go{ opacity:0; } }
+
+  .bt-tip{ position:absolute; z-index:10; width:min(270px,80vw); background:#fff; border:1px solid var(--linia); border-radius:14px; padding:.8rem .95rem; box-shadow:0 14px 40px rgba(14,27,54,.28); pointer-events:none; opacity:0; transform:translateY(6px); transition:opacity .15s, transform .15s; font-size:.9rem; color:var(--tinta); line-height:1.4; }
+  .bt-tip.show{ opacity:1; transform:none; }
+  .bt-tip b{ font-family:var(--display); font-size:1rem; color:var(--blau-llobregat); }
+  .bt-tip .t-reto{ display:block; font-size:.74rem; color:var(--blau-diabetis); font-weight:700; margin-bottom:.25rem; }
+  .bt-tip p{ margin:.35rem 0 0; }
+  .bt-tip .t-meta{ color:var(--gris); font-size:.74rem; margin-top:.4rem; display:block; }
+
+  .bt-title{ font-family:var(--display); font-weight:800; font-size:clamp(2rem,5vw,3.2rem); line-height:1.05; letter-spacing:-.02em; color:var(--blau-llobregat); margin:.2rem 0 .9rem; }
+  .bt-title em{ font-style:normal; color:var(--esperanca); }
+  .bt-lead{ color:var(--gris); max-width:52ch; margin:0; }
+  .bt-counters{ display:flex; flex-wrap:wrap; gap:1.6rem; margin:1.4rem 0 1.4rem; }
+  .bt-counter b.counting{ filter:blur(1.5px); opacity:.85; }
+  .bt-panel .total-breakdown{ text-align:left; margin:.2rem 0 0; }
+  .bt-counter b{ display:block; font-family:var(--display); font-weight:800; font-size:clamp(2rem,5vw,3rem); line-height:1; color:var(--blau-llobregat); font-variant-numeric:tabular-nums; }
+  .bt-counter span{ font-size:.82rem; color:var(--gris); }
+  .bt-live{ background:#fff; border:1px solid var(--linia); border-radius:18px; padding:1.1rem 1.25rem; min-height:128px; box-shadow:0 8px 30px rgba(21,49,95,.06); }
+  .bt-live .l-label{ font-weight:700; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--blau-diabetis); }
+  .bt-live blockquote{ margin:.45rem 0 .5rem; font-family:var(--display); font-size:clamp(1.1rem,2.4vw,1.4rem); line-height:1.3; color:var(--tinta); font-weight:600; }
+  .bt-live .l-who{ font-size:.86rem; color:var(--gris); }
+  .bt-legend{ display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem; font-size:.8rem; color:var(--gris); }
+  .bt-legend i{ display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:.35rem; vertical-align:-1px; }
+  .bt-actions{ margin-top:1.4rem; }
+  .bt-note{ font-size:.8rem; color:var(--gris); margin:.8rem 0 0; max-width:52ch; }
+
+  .bt-wall{ max-width:1180px; margin:0 auto; padding:2.6rem var(--pad-x) 0; }
+  .bt-wall h2.bt-wall-title{ font-size:clamp(1.4rem,3vw,2rem); margin:0 0 1.2rem; }
+  .bt-cards{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1rem; }
+  .bt-card{ background:#fff; border:1px solid var(--linia); border-radius:16px; padding:1rem 1.1rem; display:flex; flex-direction:column; gap:.35rem; cursor:pointer; transition:transform .15s, box-shadow .2s; text-align:left; font:inherit; color:inherit; }
+  .bt-card:hover{ transform:translateY(-2px); box-shadow:0 10px 28px rgba(21,49,95,.1); }
+  .bt-card .c-reto{ font-weight:700; font-size:.72rem; color:var(--blau-diabetis); letter-spacing:.03em; }
+  .bt-card .c-msg{ font-size:.98rem; margin:0; }
+  .bt-card .c-msg.none{ color:var(--gris); font-style:italic; }
+  .bt-card .c-who{ font-weight:700; font-size:.88rem; margin-top:auto; color:var(--blau-llobregat); }
+  .bt-card .c-date{ font-size:.76rem; color:var(--gris); }
+  .bt-empty, .bt-demo{ text-align:center; color:var(--gris); padding:1rem; }
+  .bt-demo{ background:#FFF3E0; color:#8a4b00; border-radius:10px; margin:1rem auto 0; max-width:1180px; font-size:.85rem; }
+  .bt-btn{ display:inline-flex; align-items:center; gap:.5rem; font-family:var(--body); font-weight:600; font-size:.95rem; padding:.7rem 1.3rem; border-radius:100px; border:0; cursor:pointer; transition:transform .15s, box-shadow .2s; text-decoration:none; }
+  .bt-btn-coral{ background:var(--coral); color:#fff; box-shadow:0 6px 20px rgba(255,107,71,.3); }
+  .bt-btn-coral:hover{ transform:translateY(-2px); box-shadow:0 10px 26px rgba(255,107,71,.42); }
+  .bt-btn-line{ background:transparent; color:var(--blau-llobregat); border:1.5px solid var(--linia); }
+  .bt-btn-line:hover{ border-color:var(--blau-llobregat); }
+  .bt-more{ display:flex; margin:1.6rem auto 0; }
+</style>
+<link rel="stylesheet" href="../menu.css">
+</head>
+<body>
+
+<!-- ============================================
+     NAV — mateixos enllaços i idiomes que index.html
+     ============================================ -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="brand">
+      <img src="../img/logo-small.png" alt="Llobregat x la Diabetis">
+      <span>Llobregat <em>x la</em> Diabetis</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true"><span lang="ca">El repte</span><span lang="es">El reto</span><span lang="en">The challenge</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+        <div class="nav-dd-menu">
+          <a href="../el-repte.html"><span lang="ca">El repte i la causa</span><span lang="es">El reto y la causa</span><span lang="en">The challenge and the cause</span></a>
+          <a href="../pobles.html"><span lang="ca">Pobles</span><span lang="es">Pueblos</span><span lang="en">Towns</span></a>
+          <a href="../persones.html"><span lang="ca">Persones i Herois</span><span lang="es">Personas y Héroes</span><span lang="en">People and Heroes</span></a>
+          <a href="../inscrits.html"><span lang="ca">Inscrits</span><span lang="es">Inscritos</span><span lang="en">Registered</span></a>
+        </div>
+      </div>
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true"><span lang="ca">Informació</span><span lang="es">Información</span><span lang="en">Information</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+        <div class="nav-dd-menu">
+          <a href="../recorregut.html"><span lang="ca">Recorregut i etapes</span><span lang="es">Recorrido y etapas</span><span lang="en">Route and stages</span></a>
+          <a href="../briefing.html"><span lang="ca">Briefing</span><span lang="es">Briefing</span><span lang="en">Briefing</span></a>
+          <a href="../normativa.html"><span lang="ca">Normativa</span><span lang="es">Normativa</span><span lang="en">Rules</span></a>
+          <a href="../recollida.html"><span lang="ca">Recollida de bossa i samarreta</span><span lang="es">Recogida de bolsa y camiseta</span><span lang="en">Bag and t-shirt collection</span></a>
+        </div>
+      </div>
+      <a href="../en-directe.html"><span lang="ca">En directe</span><span lang="es">En directo</span><span lang="en">Live</span></a>
+      <a href="https://www.instagram.com/llobregatxladiabetis/" class="nav-ig" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg><span class="nav-ig-txt">Instagram</span></a>
+      <div class="lang-toggle" role="group" aria-label="Llengua">
+        <button data-set-lang="ca" class="active" type="button">CA</button>
+        <button data-set-lang="es" type="button">ES</button>
+        <button data-set-lang="en" type="button">EN</button>
+      </div>
+      <a href="../dona/" class="nav-dona"><span lang="ca">Dona</span><span lang="es">Dona</span><span lang="en">Donate</span><span class="nav-dona-total" hidden></span></a>
+    </div>
+    <button class="nav-burger" id="burger" aria-label="Menú" aria-expanded="false"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
+  </div>
+</nav>
+
+<!-- ============================================
+     HERO — la foto i el lema, en un sol bloc.
+     Va dins ".container" (1280px, ample complet, com el nav/footer) en
+     comptes del ".wrap" estret de sota, perquè a desktop la imatge es
+     vegi més horitzontal i no talli el logo de la vora.
+     ============================================ -->
+<!-- ============================================
+     L'AMPOLLA DE L'ESPERANÇA — cada donació (Mi Grano de Arena) és una gota.
+     Les gotes cauen dins la foto de l'ampolla i el vidre deixa veure el fons.
+     Dades: dona/donaciones.json (les genera el bot de GitHub Actions).
+     ============================================ -->
+<div class="bt-demo" id="btDemo" hidden>
+  <span lang="ca">Dades d'exemple: aquests noms i missatges no són reals.</span>
+  <span lang="es">Datos de ejemplo: estos nombres y mensajes no son reales.</span>
+  <span lang="en">Sample data: these names and messages are not real.</span>
+</div>
+
+<div class="container hero-wrap" id="donaTop">
+  <div class="hero">
+    <img class="hero-photo" src="../img/hero-dona.jpg" alt="Llobregat x la Diabetis — del riu a la cura">
+    <div class="hero-content">
+      <p class="eyebrow">Llobregat x la Diabetis 2026</p>
+      <p class="lema">
+        <span lang="ca">El riu sempre arriba al mar.<br>La ciència trobarà la cura.</span>
+        <span lang="es">El río siempre llega al mar.<br>La ciencia encontrará la cura.</span>
+        <span lang="en">The river always reaches the sea.<br>Science will find a cure.</span>
+      </p>
+      <a class="cta" id="ctaGeneral" href="#" target="_blank" rel="noopener">
+        <span lang="ca">Dona ara</span>
+        <span lang="es">Dona ahora</span>
+        <span lang="en">Donate now</span>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<section class="bt-sec" id="ampolla" aria-labelledby="btH">
+  <div class="bt-stage">
+    <div class="bt-fig" id="btFig">
+      <svg id="btSvg" viewBox="50 0 260 560" role="img" aria-labelledby="btSvgT">
+        <title id="btSvgT">L'ampolla de l'esperança</title>
+      <defs>
+        <clipPath id="btClip"><path id="btClipPath" d="M138 26 L222 26 Q232 26 232 36 L232 118 C232 150 282 162 284 220 L284 494 Q284 538 246 538 L114 538 Q76 538 76 494 L76 220 C78 162 128 150 128 118 L128 36 Q128 26 138 26 Z"/></clipPath>
+        <linearGradient id="btgWater" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#5AC0E6"/><stop offset="1" stop-color="#1E72D4"/>
+        </linearGradient>
+        <linearGradient id="btgGlass" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".18" stop-color="#fff" stop-opacity=".05"/>
+          <stop offset=".85" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity=".5"/>
+        </linearGradient>
+        <radialGradient id="btgDrop" cx=".35" cy=".3" r=".8">
+          <stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".5" stop-color="#9fdcf3"/><stop offset="1" stop-color="#4DB4E0"/>
+        </radialGradient>
+        <radialGradient id="btgDropMsg" cx=".35" cy=".3" r=".8">
+          <stop offset="0" stop-color="#cfe6ff"/><stop offset=".5" stop-color="#3F8FE6"/><stop offset="1" stop-color="#15315F"/>
+        </radialGradient>
+      </defs>
+      <!-- ombra -->
+      <ellipse cx="180" cy="546" rx="100" ry="9" fill="#15315F" opacity=".12"/>
+      <!-- interior buit -->
+      <path d="M138 26 L222 26 Q232 26 232 36 L232 118 C232 150 282 162 284 220 L284 494 Q284 538 246 538 L114 538 Q76 538 76 494 L76 220 C78 162 128 150 128 118 L128 36 Q128 26 138 26 Z" fill="#EAF6FC" opacity=".55"/>
+      <g clip-path="url(#btClip)">
+        <g id="btWater" pointer-events="none">
+          <rect id="btWaterBody" x="0" y="538" width="360" height="560" fill="url(#btgWater)" opacity=".92"/>
+          <g id="btWaveG" transform="translate(0,538)">
+            <path class="bt-wave2" id="btWave2" d="" fill="#5AC0E6"/>
+            <path class="bt-wave1" id="btWave1" d="" fill="url(#btgWater)"/>
+          </g>
+        </g>
+        <g id="btDrops"></g>
+      </g>
+      <!-- vidre -->
+      <path d="M138 26 L222 26 Q232 26 232 36 L232 118 C232 150 282 162 284 220 L284 494 Q284 538 246 538 L114 538 Q76 538 76 494 L76 220 C78 162 128 150 128 118 L128 36 Q128 26 138 26 Z" fill="url(#btgGlass)" stroke="#15315F" stroke-opacity=".35" stroke-width="3" pointer-events="none"/>
+      <!-- rosca del coll -->
+      <g fill="none" stroke="#15315F" stroke-opacity=".3" stroke-width="2.5" stroke-linecap="round" pointer-events="none">
+        <path d="M132 48 H228"/><path d="M132 66 H228"/><path d="M132 84 H228"/>
+      </g>
+      <!-- reflex -->
+      <path d="M98 250 C95 330 95 420 100 488" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="7" stroke-linecap="round" pointer-events="none"/>
+      <!-- gota que cau -->
+      <g id="btFallLayer" pointer-events="none"><circle id="btFall" class="bt-falling" cx="180" cy="16" r="9" fill="url(#btgDropMsg)"/></g>
+    
+      </svg>
+      <div class="bt-tip" id="btTip" role="tooltip"></div>
+    </div>
+
+    <div class="bt-panel">
+      <span class="h-eyebrow"><span lang="ca">Una gota, una persona</span><span lang="es">Una gota, una persona</span><span lang="en">One drop, one person</span></span>
+      <h2 class="bt-title" id="btH"><span lang="ca">L'ampolla de <em>l'esperança</em></span><span lang="es">La botella de la <em>esperanza</em></span><span lang="en">The bottle of <em>hope</em></span></h2>
+      <p class="bt-lead">
+        <span lang="ca">Cada donació al repte és una gota. Toca una gota per llegir el missatge de qui l'ha deixada.</span>
+        <span lang="es">Cada donación al reto es una gota. Toca una gota para leer el mensaje de quien la dejó.</span>
+        <span lang="en">Every donation to the challenge is a drop. Tap a drop to read the message left by the donor.</span>
+      </p>
+      <div class="bt-counters">
+        <div class="bt-counter"><b id="totalRecaudado" class="total">—</b><span><span lang="ca">recaptat</span><span lang="es">recaudado</span><span lang="en">raised</span></span></div>
+        <div class="bt-counter"><b id="btDropsN">0</b><span><span lang="ca">gotes (donacions)</span><span lang="es">gotas (donaciones)</span><span lang="en">drops (donations)</span></span></div>
+        <div class="bt-counter"><b id="btMsgsN">0</b><span><span lang="ca">amb missatge</span><span lang="es">con mensaje</span><span lang="en">with a message</span></span></div>
+      </div>
+      <p class="total-breakdown" id="totalBreakdown" hidden></p>
+      <div class="bt-live" aria-live="polite">
+        <div class="l-label"><span lang="ca">Acaba de caure una gota</span><span lang="es">Acaba de caer una gota</span><span lang="en">A drop just fell</span></div>
+        <blockquote id="btLiveMsg">…</blockquote>
+        <div class="l-who" id="btLiveWho"></div>
+      </div>
+      <div class="bt-legend">
+        <span><i style="background:#1E72D4"></i><span lang="ca">Gota amb missatge</span><span lang="es">Gota con mensaje</span><span lang="en">Drop with a message</span></span>
+        <span><i style="background:#7fd0ee"></i><span lang="ca">Gota sense missatge</span><span lang="es">Gota sin mensaje</span><span lang="en">Drop without a message</span></span>
+      </div>
+      <div class="bt-actions">
+        <a class="bt-btn bt-btn-coral" href="#tria"><span lang="ca">Afegeix la teva gota</span><span lang="es">Añade tu gota</span><span lang="en">Add your drop</span></a>
+      </div>
+      <p class="bt-note">
+        <span lang="ca">Les gotes noves poden trigar uns minuts a aparèixer a l'ampolla.</span>
+        <span lang="es">Las gotas nuevas pueden tardar unos minutos en aparecer en la botella.</span>
+        <span lang="en">New drops can take a few minutes to show up in the bottle.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="bt-wall" aria-labelledby="btWallH">
+  <h2 class="bt-wall-title" id="btWallH"><span lang="ca">Els missatges, de més nou a més antic</span><span lang="es">Los mensajes, del más nuevo al más antiguo</span><span lang="en">Messages, newest first</span></h2>
+  <div class="bt-cards" id="btCards"></div>
+  <p class="bt-empty" id="btEmpty" hidden>
+    <span lang="ca">Encara no hi ha gotes. Sigues la primera!</span>
+    <span lang="es">Todavía no hay gotas. ¡Sé la primera persona!</span>
+    <span lang="en">No drops yet. Be the first!</span>
+  </p>
+  <button type="button" class="bt-btn bt-btn-line bt-more" id="btMore" hidden>
+    <span lang="ca">Mostra'n més</span><span lang="es">Mostrar más</span><span lang="en">Show more</span>
+  </button>
+</section>
+
+<div class="wrap">
+
+  <!-- ============================================
+       LA CAUSA — el recorregut del riu i el de la recerca
+       ============================================ -->
+  <div class="causa-intro section-head">
+    <span class="h-eyebrow">
+      <span lang="ca">La causa</span><span lang="es">La causa</span><span lang="en">The cause</span>
+    </span>
+    <h2>
+      <span lang="ca">Del naixement del riu… fins a la cura</span>
+      <span lang="es">Del nacimiento del río… hasta la cura</span>
+      <span lang="en">From the river's source… to the cure</span>
+    </h2>
+    <p class="lead lead-quiet section-sub">
+      <span lang="ca">El repte recorre 180 km del Llobregat, del Berguedà fins al mar. La recerca fa un camí semblant: comença amb una pregunta i no s'atura fins trobar la cura de la diabetis tipus 1. Cada donatiu hi impulsa el corrent.</span>
+      <span lang="es">El reto recorre 180 km del Llobregat, del Berguedà hasta el mar. La investigación hace un camino parecido: empieza con una pregunta y no se detiene hasta encontrar la cura de la diabetes tipo 1. Cada donativo impulsa esa corriente.</span>
+      <span lang="en">The challenge follows 180 km of the Llobregat, from the Berguedà to the sea. Research follows a similar course: it starts with a question and doesn't stop until it finds a cure for type 1 diabetes. Every donation pushes that current forward.</span>
+    </p>
+  </div>
+
+  <div class="causa">
+    <img src="../img/aredi-logo.png" alt="AREDI">
+    <div class="causa-text">
+      <small>
+        <span lang="ca">Beneficiari íntegre</span>
+        <span lang="es">Beneficiario íntegro</span>
+        <span lang="en">Sole beneficiary</span>
+      </small>
+      <strong>
+        <span lang="ca">AREDI · Associació Ajuda a la Recerca en Diabetis</span>
+        <span lang="es">AREDI · Asociación Ayuda a la Investigación en Diabetes</span>
+        <span lang="en">AREDI · Association for Research into Diabetes</span>
+      </strong>
+      <div class="causa-stats">
+        <div class="stat"><strong>100%</strong><span>a AREDI</span></div>
+        <div class="stat">
+          <strong>100%</strong>
+          <span><span lang="ca">a recerca</span><span lang="es">a investigación</span><span lang="en">to research</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       TRIA UN TRAM DEL RIU
+       ============================================ -->
+  <div class="section-head" id="tria">
+    <span class="h-eyebrow">
+      <span lang="ca">Suma-t'hi</span><span lang="es">Súmate</span><span lang="en">Join in</span>
+    </span>
+    <h2>
+      <span lang="ca">Tria el teu tram del riu</span>
+      <span lang="es">Elige tu tramo del río</span>
+      <span lang="en">Choose your stretch of the river</span>
+    </h2>
+    <p class="lead lead-quiet section-sub">
+      <span lang="ca">Cada poble i cada heroi és un tram del recorregut. Sumats, arriben al mar — i la recerca, un pas més a prop de la cura.</span>
+      <span lang="es">Cada pueblo y cada héroe es un tramo del recorrido. Sumados, llegan al mar — y la investigación, un paso más cerca de la cura.</span>
+      <span lang="en">Each town and each hero is a stretch of the route. Together they reach the sea — and research, one step closer to the cure.</span>
+    </p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tipo="poble">
+      <span class="tab-icon" aria-hidden="true">🏘️</span>
+      <span lang="ca">Pobles</span><span lang="es">Municipios</span><span lang="en">Towns</span>
+    </button>
+    <button class="tab" data-tipo="heroe">
+      <span class="tab-icon" aria-hidden="true">🦸</span>
+      <span lang="ca">Herois</span><span lang="es">Héroes</span><span lang="en">Heroes</span>
+    </button>
+  </div>
+
+  <div class="grid" id="grid">
+    <p class="empty">
+      <span lang="ca">Carregant reptes…</span>
+      <span lang="es">Cargando retos…</span>
+      <span lang="en">Loading challenges…</span>
+    </p>
+  </div>
+
+  <p class="updated-note" id="updatedNote"></p>
+</div>
+
+<!-- ============================================
+     FOOTER — còpia exacta d'index.html
+     ============================================ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img src="../img/logo-footer-white.png" alt="Llobregat x la Diabetis">
+          <div>
+            <div class="footer-brand-text">Llobregat <em>x la</em> Diabetis</div>
+            <span class="footer-tagline">180 km · 3 <span lang="ca">dies</span><span lang="es">días</span><span lang="en">days</span> · <span lang="ca">un propòsit</span><span lang="es">un propósito</span><span lang="en">one purpose</span></span>
+          </div>
+        </div>
+        <p style="color: rgba(255,255,255,0.55); font-size: 0.92rem; max-width: 38ch; margin-top: 1rem;">
+          <span lang="ca">Repte solidari pel riu Llobregat per visibilitzar la diabetis tipus 1 i recaptar fons per a AREDI.</span>
+          <span lang="es">Reto solidario por el río Llobregat para visibilizar la diabetes tipo 1 y recaudar fondos para AREDI.</span>
+          <span lang="en">Charity challenge along the Llobregat river to raise awareness of type 1 diabetes and funds for AREDI.</span>
+        </p>
+      </div>
+      <div>
+        <h4><span lang="ca">El repte</span><span lang="es">El reto</span><span lang="en">The challenge</span></h4>
+        <ul>
+          <li><a href="../el-repte.html#repte"><span lang="ca">El repte</span><span lang="es">El reto</span><span lang="en">The challenge</span></a></li>
+          <li><a href="../el-repte.html#recorregut"><span lang="ca">Recorregut</span><span lang="es">Recorrido</span><span lang="en">Route</span></a></li>
+          <li><a href="../el-repte.html#corredor"><span lang="ca">Impulsor</span><span lang="es">Impulsor</span><span lang="en">Founder</span></a></li>
+          <li><a href="../el-repte.html#causa"><span lang="ca">La causa</span><span lang="es">La causa</span><span lang="en">The cause</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h4><span lang="ca">Suma-t'hi</span><span lang="es">Súmate</span><span lang="en">Join in</span></h4>
+        <ul>
+          <li><a href="../persones.html"><span lang="ca">Persones</span><span lang="es">Personas</span><span lang="en">People</span></a></li>
+          <li><a href="../pobles.html"><span lang="ca">Pobles</span><span lang="es">Pueblos</span><span lang="en">Towns</span></a></li>
+          <li><a href="../patrocina.html"><span lang="ca">Patrocina el repte</span><span lang="es">Patrocina el reto</span><span lang="en">Sponsor the challenge</span></a></li>
+          <li><a href="../patrocinadors.html"><span lang="ca">Patrocinadors</span><span lang="es">Patrocinadores</span><span lang="en">Sponsors</span></a></li>
+          <li><a href="../el-repte.html#participacio"><span lang="ca">Participa</span><span lang="es">Participa</span><span lang="en">Take part</span></a></li>
+          <li><a href="#donaTop"><span lang="ca">Dona ara</span><span lang="es">Dona ahora</span><span lang="en">Donate now</span></a></li>
+          <li><a href="../el-repte.html#seguiment"><span lang="ca">Seguiment</span><span lang="es">Seguimiento</span><span lang="en">Tracking</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h4><span lang="ca">Contacte</span><span lang="es">Contacto</span><span lang="en">Contact</span></h4>
+        <ul>
+          <li><a href="https://www.instagram.com/llobregatxladiabetis/" target="_blank" rel="noopener">@llobregatxladiabetis</a></li>
+          <li><a href="mailto:info@llobregat.org">info@llobregat.org</a></li>
+          <li><a href="https://www.arediabetis.org" target="_blank" rel="noopener">arediabetis.org</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Llobregat x la Diabetis · <span lang="ca">Tots els fons a AREDI</span><span lang="es">Todos los fondos a AREDI</span><span lang="en">All funds go to AREDI</span> · <a href="../privacitat.html"><span lang="ca">Política de privacitat</span><span lang="es">Política de privacidad</span><span lang="en">Privacy policy</span></a></span>
+      <span>#LlobregatXLaDiabetis · #LxD2026 · #UnPropòsit</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ============================================
+  // BILINGÜISME — mateix mecanisme que index.html:
+  // llegeix/desa l'idioma a localStorage("llxd-lang"), de manera que si
+  // l'usuari ja el va triar a la home, aquí es carrega automàticament.
+  // ============================================
+  const html = document.documentElement;
+  const langButtons = document.querySelectorAll('[data-set-lang]');
+
+  // Declarades aquí (i no més avall, on s'usaven abans) perquè setLang() ja
+  // hi fa referència just després, i amb "let" això llençava "Cannot access
+  // 'DATA' before initialization" quan hi havia un idioma desat a
+  // localStorage (setLang es crida abans que el codi arribi a declarar-les).
+  let DATA = null;
+  let currentTipo = 'poble';
+
+  const TITLES = {
+    ca: 'Dona · Llobregat x la Diabetis',
+    es: 'Dona · Llobregat x la Diabetis',
+    en: 'Donate · Llobregat for Diabetes',
+  };
+
+  function setLang(lang) {
+    html.setAttribute('data-lang', lang);
+    html.setAttribute('lang', lang);
+    langButtons.forEach(b => b.classList.toggle('active', b.dataset.setLang === lang));
+    try { localStorage.setItem('llxd-lang', lang); } catch (e) {}
+    document.title = TITLES[lang] || TITLES.ca;
+    if (DATA) render();
+    if (window.llxdBotella) window.llxdBotella.onLang();
+  }
+
+  langButtons.forEach(b => {
+    b.addEventListener('click', () => setLang(b.dataset.setLang));
+  });
+
+  let savedLang = null;
+  try { savedLang = localStorage.getItem('llxd-lang'); } catch (e) {}
+  if (savedLang === 'ca' || savedLang === 'es' || savedLang === 'en') {
+    setLang(savedLang);
+  }
+
+  function getLang() {
+    return html.getAttribute('data-lang') || 'ca';
+  }
+
+  // ============================================
+  // NAV — scroll state + mobile burger
+  // ============================================
+  const nav = document.getElementById('nav');
+  const navLinks = document.getElementById('navLinks');
+  const burger = document.getElementById('burger');
+  function onScroll(){ nav.classList.toggle('scrolled', window.scrollY > 30); }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+  burger.addEventListener('click', () => { navLinks.classList.toggle('open'); });
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => { navLinks.classList.remove('open'); });
+  });
+
+  // ============================================
+  // RETOS — placeholder generat al propi codi (SVG en base64) — mai pot
+  // donar 404, així que no hi ha risc de parpelleig si a algú encara no
+  // li hem pujat foto.
+  // ============================================
+  const FOTO_PLACEHOLDER = 'data:image/svg+xml;base64,' + btoa(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+      <rect width="400" height="400" fill="#e7eef3"/>
+      <circle cx="200" cy="160" r="70" fill="#c7d9e3"/>
+      <rect x="80" y="250" width="240" height="130" rx="65" fill="#c7d9e3"/>
+    </svg>
+  `);
+
+  // Enllaç general "Dona ara a la causa" — un per idioma perquè cadascun porta
+  // a la pàgina de Mi Grano de Arena en aquella llengua. Es pot sobreescriure
+  // des de retos.json posant "retoGeneralUrl" com a objecte {ca, es, en} (si
+  // hi falta algun idioma, o si retoGeneralUrl no existeix al JSON, s'usen
+  // aquests valors per defecte).
+  const DEFAULT_MGA_URLS = {
+    ca: 'https://www.migranodearena.org/ca/repte/llobregat-x-la-diabetes',
+    es: 'https://www.migranodearena.org/reto/llobregat-x-la-diabetes',
+    en: 'https://www.migranodearena.org/en/cause/llobregat-x-la-diabetes',
+  };
+
+  // Tria la URL de l'idioma actiu dins un valor que pot ser:
+  //  - un string (una sola URL per a tots els idiomes — format antic), o
+  //  - un objecte {ca, es, en} (una URL per idioma — format nou).
+  // Si l'idioma actiu no hi és configurat, mostra un altre idioma abans que
+  // trencar l'enllaç (es -> ca -> en -> el primer que hi hagi).
+  const LANG_FALLBACK_ORDER = ['es', 'ca', 'en'];
+  function pickLangUrl(value, lang){
+    if (!value) return null;
+    if (typeof value === 'string') return value;
+    if (value[lang]) return value[lang];
+    for (const l of LANG_FALLBACK_ORDER) {
+      if (value[l]) return value[l];
+    }
+    return Object.values(value).find(Boolean) || null;
+  }
+
+  function resolveFotoUrl(foto){
+    if(!foto) return FOTO_PLACEHOLDER;
+    // Accepta tant "nom.jpg" com "fotos/nom.jpg" al JSON — traiem un
+    // possible prefix "fotos/" i el tornem a afegir sempre, per no
+    // acabar amb "fotos/fotos/...".
+    const clean = foto.replace(/^fotos\//, '');
+    return 'fotos/' + encodeURI(clean);
+  }
+
+  // Textos que depenen de l'idioma actiu i que es generen des del JS
+  // (la resta de la pàgina fa servir spans [lang] estàtics).
+  const STR = {
+    ca: { poble:'Poble', heroe:'Heroi', dies:n=>`Falten ${n} dies`, donar:'Dona',
+          empty:'Encara no hi ha reptes publicats en aquesta categoria.',
+          error:"No s'ha pogut carregar el llistat de reptes ara mateix.",
+          actualitzat:'Actualitzat', locale:'ca-ES',
+          breakdown:amt=>`Inclou ${amt} donats directament a través de les inscripcions al repte.` },
+    es: { poble:'Municipio', heroe:'Héroe', dies:n=>`Faltan ${n} días`, donar:'Donar',
+          empty:'Todavía no hay retos publicados en esta categoría.',
+          error:'No se ha podido cargar el listado de retos ahora mismo.',
+          actualitzat:'Actualizado', locale:'es-ES',
+          breakdown:amt=>`Incluye ${amt} donados directamente a través de las inscripciones al reto.` },
+    en: { poble:'Town', heroe:'Hero', dies:n=>`${n} days left`, donar:'Donate',
+          empty:'No challenges published in this category yet.',
+          error:"Couldn't load the list of challenges right now.",
+          actualitzat:'Updated', locale:'en-GB',
+          breakdown:amt=>`Includes ${amt} donated directly through challenge registrations.` },
+  };
+
+  // Donatius fets directament des de les inscripcions (Dorsal 0 i similars).
+  // NO es configura a mà a cap JSON: es calcula EN VIU cada vegada que es
+  // carrega la pàgina, demanant un endpoint PÚBLIC (public-stats, sense
+  // token) que fa exactament la mateixa suma que la targeta "Donativos
+  // (inscripciones)" de l'admin però només retorna l'agregat — mai les
+  // inscripcions una a una ni cap dada personal. (Abans es provava de
+  // llegir-ho de l'endpoint privat de l'admin, que requereix ADMIN_TOKEN i
+  // per això mai sumava res des d'aquí — d'aquí ve aquest endpoint nou.)
+  // Si l'endpoint no respon, es tracta com a 0 en comptes de trencar la
+  // resta de la pàgina.
+  const PUBLIC_STATS_API_CANDIDATES = ['/api/public-stats', '/.netlify/functions/public-stats'];
+  // Aquest endpoint pot trigar (llegeix totes les inscripcions una a una);
+  // li posem un límit de temps propi perquè mai bloquegi la resta de la
+  // pàgina — si no respon a temps, es tracta com a 0 (es reintentarà sol
+  // la propera vegada que algú carregui la pàgina).
+  const PUBLIC_STATS_TIMEOUT_MS = 4000;
+  // Últim import conegut de donatius d'inscripcions, guardat al navegador:
+  // es pinta a l'instant mentre arriba el valor fresc, de manera que mai es
+  // veu el total "penjat" o sense els donatius. Si localStorage no hi és,
+  // tot funciona igual (només es perd aquest avantatge).
+  const DONATIUS_CACHE_KEY = 'llxd-donatius-inscripcions';
+  function llegirDonatiusCache(){
+    try {
+      const v = Number(localStorage.getItem(DONATIUS_CACHE_KEY));
+      return isFinite(v) && v > 0 ? v : 0;
+    } catch (e) { return 0; }
+  }
+  function desarDonatiusCache(v){
+    try { localStorage.setItem(DONATIUS_CACHE_KEY, String(v)); } catch (e) {}
+  }
+  // Retorna l'import, o null si no s'ha pogut obtenir (llavors es manté el
+  // valor guardat en comptes de tornar a 0).
+  async function fetchDonatiusInscripcions(){
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), PUBLIC_STATS_TIMEOUT_MS);
+    try {
+      for (const url of PUBLIC_STATS_API_CANDIDATES) {
+        try {
+          const res = await fetch(url, {signal: controller.signal});
+          if (!res.ok) continue;
+          const data = await res.json();
+          return Number(data && data.donatiusInscripcionsEur) || 0;
+        } catch (err) {
+          if (controller.signal.aborted) break;
+        }
+      }
+    } finally {
+      clearTimeout(timeoutId);
+    }
+    return null;
+  }
+
+  // Es llegeix directament de GitHub (raw.githubusercontent.com, cau de ~5
+  // min) en comptes del propi Netlify: així el bot que actualitza retos.json
+  // cada 15 min NO dispara cap build/deploy a Netlify (que cobra crèdits per
+  // cada un). Abans es feia només via jsDelivr, però jsDelivr guarda en cau
+  // a quin commit apunta "@main" fins a 12 h i la purga no sempre ho
+  // refresca — per això ara jsDelivr queda només com a reserva si GitHub
+  // falla. Cal que netlify.toml permeti raw.githubusercontent.com a
+  // connect-src (CSP).
+  const RETOS_JSON_URL = 'https://raw.githubusercontent.com/cristiangomezm85/llobregatxladiabetis/main/dona/retos.json';
+  const RETOS_JSON_FALLBACK = 'https://cdn.jsdelivr.net/gh/cristiangomezm85/llobregatxladiabetis@main/dona/retos.json';
+
+  // Efecto "contador" para el número grande del total: mientras esperamos
+  // la cifra de inscripciones, se muestra la cifra parcial (solo Mi Grano de
+  // Arena) ya conocida, con un desenfoque/opacidad que indica "cargando",
+  // en vez de un número inventado. Antes aquí se mostraba una cifra con un
+  // salto aleatorio (base + random) que, al ser siempre más alta que la
+  // base pero sin relación con el total real, podía leerse como "la cifra
+  // va mal" — se ha quitado para no mostrar nunca un número que no sea
+  // real. Solo se activa si la espera se nota (más de UMBRAL_FLORITURA_MS)
+  // — si la respuesta llega rápido, el número final se pinta directo, sin
+  // pasar por este estado intermedio.
+  const UMBRAL_FLORITURA_MS = 150;
+  function setTotalDisplay(valor){
+    document.getElementById('totalRecaudado').textContent = formatEuros(valor);
+  }
+  function iniciarFlorituraContador(base){
+    const el = document.getElementById('totalRecaudado');
+    el.classList.add('counting');
+    setTotalDisplay(base);
+  }
+  function pararFlorituraContador(){
+    document.getElementById('totalRecaudado').classList.remove('counting');
+  }
+  // Al terminar, un conteo rápido (pero legible) desde el número borroso
+  // hasta la cifra definitiva, para que "aterrice" con suavidad.
+  function animarHastaTotal(valorFinal, duracionMs){
+    const el = document.getElementById('totalRecaudado');
+    const inicio = Number(String(el.textContent).replace(/[^\d]/g,'')) || 0;
+    const t0 = performance.now();
+    (function paso(ahora){
+      const t = Math.min(1, (ahora - t0) / duracionMs);
+      const suavizado = 1 - Math.pow(1 - t, 3);
+      setTotalDisplay(Math.round(inicio + (valorFinal - inicio) * suavizado));
+      if (t < 1) requestAnimationFrame(paso); else setTotalDisplay(valorFinal);
+    })(t0);
+  }
+
+  async function load(){
+    try{
+      // Los retos (fotos, importes de MGA) vienen de jsDelivr y son rápidos:
+      // se pintan en cuanto llegan, sin esperar a nada más. Los donativos
+      // hechos desde el formulario de inscripción se piden aparte y, si
+      // tardan o fallan, se suman en cuanto lleguen (o se quedan en 0) sin
+      // dejar la página entera colgada mientras tanto.
+      DATA = await fetch(RETOS_JSON_URL, {cache:'no-store'})
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .catch(() => fetch(RETOS_JSON_FALLBACK, {cache:'no-store'}).then(r => r.json()));
+      const baseTotal = Number(DATA.totalRecaudado) || 0;
+      const donatiusGuardats = llegirDonatiusCache();
+      DATA.donatiusInscripcions = donatiusGuardats;
+      render();
+
+      // Només hi ha "floritura" (número borrós) si no hi ha cap valor
+      // guardat i l'espera es nota; amb valor guardat el total ja és bo.
+      let florituraActiva = false;
+      const esperaFloritura = donatiusGuardats > 0 ? null : setTimeout(() => {
+        florituraActiva = true;
+        iniciarFlorituraContador(baseTotal);
+      }, UMBRAL_FLORITURA_MS);
+
+      const fresc = await fetchDonatiusInscripcions();
+      if (esperaFloritura) clearTimeout(esperaFloritura);
+      if (!DATA) return;
+      const donatiusInscripcions = fresc === null ? donatiusGuardats : fresc;
+      if (fresc !== null) desarDonatiusCache(fresc);
+      DATA.donatiusInscripcions = donatiusInscripcions;
+      const totalFinal = baseTotal + donatiusInscripcions;
+
+      if (florituraActiva) {
+        pararFlorituraContador();
+        animarHastaTotal(totalFinal, 550);
+        setTimeout(render, 570);
+      } else {
+        render();
+      }
+    }catch(err){
+      const s = STR[getLang()];
+      document.getElementById('grid').innerHTML = `<p class="error">${escapeHtml(s.error)}</p>`;
+      console.error(err);
+    }
+  }
+
+  function formatEuros(n){
+    const lang = getLang();
+    const formatted = new Intl.NumberFormat(STR[lang].locale, {maximumFractionDigits:0}).format(n);
+    return lang === 'en' ? '€' + formatted : formatted + '€';
+  }
+
+  function render(){
+    if(!DATA) return;
+    const s = STR[getLang()];
+
+    // El total mostrat suma el que arriba de Mi Grano de Arena
+    // (DATA.totalRecaudado, ve de retos.json) més els donatius fets
+    // directament des del formulari d'inscripció (DATA.donatiusInscripcions,
+    // calculat EN VIU per fetchDonatiusInscripcions() — no ve del JSON).
+    const donatiusInscripcions = Number(DATA.donatiusInscripcions) || 0;
+    const totalAmbInscripcions = (Number(DATA.totalRecaudado) || 0) + donatiusInscripcions;
+    document.getElementById('totalRecaudado').textContent = formatEuros(totalAmbInscripcions);
+    const breakdownEl = document.getElementById('totalBreakdown');
+    if (donatiusInscripcions > 0) {
+      breakdownEl.hidden = false;
+      breakdownEl.textContent = s.breakdown(formatEuros(donatiusInscripcions));
+    } else {
+      breakdownEl.hidden = true;
+    }
+    const ctaUrls = (DATA.retoGeneralUrl && typeof DATA.retoGeneralUrl === 'object') ? DATA.retoGeneralUrl : DEFAULT_MGA_URLS;
+    document.getElementById('ctaGeneral').href = pickLangUrl(ctaUrls, getLang());
+    if(DATA.actualizado){
+      const d = new Date(DATA.actualizado);
+      document.getElementById('updatedNote').textContent = s.actualitzat + ' ' +
+        d.toLocaleDateString(s.locale, {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+    }
+
+    const grid = document.getElementById('grid');
+    const filtered = (DATA.retos || []).filter(r => r.tipo === currentTipo);
+
+    if(filtered.length === 0){
+      grid.innerHTML = `<p class="empty">${escapeHtml(s.empty)}</p>`;
+      return;
+    }
+
+    grid.innerHTML = filtered.map(r => `
+      <div class="card">
+        <img class="foto" src="${escapeAttr(resolveFotoUrl(r.foto))}"
+             alt="${escapeAttr(r.nombre)}"
+             onerror="this.onerror=null; this.src='${FOTO_PLACEHOLDER}';">
+        <div class="scrim"></div>
+        <span class="badge ${r.tipo}">${r.tipo === 'poble' ? escapeHtml(s.poble) : escapeHtml(s.heroe)}</span>
+        <div class="info">
+          <div class="nombre">${escapeHtml(r.nombre)}</div>
+          <div class="amount">${formatEuros(r.recaudado || 0)}</div>
+          ${r.diasRestantes != null ? `<div class="dias">${escapeHtml(s.dies(r.diasRestantes))}</div>` : ''}
+          <a class="donar" href="${escapeAttr(pickLangUrl(r.url, getLang()) || '#')}" target="_blank" rel="noopener">${escapeHtml(s.donar)}</a>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function escapeAttr(s){ return escapeHtml(s); }
+
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentTipo = btn.dataset.tipo;
+      render();
+    });
+  });
+
+  load();
+</script>
+<script>
+// ============================================
+// L'AMPOLLA DE L'ESPERANÇA — una gota per donació (dades: dona/donaciones.json)
+// ============================================
+(function () {
+  'use strict';
+
+  var OBJECTIU_PER_DEFECTE = 250;   // gotes per omplir l'ampolla si el JSON no porta "objectiuGotes"
+  // Per privacitat NO es mostra l'import de cada donació.
+  // Primer GitHub raw (cau ~5 min, no depèn del CDN) i jsDelivr només com a reserva.
+  var URLS = [
+    'https://raw.githubusercontent.com/cristiangomezm85/llobregatxladiabetis/main/dona/donaciones.json',
+    'https://cdn.jsdelivr.net/gh/cristiangomezm85/llobregatxladiabetis@main/dona/donaciones.json'
+  ];
+  var DEMO = /[?&]demo=1/.test(location.search);
+  var PAGE = 12;
+
+  var LOCALES = { ca: 'ca-ES', es: 'es-ES', en: 'en-GB' };
+  var T = {
+    ca: { anon: 'Anònim', noMsg: 'Sense missatge', event: 'Repte general' },
+    es: { anon: 'Anónimo', noMsg: 'Sin mensaje', event: 'Reto general' },
+    en: { anon: 'Anonymous', noMsg: 'No message', event: 'General challenge' }
+  };
+  var htmlEl = document.documentElement;
+  function lang() { var l = htmlEl.getAttribute('data-lang'); return LOCALES[l] ? l : 'ca'; }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var NS = 'http://www.w3.org/2000/svg';
+  var data = { donaciones: [], objectiu: OBJECTIU_PER_DEFECTE };
+  var geo = null, shown = PAGE;
+  var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // MGA entrega textos con entidades (&#039; &quot; ...), a veces doblemente escapadas: se decodifican.
+  var _ta = document.createElement('textarea');
+  function dec(s) { if (s == null) return s; s = String(s); for (var i = 0; i < 3 && /&(#\d+|#x[0-9a-f]+|[a-z]+);/i.test(s); i++) { _ta.innerHTML = s; s = _ta.value; } return s; }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function hash(str) { var h = 2166136261; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; }
+  function nomDe(d) { return d.anonimo || !d.nombre ? T[lang()].anon : d.nombre; }
+  function retoDe(d) { return d.retoNombre || T[lang()].event; }
+  function teMsg(d) { return !!(d.mensaje && String(d.mensaje).trim()); }
+  function sel(id) { return '.bt-bubble[data-id="' + (window.CSS && CSS.escape ? CSS.escape(id) : id) + '"]'; }
+  function fmtData(d) {
+    if (!d.fecha) return '';
+    var t = new Date(d.fecha); if (isNaN(t)) return '';
+    return new Intl.DateTimeFormat(LOCALES[lang()], { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }).format(t);
+  }
+
+  // ============ Dades ============
+  async function getJson(url, ms) {
+    var c = new AbortController(); var to = setTimeout(function () { c.abort(); }, ms || 7000);
+    try { var r = await fetch(url, { signal: c.signal, cache: 'no-store' }); if (!r.ok) return null; return await r.json(); }
+    catch (e) { return null; } finally { clearTimeout(to); }
+  }
+  async function carrega() {
+    var j = null;
+    if (DEMO) j = await getJson('donaciones.demo.json');
+    else { for (var i = 0; i < URLS.length && !j; i++) { var x = await getJson(URLS[i]); if (x && Array.isArray(x.donaciones)) j = x; } }
+    if (!j || !Array.isArray(j.donaciones)) j = { donaciones: [] };
+    // L'ordre és el de "orden" (1 = la primera donació). Si falta, es manté l'ordre de l'array.
+    var arr = j.donaciones.map(function (d, i) { d._i = i; d.nombre = dec(d.nombre); d.mensaje = dec(d.mensaje); d.retoNombre = dec(d.retoNombre); return d; });
+    arr.sort(function (a, b) { var oa = a.orden != null ? a.orden : a._i, ob = b.orden != null ? b.orden : b._i; return oa - ob; });
+    arr.forEach(function (d, i) { d.id = d.id || ('d' + i); });
+    data.donaciones = arr;
+    data.objectiu = Math.max(1, Number(j.objectiuGotes) || OBJECTIU_PER_DEFECTE);
+    $('btDemo').hidden = !(DEMO || j.demo === true);
+  }
+
+  // ============ Ampolla ============
+  // Coordenades de l'ampolla (1774 x 887). L'ampolla de la imatge està inclinada;
+  // les gotes s'apilen en files horitzontals (com l'aigua) dins del contorn del vidre,
+  // de baix a dalt, seguint l'ordre de les donacions.
+  // Zona útil del cos (igual que botella.html)
+  function calcGeo() {
+    var n = data.donaciones.length;
+    var cap = Math.max(data.objectiu, n);
+    var X0 = 86, X1 = 274, YB = 530, YT = 200;
+    var W = X1 - X0, H = YB - YT;
+    var s = Math.sqrt(W * H / cap);
+    var cols = Math.max(1, Math.floor(W / s));
+    var cw = W / cols;
+    var rows = Math.ceil(cap / cols);
+    var rh = H / rows;
+    return { n: n, cap: cap, X0: X0, YB: YB, YT: YT, cols: cols, cw: cw, rh: rh, r: Math.max(3.2, Math.min(cw, rh) * 0.43) };
+  }
+  function posGota(i) {
+    var g = geo; var row = Math.floor(i / g.cols), col = i % g.cols;
+    var off = (row % 2) ? g.cw / 2 : 0;
+    var jx = (hash('x' + i) - .5) * g.cw * .25, jy = (hash('y' + i) - .5) * g.rh * .25;
+    var x = g.X0 + g.cw / 2 + col * g.cw + off + jx;
+    var y = g.YB - g.rh / 2 - row * g.rh + jy;
+    x = Math.min(g.X0 + (g.cols * g.cw) - g.r, Math.max(g.X0 + g.r, x));
+    return { x: x, y: y, row: row };
+  }
+  function wavePath(w, amp, phase) {
+    var p = 'M-120 ' + 0, x;
+    for (x = -120; x <= 480; x += 10) p += ' L' + x + ' ' + (Math.sin((x + phase) / 120 * Math.PI * 2) * amp).toFixed(2);
+    p += ' L480 600 L-120 600 Z';
+    return p;
+  }
+  function pinta() {
+    geo = calcGeo();
+    var g = geo, n = g.n;
+    var layer = $('btDrops'); layer.innerHTML = '';
+    var rowsUsed = n ? Math.floor((n - 1) / g.cols) + 1 : 0;
+    var nivell = n ? Math.max(g.YT - 18, g.YB - rowsUsed * g.rh - g.rh * .55) : 538;
+    if (n >= g.cap) nivell = g.YT - 18;
+    $('btWaveG').setAttribute('transform', 'translate(0,' + nivell.toFixed(1) + ')');
+    $('btWave1').setAttribute('d', wavePath(0, 3.2, 0));
+    $('btWave2').setAttribute('d', wavePath(0, 4.2, 40));
+    $('btWaterBody').setAttribute('y', (nivell + 2).toFixed(1));
+    var frag = document.createDocumentFragment();
+    data.donaciones.forEach(function (d, i) {
+      var p = posGota(i), msg = teMsg(d);
+      var gEl = document.createElementNS(NS, 'g');
+      gEl.setAttribute('class', 'bt-bubble'); gEl.setAttribute('tabindex', '0'); gEl.setAttribute('role', 'button');
+      gEl.setAttribute('data-id', d.id);
+      gEl.setAttribute('aria-label', nomDe(d) + (msg ? ': ' + d.mensaje : ''));
+      var c = document.createElementNS(NS, 'circle');
+      c.setAttribute('class', 'b-body'); c.setAttribute('cx', p.x.toFixed(1)); c.setAttribute('cy', p.y.toFixed(1)); c.setAttribute('r', (g.r * .92).toFixed(1));
+      c.setAttribute('fill', msg ? 'url(#btgDropMsg)' : 'url(#btgDrop)'); c.setAttribute('stroke', msg ? '#fff' : '#2a7fc9'); c.setAttribute('stroke-opacity', msg ? '.8' : '.6'); c.setAttribute('stroke-width', '1.2');
+      var h = document.createElementNS(NS, 'circle');
+      h.setAttribute('cx', (p.x - g.r * .3).toFixed(1)); h.setAttribute('cy', (p.y - g.r * .35).toFixed(1)); h.setAttribute('r', (g.r * .22).toFixed(1)); h.setAttribute('fill', '#fff'); h.setAttribute('opacity', '.9');
+      gEl.appendChild(c); gEl.appendChild(h);
+      gEl.addEventListener('mouseenter', function () { mostraTip(d, gEl); });
+      gEl.addEventListener('mouseleave', amagaTip);
+      gEl.addEventListener('focus', function () { mostraTip(d, gEl); });
+      gEl.addEventListener('blur', amagaTip);
+      gEl.addEventListener('click', function (ev) { ev.stopPropagation(); mostraTip(d, gEl, true); });
+      frag.appendChild(gEl);
+    });
+    layer.appendChild(frag);
+    renderStatic();
+  }
+  function renderStatic() {
+    var n = data.donaciones.length, m = data.donaciones.filter(teMsg).length;
+    $('btDropsN').textContent = n.toLocaleString(LOCALES[lang()]);
+    $('btMsgsN').textContent = m.toLocaleString(LOCALES[lang()]);
+  }
+
+  // ============ Tooltip ============
+  var tipEl = $('btTip'), tipTimer = null;
+  function contingutTip(d) {
+    var msg = teMsg(d) && String(d.mensaje).trim();
+    return '<span class="t-reto">' + esc(retoDe(d)) + '</span><b>' + esc(nomDe(d)) + '</b>' +
+      '<p>' + (msg ? '&ldquo;' + esc(msg) + '&rdquo;' : '<i style="color:var(--gris)">' + esc(T[lang()].noMsg) + '</i>') + '</p>' +
+      (fmtData(d) ? '<span class="t-meta">' + esc(fmtData(d)) + '</span>' : '');
+  }
+  function mostraTip(d, el, sticky) {
+    clearTimeout(tipTimer);
+    tipEl.innerHTML = contingutTip(d);
+    var wr = $('btFig').getBoundingClientRect(), r = el.getBoundingClientRect();
+    var w = tipEl.offsetWidth || 250, hgt = tipEl.offsetHeight || 100;
+    var x = Math.max(8, Math.min(wr.width - w - 8, r.left + r.width / 2 - wr.left - w / 2));
+    var y = r.top - wr.top - hgt - 10;
+    if (y < 8) y = r.bottom - wr.top + 10;
+    tipEl.style.left = x + 'px'; tipEl.style.top = y + 'px';
+    tipEl.classList.add('show');
+    marca(d.id);
+    if (sticky) tipTimer = setTimeout(amagaTip, 4500);
+  }
+  function amagaTip() { tipEl.classList.remove('show'); marca(null); }
+  document.addEventListener('click', amagaTip);
+  function marca(id) {
+    document.querySelectorAll('.bt-bubble.is-active').forEach(function (b) { b.classList.remove('is-active'); });
+    if (id) { var b = document.querySelector(sel(id)); if (b) b.classList.add('is-active'); }
+  }
+
+  // ============ Gota que cau (rotació de missatges) ============
+  var cua = [], cuaPos = 0, cicle = null;
+  function iniciaCicle() {
+    clearTimeout(cicle);
+    // Comença per la més recent i va tornant enrere.
+    cua = data.donaciones.filter(teMsg).reverse(); cuaPos = 0;
+    if (!cua.length) { $('btLiveMsg').textContent = '—'; $('btLiveWho').textContent = ''; return; }
+    seguent();
+  }
+  function seguent() {
+    if (!cua.length) return;
+    var d = cua[cuaPos % cua.length]; cuaPos++;
+    $('btLiveMsg').innerHTML = '&ldquo;' + esc(d.mensaje) + '&rdquo;';
+    $('btLiveWho').textContent = nomDe(d) + ' · ' + retoDe(d);
+    var idx = data.donaciones.indexOf(d), el = document.querySelector(sel(d.id));
+    if (!reduced && idx >= 0) {
+      var p = posGota(idx), f = $('btFall');
+      f.classList.remove('go'); void f.getBoundingClientRect();
+      f.style.setProperty('--dy', Math.max(40, p.y - 16) + 'px');
+      f.classList.add('go');
+      setTimeout(function () { if (el) { el.classList.add('bt-pop'); setTimeout(function () { el.classList.remove('bt-pop'); }, 600); } }, 1500);
+    }
+    cicle = setTimeout(seguent, 6500);
+  }
+
+  // ============ Mur de missatges (de més nou a més antic) ============
+  function renderCards(reset) {
+    if (reset) shown = PAGE;
+    var llista = data.donaciones.slice().reverse();
+    $('btEmpty').hidden = data.donaciones.length > 0;
+    $('btCards').innerHTML = llista.slice(0, shown).map(function (d) {
+      var msg = teMsg(d) && String(d.mensaje).trim();
+      return '<button type="button" class="bt-card" data-id="' + esc(d.id) + '">' +
+        '<span class="c-reto">' + esc(retoDe(d)) + '</span>' +
+        '<p class="c-msg' + (msg ? '' : ' none') + '">' + (msg ? '&ldquo;' + esc(msg) + '&rdquo;' : esc(T[lang()].noMsg)) + '</p>' +
+        '<span class="c-who">' + esc(nomDe(d)) + '</span>' +
+        (fmtData(d) ? '<span class="c-date">' + esc(fmtData(d)) + '</span>' : '') + '</button>';
+    }).join('');
+    $('btMore').hidden = llista.length <= shown;
+  }
+  $('btCards').addEventListener('click', function (ev) {
+    var b = ev.target.closest('.bt-card'); if (!b) return;
+    var el = document.querySelector(sel(b.dataset.id));
+    var d = data.donaciones.filter(function (x) { return x.id === b.dataset.id; })[0];
+    if (!el || !d) return;
+    $('btFig').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+    setTimeout(function () { mostraTip(d, el, true); }, reduced ? 0 : 450);
+  });
+  $('btMore').addEventListener('click', function () { shown += PAGE; renderCards(false); });
+
+  // La pàgina crida això quan canvia l'idioma.
+  window.llxdBotella = { onLang: function () { if (window.__botellaReady) { renderStatic(); renderCards(true); amagaTip(); } } };
+
+  // ============ Arrencada ============
+  carrega().then(function () { window.__botellaReady = true; pinta(); renderCards(true); iniciaCicle(); });
+  // Refresc suau cada 5 minuts (el JSON s'actualitza cada ~15 min des de GitHub).
+  setInterval(function () {
+    if (document.hidden || DEMO) return;
+    var abans = data.donaciones.length;
+    carrega().then(function () { if (data.donaciones.length !== abans) { pinta(); renderCards(true); iniciaCicle(); } });
+  }, 300000);
+})();
+</script>
+<script src="../menu.js" defer></script>
+</body>
+</html>
