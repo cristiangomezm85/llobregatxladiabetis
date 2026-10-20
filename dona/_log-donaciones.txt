@@ -10,8 +10,8 @@ pedro-x-la-diabetes: donantes 6/6 · comentarios 2/3 · textos 219
 ⚠️  pedro-x-la-diabetes: la página dice 3 comentarios pero se leyeron 2
 pksteam-x-la-diabetes: donantes 27/27 · comentarios 6/7 · textos 284
 ⚠️  pksteam-x-la-diabetes: la página dice 7 comentarios pero se leyeron 6
-ricard-x-la-diabetes: donantes 48/48 · comentarios 20/24 · textos 394
-⚠️  ricard-x-la-diabetes: la página dice 24 comentarios pero se leyeron 20
+ricard-x-la-diabetes: donantes 49/49 · comentarios 21/25 · textos 400
+⚠️  ricard-x-la-diabetes: la página dice 25 comentarios pero se leyeron 21
 sandra-x-la-diabetis: donantes 6/6 · comentarios 3/3 · textos 221
 team-one-x-la-diabetes: donantes 4/4 · comentarios 1/1 · textos 221
 castellar-de-n-hug-x-la-diabetes: donantes 1/1 · comentarios 0/? · textos 194
@@ -32,7 +32,7 @@ llobregat-x-la-diabetis-190-kms-corriendo-por-la-diabetes-tipo-1: donantes 0/0 �
 llobregat-per-la-diabetes: donantes 1/1 · comentarios 0/? · textos 186
 un-vehiculo-para-afa-palencia: donantes 0/? · comentarios 0/? · textos 113
 --- DIAGNÓSTICO un-vehiculo-para-afa-palencia: no se encontró el encabezado "Donantes (N)" ---
-HTML: 41229 caracteres · <title>: (sin título)
+HTML: 41215 caracteres · <title>: (sin título)
 Primeros textos: ["Buscar","Crea tu reto","es","es","ca","en","Regístrate / Inicia sesión","Crea tu reto","Descubre retos","Descubre eventos","Descubre causas","Nuestra fundación","¿Qué es el crowdfunding?","¿Quieres ser un event partner?","La causa del mes","Personas","Empresas","ONGs","Equipo","Blog","Cajas","solidarias","Tu donación en una caja","Dónalo","Donación de producto"]
 Textos con donan/coment: []
-✅ donaciones.json — 217 donaciones (1 nuevas, 0 con comentario añadido)
+✅ donaciones.json — 218 donaciones (1 nuevas, 0 con comentario añadido)

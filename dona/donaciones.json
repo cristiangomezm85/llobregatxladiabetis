@@ -1,7 +1,7 @@
 {
   "objectiuGotes": 250,
-  "actualizado": "2026-10-20T19:16:06.613Z",
-  "total": 217,
+  "actualizado": "2026-10-20T19:28:32.439Z",
+  "total": 218,
   "donaciones": [
     {
       "id": "fb594bee7cc2",
@@ -2389,6 +2389,17 @@
       "mensaje": "",
       "fecha": "2026-10-20T19:15:52.384Z",
       "orden": 228
+    },
+    {
+      "id": "2e347fc818b7",
+      "reto": "ricard-x-la-diabetes",
+      "retoNombre": "Ricard x La Diabetes",
+      "nombre": "Gemma",
+      "anonimo": false,
+      "importe": 200,
+      "mensaje": "Què gran! Increïble córrer 200kms en 3 dies!",
+      "fecha": "2026-10-20T19:28:21.896Z",
+      "orden": 229
     }
   ]
 }
