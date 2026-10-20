@@ -1,7 +1,7 @@
 {
   "objectiuGotes": 250,
-  "actualizado": "2026-10-20T10:46:06.380Z",
-  "total": 215,
+  "actualizado": "2026-10-20T11:01:27.218Z",
+  "total": 216,
   "donaciones": [
     {
       "id": "fb594bee7cc2",
@@ -2367,6 +2367,17 @@
       "mensaje": "Arribarem junts!",
       "fecha": "2026-10-20T10:31:08.775Z",
       "orden": 226
+    },
+    {
+      "id": "8b889e315adf",
+      "reto": "llobregat-x-la-diabetes",
+      "retoNombre": "llobregat-x-la-diabetes",
+      "nombre": "Daniel",
+      "anonimo": false,
+      "importe": 50,
+      "mensaje": "Un reto excepcional con gente excepcional. Una pequeña ayuda para los verdaderos héroes que lidian las 24h con la DT1",
+      "fecha": "2026-10-20T11:01:24.946Z",
+      "orden": 227
     }
   ]
 }
