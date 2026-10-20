@@ -6,7 +6,7 @@
     "en": "https://www.migranodearena.org/en/cause/llobregat-x-la-diabetes"
   },
   "totalRecaudado": 8773,
-  "actualizado": "2026-10-20T08:30:55.961Z",
+  "actualizado": "2026-10-20T08:45:44.584Z",
   "retos": [
     {
       "slug": "astolfo-x-la-diabetes",
@@ -14,8 +14,10 @@
       "tipo": "heroe",
       "foto": "fotos/Astolfo.jpg",
       "url": "https://www.migranodearena.org/reto/astolfo-x-la-diabetes",
-      "recaudado": 0,
-      "diasRestantes": 11
+      "recaudado": 700,
+      "diasRestantes": null,
+      "enListado": true,
+      "finalizado": true
     },
     {
       "slug": "club-basquet-santjust-x-la-diabetes",
@@ -24,7 +26,8 @@
       "foto": "fotos/clubbasquetesplugues.jpeg",
       "url": "https://www.migranodearena.org/reto/club-basquet-sant-just-amb-llobregat-x-la-diabetis",
       "recaudado": 1069,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "carlos-912runners-x-la-diabetes",
@@ -33,7 +36,8 @@
       "foto": "fotos/carlosluna.jpeg",
       "url": "https://www.migranodearena.org/reto/carlos-912runners-x-la-diabetes",
       "recaudado": 1745,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "dani-x-la-diabetes",
@@ -42,7 +46,8 @@
       "foto": "fotos/Dani.jpeg",
       "url": "https://www.migranodearena.org/reto/dani-x-la-diabetes",
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "daniel-x-la-diabetes",
@@ -54,7 +59,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/daniel-x-la-diabetes"
       },
       "recaudado": 210,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "david-x-la-diabetis",
@@ -63,7 +69,8 @@
       "foto": "fotos/David.jpg",
       "url": "https://www.migranodearena.org/reto/david-x-la-diabetis",
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "emi-x-la-diabetes",
@@ -72,7 +79,8 @@
       "foto": "fotos/Emi.jpg",
       "url": "https://www.migranodearena.org/reto/emi-x-la-diabetes",
       "recaudado": 255,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "manu-x-la-diabetes",
@@ -81,7 +89,8 @@
       "foto": "fotos/Manu.jpg",
       "url": "https://www.migranodearena.org/reto/manu-x-la-diabetes",
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "pedro-x-la-diabetes",
@@ -93,7 +102,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/pedro-x-la-diabetes"
       },
       "recaudado": 225,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "pksteam-x-la-diabetes",
@@ -102,7 +112,8 @@
       "foto": "fotos/PKsTEAM.jpeg",
       "url": "https://www.migranodearena.org/reto/pk-s-team-x-la-diabetes",
       "recaudado": 1000,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "ricard-x-la-diabetes",
@@ -110,8 +121,10 @@
       "tipo": "heroe",
       "foto": "fotos/ricard.png",
       "url": "https://www.migranodearena.org/reto/correre-el-llobregat-x-la-diabetis",
-      "recaudado": 0,
-      "diasRestantes": 11
+      "recaudado": 2000,
+      "diasRestantes": null,
+      "enListado": true,
+      "finalizado": true
     },
     {
       "slug": "sandra-x-la-diabetis",
@@ -120,7 +133,8 @@
       "foto": "fotos/Sandra.jpg",
       "url": "https://www.migranodearena.org/reto/sandra-x-la-diabetis",
       "recaudado": 105,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "team-one-x-la-diabetes",
@@ -129,7 +143,8 @@
       "foto": "fotos/TeamOne.jpg",
       "url": "https://www.migranodearena.org/reto/team-one-x-la-diabetes",
       "recaudado": 155,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "llobregat-x-la-diabetes",
@@ -138,7 +153,8 @@
       "foto": null,
       "url": "https://www.migranodearena.org/reto/llobregat-x-la-diabetes",
       "recaudado": 564,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "castellar-de-n-hug-x-la-diabetes",
@@ -150,7 +166,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/castellar-de-n-hug-x-la-diabetis"
       },
       "recaudado": 50,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "la-pobla-de-lillet-x-la-diabetes",
@@ -162,7 +179,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/la-pobla-de-lillet-x-la-diabetes"
       },
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "guardiola-de-bergueda-x-la-diabetes",
@@ -174,7 +192,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/guardiola-de-bergueda-x-la-diabetes"
       },
       "recaudado": 10,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "sant-jordi-de-cercs-x-la-diabetes",
@@ -186,7 +205,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/sant-jordi-de-cercs-x-la-diabetis"
       },
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "berga-x-la-diabetes",
@@ -198,7 +218,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/berga-x-la-diabetis"
       },
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "cal-rosal-olvan-x-la-diabetes",
@@ -210,7 +231,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/cal-rosal-olvan-x-la-diabetis"
       },
       "recaudado": 160,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "gironella-x-la-diabetes",
@@ -222,7 +244,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/gironella-x-la-diabetis"
       },
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "puig-reig-x-la-diabetes",
@@ -234,7 +257,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/puig-reig-x-la-diabetis"
       },
       "recaudado": 10,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "navas-x-la-diabetes",
@@ -246,7 +270,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/navas-x-la-diabetis"
       },
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "balsareny-x-la-diabetes",
@@ -258,7 +283,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/balsareny-x-la-diabetis"
       },
       "recaudado": 5,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "sallent-x-la-diabetes",
@@ -270,7 +296,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/sallent-x-la-diabetis"
       },
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "navarcles-x-la-diabetes",
@@ -282,7 +309,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/navarcles-x-la-diabetis"
       },
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "manresa-x-la-diabetes",
@@ -294,7 +322,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/manresa-x-la-diabetis"
       },
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "sant-vicen-de-castellet-x-la-diabetes",
@@ -306,7 +335,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/sant-vicen-de-castellet-x-la-diabetis"
       },
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "castellbell-i-el-vilar-x-la-diabetes",
@@ -318,7 +348,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/castellbell-i-el-vilar-x-la-diabetis"
       },
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "monistrol-de-montserrat-x-la-diabetes",
@@ -330,7 +361,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/monistrol-de-montserrat-x-la-diabetis"
       },
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "esparreguera-x-la-diabetes",
@@ -342,7 +374,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/esparreguera-x-la-diabetis"
       },
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "olesa-de-montserrat-x-la-diabetes",
@@ -354,7 +387,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/olesa-de-montserrat-x-la-diabetis"
       },
       "recaudado": 115,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "martorell-x-la-diabetes",
@@ -366,7 +400,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/martorell-x-la-diabetis"
       },
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "castellbisbal-x-la-diabetes",
@@ -378,7 +413,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/castellbisbal-x-la-diabetis"
       },
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "sant-andreu-de-la-barca-x-la-diabetes",
@@ -390,7 +426,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/sant-andreu-de-la-barca-x-la-diabetis"
       },
       "recaudado": 10,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "palleja-x-la-diabetes",
@@ -399,7 +436,8 @@
       "foto": "fotos/Pallejà.png",
       "url": "https://www.migranodearena.org/reto/palleja-x-la-diabetes",
       "recaudado": 100,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "sant-vicen-dels-horts-x-la-diabetes",
@@ -411,7 +449,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/sant-vicen-dels-horts-x-la-diabetis"
       },
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "santa-coloma-de-cervello-x-la-diabetes",
@@ -423,7 +462,8 @@
         "ca": "https://www.migranodearena.org/ca/repte/santa-coloma-de-cervello-x-la-diabetes"
       },
       "recaudado": 35,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "sant-boi-x-la-diabetes",
@@ -432,7 +472,8 @@
       "foto": "fotos/Sant Boi de Llobregat.png",
       "url": "https://www.migranodearena.org/reto/sant-boi-x-la-diabetes",
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "sant-joan-x-la-diabetes",
@@ -441,7 +482,8 @@
       "foto": "fotos/Sant Joan Despí.png",
       "url": "https://www.migranodearena.org/reto/sant-joan-x-la-diabetes",
       "recaudado": 185,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "cornella-x-la-diabetes",
@@ -450,7 +492,8 @@
       "foto": "fotos/Cornellà de Llobregat.png",
       "url": "https://www.migranodearena.org/reto/cornella-x-la-diabetes",
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "hospitalet-x-la-diabetes",
@@ -459,7 +502,8 @@
       "foto": "fotos/Hospitalet de Llobregat.png",
       "url": "https://www.migranodearena.org/reto/hospitalet-x-la-diabetes",
       "recaudado": 60,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "el-prat-x-la-diabetes",
@@ -468,7 +512,8 @@
       "foto": "fotos/El Prat de Llobregat.png",
       "url": "https://www.migranodearena.org/reto/el-prat-x-la-diabetes",
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "correre-el-llobregat-x-la-diabetis",
@@ -476,8 +521,9 @@
       "tipo": "pendiente",
       "foto": null,
       "url": "https://www.migranodearena.org/reto/correre-el-llobregat-x-la-diabetis",
-      "recaudado": 0,
-      "diasRestantes": 11
+      "recaudado": 2000,
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "llobregat-x-la-diabetis-190-kms-corriendo-por-la-diabetes-tipo-1",
@@ -486,7 +532,9 @@
       "foto": null,
       "url": "https://www.migranodearena.org/reto/llobregat-x-la-diabetis-190-kms-corriendo-por-la-diabetes-tipo-1",
       "recaudado": 0,
-      "diasRestantes": 32
+      "diasRestantes": null,
+      "enListado": false,
+      "finalizado": true
     },
     {
       "slug": "club-basquet-sant-just-amb-llobregat-x-la-diabetis",
@@ -495,7 +543,8 @@
       "foto": null,
       "url": "https://www.migranodearena.org/reto/club-basquet-sant-just-amb-llobregat-x-la-diabetis",
       "recaudado": 1069,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "llobregat-por-la-diabetes",
@@ -504,7 +553,8 @@
       "foto": null,
       "url": "https://www.migranodearena.org/reto/llobregat-por-la-diabetes",
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "santa-coloma-de-cervello-x-la-diabetes",
@@ -513,7 +563,8 @@
       "foto": null,
       "url": "https://www.migranodearena.org/reto/santa-coloma-de-cervello-x-la-diabetes",
       "recaudado": 35,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "llobregat-per-la-diabetes",
@@ -522,7 +573,8 @@
       "foto": null,
       "url": "https://www.migranodearena.org/reto/llobregat-per-la-diabetes",
       "recaudado": 5,
-      "diasRestantes": 41
+      "diasRestantes": 41,
+      "enListado": true
     },
     {
       "slug": "pedro-x-la-diabetes",
@@ -531,7 +583,8 @@
       "foto": null,
       "url": "https://www.migranodearena.org/reto/pedro-x-la-diabetes",
       "recaudado": 225,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "team-one-x-la-diabetes",
@@ -540,7 +593,8 @@
       "foto": null,
       "url": "https://www.migranodearena.org/reto/team-one-x-la-diabetes",
       "recaudado": 155,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "david-x-la-diabetis",
@@ -549,7 +603,8 @@
       "foto": null,
       "url": "https://www.migranodearena.org/reto/david-x-la-diabetis",
       "recaudado": 0,
-      "diasRestantes": 11
+      "diasRestantes": 11,
+      "enListado": true
     },
     {
       "slug": "un-vehiculo-para-afa-palencia",
@@ -558,7 +613,8 @@
       "foto": null,
       "url": "https://www.migranodearena.org/reto/un-vehiculo-para-afa-palencia",
       "recaudado": 0,
-      "diasRestantes": 44
+      "diasRestantes": 44,
+      "enListado": false
     }
   ]
 }

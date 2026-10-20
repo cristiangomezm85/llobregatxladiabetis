@@ -1,3 +1,6 @@
+astolfo-x-la-diabetes: donantes 22/22 · comentarios 11/12 · textos 289
+⚠️  astolfo-x-la-diabetes: la página dice 12 comentarios pero se leyeron 11
+  ↳ astolfo-x-la-diabetes: marcado como finalizado
 club-basquet-santjust-x-la-diabetes: donantes 14/14 · comentarios 5/5 · textos 250
 carlos-912runners-x-la-diabetes: donantes 23/23 · comentarios 5/6 · textos 280
 ⚠️  carlos-912runners-x-la-diabetes: la página dice 6 comentarios pero se leyeron 5
@@ -8,10 +11,11 @@ pedro-x-la-diabetes: donantes 6/6 · comentarios 2/3 · textos 219
 ⚠️  pedro-x-la-diabetes: la página dice 3 comentarios pero se leyeron 2
 pksteam-x-la-diabetes: donantes 27/27 · comentarios 6/7 · textos 284
 ⚠️  pksteam-x-la-diabetes: la página dice 7 comentarios pero se leyeron 6
+ricard-x-la-diabetes: donantes 48/48 · comentarios 20/24 · textos 392
+⚠️  ricard-x-la-diabetes: la página dice 24 comentarios pero se leyeron 20
+  ↳ ricard-x-la-diabetes: marcado como finalizado
 sandra-x-la-diabetis: donantes 6/6 · comentarios 3/3 · textos 221
 team-one-x-la-diabetes: donantes 4/4 · comentarios 1/1 · textos 221
-llobregat-x-la-diabetes: donantes 13/13 · comentarios 3/4 · textos 241
-⚠️  llobregat-x-la-diabetes: la página dice 4 comentarios pero se leyeron 3
 castellar-de-n-hug-x-la-diabetes: donantes 1/1 · comentarios 0/? · textos 194
 guardiola-de-bergueda-x-la-diabetes: donantes 1/1 · comentarios 0/? · textos 194
 cal-rosal-olvan-x-la-diabetes: donantes 2/2 · comentarios 1/1 · textos 201
@@ -24,11 +28,15 @@ santa-coloma-de-cervello-x-la-diabetes: donantes 1/1 · comentarios 0/1 · texto
 ⚠️  santa-coloma-de-cervello-x-la-diabetes: la página dice 1 comentarios pero se leyeron 0
 sant-joan-x-la-diabetes: donantes 4/4 · comentarios 3/3 · textos 213
 hospitalet-x-la-diabetes: donantes 2/2 · comentarios 1/1 · textos 201
-club-basquet-sant-just-amb-llobregat-x-la-diabetis: donantes 14/14 · comentarios 5/5 · textos 250
-santa-coloma-de-cervello-x-la-diabetes: donantes 1/1 · comentarios 0/1 · textos 195
-⚠️  santa-coloma-de-cervello-x-la-diabetes: la página dice 1 comentarios pero se leyeron 0
+llobregat-x-la-diabetes: donantes 13/13 · comentarios 3/4 · textos 241
+⚠️  llobregat-x-la-diabetes: la página dice 4 comentarios pero se leyeron 3
+llobregat-x-la-diabetis-190-kms-corriendo-por-la-diabetes-tipo-1: donantes 0/0 · comentarios 0/? · textos 187
+  ↳ llobregat-x-la-diabetis-190-kms-corriendo-por-la-diabetes-tipo-1: marcado como finalizado
 llobregat-per-la-diabetes: donantes 1/1 · comentarios 0/? · textos 186
-pedro-x-la-diabetes: donantes 6/6 · comentarios 2/3 · textos 219
-⚠️  pedro-x-la-diabetes: la página dice 3 comentarios pero se leyeron 2
-team-one-x-la-diabetes: donantes 4/4 · comentarios 1/1 · textos 221
-✅ donaciones.json — 144 donaciones (0 nuevas, 0 con comentario añadido)
+un-vehiculo-para-afa-palencia: donantes 0/? · comentarios 0/? · textos 396
+--- DIAGNÓSTICO un-vehiculo-para-afa-palencia: no se encontró el encabezado "Donantes (N)" ---
+HTML: 121717 caracteres · <title>: migranodearena | Líderes en crowdfunding de donación
+Primeros textos: ["Buscar","Crea tu reto","es","es","ca","en","Regístrate / Inicia sesión","Crea tu reto","Descubre retos","Descubre eventos","Descubre causas","Nuestra fundación","¿Qué es el crowdfunding?","¿Quieres ser un event partner?","La causa del mes","Personas","Empresas","ONGs","Equipo","Blog","Cajas","solidarias","Tu donación en una caja","Dónalo","Donación de producto"]
+Textos con donan/coment: [[277,["Retos solidarios liderados desde tu empresa para involucrar a empleados, clientes o colaboradores en una causa común y generar un impacto positivo.<br><br><strong>Ejemplos:</strong> retos corporativos solidarios, retos entre departamentos, recaudación navideña para una causa concreta.","Ofrecer esta herramienta a nuestros donantes es poder ampliar nuestro ámbito de captación multiplicando nuestras posibilidades. Trabajar y crecer al lado de este proyecto pionero en su campo, es una muestra de solidez e innovación para el sector.","Regina Díez","Fundación Josep Carreras","En migranodearena hemos encontrado una plataforma de recaudación transparente e intuitiva, que ha permitido a nuestros embajadores crear múltiples retos en favor de nuestra ONG y a miles de donantes contribuir a la consecución de nuestros objetivos. Además, su increíble equipo humano nos ha acompañado en todo momento, resolviendo cualquier duda o problema de manera amable y eficaz.\""]],[280,["Fundación Josep Carreras","En migranodearena hemos encontrado una plataforma de recaudación transparente e intuitiva, que ha permitido a nuestros embajadores crear múltiples retos en favor de nuestra ONG y a miles de donantes contribuir a la consecución de nuestros objetivos. Además, su increíble equipo humano nos ha acompañado en todo momento, resolviendo cualquier duda o problema de manera amable y eficaz.\"","Jaime Caraza","CooperatingVolunteers","Para Auxadi, nuestro Torneo de Fútbol Solidario es una iniciativa muy especial que llevamos más de una década celebrando y con el que devolvemos a la sociedad parte de lo que recibimos de ella. migranodearena nos permite llevar esto mucho más lejos. Sin duda es una herramienta muy útil para nuestros proyectos solidarios."]],[300,["Autism & Dogs","Las campañas de migranodearena nos permiten no tan solo conseguir financiación para los proyectos sino también informar a nuestros donantes de los avances que vamos consiguiendo. Es una herramienta transparente y que nos ofrece confianza.","Iñaki Alegría","Alegría Sin Fronteras","Decidí unir mi reto deportivo a una buena causa; recaudar fondos para un centro de discapacidad física e intelectual de Barcelona. Gracias a migranodearena, logré hacer partícipes de esta causa a amigos y conocidos. Con su apoyo, pronto se quedó pequeño el objetivo inicial, que superamos en sólo 6 horas. Al final de este desafío mi felicidad fue doble; completar la media maratón y poder aportar al centro 8 veces más de lo que pensaba."]]]
+retos.json: 3 cambio(s) de importe/estado
+✅ donaciones.json — 214 donaciones (70 nuevas, 0 con comentario añadido)
