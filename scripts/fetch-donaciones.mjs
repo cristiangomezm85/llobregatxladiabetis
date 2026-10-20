@@ -46,6 +46,8 @@ const RE_OCULTA = /^(donaci[oó]n oculta|donaci[oó] oculta|hidden donation)$/i;
 const RE_ANON = /^(an[oòó]nim[oa]?|anonymous)$/i;
 const RE_VERMAS = /^(ver m[aá]s|veure'n m[eé]s|veure m[eé]s|show more|ver todos)/i;
 const RE_FIN_SECCION = /^(patrocin|sponsor|col[·.]?labora|newsletter|suscr[ií]b|subscr|©|aviso legal|avís legal|pol[ií]tica|cookies|compart|comparteix|share)/i;
+const RE_FINALIZADO_PAG = /^(?:(?:reto|repte|campa[ñn]a|campanya)\s+)?(?:finalizad[oa]|finalitzat|finalitzada|terminad[oa]|cerrad[oa]|tancat|tancada|ended|finished|closed)\b/i;
+const RE_RECAUDADO = /recaudad|recaptad|raised/i;
 const RE_FECHA = /^(hace|fa|hace\s+un[ao]?|hoy|avui|ayer|ahir|today|yesterday)\b|\bago$/i;
 
 async function main() {
@@ -58,10 +60,22 @@ async function main() {
   const nuevas = [];
   let retosConDinero = 0, reconocidas = 0, actualizadas = 0, diagnosticoDado = false;
 
-  for (const reto of retosJson.retos) {
-    if (!(reto.recaudado > 0)) continue;
+  // Se leen primero los retos "buenos" (heroe/poble) y al final los "pendiente", y cada
+  // página de reto una sola vez aunque aparezca repetida en retos.json.
+  const orden = retosJson.retos.slice().sort((a, b) => (a.tipo === 'pendiente') - (b.tipo === 'pendiente'));
+  const vistos = new Set();
+  const firmas = new Map();      // firma de la lista de donaciones -> slug que la leyó primero
+  const duplicados = new Set();  // slugs cuya página es copia exacta de otra (mismo reto con otra URL)
+  let retosCambiados = 0;
+
+  for (const reto of orden) {
     const base = typeof reto.url === 'string' ? reto.url : reto.url?.es;
-    if (!base) continue;
+    if (!base || vistos.has(base)) continue;
+    // Se leen los retos con dinero, los FINALIZADOS y los que ya no salen en el listado
+    // del evento (MGA los saca de ahí al terminar y el importe podía quedarse a 0 €).
+    // Solo se salta un reto activo, visible en el listado y con 0 € de verdad.
+    if (!(reto.recaudado > 0) && !reto.finalizado && reto.enListado !== false) continue;
+    vistos.add(base);
     retosConDinero++;
 
     const html = await fetchText(base);
@@ -74,6 +88,25 @@ async function main() {
       console.warn(`⚠️  ${reto.slug}: la página dice ${totalDonantes} donantes pero se leyeron ${donantes.length} (¿paginación por JS?)`);
     if (totalComentarios != null && comentarios.length < totalComentarios)
       console.warn(`⚠️  ${reto.slug}: la página dice ${totalComentarios} comentarios pero se leyeron ${comentarios.length}`);
+
+    // Importe y estado según la propia página del reto (por si el listado del evento no los da).
+    const importePagina = totalDePagina(tokens);
+    const sumaPublica = donantes.reduce((t, d) => t + (d.importe || 0), 0);
+    const estimado = Math.max(importePagina ?? 0, sumaPublica);
+    if (estimado > (Number(reto.recaudado) || 0)) {
+      console.log(`  ↳ ${reto.slug}: importe ${reto.recaudado || 0}€ -> ${estimado}€ (${importePagina != null ? 'leído de la página' : 'suma de donantes visibles'})`);
+      reto.recaudado = estimado; retosCambiados++;
+    }
+    if (tokens.slice(0, 80).some(t => t.length < 50 && RE_FINALIZADO_PAG.test(t)) && !reto.finalizado) {
+      reto.finalizado = true; reto.diasRestantes = null; retosCambiados++;
+      console.log(`  ↳ ${reto.slug}: marcado como finalizado`);
+    }
+    // Mismo reto publicado con dos URLs (p. ej. slug antiguo y nuevo): se queda una sola copia.
+    if (donantes.length >= 3) {   // con menos donantes no se puede distinguir una copia de un reto distinto
+      const firma = donantes.map(d => [norm(d.nombre), d.importe ?? 'x'].join('~')).join('|');
+      if (firmas.has(firma)) { duplicados.add(reto.slug); console.log(`  ↳ ${reto.slug}: copia de ${firmas.get(firma)}, se ignora`); await pausa(); continue; }
+      firmas.set(firma, reto.slug);
+    }
 
     // Emparejar comentarios con donantes por nombre (sin tener en cuenta mayúsculas/tildes).
     const libres = comentarios.map(c => ({ ...c, usado: false }));
@@ -121,6 +154,15 @@ async function main() {
     process.exit(1);
   }
 
+  // Quita lo que se guardó antes de otra copia del mismo reto (mismos donantes, otra URL).
+  if (duplicados.size) {
+    for (const [id, d] of [...guardadas]) if (duplicados.has(d.reto)) guardadas.delete(id);
+  }
+  if (retosCambiados) {
+    await writeFile(RETOS_PATH, JSON.stringify(retosJson, null, 2) + '\n', 'utf8');
+    console.log(`retos.json: ${retosCambiados} cambio(s) de importe/estado`);
+  }
+
   nuevas.sort((a, b) => (a.fecha && b.fecha) ? a.fecha.localeCompare(b.fecha) : 0);
   for (const it of nuevas) { it.orden = ++maxOrden; guardadas.set(it.id, it); }
 
@@ -164,6 +206,19 @@ export function parsear(html) {
   const tramoDon = iD < 0 ? [] : tokens.slice(iD + 1, iC >= 0 ? iC : undefined);
   const tramoCom = iC < 0 ? [] : tokens.slice(iC + 1);
   return { donantes: parsearDonantes(tramoDon), comentarios: parsearComentarios(tramoCom), totalDonantes, totalComentarios, tokens };
+}
+
+// Importe total del reto según su página: texto con "recaudado/recaptat/raised" y un importe en € al lado.
+export function totalDePagina(tokens) {
+  const conImporte = t => { const m = String(t || '').match(/([\d.]+(?:,\d+)?)\s*€|€\s*([\d.]+(?:,\d+)?)/); return m ? parseImporte(m[1] || m[2]) : null; };
+  for (let i = 0; i < Math.min(tokens.length, 120); i++) {
+    if (!RE_RECAUDADO.test(tokens[i])) continue;
+    for (const j of [i, i - 1, i + 1]) {
+      const v = conImporte(tokens[j]);
+      if (v != null) return v;
+    }
+  }
+  return null;
 }
 
 function parsearDonantes(t) {

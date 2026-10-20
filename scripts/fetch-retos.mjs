@@ -34,6 +34,7 @@ import * as cheerio from 'cheerio';
 
 const JSON_PATH = new URL('../dona/retos.json', import.meta.url);
 const MAX_PAGES = 15; // salvaguarda por si "count" viniera mal
+const RE_FINALIZADO = /finaliz|terminad|cerrad|concluid|acabad|finalitzat|tancat|\bended\b|finished|closed/i;
 
 async function main() {
   const current = JSON.parse(await readFile(JSON_PATH, 'utf8'));
@@ -102,15 +103,23 @@ async function main() {
   const retos = current.retos.map(reto => {
     const mgaSlug = extractSlugFromUrl(reto.url) || reto.slug;
     const scraped = scrapedBySlug.get(mgaSlug);
-    if (!scraped) return reto; // no lo hemos visto en este scrape: se deja tal cual
+    if (!scraped) {
+      // No sale en el listado del evento (p. ej. un reto ya finalizado que MGA
+      // saca del listado): se conserva todo, se marca "enListado:false" y el
+      // scraper de donaciones lo sigue leyendo directamente en su propia página
+      // (importe y comentarios), en vez de dejarlo a 0 € para siempre.
+      return { ...reto, enListado: false };
+    }
 
     consumed.add(mgaSlug);
-    return {
-      ...reto,
-      url: mergeUrl(reto.url, scraped.url),
-      recaudado: scraped.recaudado ?? reto.recaudado,
-      diasRestantes: scraped.diasRestantes ?? reto.diasRestantes
-    };
+    const nuevo = { ...reto, url: mergeUrl(reto.url, scraped.url), enListado: true };
+    // El importe recaudado solo puede crecer: nunca se baja un valor ya guardado.
+    if (scraped.recaudado != null) nuevo.recaudado = Math.max(Number(reto.recaudado) || 0, scraped.recaudado);
+    if (scraped.finalizado) { nuevo.finalizado = true; nuevo.diasRestantes = null; }
+    else {
+      if (scraped.diasRestantes != null) { nuevo.diasRestantes = scraped.diasRestantes; delete nuevo.finalizado; }
+    }
+    return nuevo;
   });
 
   // Retos nuevos que no reconocemos todavía: se añaden al final.
@@ -124,7 +133,9 @@ async function main() {
       foto: null,
       url: scraped.url,
       recaudado: scraped.recaudado ?? 0,
-      diasRestantes: scraped.diasRestantes ?? null
+      diasRestantes: scraped.diasRestantes ?? null,
+      ...(scraped.finalizado ? { finalizado: true } : {}),
+      enListado: true
     });
   }
 
@@ -165,32 +176,33 @@ function extractCausesFromHtml(html, eventoUrl) {
       ? href
       : new URL(href, eventoUrl).toString();
 
-    // Subimos por los ancestros del enlace hasta encontrar un bloque que
-    // contenga tanto un importe en € como "Faltan N días" — así no
-    // dependemos de nombres de clase CSS que puedan cambiar.
+    // Subimos por los ancestros del enlace hasta encontrar el bloque (la
+    // tarjeta) que contenga un importe en € — así no dependemos de nombres
+    // de clase CSS. Antes se exigía además "Faltan N días": las tarjetas de
+    // retos FINALIZADOS no lo llevan, no se les leía el importe y se
+    // quedaban a 0 €.
     let node = $(el);
     let container = null;
-    for (let i = 0; i < 6 && node.length; i++) {
+    for (let i = 0; i < 8 && node.length; i++) {
       const text = node.text();
-      if (/€/.test(text) && /Faltan/i.test(text)) {
-        container = text;
-        break;
-      }
+      if (/€/.test(text)) { container = text; break; }
       node = node.parent();
     }
 
     let recaudado = null;
     let diasRestantes = null;
+    let finalizado = false;
     if (container) {
       const importeMatch = container.match(/([\d.,]+)\s*€/);
-      const diasMatch = container.match(/Faltan\s*(\d+)\s*d/i);
+      const diasMatch = container.match(/Faltan?\s*(\d+)\s*d/i);
       if (importeMatch) recaudado = parseImporte(importeMatch[1]);
       if (diasMatch) diasRestantes = parseInt(diasMatch[1], 10);
+      finalizado = !diasMatch && RE_FINALIZADO.test(container);
     }
 
     const nombre = $(el).text().trim() || slug;
 
-    out.set(slug, { slug, nombre, url, recaudado, diasRestantes });
+    out.set(slug, { slug, nombre, url, recaudado, diasRestantes, finalizado });
   });
 
   return out;
