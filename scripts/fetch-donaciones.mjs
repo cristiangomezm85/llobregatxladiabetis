@@ -151,6 +151,10 @@ export function parsear(html) {
     });
   };
   visita($('body').length ? $('body') : $.root());
+  // En MGA el encabezado viene partido en dos textos ("Donantes" + "(14)"): los unimos.
+  for (let i = tokens.length - 1; i > 0; i--) {
+    if (/^\(\d+\)$/.test(tokens[i])) { tokens[i - 1] += ' ' + tokens[i]; tokens.splice(i, 1); }
+  }
 
   const iD = tokens.findIndex(t => RE_DONANTES.test(t));
   const iC = tokens.findIndex((t, i) => i > iD && RE_COMENTARIOS.test(t));
