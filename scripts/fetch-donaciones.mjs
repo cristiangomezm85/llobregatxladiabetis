@@ -52,7 +52,7 @@ async function main() {
   const retosJson = JSON.parse(await readFile(RETOS_PATH, 'utf8'));
   let previo = { donaciones: [] };
   try { previo = JSON.parse(await readFile(OUT_PATH, 'utf8')); } catch {}
-  const guardadas = new Map(previo.donaciones.map(d => [d.id, d]));
+  const guardadas = new Map(previo.donaciones.map(d => [d.id, { ...d, nombre: decodificar(d.nombre), mensaje: decodificar(d.mensaje), retoNombre: decodificar(d.retoNombre) }]));
   let maxOrden = previo.donaciones.reduce((m, d) => Math.max(m, d.orden || 0), 0);
 
   const nuevas = [];
@@ -101,13 +101,13 @@ async function main() {
       const ya = guardadas.get(it.id);
       if (ya) {
         // Un comentario puede llegar después de la donación.
-        if (!ya.mensaje && it.mensaje) { ya.mensaje = it.mensaje; actualizadas++; }
+        if (!ya.mensaje && it.mensaje) { ya.mensaje = decodificar(it.mensaje); actualizadas++; }
         continue;
       }
       nuevas.push({
         id: it.id, reto: reto.slug, retoNombre: reto.nombre,
-        nombre: it.anonimo ? null : it.nombre, anonimo: !!it.anonimo,
-        importe: it.importe, mensaje: it.mensaje || '',
+        nombre: it.anonimo ? null : decodificar(it.nombre), anonimo: !!it.anonimo,
+        importe: it.importe, mensaje: decodificar(it.mensaje || ''),
         fecha: aproximarFecha(it._fechaRel)
       });
     }
@@ -230,6 +230,13 @@ function volcar(slug, tokens, donantes, comentarios, td, tc) {
   console.log('Comentarios leídos:', comentarios.length); comentarios.slice(0, 5).forEach(c => console.log('  ', JSON.stringify(c)));
 }
 
+// MGA entrega algunos textos con entidades HTML (&#039; &quot;...), a veces doblemente escapadas.
+export function decodificar(t) {
+  if (t == null) return t;
+  let s = String(t);
+  for (let i = 0; i < 3 && /&(#\d+|#x[0-9a-f]+|[a-z]+);/i.test(s); i++) s = cheerio.load(`<i>${s}</i>`, null, false).text();
+  return s;
+}
 const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
 async function fetchText(url) {
   const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; LlobregatDonaBot/1.0)', 'Accept-Language': 'es-ES,es;q=0.9,ca;q=0.8,en;q=0.5' } });
