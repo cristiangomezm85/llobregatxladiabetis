@@ -244,11 +244,20 @@
   :root{ --esperanca:#4DB5E3; }
   #ampolla, #tria{ scroll-margin-top:90px; }
   .bt-sec{ max-width:1180px; margin:0 auto; padding:clamp(2.2rem,5vw,3.8rem) var(--pad-x) 0; }
-  .bt-stage{ display:grid; grid-template-columns:minmax(260px,440px) 1fr; gap:clamp(1.5rem,4vw,3.5rem); align-items:center; }
-  @media (max-width:860px){ .bt-stage{ grid-template-columns:1fr; } }
-  .bt-fig{ position:relative; width:100%; max-width:440px; margin:0 auto; aspect-ratio:640/1038; border-radius:22px; overflow:hidden; background:#143a63; box-shadow:0 30px 60px -30px rgba(14,27,54,.45); }
-  @media (max-width:860px){ .bt-fig{ max-width:340px; } }
-  #btSvg{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+  .bt-panel{ display:grid; grid-template-columns:1.15fr 1fr; gap:clamp(1.5rem,4vw,3.5rem); align-items:center; }
+  @media (max-width:860px){ .bt-panel{ grid-template-columns:1fr; } }
+  /* Capa de gotes sobre la foto del hero (mateix encaix que object-fit:cover; el JS ajusta el viewBox) */
+  .hero .bt-overlay{ position:absolute; inset:0; width:100%; height:100%; z-index:0; display:block; }
+  .hero .hero-content{ pointer-events:none; }
+  .hero .hero-content a{ pointer-events:auto; }
+  .hero .hero-photo{ object-position:var(--bt-px,50%) 58%; }
+  @media (max-width:1100px){ .hero{ --bt-px:8%; } }
+  @media (max-width:1000px){
+    .hero{ min-height:clamp(560px,74vw,640px); align-items:flex-start; }
+    .hero .hero-content{ padding-top:1.5rem; }
+  }
+  .bt-cta-row{ display:flex; flex-wrap:wrap; gap:.8rem; justify-content:center; margin:1.4rem 0 0; }
+  .bt-note{ text-align:center; margin:.9rem auto 0; }
   .bt-bubble{ cursor:pointer; transition:transform .2s; transform-box:fill-box; transform-origin:center; outline:none; }
   .bt-bubble:hover, .bt-bubble:focus-visible{ transform:scale(1.35); }
   .bt-bubble.is-active{ transform:scale(1.5); }
@@ -280,6 +289,8 @@
   .bt-title em{ font-style:normal; color:var(--esperanca); }
   .bt-lead{ color:var(--gris); max-width:52ch; margin:0; }
   .bt-counters{ display:flex; flex-wrap:wrap; gap:1.6rem; margin:1.4rem 0 1.4rem; }
+  .bt-counter b.counting{ filter:blur(1.5px); opacity:.85; }
+  .bt-panel .total-breakdown{ text-align:left; margin:.2rem 0 0; }
   .bt-counter b{ display:block; font-family:var(--display); font-weight:800; font-size:clamp(2rem,5vw,3rem); line-height:1; color:var(--blau-llobregat); font-variant-numeric:tabular-nums; }
   .bt-counter span{ font-size:.82rem; color:var(--gris); }
   .bt-live{ background:#fff; border:1px solid var(--linia); border-radius:18px; padding:1.1rem 1.25rem; min-height:128px; box-shadow:0 8px 30px rgba(21,49,95,.06); }
@@ -288,8 +299,7 @@
   .bt-live .l-who{ font-size:.86rem; color:var(--gris); }
   .bt-legend{ display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem; font-size:.8rem; color:var(--gris); }
   .bt-legend i{ display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:.35rem; vertical-align:-1px; }
-  .bt-actions{ margin-top:1.4rem; }
-  .bt-note{ font-size:.8rem; color:var(--gris); margin:.8rem 0 0; max-width:52ch; }
+  .bt-note{ font-size:.8rem; color:var(--gris); }
 
   .bt-wall{ max-width:1180px; margin:0 auto; padding:2.6rem var(--pad-x) 0; }
   .bt-wall h2.bt-wall-title{ font-size:clamp(1.4rem,3vw,2rem); margin:0 0 1.2rem; }
@@ -361,28 +371,6 @@
      comptes del ".wrap" estret de sota, perquè a desktop la imatge es
      vegi més horitzontal i no talli el logo de la vora.
      ============================================ -->
-<div class="container hero-wrap" id="donaTop">
-  <div class="hero">
-    <img class="hero-photo" src="../img/hero-dona.jpg" alt="Llobregat x la Diabetis — del riu a la cura">
-    <div class="hero-content">
-      <p class="eyebrow">Llobregat x la Diabetis 2026</p>
-      <p class="lema">
-        <span lang="ca">El riu sempre arriba al mar.<br>La ciència trobarà la cura.</span>
-        <span lang="es">El río siempre llega al mar.<br>La ciencia encontrará la cura.</span>
-        <span lang="en">The river always reaches the sea.<br>Science will find a cure.</span>
-      </p>
-      <p class="total" id="totalRecaudado">—</p>
-      <a class="cta" id="ctaGeneral" href="#" target="_blank" rel="noopener">
-        <span lang="ca">Dona ara</span>
-        <span lang="es">Dona ahora</span>
-        <span lang="en">Donate now</span>
-      </a>
-    </div>
-  </div>
-
-  <p class="total-breakdown" id="totalBreakdown" hidden></p>
-</div>
-
 <!-- ============================================
      L'AMPOLLA DE L'ESPERANÇA — cada donació (Mi Grano de Arena) és una gota.
      Les gotes cauen dins la foto de l'ampolla i el vidre deixa veure el fons.
@@ -394,54 +382,78 @@
   <span lang="en">Sample data: these names and messages are not real.</span>
 </div>
 
-<section class="bt-sec" id="ampolla" aria-labelledby="btH">
-  <div class="bt-stage">
-    <div class="bt-fig" id="btFig">
-      <svg id="btSvg" viewBox="230 10 640 1038" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="btSvgT">
-        <title id="btSvgT">L'ampolla de l'esperança</title>
-        <defs>
-          <clipPath id="btClip"><path d="M420 130 L676 130 L676 285 C676 340 716 362 724 440 L727 520 L727 820 C727 920 714 1000 706 1060 L356 1060 C350 1000 350 920 350 820 L350 520 C351 440 378 345 420 285 Z"/></clipPath>
-          <linearGradient id="btgWater" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#5AC0E6" stop-opacity=".16"/><stop offset="1" stop-color="#1E72D4" stop-opacity=".3"/>
-          </linearGradient>
-          <radialGradient id="btgDrop" cx=".35" cy=".3" r=".8">
-            <stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".5" stop-color="#9fdcf3" stop-opacity=".5"/><stop offset="1" stop-color="#4DB4E0" stop-opacity=".5"/>
-          </radialGradient>
-          <radialGradient id="btgDropMsg" cx=".35" cy=".3" r=".8">
-            <stop offset="0" stop-color="#cfe6ff" stop-opacity=".92"/><stop offset=".5" stop-color="#3F8FE6" stop-opacity=".86"/><stop offset="1" stop-color="#15315F" stop-opacity=".9"/>
-          </radialGradient>
-        </defs>
-        <!-- la foto: el fons i el vidre reals -->
-        <image href="../img/ampolla.jpg" x="0" y="0" width="1100" height="1048" preserveAspectRatio="none" pointer-events="none"/>
-        <!-- interior de l'ampolla: aigua i gotes semitransparents -->
-        <g clip-path="url(#btClip)">
-          <g id="btWater" pointer-events="none">
-            <rect id="btWaterBody" x="200" y="1060" width="760" height="700" fill="url(#btgWater)"/>
-            <g id="btWaveG" transform="translate(0,1060)">
-              <path class="bt-wave2" id="btWave2" d="" fill="#7fd0ee" fill-opacity=".25"/>
-              <path class="bt-wave1" id="btWave1" d="" fill="url(#btgWater)" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/>
-            </g>
+<div class="container hero-wrap" id="donaTop">
+  <div class="hero" id="btHero">
+    <img class="hero-photo" id="btPhoto" src="../img/hero-dona.jpg" alt="Llobregat x la Diabetis — del riu a la cura">
+    <!-- Les gotes (donacions) cauen DINS l'ampolla de la foto: aigua i gotes semitransparents, el vidre és el de la imatge -->
+    <svg id="btSvg" class="bt-overlay" viewBox="0 0 1774 887" preserveAspectRatio="none" role="img" aria-labelledby="btSvgT">
+      <title id="btSvgT">L'ampolla de l'esperança</title>
+      <defs>
+        <clipPath id="btClip"><path d="M308 385 L436 385 C440 425 456 445 470 520 L470 545 L458 650 L446 770 L158 770 L175 670 L200 555 L227 485 C245 450 290 420 308 385 Z"/></clipPath>
+        <linearGradient id="btgWater" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#5AC0E6" stop-opacity=".16"/><stop offset="1" stop-color="#1E72D4" stop-opacity=".3"/>
+        </linearGradient>
+        <radialGradient id="btgDrop" cx=".35" cy=".3" r=".8">
+          <stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".5" stop-color="#9fdcf3" stop-opacity=".55"/><stop offset="1" stop-color="#3a9fd6" stop-opacity=".6"/>
+        </radialGradient>
+        <radialGradient id="btgDropMsg" cx=".35" cy=".3" r=".8">
+          <stop offset="0" stop-color="#cfe6ff" stop-opacity=".92"/><stop offset=".5" stop-color="#3F8FE6" stop-opacity=".86"/><stop offset="1" stop-color="#15315F" stop-opacity=".9"/>
+        </radialGradient>
+        <linearGradient id="btgFade" gradientUnits="userSpaceOnUse" x1="0" y1="700" x2="0" y2="768"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
+        <mask id="btFade" maskUnits="userSpaceOnUse" x="0" y="0" width="1774" height="887"><rect x="0" y="0" width="1774" height="887" fill="url(#btgFade)"/></mask>
+      </defs>
+      <g clip-path="url(#btClip)" mask="url(#btFade)">
+        <g id="btWater" pointer-events="none">
+          <rect id="btWaterBody" x="0" y="780" width="900" height="400" fill="url(#btgWater)"/>
+          <g id="btWaveG" transform="translate(0,780)">
+            <path class="bt-wave2" id="btWave2" d="" fill="#7fd0ee" fill-opacity=".25"/>
+            <path class="bt-wave1" id="btWave1" d="" fill="url(#btgWater)" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/>
           </g>
-          <g id="btDrops"></g>
         </g>
-        <!-- gota que cau -->
-        <g id="btFallLayer" pointer-events="none"><circle id="btFall" class="bt-falling" cx="556" cy="62" r="13" fill="url(#btgDropMsg)" stroke="#fff" stroke-opacity=".8" stroke-width="1"/></g>
-      </svg>
-      <div class="bt-tip" id="btTip" role="tooltip"></div>
+        <g id="btDrops"></g>
+      </g>
+      <g id="btFallLayer" pointer-events="none"><circle id="btFall" class="bt-falling" cx="372" cy="392" r="9" fill="url(#btgDropMsg)" stroke="#fff" stroke-opacity=".8" stroke-width="1"/></g>
+    </svg>
+    <div class="bt-tip" id="btTip" role="tooltip"></div>
+    <div class="hero-content">
+      <p class="eyebrow">Llobregat x la Diabetis 2026</p>
+      <p class="lema">
+        <span lang="ca">El riu sempre arriba al mar.<br>La ciència trobarà la cura.</span>
+        <span lang="es">El río siempre llega al mar.<br>La ciencia encontrará la cura.</span>
+        <span lang="en">The river always reaches the sea.<br>Science will find a cure.</span>
+      </p>
     </div>
+  </div>
 
-    <div class="bt-panel">
+  <div class="bt-cta-row">
+    <a class="bt-btn bt-btn-coral" href="#tria"><span lang="ca">Afegeix la teva gota</span><span lang="es">Añade tu gota</span><span lang="en">Add your drop</span></a>
+    <a class="bt-btn bt-btn-line" id="ctaGeneral" href="#" target="_blank" rel="noopener"><span lang="ca">Dona ara</span><span lang="es">Dona ahora</span><span lang="en">Donate now</span></a>
+  </div>
+  <p class="bt-note">
+    <span lang="ca">Les gotes noves poden trigar uns minuts a aparèixer a l'ampolla.</span>
+    <span lang="es">Las gotas nuevas pueden tardar unos minutos en aparecer en la botella.</span>
+    <span lang="en">New drops can take a few minutes to show up in the bottle.</span>
+  </p>
+</div>
+
+<section class="bt-sec" id="ampolla" aria-labelledby="btH">
+  <div class="bt-panel">
+    <div class="bt-left">
       <span class="h-eyebrow"><span lang="ca">Una gota, una persona</span><span lang="es">Una gota, una persona</span><span lang="en">One drop, one person</span></span>
       <h2 class="bt-title" id="btH"><span lang="ca">L'ampolla de <em>l'esperança</em></span><span lang="es">La botella de la <em>esperanza</em></span><span lang="en">The bottle of <em>hope</em></span></h2>
       <p class="bt-lead">
-        <span lang="ca">Cada donació al repte és una gota. Toca una gota per llegir el missatge de qui l'ha deixada.</span>
-        <span lang="es">Cada donación al reto es una gota. Toca una gota para leer el mensaje de quien la dejó.</span>
-        <span lang="en">Every donation to the challenge is a drop. Tap a drop to read the message left by the donor.</span>
+        <span lang="ca">Cada donació al repte és una gota. Toca una gota de l'ampolla per llegir el missatge de qui l'ha deixada.</span>
+        <span lang="es">Cada donación al reto es una gota. Toca una gota de la botella para leer el mensaje de quien la dejó.</span>
+        <span lang="en">Every donation to the challenge is a drop. Tap a drop in the bottle to read the message left by the donor.</span>
       </p>
       <div class="bt-counters">
+        <div class="bt-counter"><b id="totalRecaudado" class="total">—</b><span><span lang="ca">recaptat</span><span lang="es">recaudado</span><span lang="en">raised</span></span></div>
         <div class="bt-counter"><b id="btDropsN">0</b><span><span lang="ca">gotes (donacions)</span><span lang="es">gotas (donaciones)</span><span lang="en">drops (donations)</span></span></div>
         <div class="bt-counter"><b id="btMsgsN">0</b><span><span lang="ca">amb missatge</span><span lang="es">con mensaje</span><span lang="en">with a message</span></span></div>
       </div>
+      <p class="total-breakdown" id="totalBreakdown" hidden></p>
+    </div>
+    <div class="bt-right">
       <div class="bt-live" aria-live="polite">
         <div class="l-label"><span lang="ca">Acaba de caure una gota</span><span lang="es">Acaba de caer una gota</span><span lang="en">A drop just fell</span></div>
         <blockquote id="btLiveMsg">…</blockquote>
@@ -451,14 +463,6 @@
         <span><i style="background:#1E72D4"></i><span lang="ca">Gota amb missatge</span><span lang="es">Gota con mensaje</span><span lang="en">Drop with a message</span></span>
         <span><i style="background:#7fd0ee"></i><span lang="ca">Gota sense missatge</span><span lang="es">Gota sin mensaje</span><span lang="en">Drop without a message</span></span>
       </div>
-      <div class="bt-actions">
-        <a class="bt-btn bt-btn-coral" href="#tria"><span lang="ca">Afegeix la teva gota</span><span lang="es">Añade tu gota</span><span lang="en">Add your drop</span></a>
-      </div>
-      <p class="bt-note">
-        <span lang="ca">Les gotes noves poden trigar uns minuts a aparèixer a l'ampolla.</span>
-        <span lang="es">Las gotas nuevas pueden tardar unos minutos en aparecer en la botella.</span>
-        <span lang="en">New drops can take a few minutes to show up in the bottle.</span>
-      </p>
     </div>
   </div>
 </section>
@@ -1032,46 +1036,74 @@
   }
 
   // ============ Ampolla ============
-  // Coordenades de la foto (1100 x 1048). Cos de l'ampolla: x 366..714, y 505..1036.
-  // Les gotes s'apilen de baix a dalt seguint l'ordre de les donacions.
-  var BODY = { X0: 366, X1: 714, YB: 1036, YT: 505, FULL: 440 };
+  // Coordenades de la foto del hero (1774 x 887). L'ampolla de la imatge està inclinada;
+  // les gotes s'apilen en files horitzontals (com l'aigua) dins del contorn del vidre,
+  // de baix a dalt, seguint l'ordre de les donacions.
+  var IMG_W = 1774, IMG_H = 887;
+  var LEFT = [[308, 385], [250, 455], [227, 485], [200, 555], [175, 670], [158, 770]];
+  var RIGHT = [[436, 385], [450, 470], [470, 520], [470, 545], [458, 650], [446, 770]];
+  var YB = 752, YT = 410, FULL = 400;   // fons, límit superior de les gotes, nivell "ampolla plena"
+  function xAt(pts, y) {
+    for (var i = 0; i < pts.length - 1; i++) {
+      var a = pts[i], b = pts[i + 1];
+      if (y >= a[1] && y <= b[1]) return a[0] + (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]);
+    }
+    return y < pts[0][1] ? pts[0][0] : pts[pts.length - 1][0];
+  }
+  function buildSlots(r) {
+    var rh = r * 1.8, cw = r * 2.15, slots = [], rows = [];
+    for (var y = YB - r, k = 0; y - r >= YT; y -= rh, k++) {
+      var xl = Math.max(xAt(LEFT, y), xAt(LEFT, y - r)) + r + 3, xr = Math.min(xAt(RIGHT, y), xAt(RIGHT, y - r)) - r - 3;
+      var off = (k % 2) ? cw / 2 : 0;
+      var n = Math.floor((xr - xl - off) / cw) + 1;
+      if (n < 1) continue;
+      var step = n > 1 ? (xr - xl - off) / (n - 1) : 0;
+      rows.push(y);
+      for (var c = 0; c < n; c++) slots.push({ x: xl + off + c * step, y: y, row: rows.length - 1 });
+    }
+    return { slots: slots, rows: rows, rh: rh, r: r };
+  }
   function calcGeo() {
-    var n = data.donaciones.length;
-    var cap = Math.max(data.objectiu, n);
-    var W = BODY.X1 - BODY.X0, H = BODY.YB - BODY.YT;
-    var s = Math.sqrt(W * H / cap);
-    var cols = Math.max(1, Math.floor(W / s));
-    var cw = W / cols;
-    var rows = Math.ceil(cap / cols);
-    var rh = H / rows;
-    return { n: n, cap: cap, cols: cols, cw: cw, rh: rh, r: Math.max(4, Math.min(cw, rh) * 0.43) };
+    var n = data.donaciones.length, cap = Math.max(data.objectiu, n);
+    var r = 13, g = buildSlots(r);
+    while (g.slots.length < cap && r > 3) { r -= .5; g = buildSlots(r); }
+    g.n = n; g.cap = cap;
+    return g;
   }
   function posGota(i) {
-    var g = geo, row = Math.floor(i / g.cols), col = i % g.cols;
-    var off = (row % 2) ? g.cw / 2 : 0;
-    var jx = (hash('x' + i) - .5) * g.cw * .25, jy = (hash('y' + i) - .5) * g.rh * .25;
-    var x = BODY.X0 + g.cw / 2 + col * g.cw + off + jx;
-    var y = BODY.YB - g.rh / 2 - row * g.rh + jy;
-    x = Math.min(BODY.X1 - g.r, Math.max(BODY.X0 + g.r, x));
-    return { x: x, y: y };
+    var g = geo, s = g.slots[Math.min(i, g.slots.length - 1)];
+    var jx = (hash('x' + i) - .5) * g.r * .35, jy = (hash('y' + i) - .5) * g.r * .35;
+    return { x: s.x + jx, y: s.y + jy };
   }
   function wavePath(amp, phase) {
     // Ona repetible (període 120). L'animació la desplaça 120 -> bucle continu.
-    var p = 'M240 0', x;
-    for (x = 240; x <= 960; x += 10) p += ' L' + x + ' ' + (Math.sin((x + phase) / 120 * Math.PI * 2) * amp).toFixed(2);
-    p += ' L960 800 L240 800 Z';
+    var p = 'M0 0', x;
+    for (x = 0; x <= 840; x += 10) p += ' L' + x + ' ' + (Math.sin((x + phase) / 120 * Math.PI * 2) * amp).toFixed(2);
+    p += ' L840 500 L0 500 Z';
     return p;
   }
+  // La capa SVG ha de coincidir amb la foto (object-fit: cover + object-position): s'ajusta el viewBox.
+  function fitView() {
+    var hero = $('btHero'), img = $('btPhoto'), svg = $('btSvg');
+    var W = hero.clientWidth, H = hero.clientHeight; if (!W || !H) return;
+    var sc = Math.max(W / IMG_W, H / IMG_H), vw = W / sc, vh = H / sc;
+    var pos = (getComputedStyle(img).objectPosition || '50% 58%').split(' ');
+    var px = parseFloat(pos[0]) / 100, py = parseFloat(pos[1]) / 100;
+    if (!isFinite(px)) px = .5; if (!isFinite(py)) py = .58;
+    svg.setAttribute('viewBox', ((IMG_W - vw) * px).toFixed(1) + ' ' + ((IMG_H - vh) * py).toFixed(1) + ' ' + vw.toFixed(1) + ' ' + vh.toFixed(1));
+  }
+  if (window.ResizeObserver) new ResizeObserver(fitView).observe($('btHero')); else window.addEventListener('resize', fitView);
+  fitView();
   function pinta() {
     geo = calcGeo();
     var g = geo, n = g.n;
     var layer = $('btDrops'); layer.innerHTML = '';
-    var rowsUsed = n ? Math.floor((n - 1) / g.cols) + 1 : 0;
-    var nivell = n ? Math.max(BODY.FULL, BODY.YB - rowsUsed * g.rh - g.rh * .55) : 1060;
-    if (n >= g.cap) nivell = BODY.FULL;
+    var lastRow = n ? g.slots[Math.min(n, g.slots.length) - 1].row : -1;
+    var nivell = n ? Math.max(FULL, g.rows[lastRow] - g.r - 4) : 790;
+    if (n >= g.cap) nivell = FULL;
     $('btWaveG').setAttribute('transform', 'translate(0,' + nivell.toFixed(1) + ')');
-    $('btWave1').setAttribute('d', wavePath(5, 0));
-    $('btWave2').setAttribute('d', wavePath(7, 40));
+    $('btWave1').setAttribute('d', wavePath(4, 0));
+    $('btWave2').setAttribute('d', wavePath(6, 40));
     $('btWaterBody').setAttribute('y', (nivell + 2).toFixed(1));
     var frag = document.createDocumentFragment();
     data.donaciones.forEach(function (d, i) {
@@ -1081,8 +1113,8 @@
       gEl.setAttribute('data-id', d.id);
       gEl.setAttribute('aria-label', nomDe(d) + (msg ? ': ' + d.mensaje : ''));
       var c = document.createElementNS(NS, 'circle');
-      c.setAttribute('class', 'b-body'); c.setAttribute('cx', p.x.toFixed(1)); c.setAttribute('cy', p.y.toFixed(1)); c.setAttribute('r', g.r.toFixed(1));
-      c.setAttribute('fill', msg ? 'url(#btgDropMsg)' : 'url(#btgDrop)'); c.setAttribute('stroke', '#fff'); c.setAttribute('stroke-opacity', '.75'); c.setAttribute('stroke-width', '1.2');
+      c.setAttribute('class', 'b-body'); c.setAttribute('cx', p.x.toFixed(1)); c.setAttribute('cy', p.y.toFixed(1)); c.setAttribute('r', (g.r * .92).toFixed(1));
+      c.setAttribute('fill', msg ? 'url(#btgDropMsg)' : 'url(#btgDrop)'); c.setAttribute('stroke', msg ? '#fff' : '#2a7fc9'); c.setAttribute('stroke-opacity', msg ? '.8' : '.6'); c.setAttribute('stroke-width', '1.2');
       var h = document.createElementNS(NS, 'circle');
       h.setAttribute('cx', (p.x - g.r * .3).toFixed(1)); h.setAttribute('cy', (p.y - g.r * .35).toFixed(1)); h.setAttribute('r', (g.r * .22).toFixed(1)); h.setAttribute('fill', '#fff'); h.setAttribute('opacity', '.9');
       gEl.appendChild(c); gEl.appendChild(h);
@@ -1113,7 +1145,7 @@
   function mostraTip(d, el, sticky) {
     clearTimeout(tipTimer);
     tipEl.innerHTML = contingutTip(d);
-    var wr = $('btFig').getBoundingClientRect(), r = el.getBoundingClientRect();
+    var wr = $('btHero').getBoundingClientRect(), r = el.getBoundingClientRect();
     var w = tipEl.offsetWidth || 250, hgt = tipEl.offsetHeight || 100;
     var x = Math.max(8, Math.min(wr.width - w - 8, r.left + r.width / 2 - wr.left - w / 2));
     var y = r.top - wr.top - hgt - 10;
@@ -1148,8 +1180,8 @@
     if (!reduced && idx >= 0) {
       var p = posGota(idx), f = $('btFall');
       f.classList.remove('go'); void f.getBoundingClientRect();
-      f.style.setProperty('--dx', (p.x - 556) + 'px');
-      f.style.setProperty('--dy', Math.max(40, p.y - 62) + 'px');
+      f.style.setProperty('--dx', (p.x - 372) + 'px');
+      f.style.setProperty('--dy', Math.max(20, p.y - 392) + 'px');
       f.classList.add('go');
       setTimeout(function () { if (el) { el.classList.add('bt-pop'); setTimeout(function () { el.classList.remove('bt-pop'); }, 600); } }, 1500);
     }
@@ -1176,7 +1208,7 @@
     var el = document.querySelector(sel(b.dataset.id));
     var d = data.donaciones.filter(function (x) { return x.id === b.dataset.id; })[0];
     if (!el || !d) return;
-    $('btFig').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+    $('btHero').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
     setTimeout(function () { mostraTip(d, el, true); }, reduced ? 0 : 450);
   });
   $('btMore').addEventListener('click', function () { shown += PAGE; renderCards(false); });
