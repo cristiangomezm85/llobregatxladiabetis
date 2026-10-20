@@ -1,7 +1,7 @@
 {
   "objectiuGotes": 250,
-  "actualizado": "2026-10-20T19:01:27.248Z",
-  "total": 216,
+  "actualizado": "2026-10-20T19:16:06.613Z",
+  "total": 217,
   "donaciones": [
     {
       "id": "fb594bee7cc2",
@@ -2378,6 +2378,17 @@
       "mensaje": "Un reto excepcional con gente excepcional. Una pequeña ayuda para los verdaderos héroes que lidian las 24h con la DT1",
       "fecha": "2026-10-20T11:01:24.946Z",
       "orden": 227
+    },
+    {
+      "id": "c8187bfcdfe6",
+      "reto": "carlos-912runners-x-la-diabetes",
+      "retoNombre": "Carlos (912Runners) x La Diabetes",
+      "nombre": "Pilar C",
+      "anonimo": false,
+      "importe": null,
+      "mensaje": "",
+      "fecha": "2026-10-20T19:15:52.384Z",
+      "orden": 228
     }
   ]
 }
