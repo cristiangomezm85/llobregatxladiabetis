@@ -244,25 +244,10 @@
   :root{ --esperanca:#4DB5E3; }
   #ampolla, #tria{ scroll-margin-top:90px; }
   .bt-sec{ max-width:1180px; margin:0 auto; padding:clamp(2.2rem,5vw,3.8rem) var(--pad-x) 0; }
-  .bt-panel{ display:grid; grid-template-columns:1.15fr 1fr; gap:clamp(1.5rem,4vw,3.5rem); align-items:center; }
-  @media (max-width:860px){ .bt-panel{ grid-template-columns:1fr; } }
-  /* Capa de gotes sobre la foto del hero (mateix encaix que object-fit:cover; el JS ajusta el viewBox) */
-  .hero .bt-overlay{ position:absolute; inset:0; width:100%; height:100%; z-index:0; display:block; }
-  .hero .hero-content{ pointer-events:none; }
-  .hero .hero-content a{ pointer-events:auto; }
-  .hero .hero-photo{ object-position:var(--bt-px,50%) var(--bt-py,25%); }
-  /* Escriptori: hero més alt (la foto s'ha retallat i queda més ampla) i lema a dalt a l'esquerra,
-     perquè no tapi ni l'ampolla ni el logo d'AREDI. */
-  .hero{ min-height:clamp(560px,56vw,680px); align-items:flex-start; }
-  .hero .hero-content{ width:62%; padding-top:1.75rem; }
-  @media (max-width:1100px){ .hero{ --bt-px:0%; --bt-py:58%; } }
-  @media (max-width:1000px){
-    .hero{ min-height:clamp(560px,74vw,640px); }
-    .hero .hero-content{ width:100%; padding-top:1.5rem; }
-    @media (min-width:700px){ .hero .hero-content{ width:58%; } }
-  }
-  .bt-cta-row{ display:flex; flex-wrap:wrap; gap:.8rem; justify-content:center; margin:1.4rem 0 0; }
-  .bt-note{ text-align:center; margin:.9rem auto 0; }
+  .bt-stage{ display:grid; grid-template-columns:minmax(240px,320px) 1fr; gap:clamp(1.5rem,4vw,3.5rem); align-items:center; }
+  @media (max-width:860px){ .bt-stage{ grid-template-columns:1fr; } }
+  .bt-fig{ position:relative; width:100%; max-width:320px; margin:0 auto; }
+  #btSvg{ width:100%; height:auto; display:block; overflow:visible; }
   .bt-bubble{ cursor:pointer; transition:transform .2s; transform-box:fill-box; transform-origin:center; outline:none; }
   .bt-bubble:hover, .bt-bubble:focus-visible{ transform:scale(1.35); }
   .bt-bubble.is-active{ transform:scale(1.5); }
@@ -282,7 +267,7 @@
   @keyframes btPop{ 0%{ transform:scale(.2); opacity:0; } 60%{ transform:scale(1.25); opacity:1; } 100%{ transform:scale(1); } }
   @media (prefers-reduced-motion:reduce){ .bt-wave1,.bt-wave2,.bt-pop,.bt-falling.go{ animation:none !important; } .bt-falling.go{ opacity:0; } }
 
-  .bt-tip{ position:absolute; z-index:10; width:min(250px,78%); background:#fff; border:1px solid var(--linia); border-radius:14px; padding:.8rem .95rem; box-shadow:0 14px 40px rgba(14,27,54,.28); pointer-events:none; opacity:0; transform:translateY(6px); transition:opacity .15s, transform .15s; font-size:.9rem; color:var(--tinta); line-height:1.4; }
+  .bt-tip{ position:absolute; z-index:10; width:min(270px,80vw); background:#fff; border:1px solid var(--linia); border-radius:14px; padding:.8rem .95rem; box-shadow:0 14px 40px rgba(14,27,54,.28); pointer-events:none; opacity:0; transform:translateY(6px); transition:opacity .15s, transform .15s; font-size:.9rem; color:var(--tinta); line-height:1.4; }
   .bt-tip.show{ opacity:1; transform:none; }
   .bt-tip b{ font-family:var(--display); font-size:1rem; color:var(--blau-llobregat); }
   .bt-tip .t-reto{ display:block; font-size:.74rem; color:var(--blau-diabetis); font-weight:700; margin-bottom:.25rem; }
@@ -303,7 +288,8 @@
   .bt-live .l-who{ font-size:.86rem; color:var(--gris); }
   .bt-legend{ display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem; font-size:.8rem; color:var(--gris); }
   .bt-legend i{ display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:.35rem; vertical-align:-1px; }
-  .bt-note{ font-size:.8rem; color:var(--gris); }
+  .bt-actions{ margin-top:1.4rem; }
+  .bt-note{ font-size:.8rem; color:var(--gris); margin:.8rem 0 0; max-width:52ch; }
 
   .bt-wall{ max-width:1180px; margin:0 auto; padding:2.6rem var(--pad-x) 0; }
   .bt-wall h2.bt-wall-title{ font-size:clamp(1.4rem,3vw,2rem); margin:0 0 1.2rem; }
@@ -387,13 +373,30 @@
 </div>
 
 <div class="container hero-wrap" id="donaTop">
-  <div class="hero" id="btHero">
-    <img class="hero-photo" id="btPhoto" src="../img/hero-dona-ampolla.jpg" alt="Llobregat x la Diabetis — del riu a la cura">
-    <!-- Les gotes (donacions) cauen DINS l'ampolla de la foto: aigua i gotes semitransparents, el vidre és el de la imatge -->
-    <svg id="btSvg" class="bt-overlay" viewBox="0 0 1274 887" preserveAspectRatio="none" role="img" aria-labelledby="btSvgT">
-      <title id="btSvgT">L'ampolla de l'esperança</title>
-      <!-- L'ampolla, exactament com a botella.html, sobre la foto (el JS la col·loca i l'escala) -->
-      <g id="btBottleG">
+  <div class="hero">
+    <img class="hero-photo" src="../img/hero-dona.jpg" alt="Llobregat x la Diabetis — del riu a la cura">
+    <div class="hero-content">
+      <p class="eyebrow">Llobregat x la Diabetis 2026</p>
+      <p class="lema">
+        <span lang="ca">El riu sempre arriba al mar.<br>La ciència trobarà la cura.</span>
+        <span lang="es">El río siempre llega al mar.<br>La ciencia encontrará la cura.</span>
+        <span lang="en">The river always reaches the sea.<br>Science will find a cure.</span>
+      </p>
+      <a class="cta" id="ctaGeneral" href="#" target="_blank" rel="noopener">
+        <span lang="ca">Dona ara</span>
+        <span lang="es">Dona ahora</span>
+        <span lang="en">Donate now</span>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<section class="bt-sec" id="ampolla" aria-labelledby="btH">
+  <div class="bt-stage">
+    <div class="bt-fig" id="btFig">
+      <svg id="btSvg" viewBox="50 0 260 560" role="img" aria-labelledby="btSvgT">
+        <title id="btSvgT">L'ampolla de l'esperança</title>
       <defs>
         <clipPath id="btClip"><path id="btClipPath" d="M138 26 L222 26 Q232 26 232 36 L232 118 C232 150 282 162 284 220 L284 494 Q284 538 246 538 L114 538 Q76 538 76 494 L76 220 C78 162 128 150 128 118 L128 36 Q128 26 138 26 Z"/></clipPath>
         <linearGradient id="btgWater" x1="0" y1="0" x2="0" y2="1">
@@ -435,39 +438,17 @@
       <!-- gota que cau -->
       <g id="btFallLayer" pointer-events="none"><circle id="btFall" class="bt-falling" cx="180" cy="16" r="9" fill="url(#btgDropMsg)"/></g>
     
-      </g>
-    </svg>
-    <div class="bt-tip" id="btTip" role="tooltip"></div>
-    <div class="hero-content">
-      <p class="eyebrow">Llobregat x la Diabetis 2026</p>
-      <p class="lema">
-        <span lang="ca">El riu sempre arriba al mar.<br>La ciència trobarà la cura.</span>
-        <span lang="es">El río siempre llega al mar.<br>La ciencia encontrará la cura.</span>
-        <span lang="en">The river always reaches the sea.<br>Science will find a cure.</span>
-      </p>
+      </svg>
+      <div class="bt-tip" id="btTip" role="tooltip"></div>
     </div>
-  </div>
 
-  <div class="bt-cta-row">
-    <a class="bt-btn bt-btn-coral" href="#tria"><span lang="ca">Afegeix la teva gota</span><span lang="es">Añade tu gota</span><span lang="en">Add your drop</span></a>
-    <a class="bt-btn bt-btn-line" id="ctaGeneral" href="#" target="_blank" rel="noopener"><span lang="ca">Dona ara</span><span lang="es">Dona ahora</span><span lang="en">Donate now</span></a>
-  </div>
-  <p class="bt-note">
-    <span lang="ca">Les gotes noves poden trigar uns minuts a aparèixer a l'ampolla.</span>
-    <span lang="es">Las gotas nuevas pueden tardar unos minutos en aparecer en la botella.</span>
-    <span lang="en">New drops can take a few minutes to show up in the bottle.</span>
-  </p>
-</div>
-
-<section class="bt-sec" id="ampolla" aria-labelledby="btH">
-  <div class="bt-panel">
-    <div class="bt-left">
+    <div class="bt-panel">
       <span class="h-eyebrow"><span lang="ca">Una gota, una persona</span><span lang="es">Una gota, una persona</span><span lang="en">One drop, one person</span></span>
       <h2 class="bt-title" id="btH"><span lang="ca">L'ampolla de <em>l'esperança</em></span><span lang="es">La botella de la <em>esperanza</em></span><span lang="en">The bottle of <em>hope</em></span></h2>
       <p class="bt-lead">
-        <span lang="ca">Cada donació al repte és una gota. Toca una gota de l'ampolla per llegir el missatge de qui l'ha deixada.</span>
-        <span lang="es">Cada donación al reto es una gota. Toca una gota de la botella para leer el mensaje de quien la dejó.</span>
-        <span lang="en">Every donation to the challenge is a drop. Tap a drop in the bottle to read the message left by the donor.</span>
+        <span lang="ca">Cada donació al repte és una gota. Toca una gota per llegir el missatge de qui l'ha deixada.</span>
+        <span lang="es">Cada donación al reto es una gota. Toca una gota para leer el mensaje de quien la dejó.</span>
+        <span lang="en">Every donation to the challenge is a drop. Tap a drop to read the message left by the donor.</span>
       </p>
       <div class="bt-counters">
         <div class="bt-counter"><b id="totalRecaudado" class="total">—</b><span><span lang="ca">recaptat</span><span lang="es">recaudado</span><span lang="en">raised</span></span></div>
@@ -475,8 +456,6 @@
         <div class="bt-counter"><b id="btMsgsN">0</b><span><span lang="ca">amb missatge</span><span lang="es">con mensaje</span><span lang="en">with a message</span></span></div>
       </div>
       <p class="total-breakdown" id="totalBreakdown" hidden></p>
-    </div>
-    <div class="bt-right">
       <div class="bt-live" aria-live="polite">
         <div class="l-label"><span lang="ca">Acaba de caure una gota</span><span lang="es">Acaba de caer una gota</span><span lang="en">A drop just fell</span></div>
         <blockquote id="btLiveMsg">…</blockquote>
@@ -486,6 +465,14 @@
         <span><i style="background:#1E72D4"></i><span lang="ca">Gota amb missatge</span><span lang="es">Gota con mensaje</span><span lang="en">Drop with a message</span></span>
         <span><i style="background:#7fd0ee"></i><span lang="ca">Gota sense missatge</span><span lang="es">Gota sin mensaje</span><span lang="en">Drop without a message</span></span>
       </div>
+      <div class="bt-actions">
+        <a class="bt-btn bt-btn-coral" href="#tria"><span lang="ca">Afegeix la teva gota</span><span lang="es">Añade tu gota</span><span lang="en">Add your drop</span></a>
+      </div>
+      <p class="bt-note">
+        <span lang="ca">Les gotes noves poden trigar uns minuts a aparèixer a l'ampolla.</span>
+        <span lang="es">Las gotas nuevas pueden tardar unos minutos en aparecer en la botella.</span>
+        <span lang="en">New drops can take a few minutes to show up in the bottle.</span>
+      </p>
     </div>
   </div>
 </section>
@@ -757,17 +744,17 @@
   // Textos que depenen de l'idioma actiu i que es generen des del JS
   // (la resta de la pàgina fa servir spans [lang] estàtics).
   const STR = {
-    ca: { poble:'Poble', heroe:'Heroi', dies:n=>`Falten ${n} dies`, donar:'Dona',
+    ca: { poble:'Poble', heroe:'Heroi', dies:n=>`Falten ${n} dies`, fin:'Finalitzat', donar:'Dona',
           empty:'Encara no hi ha reptes publicats en aquesta categoria.',
           error:"No s'ha pogut carregar el llistat de reptes ara mateix.",
           actualitzat:'Actualitzat', locale:'ca-ES',
           breakdown:amt=>`Inclou ${amt} donats directament a través de les inscripcions al repte.` },
-    es: { poble:'Municipio', heroe:'Héroe', dies:n=>`Faltan ${n} días`, donar:'Donar',
+    es: { poble:'Municipio', heroe:'Héroe', dies:n=>`Faltan ${n} días`, fin:'Finalizado', donar:'Donar',
           empty:'Todavía no hay retos publicados en esta categoría.',
           error:'No se ha podido cargar el listado de retos ahora mismo.',
           actualitzat:'Actualizado', locale:'es-ES',
           breakdown:amt=>`Incluye ${amt} donados directamente a través de las inscripciones al reto.` },
-    en: { poble:'Town', heroe:'Hero', dies:n=>`${n} days left`, donar:'Donate',
+    en: { poble:'Town', heroe:'Hero', dies:n=>`${n} days left`, fin:'Finished', donar:'Donate',
           empty:'No challenges published in this category yet.',
           error:"Couldn't load the list of challenges right now.",
           actualitzat:'Updated', locale:'en-GB',
@@ -968,7 +955,7 @@
         <div class="info">
           <div class="nombre">${escapeHtml(r.nombre)}</div>
           <div class="amount">${formatEuros(r.recaudado || 0)}</div>
-          ${r.diasRestantes != null ? `<div class="dias">${escapeHtml(s.dies(r.diasRestantes))}</div>` : ''}
+          ${r.finalizado ? `<div class="dias">${escapeHtml(s.fin)}</div>` : (r.diasRestantes != null ? `<div class="dias">${escapeHtml(s.dies(r.diasRestantes))}</div>` : '')}
           <a class="donar" href="${escapeAttr(pickLangUrl(r.url, getLang()) || '#')}" target="_blank" rel="noopener">${escapeHtml(s.donar)}</a>
         </div>
       </div>
@@ -1059,14 +1046,9 @@
   }
 
   // ============ Ampolla ============
-  // Coordenades de la foto del hero (1774 x 887). L'ampolla de la imatge està inclinada;
+  // Coordenades de l'ampolla (1774 x 887). L'ampolla de la imatge està inclinada;
   // les gotes s'apilen en files horitzontals (com l'aigua) dins del contorn del vidre,
   // de baix a dalt, seguint l'ordre de les donacions.
-  var IMG_W = 1274, IMG_H = 887;   // foto del hero recortada (sense l'ampolla de suro de la imatge original)
-  // L'ampolla és la mateixa de botella.html (coordenades locals 0..360 x 0..560); aquí només es
-  // col·loca sobre la foto: peu al punt (BX,BY) de la imatge i escalada BS.
-  var BX = 275, BY = 736, BS = 1.05;
-  var BTF = 'translate(' + BX + ' ' + BY + ') scale(' + BS + ') translate(-180 -538)';
   // Zona útil del cos (igual que botella.html)
   function calcGeo() {
     var n = data.donaciones.length;
@@ -1095,19 +1077,6 @@
     p += ' L480 600 L-120 600 Z';
     return p;
   }
-  // La capa SVG ha de coincidir amb la foto (object-fit: cover + object-position): s'ajusta el viewBox.
-  function fitView() {
-    var hero = $('btHero'), img = $('btPhoto'), svg = $('btSvg');
-    var W = hero.clientWidth, H = hero.clientHeight; if (!W || !H) return;
-    var sc = Math.max(W / IMG_W, H / IMG_H), vw = W / sc, vh = H / sc;
-    var pos = (getComputedStyle(img).objectPosition || '50% 25%').split(' ');
-    var px = parseFloat(pos[0]) / 100, py = parseFloat(pos[1]) / 100;
-    if (!isFinite(px)) px = .5; if (!isFinite(py)) py = .25;
-    svg.setAttribute('viewBox', ((IMG_W - vw) * px).toFixed(1) + ' ' + ((IMG_H - vh) * py).toFixed(1) + ' ' + vw.toFixed(1) + ' ' + vh.toFixed(1));
-  }
-  if (window.ResizeObserver) new ResizeObserver(fitView).observe($('btHero')); else window.addEventListener('resize', fitView);
-  fitView();
-  $('btBottleG').setAttribute('transform', BTF);
   function pinta() {
     geo = calcGeo();
     var g = geo, n = g.n;
@@ -1159,7 +1128,7 @@
   function mostraTip(d, el, sticky) {
     clearTimeout(tipTimer);
     tipEl.innerHTML = contingutTip(d);
-    var wr = $('btHero').getBoundingClientRect(), r = el.getBoundingClientRect();
+    var wr = $('btFig').getBoundingClientRect(), r = el.getBoundingClientRect();
     var w = tipEl.offsetWidth || 250, hgt = tipEl.offsetHeight || 100;
     var x = Math.max(8, Math.min(wr.width - w - 8, r.left + r.width / 2 - wr.left - w / 2));
     var y = r.top - wr.top - hgt - 10;
@@ -1194,7 +1163,6 @@
     if (!reduced && idx >= 0) {
       var p = posGota(idx), f = $('btFall');
       f.classList.remove('go'); void f.getBoundingClientRect();
-      f.style.setProperty('--dx', (p.x - 180) + 'px');
       f.style.setProperty('--dy', Math.max(40, p.y - 16) + 'px');
       f.classList.add('go');
       setTimeout(function () { if (el) { el.classList.add('bt-pop'); setTimeout(function () { el.classList.remove('bt-pop'); }, 600); } }, 1500);
@@ -1222,7 +1190,7 @@
     var el = document.querySelector(sel(b.dataset.id));
     var d = data.donaciones.filter(function (x) { return x.id === b.dataset.id; })[0];
     if (!el || !d) return;
-    $('btHero').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+    $('btFig').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
     setTimeout(function () { mostraTip(d, el, true); }, reduced ? 0 : 450);
   });
   $('btMore').addEventListener('click', function () { shown += PAGE; renderCards(false); });
