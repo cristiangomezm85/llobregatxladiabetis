@@ -31,4 +31,4 @@ llobregat-per-la-diabetes: donantes 1/1 · comentarios 0/? · textos 186
 pedro-x-la-diabetes: donantes 6/6 · comentarios 2/3 · textos 219
 ⚠️  pedro-x-la-diabetes: la página dice 3 comentarios pero se leyeron 2
 team-one-x-la-diabetes: donantes 4/4 · comentarios 1/1 · textos 221
-✅ donaciones.json — 144 donaciones (155 nuevas, 0 con comentario añadido)
+✅ donaciones.json — 144 donaciones (0 nuevas, 0 con comentario añadido)
