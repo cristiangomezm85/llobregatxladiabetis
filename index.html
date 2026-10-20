@@ -698,17 +698,6 @@
     transform: translateY(-2px);
     box-shadow: 0 10px 28px rgba(255, 107, 71, 0.45);
   }
-  .btn-live { font-size: 1.05rem; padding: 1.1rem 2rem; }
-  .live-dot {
-    width: .6rem; height: .6rem; border-radius: 50%;
-    background: #fff; flex: none;
-    animation: livePulse 1.6s ease-out infinite;
-  }
-  @keyframes livePulse {
-    0% { box-shadow: 0 0 0 0 rgba(255,255,255,.7); }
-    100% { box-shadow: 0 0 0 .6rem rgba(255,255,255,0); }
-  }
-  @media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
   .btn-ghost {
     background: transparent;
     color: white;
@@ -3594,13 +3583,7 @@
     </a>
 
     <div class="hero-actions">
-      <a href="GPSv2/cliente.html" class="btn btn-primary btn-arrow btn-live">
-        <span class="live-dot" aria-hidden="true"></span>
-        <span lang="ca">Segueix el repte</span>
-        <span lang="es">Sigue el reto</span>
-        <span lang="en">Follow the challenge</span>
-      </a>
-      <a href="dona/" data-mga-link class="btn btn-ghost btn-arrow">
+      <a href="dona/" data-mga-link class="btn btn-primary btn-arrow">
         <span lang="ca">Dona</span>
         <span lang="es">Dona</span>
         <span lang="en">Donate</span>
@@ -3663,22 +3646,22 @@
 <section class="countdown-section" id="countdown-section">
   <div class="container">
     <div class="countdown-stack">
-      <div class="countdown-banner countdown-banner--event" id="eventCountdown" data-countdown-target="2026-10-16T08:00:00+02:00" data-countdown-kind="event">
+      <div class="countdown-banner countdown-banner--event" id="eventCountdown" data-countdown-target="2026-10-31T23:59:59+01:00" data-countdown-kind="inscripcions">
         <div class="countdown-banner-text">
           <span class="countdown-banner-tag">
-            <span lang="ca">Inici del repte</span>
-            <span lang="es">Inicio del reto</span>
-            <span lang="en">Challenge start</span>
+            <span lang="ca">Tancament d'inscripcions</span>
+            <span lang="es">Cierre de inscripciones</span>
+            <span lang="en">Registration closes</span>
           </span>
           <span class="countdown-banner-label">
-            <span lang="ca">Sortida del repte: 16 d'octubre a les 8:00 h</span>
-            <span lang="es">Salida del reto: 16 de octubre a las 8:00 h</span>
-            <span lang="en">Challenge start: 16 October at 8:00</span>
+            <span lang="ca">Les inscripcions es tanquen el 31 d'octubre</span>
+            <span lang="es">Las inscripciones se cierran el 31 de octubre</span>
+            <span lang="en">Registration closes on 31 October</span>
           </span>
           <span class="countdown-banner-sublabel">
-            <span lang="ca">GMT+2 · Castellar de n'Hug</span>
-            <span lang="es">GMT+2 · Castellar de n'Hug</span>
-            <span lang="en">GMT+2 · Castellar de n'Hug</span>
+            <span lang="ca">31 d'octubre a les 23:59 h · hora de Catalunya (GMT+1)</span>
+            <span lang="es">31 de octubre a las 23:59 h · hora de Cataluña (GMT+1)</span>
+            <span lang="en">31 October at 23:59 · Catalonia time (GMT+1)</span>
           </span>
         </div>
         <div class="countdown" aria-live="polite" aria-atomic="true">
@@ -6189,7 +6172,13 @@
 
   function setCountdownOpenText(banner) {
     const kind = banner.getAttribute('data-countdown-kind');
-    const translations = kind === 'event'
+    const translations = kind === 'inscripcions'
+      ? {
+          tag: { ca: 'Tancades', es: 'Cerradas', en: 'Closed' },
+          label: { ca: 'Les inscripcions ja estan tancades', es: 'Las inscripciones ya están cerradas', en: 'Registration is now closed' },
+          sublabel: { ca: 'Gràcies a totes les persones que us heu sumat al repte.', es: 'Gracias a todas las personas que os habéis sumado al reto.', en: 'Thank you to everyone who joined the challenge.' },
+        }
+      : kind === 'event'
       ? {
           tag: { ca: 'En marxa', es: 'En marcha', en: 'Live' },
           label: { ca: 'El repte ja ha començat', es: 'El reto ya ha empezado', en: 'The challenge has started' },
