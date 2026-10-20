@@ -1,7 +1,7 @@
 {
   "objectiuGotes": 250,
-  "actualizado": "2026-10-20T10:16:45.130Z",
-  "total": 214,
+  "actualizado": "2026-10-20T10:31:11.499Z",
+  "total": 215,
   "donaciones": [
     {
       "id": "fb594bee7cc2",
@@ -2356,6 +2356,17 @@
       "mensaje": "Ricard",
       "fecha": "2026-10-19T08:45:49.995Z",
       "orden": 225
+    },
+    {
+      "id": "d0dccb898905",
+      "reto": "llobregat-x-la-diabetes",
+      "retoNombre": "llobregat-x-la-diabetes",
+      "nombre": "Doriba21,SL",
+      "anonimo": false,
+      "importe": 100,
+      "mensaje": "Arribarem junts!",
+      "fecha": "2026-10-20T10:31:08.775Z",
+      "orden": 226
     }
   ]
 }
