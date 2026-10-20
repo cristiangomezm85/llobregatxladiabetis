@@ -244,9 +244,12 @@
   :root{ --esperanca:#4DB5E3; }
   #ampolla, #tria{ scroll-margin-top:90px; }
   .bt-sec{ max-width:1180px; margin:0 auto; padding:clamp(2.2rem,5vw,3.8rem) var(--pad-x) 0; }
-  .bt-stage{ display:grid; grid-template-columns:minmax(240px,320px) 1fr; gap:clamp(1.5rem,4vw,3.5rem); align-items:center; }
-  @media (max-width:860px){ .bt-stage{ grid-template-columns:1fr; } }
-  .bt-fig{ position:relative; width:100%; max-width:320px; margin:0 auto; }
+  /* Escriptori: text a l'esquerra i ampolla a la dreta (ocupa les dues files). Mòbil: text, ampolla, resta. */
+  .bt-stage{ display:grid; grid-template-columns:1fr minmax(240px,320px); grid-template-areas:"txt fig" "extra fig"; column-gap:clamp(1.5rem,4vw,3.5rem); row-gap:1.4rem; align-items:center; }
+  .bt-txt{ grid-area:txt; align-self:end; }
+  .bt-extra{ grid-area:extra; align-self:start; }
+  @media (max-width:860px){ .bt-stage{ grid-template-columns:1fr; grid-template-areas:"txt" "fig" "extra"; row-gap:1.6rem; } .bt-txt,.bt-extra{ align-self:auto; } }
+  .bt-fig{ grid-area:fig; align-self:center; position:relative; width:100%; max-width:320px; margin:0 auto; }
   #btSvg{ width:100%; height:auto; display:block; overflow:visible; }
   .bt-bubble{ cursor:pointer; transition:transform .2s; transform-box:fill-box; transform-origin:center; outline:none; }
   .bt-bubble:hover, .bt-bubble:focus-visible{ transform:scale(1.35); }
@@ -279,7 +282,7 @@
   .bt-lead{ color:var(--gris); max-width:52ch; margin:0; }
   .bt-counters{ display:flex; flex-wrap:wrap; gap:1.6rem; margin:1.4rem 0 1.4rem; }
   .bt-counter b.counting{ filter:blur(1.5px); opacity:.85; }
-  .bt-panel .total-breakdown{ text-align:left; margin:.2rem 0 0; }
+  .bt-txt .total-breakdown{ text-align:left; margin:.2rem 0 0; }
   .bt-counter b{ display:block; font-family:var(--display); font-weight:800; font-size:clamp(2rem,5vw,3rem); line-height:1; color:var(--blau-llobregat); font-variant-numeric:tabular-nums; }
   .bt-counter span{ font-size:.82rem; color:var(--gris); }
   .bt-live{ background:#fff; border:1px solid var(--linia); border-radius:18px; padding:1.1rem 1.25rem; min-height:128px; box-shadow:0 8px 30px rgba(21,49,95,.06); }
@@ -309,6 +312,9 @@
   .bt-btn-line{ background:transparent; color:var(--blau-llobregat); border:1.5px solid var(--linia); }
   .bt-btn-line:hover{ border-color:var(--blau-llobregat); }
   .bt-more{ display:flex; margin:1.6rem auto 0; }
+  .bt-or-row{ display:flex; align-items:center; flex-wrap:wrap; gap:1rem; margin:0 0 1.1rem; }
+  .bt-or{ font-weight:700; color:var(--gris); font-size:1.05rem; }
+  @media (max-width:480px){ .bt-counters{ gap:1rem 1.1rem; } .bt-counter b{ font-size:1.85rem; } .bt-counter span{ font-size:.74rem; display:block; max-width:9.5em; } }
 </style>
 <link rel="stylesheet" href="../menu.css">
 </head>
@@ -372,28 +378,24 @@
   <span lang="en">Sample data: these names and messages are not real.</span>
 </div>
 
-<div class="container hero-wrap" id="donaTop">
-  <div class="hero">
-    <img class="hero-photo" src="../img/hero-dona.jpg" alt="Llobregat x la Diabetis — del riu a la cura">
-    <div class="hero-content">
-      <p class="eyebrow">Llobregat x la Diabetis 2026</p>
-      <p class="lema">
-        <span lang="ca">El riu sempre arriba al mar.<br>La ciència trobarà la cura.</span>
-        <span lang="es">El río siempre llega al mar.<br>La ciencia encontrará la cura.</span>
-        <span lang="en">The river always reaches the sea.<br>Science will find a cure.</span>
-      </p>
-      <a class="cta" id="ctaGeneral" href="#" target="_blank" rel="noopener">
-        <span lang="ca">Dona ara</span>
-        <span lang="es">Dona ahora</span>
-        <span lang="en">Donate now</span>
-      </a>
-    </div>
-  </div>
-
-</div>
-
 <section class="bt-sec" id="ampolla" aria-labelledby="btH">
   <div class="bt-stage">
+    <div class="bt-txt">
+      <span class="h-eyebrow"><span lang="ca">Una gota, una persona</span><span lang="es">Una gota, una persona</span><span lang="en">One drop, one person</span></span>
+      <h2 class="bt-title" id="btH"><span lang="ca">L'ampolla de <em>l'esperança</em></span><span lang="es">La botella de la <em>esperanza</em></span><span lang="en">The bottle of <em>hope</em></span></h2>
+      <p class="bt-lead">
+        <span lang="ca">Cada donació al repte és una gota. Toca una gota per llegir el missatge de qui l'ha deixada.</span>
+        <span lang="es">Cada donación al reto es una gota. Toca una gota para leer el mensaje de quien la dejó.</span>
+        <span lang="en">Every donation to the challenge is a drop. Tap a drop to read the message left by the donor.</span>
+      </p>
+      <div class="bt-counters">
+        <div class="bt-counter"><b id="totalRecaudado" class="total">—</b><span><span lang="ca">recaptat</span><span lang="es">recaudado</span><span lang="en">raised</span></span></div>
+        <div class="bt-counter"><b id="btDropsN">0</b><span><span lang="ca">gotes (donacions)</span><span lang="es">gotas (donaciones)</span><span lang="en">drops (donations)</span></span></div>
+        <div class="bt-counter"><b id="btMsgsN">0</b><span><span lang="ca">amb missatge</span><span lang="es">con mensaje</span><span lang="en">with a message</span></span></div>
+      </div>
+      <p class="total-breakdown" id="totalBreakdown" hidden></p>
+    </div>
+
     <div class="bt-fig" id="btFig">
       <svg id="btSvg" viewBox="50 0 260 560" role="img" aria-labelledby="btSvgT">
         <title id="btSvgT">L'ampolla de l'esperança</title>
@@ -442,20 +444,7 @@
       <div class="bt-tip" id="btTip" role="tooltip"></div>
     </div>
 
-    <div class="bt-panel">
-      <span class="h-eyebrow"><span lang="ca">Una gota, una persona</span><span lang="es">Una gota, una persona</span><span lang="en">One drop, one person</span></span>
-      <h2 class="bt-title" id="btH"><span lang="ca">L'ampolla de <em>l'esperança</em></span><span lang="es">La botella de la <em>esperanza</em></span><span lang="en">The bottle of <em>hope</em></span></h2>
-      <p class="bt-lead">
-        <span lang="ca">Cada donació al repte és una gota. Toca una gota per llegir el missatge de qui l'ha deixada.</span>
-        <span lang="es">Cada donación al reto es una gota. Toca una gota para leer el mensaje de quien la dejó.</span>
-        <span lang="en">Every donation to the challenge is a drop. Tap a drop to read the message left by the donor.</span>
-      </p>
-      <div class="bt-counters">
-        <div class="bt-counter"><b id="totalRecaudado" class="total">—</b><span><span lang="ca">recaptat</span><span lang="es">recaudado</span><span lang="en">raised</span></span></div>
-        <div class="bt-counter"><b id="btDropsN">0</b><span><span lang="ca">gotes (donacions)</span><span lang="es">gotas (donaciones)</span><span lang="en">drops (donations)</span></span></div>
-        <div class="bt-counter"><b id="btMsgsN">0</b><span><span lang="ca">amb missatge</span><span lang="es">con mensaje</span><span lang="en">with a message</span></span></div>
-      </div>
-      <p class="total-breakdown" id="totalBreakdown" hidden></p>
+    <div class="bt-extra">
       <div class="bt-live" aria-live="polite">
         <div class="l-label"><span lang="ca">Acaba de caure una gota</span><span lang="es">Acaba de caer una gota</span><span lang="en">A drop just fell</span></div>
         <blockquote id="btLiveMsg">…</blockquote>
@@ -541,10 +530,14 @@
     <span class="h-eyebrow">
       <span lang="ca">Suma-t'hi</span><span lang="es">Súmate</span><span lang="en">Join in</span>
     </span>
+    <div class="bt-or-row">
+      <a class="bt-btn bt-btn-coral" id="ctaGeneral" href="#" target="_blank" rel="noopener"><span lang="ca">Dona ara</span><span lang="es">Dona ahora</span><span lang="en">Donate now</span></a>
+      <span class="bt-or"><span lang="ca">o</span><span lang="es">o</span><span lang="en">or</span></span>
+    </div>
     <h2>
-      <span lang="ca">Tria el teu tram del riu</span>
-      <span lang="es">Elige tu tramo del río</span>
-      <span lang="en">Choose your stretch of the river</span>
+      <span lang="ca">Tria el teu tram o heroi del riu</span>
+      <span lang="es">Elige tu tramo o héroe del río</span>
+      <span lang="en">Choose your stretch or hero of the river</span>
     </h2>
     <p class="lead lead-quiet section-sub">
       <span lang="ca">Cada poble i cada heroi és un tram del recorregut. Sumats, arriben al mar — i la recerca, un pas més a prop de la cura.</span>
@@ -612,7 +605,7 @@
           <li><a href="../patrocina.html"><span lang="ca">Patrocina el repte</span><span lang="es">Patrocina el reto</span><span lang="en">Sponsor the challenge</span></a></li>
           <li><a href="../patrocinadors.html"><span lang="ca">Patrocinadors</span><span lang="es">Patrocinadores</span><span lang="en">Sponsors</span></a></li>
           <li><a href="../el-repte.html#participacio"><span lang="ca">Participa</span><span lang="es">Participa</span><span lang="en">Take part</span></a></li>
-          <li><a href="#donaTop"><span lang="ca">Dona ara</span><span lang="es">Dona ahora</span><span lang="en">Donate now</span></a></li>
+          <li><a href="#tria"><span lang="ca">Dona ara</span><span lang="es">Dona ahora</span><span lang="en">Donate now</span></a></li>
           <li><a href="../el-repte.html#seguiment"><span lang="ca">Seguiment</span><span lang="es">Seguimiento</span><span lang="en">Tracking</span></a></li>
         </ul>
       </div>
