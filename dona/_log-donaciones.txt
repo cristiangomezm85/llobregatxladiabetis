@@ -1,0 +1,30 @@
+club-basquet-santjust-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 252
+--- DIAGNÓSTICO club-basquet-santjust-x-la-diabetes: no se encontró el encabezado "Donantes (N)" ---
+HTML: 95247 caracteres · <title>: Club Basquet Sant Just amb Llobregat x la diabetis
+Primeros textos: ["Buscar","Crea tu reto","es","es","ca","en","Regístrate / Inicia sesión","Crea tu reto","Descubre retos","Descubre eventos","Descubre causas","Nuestra fundación","¿Qué es el crowdfunding?","¿Quieres ser un event partner?","La causa del mes","Personas","Empresas","ONGs","Equipo","Blog","Cajas","solidarias","Tu donación en una caja","Dónalo","Donación de producto"]
+Textos con donan/coment: [[52,["1.500€","Donativos","14","Faltan","11 días"]],[119,["y acercarnos a un futuro en el que ningún niño tenga que empezar el día con un pinchazo, ni ninguna familia viva con miedo constante. Tu donación puede marcar la diferencia. 💙","Donantes","(14)","Begoña","50€"]],[163,["Hace 29 días","Ver más donantes","Comentarios","(5)","Gemma"]],[164,["Ver más donantes","Comentarios","(5)","Gemma","Hace 9 días"]],[168,["Hace 9 días","450€: Recaptació de Cada donatiu és un triple contra la dabetis del CB Sant Just","Gemma","Hace 9 días","Recaptació del &quot;Berenar per la Diabetis&quot; a l&#039;Escola Montseny. Gràcies a tots!"]],[180,["Hace 29 días","Donatius recollits pel Bruno i el Mateo","Patrocinadores migranodearena","Somos la plataforma de crowdfunding social y solidario que permite implicarse con causas sociales a través de la creación de retos solidarios basados en el crowdfunding.","¿Necesitas ayuda?"]]]
+carlos-912runners-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 282
+daniel-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 220
+emi-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 251
+pedro-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 221
+pksteam-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 286
+sandra-x-la-diabetis: donantes 0/? · comentarios 0/? · textos 223
+team-one-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 223
+llobregat-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 243
+castellar-de-n-hug-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 195
+guardiola-de-bergueda-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 195
+cal-rosal-olvan-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 203
+puig-reig-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 198
+balsareny-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 195
+olesa-de-montserrat-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 198
+sant-andreu-de-la-barca-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 200
+palleja-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 195
+santa-coloma-de-cervello-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 197
+sant-joan-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 215
+hospitalet-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 203
+club-basquet-sant-just-amb-llobregat-x-la-diabetis: donantes 0/? · comentarios 0/? · textos 252
+santa-coloma-de-cervello-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 197
+llobregat-per-la-diabetes: donantes 0/? · comentarios 0/? · textos 187
+pedro-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 221
+team-one-x-la-diabetes: donantes 0/? · comentarios 0/? · textos 223
+❌ Hay retos con dinero pero no se reconoció ninguna donación (¿cambió el HTML de MGA?). Ejecuta: node scripts/fetch-donaciones.mjs --dump. No se modifica donaciones.json.
