@@ -1,0 +1,294 @@
+{
+ "actualitzat": "2026-10-20",
+ "comentari": "Llistat d'entitats col·laboradores. Cada entrada: nom, nivell (organitza|institucions|principals|ajuntaments|entitats), logo (ruta a img/colaboradors/…), web (opcional), aporta {ca,es,en} (opcional), ordre, visible (false per amagar). La mida del logo la defineix cada nivell (camp 'mida': xl|l|m|s). 'recorregut': true compta l'entitat com a ajuntament del recorregut al resum encara que sigui en un altre nivell.",
+ "nivells": [
+  {
+   "id": "organitza",
+   "ordre": 1,
+   "mida": "xl",
+   "nom": {
+    "ca": "Organitza i beneficia",
+    "es": "Organiza y beneficia",
+    "en": "Organiser and beneficiary"
+   },
+   "descripcio": {
+    "ca": "L'entitat darrere del repte i a qui van destinats els donatius.",
+    "es": "La entidad detrás del reto y destinataria de los donativos.",
+    "en": "The organisation behind the challenge and recipient of the donations."
+   }
+  },
+  {
+   "id": "institucions",
+   "ordre": 2,
+   "mida": "l",
+   "nom": {
+    "ca": "Institucions",
+    "es": "Instituciones",
+    "en": "Institutions"
+   },
+   "descripcio": {
+    "ca": "Suport institucional al repte.",
+    "es": "Apoyo institucional al reto.",
+    "en": "Institutional support for the challenge."
+   }
+  },
+  {
+   "id": "principals",
+   "ordre": 3,
+   "mida": "l",
+   "nom": {
+    "ca": "Col·laboradors principals",
+    "es": "Colaboradores principales",
+    "en": "Main collaborators"
+   },
+   "descripcio": {
+    "ca": "Les aportacions que han fet créixer el repte.",
+    "es": "Las aportaciones que han hecho crecer el reto.",
+    "en": "The contributions that made the challenge grow."
+   }
+  },
+  {
+   "id": "ajuntaments",
+   "ordre": 4,
+   "mida": "m",
+   "nom": {
+    "ca": "Ajuntaments del recorregut",
+    "es": "Ayuntamientos del recorrido",
+    "en": "Route town councils"
+   },
+   "descripcio": {
+    "ca": "Els pobles que han acollit el repte, de Castellar de n'Hug al Prat.",
+    "es": "Los pueblos que han acogido el reto, de Castellar de n'Hug a El Prat.",
+    "en": "The towns that welcomed the challenge, from Castellar de n'Hug to El Prat."
+   }
+  },
+  {
+   "id": "entitats",
+   "ordre": 5,
+   "mida": "s",
+   "nom": {
+    "ca": "Entitats i empreses col·laboradores",
+    "es": "Entidades y empresas colaboradoras",
+    "en": "Collaborating organisations and companies"
+   },
+   "descripcio": {
+    "ca": "Cada aportació, gran o petita, ha fet possible el repte.",
+    "es": "Cada aportación, grande o pequeña, ha hecho posible el reto.",
+    "en": "Every contribution, big or small, made the challenge possible."
+   }
+  }
+ ],
+ "colaboradors": [
+  {
+   "nom": "AREDI",
+   "nivell": "organitza",
+   "logo": "img/support-aredi.png",
+   "web": "https://arediabetis.org",
+   "ordre": 1,
+   "aporta": {
+    "ca": "Entitat organitzadora i beneficiària: el 100% dels donatius van a la recerca en diabetis.",
+    "es": "Entidad organizadora y beneficiaria: el 100% de los donativos va a la investigación en diabetes.",
+    "en": "Organising and beneficiary entity: 100% of donations go to diabetes research."
+   }
+  },
+  {
+   "nom": "esportcat · Generalitat de Catalunya",
+   "nivell": "institucions",
+   "logo": "img/support-esportcat.png",
+   "ordre": 1
+  },
+  {
+   "nom": "Diputació de Barcelona",
+   "nivell": "institucions",
+   "logo": "img/support-diba.png",
+   "ordre": 2,
+   "aporta": {
+    "ca": "Àrea d'Esports i Activitat Física · préstec de material per als municipis adherits.",
+    "es": "Área de Deportes y Actividad Física · préstamo de material para los municipios adheridos.",
+    "en": "Sports and Physical Activity Area · equipment loan for participating towns."
+   }
+  },
+  {
+   "nom": "Consell Esportiu del Baix Llobregat",
+   "nivell": "institucions",
+   "logo": "img/support-ceb.png",
+   "ordre": 3
+  },
+  {
+   "nom": "Consell Esportiu del Bages",
+   "nivell": "institucions",
+   "ordre": 4
+  },
+  {
+   "nom": "Consell Esportiu del Berguedà",
+   "nivell": "institucions",
+   "ordre": 5
+  },
+  {
+   "nom": "Ajuntament de Cornellà de Llobregat",
+   "nivell": "principals",
+   "ordre": 1,
+   "aporta": {
+    "ca": "Ha fet possible les samarretes del repte.",
+    "es": "Ha hecho posibles las camisetas del reto.",
+    "en": "Made the challenge t-shirts possible."
+   },
+   "recorregut": true
+  },
+  {
+   "nom": "Corresolidaris",
+   "nivell": "principals",
+   "ordre": 2,
+   "aporta": {
+    "ca": "Donatiu de 1.000 €, suport a l'organització a Cornellà i l'Hospitalet i a l'acte de cloenda.",
+    "es": "Donativo de 1.000 €, apoyo a la organización en Cornellà y L'Hospitalet y en el acto de clausura.",
+    "en": "€1,000 donation, organisational support in Cornellà and L'Hospitalet and at the closing event."
+   }
+  },
+  {
+   "nom": "bonÀrea",
+   "nivell": "principals",
+   "ordre": 3,
+   "aporta": {
+    "ca": "Patrocini en espècie de l'avituallament.",
+    "es": "Patrocinio en especie del avituallamiento.",
+    "en": "In-kind sponsorship of the food stations."
+   }
+  },
+  {
+   "nom": "Ajuntament de Castellar de n'Hug",
+   "nivell": "ajuntaments",
+   "ordre": 1
+  },
+  {
+   "nom": "Ajuntament de la Pobla de Lillet",
+   "nivell": "ajuntaments",
+   "ordre": 2
+  },
+  {
+   "nom": "Ajuntament de Guardiola de Berguedà",
+   "nivell": "ajuntaments",
+   "ordre": 3
+  },
+  {
+   "nom": "Ajuntament de Sant Jordi de Cercs",
+   "nivell": "ajuntaments",
+   "ordre": 4
+  },
+  {
+   "nom": "Ajuntament de Berga",
+   "nivell": "ajuntaments",
+   "ordre": 5
+  },
+  {
+   "nom": "Ajuntament d'Olvan",
+   "nivell": "ajuntaments",
+   "ordre": 6
+  },
+  {
+   "nom": "Ajuntament de Gironella",
+   "nivell": "ajuntaments",
+   "ordre": 7
+  },
+  {
+   "nom": "Ajuntament de Puig-reig",
+   "nivell": "ajuntaments",
+   "ordre": 8
+  },
+  {
+   "nom": "Ajuntament de Navàs",
+   "nivell": "ajuntaments",
+   "ordre": 9
+  },
+  {
+   "nom": "Ajuntament de Balsareny",
+   "nivell": "ajuntaments",
+   "ordre": 10
+  },
+  {
+   "nom": "Ajuntament de Sallent",
+   "nivell": "ajuntaments",
+   "ordre": 11
+  },
+  {
+   "nom": "Ajuntament de Navarcles",
+   "nivell": "ajuntaments",
+   "ordre": 12
+  },
+  {
+   "nom": "Ajuntament de Manresa",
+   "nivell": "ajuntaments",
+   "ordre": 13
+  },
+  {
+   "nom": "Ajuntament de Sant Vicenç de Castellet",
+   "nivell": "ajuntaments",
+   "ordre": 14
+  },
+  {
+   "nom": "Ajuntament de Castellbell i el Vilar",
+   "nivell": "ajuntaments",
+   "ordre": 15
+  },
+  {
+   "nom": "Ajuntament de Monistrol de Montserrat",
+   "nivell": "ajuntaments",
+   "ordre": 16
+  },
+  {
+   "nom": "Ajuntament d'Olesa de Montserrat",
+   "nivell": "ajuntaments",
+   "ordre": 17
+  },
+  {
+   "nom": "Ajuntament d'Esparreguera",
+   "nivell": "ajuntaments",
+   "ordre": 18
+  },
+  {
+   "nom": "Ajuntament de Martorell",
+   "nivell": "ajuntaments",
+   "ordre": 19
+  },
+  {
+   "nom": "Ajuntament de Sant Andreu de la Barca",
+   "nivell": "ajuntaments",
+   "ordre": 20
+  },
+  {
+   "nom": "Ajuntament de Pallejà",
+   "nivell": "ajuntaments",
+   "ordre": 21
+  },
+  {
+   "nom": "Ajuntament de Sant Vicenç dels Horts",
+   "nivell": "ajuntaments",
+   "ordre": 22
+  },
+  {
+   "nom": "Ajuntament de Santa Coloma de Cervelló",
+   "nivell": "ajuntaments",
+   "ordre": 23
+  },
+  {
+   "nom": "Ajuntament de Sant Boi de Llobregat",
+   "nivell": "ajuntaments",
+   "ordre": 24
+  },
+  {
+   "nom": "Ajuntament de Sant Joan Despí",
+   "nivell": "ajuntaments",
+   "ordre": 25
+  },
+  {
+   "nom": "Ajuntament de l'Hospitalet de Llobregat",
+   "nivell": "ajuntaments",
+   "ordre": 26
+  },
+  {
+   "nom": "Ajuntament del Prat de Llobregat",
+   "nivell": "ajuntaments",
+   "ordre": 27
+  }
+ ]
+}
