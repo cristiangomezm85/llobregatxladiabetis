@@ -48,8 +48,23 @@
    }
   },
   {
-   "id": "ajuntaments",
+   "id": "secundaris",
    "ordre": 4,
+   "mida": "l",
+   "nom": {
+    "ca": "Col·laboradors",
+    "es": "Colaboradores",
+    "en": "Collaborators"
+   },
+   "descripcio": {
+    "ca": "Les aportacions que també han sumat.",
+    "es": "Las aportaciones que también han sumado.",
+    "en": "The contributions that have also added value."
+   }
+  },
+  {
+   "id": "ajuntaments",
+   "ordre": 5,
    "mida": "m",
    "nom": {
     "ca": "Ajuntaments del recorregut",
@@ -95,12 +110,14 @@
    "nom": "esportcat · Generalitat de Catalunya",
    "nivell": "institucions",
    "logo": "img/support-esportcat.png",
+   "web": "https://esport.gencat.cat/ca/inici",
    "ordre": 1
   },
   {
    "nom": "Diputació de Barcelona",
    "nivell": "institucions",
    "logo": "img/support-diba.png",
+   "web": "https://www.diba.cat/ca/area-d-esports-i-activitat-fisica",
    "ordre": 2,
    "aporta": {
     "ca": "Àrea d'Esports i Activitat Física · préstec de material per als municipis adherits.",
@@ -112,18 +129,30 @@
    "nom": "Consell Esportiu del Baix Llobregat",
    "nivell": "institucions",
    "logo": "img/support-ceb.png",
+   "web": "https://cebllob.cat/",
    "ordre": 3
   },
   {
    "nom": "Consell Esportiu del Bages",
    "nivell": "institucions",
+   "logo": "img/colaboradors/ceb.png",
+   "web": "https://www.cebages.info/",
    "ordre": 4
   },
   {
    "nom": "Consell Esportiu del Berguedà",
    "nivell": "institucions",
+   "logo": "img/colaboradors/ce_bergueda.png",
+   "web": "https://www.cebergueda.cat/",
    "ordre": 5
   },
+  {
+   "nom": "Consorci Turisme del Baix Llobregat",
+   "nivell": "institucions",
+   "logo": "img/colaboradors/consorci_turisme_baix_llobregat.png",
+   "web": "https://turismebaixllobregat.com/ca",
+   "ordre": 6
+  },  
   {
    "nom": "Ajuntament de Cornellà de Llobregat",
    "nivell": "principals",
