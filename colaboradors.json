@@ -97,28 +97,28 @@
   {
    "nom": "AREDI",
    "nivell": "organitza",
-   "logo": "img/support-aredi.png",
+   "logo": "img/colaboradors/aredi.png",
    "web": "https://arediabetis.org",
    "ordre": 1
   },
   {
    "nom": "esportcat · Generalitat de Catalunya",
    "nivell": "institucions",
-   "logo": "img/support-esportcat.png",
+   "logo": "img/colaboradors/esportcat.png",
    "web": "https://esport.gencat.cat/ca/inici",
    "ordre": 1
   },
   {
    "nom": "Diputació de Barcelona",
    "nivell": "institucions",
-   "logo": "img/support-diba.png",
+   "logo": "img/colaboradors/diba.png",
    "web": "https://www.diba.cat/ca/area-d-esports-i-activitat-fisica",
    "ordre": 2
   },
   {
    "nom": "Consell Esportiu del Baix Llobregat",
    "nivell": "institucions",
-   "logo": "img/support-ceb.png",
+   "logo": "img/colaboradors/ceb_baix_llobregat.png",
    "web": "https://cebllob.cat/",
    "ordre": 3
   },

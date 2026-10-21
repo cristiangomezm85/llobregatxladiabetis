@@ -374,19 +374,23 @@
     background: linear-gradient(135deg, #f7f9fc 0%, #ecf0f5 100%);
     border-radius: 12px; padding: 0.9rem;
   }
-  .colab-logo img { max-width: 100%; max-height: 150px; width: auto; height: auto; object-fit: contain; }
-  .colab-grid[data-size="xl"] .colab-logo { min-height: 170px; height: auto; }
-  .colab-grid[data-size="l"]  .colab-logo { min-height: 120px; height: auto; }
-  .colab-grid[data-size="m"]  .colab-logo { min-height: 84px; height: auto; padding: 0.7rem; }
-  .colab-grid[data-size="s"]  .colab-logo { min-height: 62px; height: auto; padding: 0.5rem; }
+  /* Totes les caselles d'un mateix nivell tenen la mateixa mida; el logo s'ajusta
+     (i s'amplia si és petit) per omplir-la, sempre centrat. */
+  .colab-logo { overflow: hidden; }
+  .colab-logo img { width: 100%; height: 100%; max-width: none; max-height: none; object-fit: contain; object-position: center; display: block; }
+  .colab-grid[data-size="xl"] .colab-logo { height: 210px; padding: 1rem; }
+  .colab-grid[data-size="l"]  .colab-logo { height: 170px; padding: 0.9rem; }
+  .colab-grid[data-size="m"]  .colab-logo { height: 150px; padding: 0.65rem; }
+  .colab-grid[data-size="s"]  .colab-logo { height: 90px; padding: 0.55rem; }
   .colab-initials {
+    overflow-wrap: anywhere;
     font-family: var(--display); font-weight: 700; color: var(--blau-llobregat);
     letter-spacing: -0.02em; text-align: center; line-height: 1.1; padding: 0 0.4rem;
     font-size: 1.15rem;
   }
   .colab-grid[data-size="xl"] .colab-initials { font-size: 2.2rem; }
   .colab-grid[data-size="l"]  .colab-initials { font-size: 1.6rem; }
-  .colab-grid[data-size="m"]  .colab-initials { font-size: 0.98rem; }
+  .colab-grid[data-size="m"]  .colab-initials { font-size: 0.9rem; }
   .colab-grid[data-size="s"]  .colab-initials { font-size: 0.85rem; }
   .colab-name {
     font-family: var(--display); font-weight: 700; color: var(--blau-llobregat);
