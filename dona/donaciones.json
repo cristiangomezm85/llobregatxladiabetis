@@ -1,7 +1,7 @@
 {
   "objectiuGotes": 250,
-  "actualizado": "2026-10-21T14:01:32.978Z",
-  "total": 218,
+  "actualizado": "2026-10-21T14:16:07.895Z",
+  "total": 219,
   "donaciones": [
     {
       "id": "fb594bee7cc2",
@@ -2400,6 +2400,17 @@
       "mensaje": "Què gran! Increïble córrer 200kms en 3 dies!",
       "fecha": "2026-10-20T19:28:21.896Z",
       "orden": 229
+    },
+    {
+      "id": "a8fb62189e3f",
+      "reto": "team-one-x-la-diabetes",
+      "retoNombre": "Team One x la Diabetes",
+      "nombre": "Alejandro",
+      "anonimo": false,
+      "importe": 50,
+      "mensaje": "Pedro Samper, la cura ya es!",
+      "fecha": "2026-10-21T14:15:58.546Z",
+      "orden": 230
     }
   ]
 }
