@@ -42,6 +42,27 @@
   to = "/.netlify/functions/public-stats"
   status = 200
 
+# Enquesta de valoració del repte (pàgina pública, API i panell d'administració)
+[[redirects]]
+  from = "/api/enquesta"
+  to = "/.netlify/functions/enquesta"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin-enquestes"
+  to = "/.netlify/functions/admin-enquestes"
+  status = 200
+
+[[redirects]]
+  from = "/enquesta"
+  to = "/enquesta.html"
+  status = 200
+
+[[redirects]]
+  from = "/enquesta-admin"
+  to = "/enquesta-admin.html"
+  status = 200
+
 [[redirects]]
   from = "/inscripcio"
   to = "/inscripcio.html"

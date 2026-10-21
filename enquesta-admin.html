@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Enquesta · Administració</title>
+<link rel="icon" type="image/png" href="img/logo-small.png">
+<style>
+  :root { --blau: #15315F; --blau2: #1E72D4; --coral: #FF6B47; --paper: #F4F6FA; --tinta: #0E1B36; --gris: #5A6478; --linia: #D9DEE8; --verd: #1E8E5A; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--paper); color: var(--tinta); line-height: 1.5; font-size: 15px; }
+  header { background: var(--blau); color: #fff; padding: .9rem 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  header h1 { margin: 0; font-size: 1.1rem; }
+  main { max-width: 1100px; margin: 0 auto; padding: 1.25rem; }
+  section { background: #fff; border: 1px solid var(--linia); border-radius: 12px; padding: 1.1rem 1.2rem; margin-bottom: 1.2rem; }
+  h2 { margin: 0 0 .6rem; font-size: 1.15rem; color: var(--blau); }
+  h3 { margin: 1rem 0 .4rem; font-size: 1rem; color: var(--blau); }
+  button, .btn { font: inherit; border: 1px solid var(--blau2); background: var(--blau2); color: #fff; border-radius: 8px; padding: .45rem .9rem; cursor: pointer; text-decoration: none; display: inline-block; }
+  button.sec { background: #fff; color: var(--blau2); }
+  button.coral { background: var(--coral); border-color: var(--coral); }
+  button:disabled { opacity: .55; cursor: wait; }
+  input, select, textarea { font: inherit; padding: .4rem .6rem; border: 1px solid var(--linia); border-radius: 8px; }
+  textarea { width: 100%; min-height: 90px; font-family: ui-monospace, monospace; font-size: 13px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { text-align: left; padding: .45rem .5rem; border-bottom: 1px solid var(--linia); vertical-align: top; }
+  th { color: var(--gris); font-weight: 600; }
+  .grup { border: 1px solid var(--linia); border-radius: 10px; padding: .9rem 1rem; margin-top: .9rem; }
+  .grup h3 { margin-top: 0; }
+  .fila { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; margin-top: .5rem; }
+  .nota { color: var(--gris); font-size: 13px; }
+  .ok { color: var(--verd); font-weight: 600; }
+  .ko { color: #B3261E; font-weight: 600; }
+  .barra { background: #E6EBF4; border-radius: 4px; height: 14px; position: relative; min-width: 80px; }
+  .barra > i { display: block; height: 100%; background: var(--blau2); border-radius: 4px; }
+  .q { border-top: 1px solid var(--linia); padding: .6rem 0; }
+  .kpis { display: flex; gap: .8rem; flex-wrap: wrap; margin: .6rem 0; }
+  .kpi { background: var(--paper); border-radius: 10px; padding: .6rem .9rem; min-width: 120px; }
+  .kpi b { display: block; font-size: 1.5rem; color: var(--blau); }
+  details summary { cursor: pointer; color: var(--blau2); }
+  .txt { background: var(--paper); border-radius: 8px; padding: .4rem .7rem; margin: .3rem 0; font-size: 14px; }
+  .txt small { color: var(--gris); }
+  #login { max-width: 420px; }
+</style>
+</head>
+<body>
+<header><h1>Enquesta de valoració · Administració</h1><a class="btn sec" style="background:transparent;color:#fff;border-color:#fff" href="/enquesta" target="_blank">Veure l'enquesta pública ↗</a></header>
+<main>
+  <section id="login">
+    <h2>Accés</h2>
+    <div class="fila"><input type="password" id="tk" placeholder="ADMIN_TOKEN" autocomplete="off"><button id="entrar">Entrar</button></div>
+    <p class="nota">És el mateix token que fas servir a l'admin del web. Es guarda només en aquesta pestanya.</p>
+    <p class="ko" id="loginErr"></p>
+  </section>
+
+  <div id="panell" hidden>
+    <section>
+      <h2>1 · Destinataris i enviament</h2>
+      <p class="nota" id="resumEstat"></p>
+      <div id="grups"></div>
+    </section>
+    <section>
+      <h2>2 · Resultats</h2>
+      <div class="fila"><button id="btnResum">Actualitzar resultats</button><span class="nota" id="resumInfo"></span></div>
+      <div id="resultats"></div>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var NOMS = { participant: 'Participants', ajuntament: 'Ajuntaments i amfitrions', voluntari: 'Voluntaris i organització', entitat: 'Entitats, col·laboradors i donants' };
+  var ORDRE = ['participant', 'ajuntament', 'voluntari', 'entitat'];
+  var TOKEN = ''; try { TOKEN = sessionStorage.getItem('llxd-enq-admin') || ''; } catch (e) {}
+  var $ = function (id) { return document.getElementById(id); };
+
+  function api(url, opts) {
+    opts = opts || {};
+    opts.headers = Object.assign({ Authorization: 'Bearer ' + TOKEN }, opts.headers || {});
+    return fetch(url, opts);
+  }
+  function post(body) { return api('/api/admin-enquestes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then(function (r) { return r.json(); }); }
+  function baixar(url, nom) {
+    return api(url).then(function (r) { if (!r.ok) throw new Error('Error ' + r.status); return r.blob(); }).then(function (b) {
+      var a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = nom; document.body.appendChild(a); a.click(); a.remove();
+    }).catch(function (e) { alert(e.message); });
+  }
+  function el(tag, attrs, kids) {
+    var e = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) { if (k === 'text') e.textContent = attrs[k]; else if (k === 'class') e.className = attrs[k]; else if (k.slice(0, 2) === 'on') e.addEventListener(k.slice(2), attrs[k]); else e.setAttribute(k, attrs[k]); });
+    (kids || []).forEach(function (c) { if (c) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    return e;
+  }
+
+  $('entrar').addEventListener('click', function () { TOKEN = $('tk').value.trim(); entrar(); });
+  $('tk').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('entrar').click(); });
+  function entrar() {
+    api('/api/admin-enquestes?accio=estat').then(function (r) { if (r.status === 401) throw new Error('Token incorrecte'); return r.json(); }).then(function (j) {
+      if (!j.ok) throw new Error(j.error || 'Error');
+      try { sessionStorage.setItem('llxd-enq-admin', TOKEN); } catch (e) {}
+      $('login').hidden = true; $('panell').hidden = false; pintaEstat(j);
+    }).catch(function (e) { $('loginErr').textContent = e.message; });
+  }
+
+  function refrescaEstat() { return api('/api/admin-enquestes?accio=estat').then(function (r) { return r.json(); }).then(pintaEstat); }
+
+  function pintaEstat(j) {
+    $('resumEstat').innerHTML = '';
+    $('resumEstat').appendChild(document.createTextNode('Respostes rebudes: ' + j.respostes_total + ' (' + j.respostes_anonimes + ' des d\'un enllaç obert, sense correu). Correus enviats avui amb Resend: ' + j.enviats_avui + ' de ' + j.limit_diari + '. '));
+    if (!j.resend_configurat) $('resumEstat').appendChild(el('span', { class: 'ko', text: 'Resend NO està configurat (falten RESEND_API_KEY / RESEND_FROM_EMAIL): només podràs baixar els enllaços per a MailerLite.' }));
+    var cont = $('grups'); cont.innerHTML = '';
+    ORDRE.forEach(function (g) { cont.appendChild(pintaGrup(g, j.grups[g], j)); });
+  }
+
+  function pintaGrup(g, d, estat) {
+    var pct = d.enviats ? Math.round(100 * d.respostes_de_destinataris / d.enviats) : 0;
+    var box = el('div', { class: 'grup' });
+    box.appendChild(el('h3', { text: NOMS[g] }));
+    box.appendChild(el('div', { text: d.destinataris + ' destinataris · ' + d.enviats + ' enviats per Resend · ' + d.respostes_de_destinataris + ' han respost' + (d.enviats ? ' (' + pct + '% dels enviats)' : '') }));
+
+    // afegir destinataris
+    if (g === 'participant') {
+      var b = el('button', { class: 'sec', text: 'Carregar / actualitzar participants des de les inscripcions pagades' });
+      b.addEventListener('click', function () {
+        b.disabled = true; post({ accio: 'preparar_inscripcions' }).then(function (j) { b.disabled = false; alert(j.ok ? 'Afegits ' + j.afegits + ' nous (ja hi eren o sense email: ' + j.ignorats + '). Total: ' + j.total : j.error); refrescaEstat(); });
+      });
+      box.appendChild(el('div', { class: 'fila' }, [b]));
+      box.appendChild(el('p', { class: 'nota', text: 'Una enquesta per correu electrònic: si una família ha inscrit diverses persones amb el mateix correu, rep un únic enllaç.' }));
+    }
+    var det = el('details');
+    det.appendChild(el('summary', { text: g === 'participant' ? 'Afegir més destinataris a mà (opcional)' : 'Afegir destinataris (enganxa una llista)' }));
+    var ta = el('textarea', { placeholder: 'una persona per línia:  email ; nom ; organització ; idioma (ca/es/en)\nex.:  alcalde@ajuntament.cat ; Maria ; Ajuntament de Sant Boi ; ca' });
+    var bAdd = el('button', { class: 'sec', text: 'Afegir a la llista' });
+    bAdd.addEventListener('click', function () {
+      var files = ta.value.split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean).map(function (l) {
+        var c = l.split(/[;\t]/).map(function (x) { return x.trim(); });
+        return { email: c[0], nom: c[1] || '', org: c[2] || '', idioma: c[3] || 'ca' };
+      });
+      if (!files.length) return;
+      bAdd.disabled = true;
+      post({ accio: 'preparar_llista', grup: g, files: files }).then(function (j) { bAdd.disabled = false; alert(j.ok ? 'Afegits ' + j.afegits + ' (ignorats: ' + j.ignorats + '). Total: ' + j.total : j.error); if (j.ok) { ta.value = ''; refrescaEstat(); } });
+    });
+    det.appendChild(ta); det.appendChild(el('div', { class: 'fila' }, [bAdd])); box.appendChild(det);
+
+    // enviar
+    var sel = el('select', null, [10, 25, 50, 90].map(function (n) { return el('option', { value: n, text: n + ' correus' }); }));
+    sel.value = '50';
+    var bEnv = el('button', { class: 'coral', text: 'Enviar següent lot per Resend' });
+    bEnv.addEventListener('click', function () {
+      var pend = d.destinataris - d.enviats;
+      if (!pend) { alert('No queda ningú pendent d\'enviar en aquest grup.'); return; }
+      if (!confirm('Enviarem fins a ' + sel.value + ' correus reals a ' + NOMS[g] + ' (pendents: ' + pend + '). Continuar?')) return;
+      bEnv.disabled = true;
+      post({ accio: 'enviar', grup: g, quant: Number(sel.value) }).then(function (j) {
+        bEnv.disabled = false;
+        if (!j.ok) alert(j.error); else if (j.motiu === 'limit_diari') alert('Límit diari assolit (' + j.enviats_avui + '/' + j.limit_diari + '). Torna demà.'); else alert('Enviats: ' + j.enviats + '. Avui: ' + j.enviats_avui + '/' + j.limit_diari);
+        refrescaEstat();
+      });
+    });
+    box.appendChild(el('div', { class: 'fila' }, [sel, bEnv]));
+
+    // prova
+    var em = el('input', { type: 'email', placeholder: 'el teu correu per a la prova' });
+    var lg = el('select', null, [el('option', { value: 'ca', text: 'CA' }), el('option', { value: 'es', text: 'ES' }), el('option', { value: 'en', text: 'EN' })]);
+    var bPr = el('button', { class: 'sec', text: 'Enviar-me un correu de prova' });
+    bPr.addEventListener('click', function () {
+      if (!em.value) return; bPr.disabled = true;
+      post({ accio: 'prova', grup: g, idioma: lg.value, email: em.value.trim() }).then(function (j) { bPr.disabled = false; alert(j.ok ? 'Enviat. Mira la safata (i el correu brossa).' : j.error); });
+    });
+    box.appendChild(el('div', { class: 'fila' }, [em, lg, bPr]));
+
+    // MailerLite
+    var fm = el('div', { class: 'fila' }, [
+      el('button', { class: 'sec', text: 'CSV amb enllaços personals (per MailerLite)', onclick: function () { baixar('/api/admin-enquestes?accio=llista&grup=' + g, 'enquesta-' + g + '-destinataris.csv'); } }),
+      el('button', { class: 'sec', text: 'HTML CA', onclick: function () { baixar('/api/admin-enquestes?accio=plantilla&grup=' + g + '&idioma=ca', 'enquesta-' + g + '-ca.html'); } }),
+      el('button', { class: 'sec', text: 'HTML ES', onclick: function () { baixar('/api/admin-enquestes?accio=plantilla&grup=' + g + '&idioma=es', 'enquesta-' + g + '-es.html'); } }),
+      el('button', { class: 'sec', text: 'HTML EN', onclick: function () { baixar('/api/admin-enquestes?accio=plantilla&grup=' + g + '&idioma=en', 'enquesta-' + g + '-en.html'); } })
+    ]);
+    box.appendChild(fm);
+    return box;
+  }
+
+  // ---------- resultats
+  $('btnResum').addEventListener('click', function () {
+    $('btnResum').disabled = true; $('resumInfo').textContent = 'Carregant…';
+    api('/api/admin-enquestes?accio=resum').then(function (r) { return r.json(); }).then(function (j) {
+      $('btnResum').disabled = false; $('resumInfo').textContent = j.ok ? j.resum.total + ' respostes' : (j.error || 'Error');
+      if (j.ok) pintaResum(j.resum);
+    }).catch(function (e) { $('btnResum').disabled = false; $('resumInfo').textContent = e.message; });
+  });
+
+  function pintaResum(r) {
+    var cont = $('resultats'); cont.innerHTML = '';
+    cont.appendChild(el('div', { class: 'fila' }, [el('button', { class: 'sec', text: 'Baixar totes les respostes (CSV per a Excel)', onclick: function () { baixar('/api/admin-enquestes?accio=respostes&format=csv', 'enquesta-respostes.csv'); } })]));
+    ORDRE.forEach(function (g) {
+      var d = r.grups[g];
+      var box = el('div', { class: 'grup' });
+      box.appendChild(el('h3', { text: NOMS[g] + ' · ' + d.n + ' respostes' }));
+      if (!d.n) { box.appendChild(el('p', { class: 'nota', text: 'Encara no hi ha respostes.' })); cont.appendChild(box); return; }
+      var byId = {}; d.preguntes.forEach(function (q) { byId[q.id] = q; });
+      var kpis = el('div', { class: 'kpis' });
+      if (byId.global && byId.global.mitjana != null) kpis.appendChild(el('div', { class: 'kpi' }, [el('b', { text: byId.global.mitjana + ' / 5' }), 'Valoració global']));
+      if (byId.recomanaria && byId.recomanaria.nps != null) kpis.appendChild(el('div', { class: 'kpi' }, [el('b', { text: (byId.recomanaria.nps > 0 ? '+' : '') + byId.recomanaria.nps }), 'NPS (recomanaria)']));
+      if (byId.repetiria && byId.repetiria.n) {
+        var si = byId.repetiria.opcions.filter(function (o) { return o.v === 'si'; })[0].n;
+        kpis.appendChild(el('div', { class: 'kpi' }, [el('b', { text: Math.round(100 * si / byId.repetiria.n) + '%' }), 'Repetirien (sí)']));
+      }
+      box.appendChild(kpis);
+      if (d.per_modalitat) box.appendChild(el('p', { class: 'nota', text: 'Per modalitat: ' + d.per_modalitat.map(function (m) { return m.modalitat + ' (' + m.n + (m.global ? ', ' + m.global + '/5' : '') + ')'; }).join(' · ') }));
+
+      d.preguntes.forEach(function (q) {
+        if (!q.n && !(q.altres && q.altres.length)) return;
+        var qb = el('div', { class: 'q' }, [el('b', { text: q.text }), el('span', { class: 'nota', text: '  (' + q.n + ' respostes)' })]);
+        if (q.tipus === 'estrelles' || q.tipus === 'nps') {
+          qb.appendChild(el('div', { text: 'Mitjana: ' + (q.mitjana != null ? q.mitjana : '—') + (q.na ? ' · N/A: ' + q.na : '') }));
+          var max = Math.max.apply(null, Object.keys(q.dist).map(function (k) { return q.dist[k]; }).concat([1]));
+          var tb = el('table');
+          Object.keys(q.dist).forEach(function (k) {
+            tb.appendChild(el('tr', null, [el('td', { text: k, style: 'width:30px' }), el('td', null, [el('div', { class: 'barra' }, [el('i', { style: 'width:' + Math.round(100 * q.dist[k] / max) + '%' })])]), el('td', { text: String(q.dist[k]), style: 'width:40px' })]));
+          });
+          qb.appendChild(tb);
+        } else if (q.opcions) {
+          var tot = Math.max.apply(null, q.opcions.map(function (o) { return o.n; }).concat([1]));
+          var t2 = el('table');
+          q.opcions.forEach(function (o) {
+            t2.appendChild(el('tr', null, [el('td', { text: o.ca, style: 'width:42%' }), el('td', null, [el('div', { class: 'barra' }, [el('i', { style: 'width:' + Math.round(100 * o.n / tot) + '%' })])]), el('td', { text: o.n + (q.n ? ' (' + Math.round(100 * o.n / q.n) + '%)' : ''), style: 'width:90px' })]));
+          });
+          qb.appendChild(t2);
+          if (q.altres && q.altres.length) qb.appendChild(el('div', { class: 'nota', text: 'Altres: ' + q.altres.join(' · ') }));
+        } else if (q.textos) {
+          var dt = el('details'); dt.appendChild(el('summary', { text: 'Veure les ' + q.textos.length + ' respostes' }));
+          q.textos.forEach(function (t) { dt.appendChild(el('div', { class: 'txt' }, [t.text, t.qui ? el('small', { text: '  — ' + t.qui }) : null])); });
+          qb.appendChild(dt);
+        }
+        box.appendChild(qb);
+      });
+      box.appendChild(el('div', { class: 'fila' }, [el('button', { class: 'sec', text: 'Baixar CSV d\'aquest grup', onclick: function () { baixar('/api/admin-enquestes?accio=respostes&format=csv&grup=' + g, 'enquesta-' + g + '.csv'); } })]));
+      cont.appendChild(box);
+    });
+  }
+
+  if (TOKEN) { $('tk').value = TOKEN; entrar(); }
+})();
+</script>
+</body>
+</html>

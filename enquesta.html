@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ca" data-lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Enquesta · Llobregat x la Diabetis</title>
+<meta name="description" content="Ajuda'ns a millorar el repte solidari Llobregat x la Diabetis: la teva opinió compta.">
+<link rel="icon" type="image/png" href="img/logo-small.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@10..48,300..800&family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blau-llobregat: #15315F; --blau-diabetis: #1E72D4; --blau-aigua: #5AC0E6;
+    --coral: #FF6B47; --paper: #FAFAF6; --tinta: #0E1B36; --gris: #5A6478;
+    --gris-clar: #C9CDD6; --linia: rgba(21,49,95,.14); --verd: #1E8E5A;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --body: "Manrope", system-ui, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { margin: 0; font-family: var(--body); color: var(--tinta); background: var(--paper); line-height: 1.55; font-size: 17px; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3 { font-family: var(--display); color: var(--blau-llobregat); line-height: 1.1; letter-spacing: -.02em; margin: 0; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  .top { background: var(--blau-llobregat); color: #fff; }
+  .top-in { max-width: 760px; margin: 0 auto; padding: .8rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .brand { display: flex; align-items: center; gap: .65rem; color: #fff; text-decoration: none; font-family: var(--display); font-weight: 700; font-size: 1.05rem; }
+  .brand img { width: 38px; height: 38px; }
+  .langs { display: flex; gap: .25rem; }
+  .langs button { background: transparent; border: 1px solid rgba(255,255,255,.35); color: #fff; border-radius: 999px; padding: .25rem .7rem; font-size: .8rem; font-weight: 700; letter-spacing: .04em; }
+  .langs button.on { background: #fff; color: var(--blau-llobregat); border-color: #fff; }
+  main { max-width: 760px; margin: 0 auto; padding: 1.75rem 1.25rem 4rem; }
+  .hero h1 { font-size: clamp(1.9rem, 6vw, 2.7rem); margin-bottom: .7rem; }
+  .hero p { margin: 0 0 .6rem; color: var(--tinta); }
+  .hero .meta { color: var(--gris); font-size: .92rem; }
+  .perfil-box { background: #fff; border: 1px solid var(--linia); border-left: 4px solid var(--blau-diabetis); border-radius: 12px; padding: .9rem 1.1rem; margin: 1.1rem 0 0; font-size: .95rem; }
+  .perfil-box strong { color: var(--blau-llobregat); }
+  .perfil-box button { background: none; border: 0; color: var(--blau-diabetis); text-decoration: underline; padding: 0; font-size: .88rem; margin-top: .3rem; }
+  .avis { background: #FFF4E5; border: 1px solid #F3CE92; color: #6B4300; border-radius: 12px; padding: .8rem 1.1rem; margin-top: 1rem; font-size: .93rem; }
+  .card { background: #fff; border: 1px solid var(--linia); border-radius: 16px; padding: 1.4rem 1.35rem 1.1rem; margin-top: 1.4rem; }
+  .card > h2 { font-size: 1.35rem; margin-bottom: 1rem; display: flex; align-items: baseline; gap: .6rem; }
+  .card > h2 small { font-family: var(--body); font-weight: 600; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--blau-diabetis); }
+  .q { padding: .95rem 0; border-top: 1px solid var(--linia); }
+  .q:first-of-type { border-top: 0; padding-top: 0; }
+  .q > label.t, .q > .t { display: block; font-weight: 700; margin-bottom: .55rem; }
+  .q .req { color: var(--coral); margin-left: .15rem; }
+  .q.err { background: #FFF1EE; border-radius: 10px; padding-left: .7rem; padding-right: .7rem; }
+  .q .msg { display: none; color: #B3261E; font-size: .85rem; margin-top: .4rem; }
+  .q.err .msg { display: block; }
+  .stars { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; }
+  .stars button.s { background: none; border: 0; padding: 0 .1rem; font-size: 2.1rem; line-height: 1; color: var(--gris-clar); transition: transform .08s; }
+  .stars button.s.on { color: #F5A524; }
+  .stars button.s:hover { transform: scale(1.12); }
+  .stars .na { margin-left: .6rem; background: #fff; border: 1px solid var(--linia); border-radius: 999px; padding: .25rem .8rem; font-size: .82rem; color: var(--gris); }
+  .stars .na.on { background: var(--blau-llobregat); color: #fff; border-color: var(--blau-llobregat); }
+  .escala { display: flex; justify-content: space-between; font-size: .76rem; color: var(--gris); margin-top: .25rem; max-width: 290px; }
+  .nps { display: grid; grid-template-columns: repeat(11, 1fr); gap: .25rem; }
+  .nps button { border: 1px solid var(--linia); background: #fff; border-radius: 8px; padding: .5rem 0; font-weight: 700; font-size: .95rem; }
+  .nps button.on { background: var(--blau-diabetis); border-color: var(--blau-diabetis); color: #fff; }
+  .nps-lbl { display: flex; justify-content: space-between; font-size: .76rem; color: var(--gris); margin-top: .3rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+  .chips button { background: #fff; border: 1.5px solid var(--linia); border-radius: 999px; padding: .5rem .95rem; font-size: .95rem; text-align: left; line-height: 1.3; }
+  .chips button:hover { border-color: var(--blau-diabetis); }
+  .chips button.on { background: var(--blau-diabetis); border-color: var(--blau-diabetis); color: #fff; }
+  textarea, input[type=text], input[type=email] { width: 100%; font: inherit; border: 1.5px solid var(--linia); border-radius: 10px; padding: .65rem .8rem; background: #fff; color: var(--tinta); }
+  textarea { min-height: 96px; resize: vertical; }
+  textarea:focus, input:focus { outline: 2px solid var(--blau-aigua); border-color: var(--blau-diabetis); }
+  .altre { margin-top: .5rem; }
+  .grups { display: grid; gap: .6rem; }
+  .grups button { text-align: left; background: #fff; border: 1.5px solid var(--linia); border-radius: 12px; padding: .8rem 1rem; }
+  .grups button b { display: block; color: var(--blau-llobregat); }
+  .grups button span { font-size: .88rem; color: var(--gris); }
+  .grups button.on { border-color: var(--blau-diabetis); background: #EEF5FF; box-shadow: 0 0 0 2px var(--blau-diabetis) inset; }
+  .enviar { margin-top: 1.6rem; display: flex; flex-direction: column; gap: .7rem; align-items: flex-start; }
+  .btn { background: var(--coral); color: #fff; border: 0; border-radius: 10px; padding: .95rem 1.8rem; font-weight: 800; font-size: 1.05rem; }
+  .btn:disabled { opacity: .6; cursor: wait; }
+  .nota { font-size: .85rem; color: var(--gris); margin: 0; }
+  .error-global { color: #B3261E; font-weight: 700; }
+  .gracies { text-align: center; padding: 3rem 1rem; }
+  .gracies .gran { font-size: 3.4rem; }
+  .gracies h1 { font-size: clamp(2rem, 7vw, 3rem); margin: .6rem 0; }
+  .gracies a { display: inline-block; margin-top: 1.2rem; color: var(--blau-diabetis); font-weight: 700; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  footer { text-align: center; font-size: .82rem; color: var(--gris); padding: 0 1.25rem 2.5rem; }
+  footer a { color: var(--blau-diabetis); }
+  @media (max-width: 520px) {
+    .stars button.s { font-size: 2.3rem; padding: 0 .05rem; }
+    .nps { grid-template-columns: repeat(6, 1fr); }
+    .card { padding: 1.1rem 1rem .8rem; }
+  }
+</style>
+</head>
+<body>
+<div class="top"><div class="top-in">
+  <a class="brand" href="/"><img src="img/logo-footer-white.png" alt=""><span>Llobregat x la Diabetis</span></a>
+  <div class="langs" id="langs">
+    <button type="button" data-l="ca">CA</button><button type="button" data-l="es">ES</button><button type="button" data-l="en">EN</button>
+  </div>
+</div></div>
+<main id="app"><p style="color:#5A6478">…</p></main>
+<footer id="foot"></footer>
+
+<script>
+(function () {
+  'use strict';
+  var UI = {
+    ca: {
+      titol: "Ajuda'ns a millorar el repte", cargant: 'Carregant…', errCarrega: "No s'ha pogut carregar l'enquesta. Torna-ho a provar d'aquí una estona.",
+      saludaToken: function (n) { return n ? 'Hola, ' + n + '!' : 'Hola!'; },
+      introToken: "Gràcies per ser part del repte. Ja sabem qui ets, així que només et farem les preguntes que ens interessen de debò. Triga uns 5 minuts i quasi tot és d'un clic.",
+      introAnon: "Gràcies per ser part del repte. Volem saber què ha anat bé, què hem de millorar i què proposes per a la propera edició. Triga uns 5 minuts i quasi tot és d'un clic.",
+      teniem: 'Tenim aquestes dades teves', noSoc: 'No sóc jo / vull respondre com a una altra persona', jaRespost: "Ja ens havies respost. Si vols, pots tornar a enviar l'enquesta: substituirà la resposta anterior.",
+      tokenInvalid: "Aquest enllaç no és vàlid o ha caducat. Pots respondre igualment com a persona nova:",
+      qui: 'Qui ets?', quiAjuda: 'Així et farem les preguntes que et toquen.',
+      sobreTu: 'Sobre tu', seccio: 'Secció', de: 'de', na: 'No aplica', req: 'Obligatòria', reqMsg: 'Aquesta pregunta és obligatòria.',
+      escalaBaix: 'Molt malament', escalaAlt: 'Excel·lent', npsBaix: 'Gens probable', npsAlt: 'Totalment segur',
+      altre: 'Altres (opcional):', escriu: 'Escriu aquí…', email: "El teu correu perquè et puguem contactar:",
+      envia: 'Enviar la meva opinió', enviant: 'Enviant…',
+      priv: 'Les respostes es tracten de forma confidencial i només es comuniquen de forma agregada, tret que ens autoritzis a citar-te.',
+      errEnvia: "No s'ha pogut enviar. Revisa la connexió i torna-ho a provar.", errReq: 'Falten respostes obligatòries. Les hem marcat en vermell.',
+      gracies: 'Moltes gràcies!', gracies2: "La teva opinió ens ajudarà a fer un repte millor. Cada resposta compta: la llegim totes.", gracies3: "Si vols tornar a canviar alguna cosa, torna a obrir l'enllaç del correu.", tornar: 'Tornar a la web',
+      peu: 'Repte Llobregat x la Diabetis · el 100% dels donatius van a AREDI · '
+    },
+    es: {
+      titol: 'Ayúdanos a mejorar el reto', cargant: 'Cargando…', errCarrega: 'No se ha podido cargar la encuesta. Inténtalo de nuevo en un rato.',
+      saludaToken: function (n) { return n ? '¡Hola, ' + n + '!' : '¡Hola!'; },
+      introToken: 'Gracias por ser parte del reto. Ya sabemos quién eres, así que solo te haremos las preguntas que de verdad nos interesan. Lleva unos 5 minutos y casi todo es de un clic.',
+      introAnon: 'Gracias por ser parte del reto. Queremos saber qué ha ido bien, qué debemos mejorar y qué propones para la próxima edición. Lleva unos 5 minutos y casi todo es de un clic.',
+      teniem: 'Tenemos estos datos tuyos', noSoc: 'No soy yo / quiero responder como otra persona', jaRespost: 'Ya nos habías respondido. Si quieres, puedes volver a enviar la encuesta: sustituirá la respuesta anterior.',
+      tokenInvalid: 'Este enlace no es válido o ha caducado. Puedes responder igualmente como persona nueva:',
+      qui: '¿Quién eres?', quiAjuda: 'Así te haremos las preguntas que te corresponden.',
+      sobreTu: 'Sobre ti', seccio: 'Sección', de: 'de', na: 'No aplica', req: 'Obligatoria', reqMsg: 'Esta pregunta es obligatoria.',
+      escalaBaix: 'Muy mal', escalaAlt: 'Excelente', npsBaix: 'Nada probable', npsAlt: 'Totalmente seguro',
+      altre: 'Otros (opcional):', escriu: 'Escribe aquí…', email: 'Tu correo para que podamos contactarte:',
+      envia: 'Enviar mi opinión', enviant: 'Enviando…',
+      priv: 'Las respuestas se tratan de forma confidencial y solo se comunican de forma agregada, salvo que nos autorices a citarte.',
+      errEnvia: 'No se ha podido enviar. Revisa la conexión e inténtalo de nuevo.', errReq: 'Faltan respuestas obligatorias. Las hemos marcado en rojo.',
+      gracies: '¡Muchas gracias!', gracies2: 'Tu opinión nos ayudará a hacer un reto mejor. Cada respuesta cuenta: las leemos todas.', gracies3: 'Si quieres cambiar algo, vuelve a abrir el enlace del correo.', tornar: 'Volver a la web',
+      peu: 'Reto Llobregat x la Diabetis · el 100% de los donativos va a AREDI · '
+    },
+    en: {
+      titol: 'Help us improve the challenge', cargant: 'Loading…', errCarrega: 'The survey could not be loaded. Please try again in a moment.',
+      saludaToken: function (n) { return n ? 'Hi ' + n + '!' : 'Hi!'; },
+      introToken: "Thank you for being part of the challenge. We already know who you are, so we'll only ask what we really need. It takes about 5 minutes and most of it is one click.",
+      introAnon: 'Thank you for being part of the challenge. We want to know what went well, what to improve and what you suggest for the next edition. It takes about 5 minutes and most of it is one click.',
+      teniem: 'This is what we know about you', noSoc: "That's not me / I want to answer as someone else", jaRespost: 'You already answered. If you like, you can send the survey again: it will replace your previous answer.',
+      tokenInvalid: 'This link is not valid or has expired. You can still answer as a new person:',
+      qui: 'Who are you?', quiAjuda: "So we ask you the questions that apply to you.",
+      sobreTu: 'About you', seccio: 'Section', de: 'of', na: 'N/A', req: 'Required', reqMsg: 'This question is required.',
+      escalaBaix: 'Very poor', escalaAlt: 'Excellent', npsBaix: 'Not at all likely', npsAlt: 'Extremely likely',
+      altre: 'Other (optional):', escriu: 'Type here…', email: 'Your email so we can contact you:',
+      envia: 'Send my feedback', enviant: 'Sending…',
+      priv: 'Answers are kept confidential and only reported in aggregate, unless you allow us to quote you.',
+      errEnvia: 'Could not send. Please check your connection and try again.', errReq: 'Some required answers are missing. We marked them in red.',
+      gracies: 'Thank you so much!', gracies2: 'Your feedback will help us build a better challenge. Every answer counts: we read them all.', gracies3: 'If you want to change something, open the link in the email again.', tornar: 'Back to the website',
+      peu: 'Llobregat x la Diabetis challenge · 100% of donations go to AREDI · '
+    }
+  };
+  var MOD = { caminant: { ca: 'Caminant', es: 'Caminando', en: 'Walking' }, corrent: { ca: 'Corrent', es: 'Corriendo', en: 'Running' }, bici: { ca: 'En bici', es: 'En bici', en: 'Cycling' }, animar: { ca: 'Animant', es: 'Animando', en: 'Cheering' }, dorsal0: { ca: 'Dorsal 0', es: 'Dorsal 0', en: 'Dorsal 0' } };
+
+  var qs = new URLSearchParams(location.search);
+  var S = { lang: 'ca', def: null, token: null, tok: null, tokenInvalid: false, grup: null, perfil: {}, resp: {}, jaRespost: false, inici: Date.now(), enviant: false };
+  var app = document.getElementById('app');
+
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+  function t() { return UI[S.lang]; }
+  function tr(o) { return o ? (o[S.lang] || o.ca || '') : ''; }
+  function el(tag, attrs, kids) {
+    var e = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      if (k === 'class') e.className = attrs[k]; else if (k === 'text') e.textContent = attrs[k];
+      else if (k.slice(0, 2) === 'on') e.addEventListener(k.slice(2), attrs[k]); else e.setAttribute(k, attrs[k]);
+    });
+    (kids || []).forEach(function (c) { if (c) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    return e;
+  }
+  function draftKey() { return 'llxd-enq-' + (S.token || 'obert'); }
+  function guardar() { lsSet(draftKey(), JSON.stringify({ grup: S.grup, perfil: S.perfil, resp: S.resp })); }
+
+  function setLang(l, noRender) {
+    S.lang = l; document.documentElement.setAttribute('data-lang', l); document.documentElement.lang = l;
+    lsSet('llxd-lang', l);
+    Array.prototype.forEach.call(document.querySelectorAll('#langs button'), function (b) { b.classList.toggle('on', b.getAttribute('data-l') === l); });
+    document.title = (UI[l].titol) + ' · Llobregat x la Diabetis';
+    var f = document.getElementById('foot');
+    f.textContent = UI[l].peu; f.appendChild(el('a', { href: '/', text: 'llobregat.org' }));
+    if (!noRender && S.def) render();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#langs button'), function (b) { b.addEventListener('click', function () { setLang(b.getAttribute('data-l')); }); });
+
+  // ---- components
+  function preguntaBloc(p, titleText) {
+    var wrap = el('div', { class: 'q', 'data-id': p.id });
+    wrap.appendChild(el('div', { class: 't' }, [titleText || tr(p.text), p.req ? el('span', { class: 'req', text: ' *', title: t().req }) : null]));
+    var ctrl;
+    if (p.tipus === 'estrelles') ctrl = ctrlStars(p);
+    else if (p.tipus === 'nps') ctrl = ctrlNps(p);
+    else if (p.tipus === 'unica' || p.tipus === 'multi') ctrl = ctrlChips(p);
+    else ctrl = ctrlText(p);
+    wrap.appendChild(ctrl);
+    if (p.altre) {
+      wrap.appendChild(el('div', { class: 'altre' }, [
+        el('input', { type: 'text', maxlength: '300', placeholder: t().altre, value: S.resp[p.id + '_altre'] || '', oninput: function (e) { S.resp[p.id + '_altre'] = e.target.value; guardar(); } })
+      ]));
+    }
+    wrap.appendChild(el('div', { class: 'msg', text: t().reqMsg }));
+    return wrap;
+  }
+  function marcar(wrap) { wrap.classList.remove('err'); }
+
+  function ctrlStars(p) {
+    var cur = S.resp[p.id];
+    var box = el('div');
+    var row = el('div', { class: 'stars', role: 'radiogroup' });
+    var btns = [];
+    for (var i = 1; i <= 5; i++) (function (i) {
+      var b = el('button', { type: 'button', class: 's' + (typeof cur === 'number' && cur >= i ? ' on' : ''), 'aria-label': i + '/5', text: '★' });
+      b.addEventListener('click', function () { S.resp[p.id] = i; guardar(); marcar(box.parentNode); upd(); });
+      btns.push(b); row.appendChild(b);
+    })(i);
+    var na;
+    if (p.na) {
+      na = el('button', { type: 'button', class: 'na' + (cur === 'na' ? ' on' : ''), text: t().na });
+      na.addEventListener('click', function () { S.resp[p.id] = S.resp[p.id] === 'na' ? undefined : 'na'; guardar(); upd(); });
+      row.appendChild(na);
+    }
+    function upd() {
+      var v = S.resp[p.id];
+      btns.forEach(function (b, idx) { b.classList.toggle('on', typeof v === 'number' && v >= idx + 1); });
+      if (na) na.classList.toggle('on', v === 'na');
+    }
+    box.appendChild(row);
+    box.appendChild(el('div', { class: 'escala' }, [el('span', { text: t().escalaBaix }), el('span', { text: t().escalaAlt })]));
+    return box;
+  }
+  function ctrlNps(p) {
+    var box = el('div'); var row = el('div', { class: 'nps' }); var btns = [];
+    for (var i = 0; i <= 10; i++) (function (i) {
+      var b = el('button', { type: 'button', class: S.resp[p.id] === i ? 'on' : '', text: String(i) });
+      b.addEventListener('click', function () { S.resp[p.id] = i; guardar(); marcar(box.parentNode); btns.forEach(function (x, k) { x.classList.toggle('on', k === i); }); });
+      btns.push(b); row.appendChild(b);
+    })(i);
+    box.appendChild(row);
+    box.appendChild(el('div', { class: 'nps-lbl' }, [el('span', { text: t().npsBaix }), el('span', { text: t().npsAlt })]));
+    return box;
+  }
+  function ctrlChips(p) {
+    var multi = p.tipus === 'multi'; var box = el('div', { class: 'chips' }); var btns = [];
+    function on(v) { var c = S.resp[p.id]; return multi ? Array.isArray(c) && c.indexOf(v) >= 0 : c === v; }
+    p.opcions.forEach(function (o) {
+      var b = el('button', { type: 'button', class: on(o.v) ? 'on' : '', text: tr(o) });
+      b.addEventListener('click', function () {
+        if (multi) {
+          var c = Array.isArray(S.resp[p.id]) ? S.resp[p.id].slice() : [];
+          var k = c.indexOf(o.v); if (k >= 0) c.splice(k, 1); else c.push(o.v);
+          S.resp[p.id] = c.length ? c : undefined;
+        } else { S.resp[p.id] = S.resp[p.id] === o.v && !p.req ? undefined : o.v; }
+        guardar(); marcar(box.parentNode);
+        btns.forEach(function (x, idx) { x.classList.toggle('on', on(p.opcions[idx].v)); });
+        if (p.id === 'contactar') renderEmail();
+      });
+      btns.push(b); box.appendChild(b);
+    });
+    return box;
+  }
+  function ctrlText(p) {
+    var common = { maxlength: '2000', placeholder: t().escriu, oninput: function (e) { S.resp[p.id] = e.target.value; guardar(); } };
+    var e = p.curt ? el('input', Object.assign({ type: 'text' }, common)) : el('textarea', common);
+    e.value = S.resp[p.id] || '';
+    return e;
+  }
+
+  // ---- perfil (només si no hi ha token)
+  function perfilTexts(p) { return p.text && p.text.ca === undefined ? tr(p.text[S.grup]) : tr(p.text); }
+  function bloquePerfil() {
+    var card = el('section', { class: 'card' });
+    card.appendChild(el('h2', null, [t().sobreTu]));
+    S.def.perfil.forEach(function (p) {
+      if (p.grups && p.grups.indexOf(S.grup) < 0) return;
+      if (p.tipus === 'unica') {
+        var fake = { id: '_perfil_' + p.id, tipus: 'unica', text: p.text, opcions: p.opcions };
+        // reutilitza chips però desant a perfil
+        var wrap = el('div', { class: 'q' }); wrap.appendChild(el('div', { class: 't', text: tr(p.text) }));
+        var box = el('div', { class: 'chips' }); var btns = [];
+        p.opcions.forEach(function (o) {
+          var b = el('button', { type: 'button', class: S.perfil[p.id] === o.v ? 'on' : '', text: tr(o) });
+          b.addEventListener('click', function () { S.perfil[p.id] = S.perfil[p.id] === o.v ? '' : o.v; guardar(); btns.forEach(function (x, i) { x.classList.toggle('on', S.perfil[p.id] === p.opcions[i].v); }); });
+          btns.push(b); box.appendChild(b);
+        });
+        wrap.appendChild(box); card.appendChild(wrap);
+      } else {
+        var w = el('div', { class: 'q' });
+        w.appendChild(el('label', { class: 't', text: perfilTexts(p) }));
+        w.appendChild(el('input', { type: 'text', maxlength: '160', value: S.perfil[p.id] || '', oninput: function (e) { S.perfil[p.id] = e.target.value; guardar(); } }));
+        card.appendChild(w);
+      }
+    });
+    return card;
+  }
+
+  function resumPerfilToken() {
+    var tk = S.tok, parts = [];
+    var g = S.def.grups[tk.grup];
+    parts.push(tr(g.nom));
+    if (tk.modalitat && MOD[tk.modalitat]) parts.push(MOD[tk.modalitat][S.lang]);
+    if (tk.tram) parts.push(tk.tram);
+    if (tk.org) parts.push(tk.org);
+    return parts.join(' · ');
+  }
+
+  var emailHolder;
+  function renderEmail() {
+    if (!emailHolder) return;
+    emailHolder.innerHTML = '';
+    if (S.resp.contactar === 'si' && !S.token) {
+      emailHolder.appendChild(el('div', { class: 'q' }, [
+        el('label', { class: 't', text: t().email }),
+        el('input', { type: 'email', maxlength: '200', value: S.contacteEmail || '', oninput: function (e) { S.contacteEmail = e.target.value; } })
+      ]));
+    }
+  }
+
+  // ---- render principal
+  function render() {
+    app.innerHTML = '';
+    var hero = el('div', { class: 'hero' });
+    hero.appendChild(el('h1', { text: S.tok ? t().saludaToken(S.tok.nom ? S.tok.nom.split(' ')[0] : '') : t().titol }));
+    hero.appendChild(el('p', { text: S.tok ? t().introToken : t().introAnon }));
+    if (S.tok) {
+      var box = el('div', { class: 'perfil-box' }, [el('div', null, [el('strong', { text: t().teniem + ': ' }), resumPerfilToken()])]);
+      box.appendChild(el('button', { type: 'button', text: t().noSoc, onclick: function () { S.token = null; S.tok = null; S.grup = qs.get('g') || null; S.resp = {}; S.perfil = {}; history.replaceState(null, '', location.pathname + (S.lang !== 'ca' ? '?l=' + S.lang : '')); render(); } }));
+      hero.appendChild(box);
+      if (S.jaRespost) hero.appendChild(el('div', { class: 'avis', text: t().jaRespost }));
+    } else if (S.tokenInvalid) {
+      hero.appendChild(el('div', { class: 'avis', text: t().tokenInvalid }));
+    }
+    app.appendChild(hero);
+
+    // selector de grup (només sense token)
+    if (!S.tok) {
+      var card = el('section', { class: 'card' });
+      card.appendChild(el('h2', { text: t().qui }));
+      card.appendChild(el('p', { class: 'nota', text: t().quiAjuda }));
+      var gr = el('div', { class: 'grups', style: 'margin-top:.8rem' });
+      Object.keys(S.def.grups).forEach(function (id) {
+        var g = S.def.grups[id];
+        var b = el('button', { type: 'button', class: S.grup === id ? 'on' : '' }, [el('b', { text: tr(g.nom) }), el('span', { text: tr(g.desc) })]);
+        b.addEventListener('click', function () { if (S.grup !== id) { S.grup = id; S.resp = {}; guardar(); render(); setTimeout(function () { var c = document.querySelector('.card:nth-of-type(2)'); if (c) c.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 30); } });
+        gr.appendChild(b);
+      });
+      card.appendChild(gr); app.appendChild(card);
+    }
+
+    if (!S.grup) return;
+    if (!S.tok) app.appendChild(bloquePerfil());
+
+    var seccions = S.def.seccions[S.grup];
+    var total = seccions.length + 1;
+    seccions.forEach(function (s, idx) {
+      var c = el('section', { class: 'card' });
+      c.appendChild(el('h2', null, [tr(s.titol), el('small', { text: t().seccio + ' ' + (idx + 1) + ' ' + t().de + ' ' + total })]));
+      s.preguntes.forEach(function (p) { c.appendChild(preguntaBloc(p)); });
+      app.appendChild(c);
+    });
+    // autorització i contacte
+    var cf = el('section', { class: 'card' });
+    cf.appendChild(el('h2', null, [tr({ ca: 'Perquè ho sapiguem', es: 'Para que lo sepamos', en: 'So we know' }), el('small', { text: t().seccio + ' ' + total + ' ' + t().de + ' ' + total })]));
+    cf.appendChild(preguntaBloc(S.def.contacte.autoritzacio));
+    cf.appendChild(preguntaBloc(S.def.contacte.contactar));
+    emailHolder = el('div'); cf.appendChild(emailHolder); renderEmail();
+    app.appendChild(cf);
+
+    var hp = el('div', { class: 'hp', 'aria-hidden': 'true' }, [el('input', { type: 'text', id: 'hp', tabindex: '-1', autocomplete: 'off', name: 'website' })]);
+    app.appendChild(hp);
+
+    var send = el('div', { class: 'enviar' });
+    var err = el('div', { class: 'error-global', id: 'errg' });
+    var btn = el('button', { type: 'button', class: 'btn', id: 'btnEnviar', text: t().envia, onclick: enviar });
+    send.appendChild(err); send.appendChild(btn); send.appendChild(el('p', { class: 'nota', text: t().priv }));
+    app.appendChild(send);
+  }
+
+  function enviar() {
+    if (S.enviant) return;
+    var errg = document.getElementById('errg'); errg.textContent = '';
+    // obligatòries
+    var primera = null;
+    S.def.seccions[S.grup].forEach(function (s) { s.preguntes.forEach(function (p) {
+      if (p.req && (S.resp[p.id] === undefined || S.resp[p.id] === '')) {
+        var w = document.querySelector('.q[data-id="' + p.id + '"]'); if (w) { w.classList.add('err'); if (!primera) primera = w; }
+      }
+    }); });
+    if (primera) { errg.textContent = t().errReq; primera.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+
+    var respostes = {};
+    Object.keys(S.resp).forEach(function (k) { var v = S.resp[k]; if (v !== undefined && v !== '' && !(Array.isArray(v) && !v.length)) respostes[k] = v; });
+    var btn = document.getElementById('btnEnviar'); S.enviant = true; btn.disabled = true; btn.textContent = t().enviant;
+    fetch('/api/enquesta', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ t: S.token || undefined, grup: S.grup, idioma: S.lang, perfil: S.perfil, respostes: respostes, contacte_email: S.contacteEmail || undefined, hp: (document.getElementById('hp') || {}).value || '', ms: Date.now() - S.inici })
+    }).then(function (r) { return r.json().catch(function () { return { ok: false }; }); }).then(function (j) {
+      S.enviant = false; btn.disabled = false; btn.textContent = t().envia;
+      if (!j.ok) { errg.textContent = j.faltes ? t().errReq : (j.error || t().errEnvia); return; }
+      lsDel(draftKey()); gracies();
+    }).catch(function () { S.enviant = false; btn.disabled = false; btn.textContent = t().envia; errg.textContent = t().errEnvia; });
+  }
+
+  function gracies() {
+    app.innerHTML = '';
+    var d = el('div', { class: 'gracies' }, [
+      el('div', { class: 'gran', text: '💧' }), el('h1', { text: t().gracies }),
+      el('p', { text: t().gracies2 }), el('p', { class: 'nota', text: t().gracies3 }),
+      el('a', { href: '/', text: t().tornar + ' →' })
+    ]);
+    app.appendChild(d); window.scrollTo({ top: 0 });
+  }
+
+  // ---- arrencada
+  var lPar = qs.get('l');
+  var inicial = ['ca', 'es', 'en'].indexOf(lPar) >= 0 ? lPar : null;
+  if (!inicial) { var sv = lsGet('llxd-lang'); if (['ca', 'es', 'en'].indexOf(sv) >= 0) inicial = sv; }
+  if (!inicial) { var nl = (navigator.language || 'ca').slice(0, 2); inicial = ['es', 'en'].indexOf(nl) >= 0 ? nl : 'ca'; }
+  setLang(inicial, true);
+  app.innerHTML = '<p style="color:#5A6478">' + t().cargant + '</p>';
+
+  var tokenParam = qs.get('t');
+  var pDef = fetch('/api/enquesta?def=1').then(function (r) { return r.json(); });
+  var pTok = tokenParam ? fetch('/api/enquesta?t=' + encodeURIComponent(tokenParam)).then(function (r) { return r.json(); }).catch(function () { return { ok: false }; }) : Promise.resolve(null);
+  Promise.all([pDef, pTok]).then(function (res) {
+    if (!res[0].ok) throw new Error('def');
+    S.def = res[0].definicio;
+    var tk = res[1];
+    if (tk && tk.ok) {
+      S.token = tokenParam; S.tok = tk; S.grup = tk.grup; S.jaRespost = !!tk.ja_respost;
+      if (!lPar && tk.idioma && ['ca', 'es', 'en'].indexOf(tk.idioma) >= 0) setLang(tk.idioma, true);
+    } else {
+      if (tokenParam) S.tokenInvalid = true;
+      var g = qs.get('g'); if (g && S.def.grups[g]) S.grup = g;
+    }
+    var d = lsGet(draftKey());
+    if (d) { try { var o = JSON.parse(d); if (o && typeof o === 'object') { S.resp = o.resp || {}; S.perfil = o.perfil || {}; if (!S.token && o.grup && S.def.grups[o.grup] && !S.grup) S.grup = o.grup; } } catch (e) {} }
+    setLang(S.lang);
+  }).catch(function () { app.innerHTML = ''; app.appendChild(el('p', { class: 'error-global', text: t().errCarrega })); });
+})();
+</script>
+</body>
+</html>
