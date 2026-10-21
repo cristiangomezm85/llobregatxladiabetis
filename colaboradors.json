@@ -168,78 +168,99 @@
    "nom": "Ajuntament de Castellar de n'Hug",
    "nivell": "ajuntaments",
    "ordre": 1,
-   "logo": "img/colaboradors/ajuntament_castellar-de-n-hug.png"
+   "logo": "img/colaboradors/ajuntament_castellar-de-n-hug.png",
+   "web": "https://www.ajcastellardenhug.cat/"
   },
   {
    "nom": "Ajuntament de la Pobla de Lillet",
    "nivell": "ajuntaments",
    "ordre": 2,
-   "logo": "img/colaboradors/ajuntament_la-pobla-de-lillet.png"
+   "logo": "img/colaboradors/ajuntament_la-pobla-de-lillet.png",
+   "web": "https://www.poblalillet.cat/"
   },
   {
    "nom": "Ajuntament de Guardiola de Berguedà",
    "nivell": "ajuntaments",
    "ordre": 3,
-   "logo": "img/colaboradors/ajuntament_guardiola-de-bergueda.png"
+   "logo": "img/colaboradors/ajuntament_guardiola-de-bergueda.png",
+   "web": "https://www.guardioladebergueda.cat/"
   },
   {
    "nom": "Ajuntament de Sant Jordi de Cercs",
    "nivell": "ajuntaments",
    "ordre": 4,
-   "logo": "img/colaboradors/ajuntament_sant-jordi-de-cercs.png"
+   "logo": "img/colaboradors/ajuntament_sant-jordi-de-cercs.png",
+   "web": "https://www.cercs.cat/"
   },
   {
    "nom": "Ajuntament de Berga",
    "nivell": "ajuntaments",
    "ordre": 5,
-   "logo": "img/colaboradors/ajuntament_berga.png"
+   "logo": "img/colaboradors/ajuntament_berga.png",
+   "web": "https://www.ajberga.cat/"
   },
   {
-   "nom": "Ajuntament d'Olvan",
+   "nom": "Ajuntament d'Olvan (Cal Rosal)",
    "nivell": "ajuntaments",
    "ordre": 6,
-   "logo": "img/colaboradors/ajuntament_olvan.png"
+   "logo": "img/colaboradors/ajuntament_olvan.png",
+   "web": "https://www.olvan.cat/"
   },
   {
    "nom": "Ajuntament de Gironella",
    "nivell": "ajuntaments",
    "ordre": 7,
-   "logo": "img/colaboradors/ajuntament_gironella.png"
+   "logo": "img/colaboradors/ajuntament_gironella.png",
+   "web": "https://gironella.cat/"
   },
   {
    "nom": "Ajuntament de Puig-reig",
    "nivell": "ajuntaments",
-   "ordre": 8
+   "ordre": 8,
+   "logo": "img/colaboradors/ajuntament_puig-reig.png",
+   "web": "https://puig-reig.cat/"
   },
   {
    "nom": "Ajuntament de Navàs",
    "nivell": "ajuntaments",
-   "ordre": 9
+   "ordre": 9,
+   "logo": "img/colaboradors/ajuntament_navas.png",
+   "web": "https://www.navas.cat/"
   },
   {
    "nom": "Ajuntament de Balsareny",
    "nivell": "ajuntaments",
-   "ordre": 10
+   "ordre": 10,
+   "logo": "img/colaboradors/ajuntament_balsareny.png",
+   "web": "https://www.balsareny.cat/"
   },
   {
    "nom": "Ajuntament de Sallent",
    "nivell": "ajuntaments",
-   "ordre": 11
+   "ordre": 11,
+   "logo": "img/colaboradors/ajuntament_sallent.png",
+   "web": "https://www.sallent.cat/"
   },
   {
    "nom": "Ajuntament de Navarcles",
    "nivell": "ajuntaments",
-   "ordre": 12
+   "ordre": 12,
+   "logo": "img/colaboradors/ajuntament_navarcles.png",
+   "web": "https://www.navarcles.cat/"
   },
   {
    "nom": "Ajuntament de Manresa",
    "nivell": "ajuntaments",
-   "ordre": 13
+   "ordre": 13,
+   "logo": "img/colaboradors/ajuntament_manresa.png",
+   "web": "https://www.manresa.cat/"
   },
   {
    "nom": "Ajuntament de Sant Vicenç de Castellet",
    "nivell": "ajuntaments",
-   "ordre": 14
+   "ordre": 14,
+   "logo": "img/colaboradors/ajuntament_sant-vicenc-de-castellet.png",
+   "web": "https://www.svc.cat/"
   },
   {
    "nom": "Ajuntament de Castellbell i el Vilar",
@@ -249,52 +270,71 @@
   {
    "nom": "Ajuntament de Monistrol de Montserrat",
    "nivell": "ajuntaments",
-   "ordre": 16
+   "ordre": 16,
+   "logo": "img/colaboradors/ajuntament_monistrol-de-montserrat.png",
+   "web": "https://www.monistroldemontserrat.cat/"
   },
   {
    "nom": "Ajuntament d'Olesa de Montserrat",
    "nivell": "ajuntaments",
-   "ordre": 17
+   "ordre": 17,
+   "logo": "img/colaboradors/ajuntament_olesa-de-montserrat.png",
+   "web": "https://www.olesademontserrat.cat/"
   },
   {
    "nom": "Ajuntament d'Esparreguera",
    "nivell": "ajuntaments",
-   "ordre": 18
+   "ordre": 18,
+   "logo": "img/colaboradors/ajuntament_esparreguera.png",
+   "web": "https://www.esparreguera.cat/"
   },
   {
    "nom": "Ajuntament de Martorell",
    "nivell": "ajuntaments",
-   "ordre": 19
+   "ordre": 19,
+   "logo": "img/colaboradors/ajuntament_martorell.png",
+   "web": "https://www.martorell.cat/"
   },
   {
    "nom": "Ajuntament de Sant Andreu de la Barca",
    "nivell": "ajuntaments",
-   "ordre": 20
+   "ordre": 20,
+   "logo": "img/colaboradors/ajuntament_sant-andreu-de-la-barca.png",
+   "web": "https://www.sabarca.cat/"
   },
   {
    "nom": "Ajuntament de Pallejà",
    "nivell": "ajuntaments",
-   "ordre": 21
+   "ordre": 21,
+   "logo": "img/colaboradors/ajuntament_palleja.png",
+   "web": "https://www.palleja.cat/"
   },
   {
    "nom": "Ajuntament de Sant Vicenç dels Horts",
    "nivell": "ajuntaments",
-   "ordre": 22
+   "ordre": 22,
+   "logo": "img/colaboradors/ajuntament_sant-vicenc-dels-horts.png",
+   "web": "https://svh.cat/"
   },
   {
    "nom": "Ajuntament de Santa Coloma de Cervelló",
    "nivell": "ajuntaments",
-   "ordre": 23
+   "ordre": 23,
+   "web": "https://www.santacolomadecervello.cat/"
   },
   {
    "nom": "Ajuntament de Sant Boi de Llobregat",
    "nivell": "ajuntaments",
-   "ordre": 24
+   "ordre": 24,
+   "logo": "img/colaboradors/ajuntament_sant-boi-de-llobregat.png",
+   "web": "https://www.santboi.cat/"
   },
   {
    "nom": "Ajuntament de Sant Joan Despí",
    "nivell": "ajuntaments",
-   "ordre": 25
+   "ordre": 25,
+   "logo": "img/colaboradors/ajuntament_sant-joan-despi.png",
+   "web": "https://sjdespi.cat/"
   },
   {
    "nom": "Ajuntament de Cornellà de Llobregat",
@@ -306,12 +346,16 @@
   {
    "nom": "Ajuntament de l'Hospitalet de Llobregat",
    "nivell": "ajuntaments",
-   "ordre": 27
+   "ordre": 27,
+   "logo": "img/colaboradors/ajuntament_l-hospitalet-de-llobregat.png",
+   "web": "https://www.l-h.cat/"
   },
   {
    "nom": "Ajuntament del Prat de Llobregat",
    "nivell": "ajuntaments",
-   "ordre": 28
+   "ordre": 28,
+   "logo": "img/colaboradors/ajuntament_el-prat-de-llobregat.png",
+   "web": "https://www.elprat.cat/"
   },
   {
    "nom": "Els Pallussus",
@@ -319,6 +363,13 @@
    "logo": "img/colaboradors/pallussus.png",
    "web": "https://www.instagram.com/elspallussus/",
    "ordre": 4
+  },
+  {
+   "nom": "Mossos d'Esquadra",
+   "nivell": "institucions",
+   "logo": "img/colaboradors/mossos.png",
+   "web": "https://mossos.gencat.cat/ca/inici",
+   "ordre": 7
   }
  ]
 }
