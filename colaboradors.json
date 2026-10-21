@@ -281,14 +281,19 @@
    "ordre": 25
   },
   {
-   "nom": "Ajuntament de l'Hospitalet de Llobregat",
+   "nom": "Ajuntament de Cornellà de Llobregat",
    "nivell": "ajuntaments",
    "ordre": 26
+  },  
+  {
+   "nom": "Ajuntament de l'Hospitalet de Llobregat",
+   "nivell": "ajuntaments",
+   "ordre": 27
   },
   {
    "nom": "Ajuntament del Prat de Llobregat",
    "nivell": "ajuntaments",
-   "ordre": 27
+   "ordre": 28
   }
  ]
 }
