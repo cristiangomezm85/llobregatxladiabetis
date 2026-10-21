@@ -1,5 +1,5 @@
 {
- "actualitzat": "2026-10-20",
+ "actualitzat": "2026-10-21",
  "comentari": "Llistat d'entitats col·laboradores. Cada entrada: nom, nivell (organitza|institucions|principals|ajuntaments|entitats), logo (ruta a img/colaboradors/…), web (opcional), aporta {ca,es,en} (opcional), ordre, visible (false per amagar). La mida del logo la defineix cada nivell (camp 'mida': xl|l|m|s). 'recorregut': true compta l'entitat com a ajuntament del recorregut al resum encara que sigui en un altre nivell.",
  "nivells": [
   {
@@ -99,12 +99,7 @@
    "nivell": "organitza",
    "logo": "img/support-aredi.png",
    "web": "https://arediabetis.org",
-   "ordre": 1,
-   "aporta": {
-    "ca": "Entitat organitzadora i beneficiària: el 100% dels donatius van a la recerca en diabetis.",
-    "es": "Entidad organizadora y beneficiaria: el 100% de los donativos va a la investigación en diabetes.",
-    "en": "Organising and beneficiary entity: 100% of donations go to diabetes research."
-   }
+   "ordre": 1
   },
   {
    "nom": "esportcat · Generalitat de Catalunya",
@@ -118,12 +113,7 @@
    "nivell": "institucions",
    "logo": "img/support-diba.png",
    "web": "https://www.diba.cat/ca/area-d-esports-i-activitat-fisica",
-   "ordre": 2,
-   "aporta": {
-    "ca": "Àrea d'Esports i Activitat Física · préstec de material per als municipis adherits.",
-    "es": "Área de Deportes y Actividad Física · préstamo de material para los municipios adheridos.",
-    "en": "Sports and Physical Activity Area · equipment loan for participating towns."
-   }
+   "ordre": 2
   },
   {
    "nom": "Consell Esportiu del Baix Llobregat",
@@ -152,37 +142,27 @@
    "logo": "img/colaboradors/consorci_turisme_baix_llobregat.png",
    "web": "https://turismebaixllobregat.com/ca",
    "ordre": 6
-  },  
+  },
   {
    "nom": "Ajuntament de Cornellà de Llobregat",
    "nivell": "principals",
    "ordre": 1,
-   "aporta": {
-    "ca": "Ha fet possible les samarretes del repte.",
-    "es": "Ha hecho posibles las camisetas del reto.",
-    "en": "Made the challenge t-shirts possible."
-   },
-   "recorregut": true
+   "logo": "img/colaboradors/ajuntament_cornella.png",
+   "web": "https://www.cornella.cat/"
   },
   {
    "nom": "Corresolidaris",
    "nivell": "principals",
    "ordre": 2,
-   "aporta": {
-    "ca": "Donatiu de 1.000 €, suport a l'organització a Cornellà i l'Hospitalet i a l'acte de cloenda.",
-    "es": "Donativo de 1.000 €, apoyo a la organización en Cornellà y L'Hospitalet y en el acto de clausura.",
-    "en": "€1,000 donation, organisational support in Cornellà and L'Hospitalet and at the closing event."
-   }
+   "logo": "img/colaboradors/corresolidaris.png",
+   "web": "https://www.corresolidaris.org/"
   },
   {
    "nom": "bonÀrea",
    "nivell": "principals",
    "ordre": 3,
-   "aporta": {
-    "ca": "Patrocini en espècie de l'avituallament.",
-    "es": "Patrocinio en especie del avituallamiento.",
-    "en": "In-kind sponsorship of the food stations."
-   }
+   "logo": "img/colaboradors/bonarea.png",
+   "web": "https://www.bonarea.com/"
   },
   {
    "nom": "Ajuntament de Castellar de n'Hug",
@@ -312,8 +292,10 @@
   {
    "nom": "Ajuntament de Cornellà de Llobregat",
    "nivell": "ajuntaments",
-   "ordre": 26
-  },  
+   "ordre": 26,
+   "logo": "img/colaboradors/ajuntament_cornella.png",
+   "web": "https://www.cornella.cat/"
+  },
   {
    "nom": "Ajuntament de l'Hospitalet de Llobregat",
    "nivell": "ajuntaments",
@@ -323,6 +305,13 @@
    "nom": "Ajuntament del Prat de Llobregat",
    "nivell": "ajuntaments",
    "ordre": 28
+  },
+  {
+   "nom": "Els Pallussus",
+   "nivell": "principals",
+   "logo": "img/colaboradors/pallussus.png",
+   "web": "https://www.instagram.com/elspallussus/",
+   "ordre": 4
   }
  ]
 }
