@@ -1,7 +1,7 @@
 {
   "objectiuGotes": 250,
-  "actualizado": "2026-10-21T16:16:04.505Z",
-  "total": 219,
+  "actualizado": "2026-10-21T16:31:19.027Z",
+  "total": 220,
   "donaciones": [
     {
       "id": "fb594bee7cc2",
@@ -2411,6 +2411,17 @@
       "mensaje": "Pedro Samper, la cura ya es!",
       "fecha": "2026-10-21T14:15:58.546Z",
       "orden": 230
+    },
+    {
+      "id": "2bfd7e3ca4b7",
+      "reto": "puig-reig-x-la-diabetes",
+      "retoNombre": "Puig-reig x la Diabetes",
+      "nombre": "Jordi",
+      "anonimo": false,
+      "importe": 100,
+      "mensaje": "Sou molt grans! Aviam si a la pròxima ens pareparem i us acompanyem tot el repte! Gracies per tant!",
+      "fecha": "2026-10-21T16:31:11.950Z",
+      "orden": 231
     }
   ]
 }
