@@ -371,6 +371,48 @@
    "logo": "img/colaboradors/mossos.png",
    "web": "https://mossos.gencat.cat/ca/inici",
    "ordre": 7
+  },
+  {
+   "nom": "Hostal La Closa",
+   "nivell": "entitats",
+   "logo": "img/colaboradors/hostal_la_closa.png",
+   "web": "https://laclosa.cat/",
+   "ordre": 1
+  },
+  {
+   "nom": "Glucoup",
+   "nivell": "entitats",
+   "logo": "img/colaboradors/glucoup.png",
+   "web": "https://glucoup.com/",
+   "ordre": 2
+  },
+  {
+   "nom": "Condis",
+   "nivell": "entitats",
+   "logo": "img/colaboradors/condis.png",
+   "web": "https://www.condis.es/",
+   "ordre": 3
+  },
+  {
+   "nom": "Glucody",
+   "nivell": "entitats",
+   "logo": "img/colaboradors/glucody.png",
+   "web": "https://glucody.com/",
+   "ordre": 4
+  },
+  {
+   "nom": "Consum",
+   "nivell": "entitats",
+   "logo": "img/colaboradors/consum.png",
+   "web": "https://www.consum.es/",
+   "ordre": 5
+  },
+  {
+   "nom": "Forum Sport",
+   "nivell": "entitats",
+   "logo": "img/colaboradors/forumsport.png",
+   "web": "https://www.forumsport.com/",
+   "ordre": 6
   }
  ]
 }
