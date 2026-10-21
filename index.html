@@ -3649,17 +3649,17 @@
 <section class="countdown-section" id="countdown-section">
   <div class="container">
     <div class="countdown-stack">
-      <div class="countdown-banner countdown-banner--event" id="eventCountdown" data-countdown-target="2026-10-31T23:59:59+01:00" data-countdown-kind="inscripcions">
+      <div class="countdown-banner countdown-banner--event" id="eventCountdown" data-countdown-target="2026-10-31T23:59:59+01:00" data-countdown-kind="tancament-donacions">
         <div class="countdown-banner-text">
           <span class="countdown-banner-tag">
-            <span lang="ca">Tancament d'inscripcions</span>
-            <span lang="es">Cierre de inscripciones</span>
-            <span lang="en">Registration closes</span>
+            <span lang="ca">Tancament de donacions</span>
+            <span lang="es">Cierre de donaciones</span>
+            <span lang="en">Donations close</span>
           </span>
           <span class="countdown-banner-label">
-            <span lang="ca">Les inscripcions es tanquen el 31 d'octubre</span>
-            <span lang="es">Las inscripciones se cierran el 31 de octubre</span>
-            <span lang="en">Registration closes on 31 October</span>
+            <span lang="ca">L'ampolla de l'esperança es tanca el 31 d'octubre</span>
+            <span lang="es">La botella de la esperanza se cierra el 31 de octubre</span>
+            <span lang="en">The bottle of hope closes on 31 October</span>
           </span>
           <span class="countdown-banner-sublabel">
             <span lang="ca">31 d'octubre a les 23:59 h · hora de Catalunya (GMT+1)</span>
@@ -6175,11 +6175,11 @@
 
   function setCountdownOpenText(banner) {
     const kind = banner.getAttribute('data-countdown-kind');
-    const translations = kind === 'inscripcions'
+    const translations = kind === 'tancament-donacions'
       ? {
           tag: { ca: 'Tancades', es: 'Cerradas', en: 'Closed' },
-          label: { ca: 'Les inscripcions ja estan tancades', es: 'Las inscripciones ya están cerradas', en: 'Registration is now closed' },
-          sublabel: { ca: 'Gràcies a totes les persones que us heu sumat al repte.', es: 'Gracias a todas las personas que os habéis sumado al reto.', en: 'Thank you to everyone who joined the challenge.' },
+          label: { ca: 'L\'ampolla de l\'esperança ja està tancada', es: 'La botella de la esperanza ya está cerrada', en: 'The bottle of hope is now closed' },
+          sublabel: { ca: 'Gràcies a totes les persones que heu fet una donació.', es: 'Gracias a todas las personas que habéis hecho una donación.', en: 'Thank you to everyone who donated.' },
         }
       : kind === 'event'
       ? {
