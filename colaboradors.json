@@ -167,37 +167,44 @@
   {
    "nom": "Ajuntament de Castellar de n'Hug",
    "nivell": "ajuntaments",
-   "ordre": 1
+   "ordre": 1,
+   "logo": "img/colaboradors/ajuntament_castellar-de-n-hug.png"
   },
   {
    "nom": "Ajuntament de la Pobla de Lillet",
    "nivell": "ajuntaments",
-   "ordre": 2
+   "ordre": 2,
+   "logo": "img/colaboradors/ajuntament_la-pobla-de-lillet.png"
   },
   {
    "nom": "Ajuntament de Guardiola de Berguedà",
    "nivell": "ajuntaments",
-   "ordre": 3
+   "ordre": 3,
+   "logo": "img/colaboradors/ajuntament_guardiola-de-bergueda.png"
   },
   {
    "nom": "Ajuntament de Sant Jordi de Cercs",
    "nivell": "ajuntaments",
-   "ordre": 4
+   "ordre": 4,
+   "logo": "img/colaboradors/ajuntament_sant-jordi-de-cercs.png"
   },
   {
    "nom": "Ajuntament de Berga",
    "nivell": "ajuntaments",
-   "ordre": 5
+   "ordre": 5,
+   "logo": "img/colaboradors/ajuntament_berga.png"
   },
   {
    "nom": "Ajuntament d'Olvan",
    "nivell": "ajuntaments",
-   "ordre": 6
+   "ordre": 6,
+   "logo": "img/colaboradors/ajuntament_olvan.png"
   },
   {
    "nom": "Ajuntament de Gironella",
    "nivell": "ajuntaments",
-   "ordre": 7
+   "ordre": 7,
+   "logo": "img/colaboradors/ajuntament_gironella.png"
   },
   {
    "nom": "Ajuntament de Puig-reig",
