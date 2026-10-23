@@ -15,8 +15,10 @@ module.exports = {
   // (Variable d'entorn ENQUESTA_FORM_FOTOS per canviar-lo.)
   fotosPujarUrl: process.env.ENQUESTA_FORM_FOTOS || ((process.env.SITE_URL || "https://llobregat.org").replace(/\/$/, "") + "/fotos"),
 
-  // Carpeta de Drive on pugen el testimoni en vídeo.
-  videosUrl: process.env.ENQUESTA_DRIVE_VIDEOS || "https://drive.google.com/drive/folders/10lcXjmXpFSTnOKl74w1dpIjnhm6SD9uO?usp=sharing",
+  // Pàgina per pujar el testimoni en vídeo: llobregat.org/video (demana nom, correu i telèfon
+  // i desa el vídeo a la carpeta privada de Drive, sense que ningú hi hagi d'accedir).
+  // (Variable d'entorn ENQUESTA_DRIVE_VIDEOS per canviar-la.)
+  videosUrl: process.env.ENQUESTA_DRIVE_VIDEOS || ((process.env.SITE_URL || "https://llobregat.org").replace(/\/$/, "") + "/video"),
 
   // Fotos que surten dalt del correu (adreces ABSOLUTES d'imatges publicades al web).
   // Es mostren 1, 2 o 3. Buit = el correu surt sense fotos.

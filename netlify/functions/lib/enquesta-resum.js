@@ -24,7 +24,7 @@ const TXT = {
     intro2: "Cada pas ha servit per recollir fons que van íntegrament a AREDI per investigar la cura de la diabetis tipus 1. Això és el que heu fet: donar esperança.",
     fotosT: "Les fotos del repte", fotosP: "Aquí a sota en tens algunes, però segur que vosaltres en teniu moltes més. Mira les que ja hi ha i puja les teves: entre tots fem l'àlbum del repte.", fotosB: "Veure i pujar fotos", fotosP2: "Aquí a sota en tens algunes, però segur que vosaltres en teniu moltes més. Mira l'àlbum i puja les teves: entre tots el fem gran.", fotosBV: "Veure les fotos", fotosBU: "Pujar les meves fotos",
     enqT: "Com ho hem fet?", enqP: "Necessitem la teva opinió per saber què ha anat bé i què es podria haver fet millor. Són uns 5 minuts i quasi tot és d'un clic.", enqB: "Respondre l'enquesta",
-    vidT: "Un testimoni en vídeo (si vols)", vidP: "Grava un vídeo curt, d'uns 30–60 segons i millor en vertical, explicant què ha significat el repte per a tu, i puja'l a la carpeta de Drive. No el publicarem sense el teu permís.", vidB: "Pujar el vídeo",
+    vidT: "Un testimoni en vídeo (si vols)", vidP: "Grava un vídeo curt, d'uns 30–60 segons i millor en vertical, explicant què ha significat el repte per a tu, i puja'l des d'aquest botó (et demanarem el teu nom i correu per poder demanar-te permís). No el publicarem mai sense el teu consentiment.", vidB: "Pujar el vídeo",
     incT: "Tens alguna incidència pendent?", incP: "Si encara tens alguna cosa per resoldre amb la samarreta o la bossa (no vas rebre el correu, no vas poder anar a la recollida, et falta la samarreta, la talla no és la correcta…), explica-ho i et contactarem.", incB: "Comunicar una incidència",
     donaT: "L'ampolla de l'esperança continua oberta fins al 31 d'octubre", donaP: "Si encara no ho has fet, ara és el moment: posa la teva gota. Cada gota omple l'ampolla una mica més, i cada gota ens apropa a la cura.", donaB: "Posa la teva gota",
     aredi: "El 100% dels donatius van directament a AREDI per finançar la investigació de la cura de la diabetis tipus 1.",
@@ -41,7 +41,7 @@ const TXT = {
     intro2: "Cada paso ha servido para recoger fondos que van íntegramente a AREDI para investigar la cura de la diabetes tipo 1. Esto es lo que habéis hecho: dar esperanza.",
     fotosT: "Las fotos del reto", fotosP: "Aquí debajo tienes algunas, pero seguro que vosotros tenéis muchas más. Mira las que ya hay y sube las tuyas: entre todos hacemos el álbum del reto.", fotosB: "Ver y subir fotos", fotosP2: "Aquí debajo tienes algunas, pero seguro que vosotros tenéis muchas más. Mira el álbum y sube las tuyas: entre todos lo hacemos grande.", fotosBV: "Ver las fotos", fotosBU: "Subir mis fotos",
     enqT: "¿Cómo lo hemos hecho?", enqP: "Necesitamos tu opinión para saber qué ha ido bien y qué se podría haber hecho mejor. Son unos 5 minutos y casi todo es de un clic.", enqB: "Responder la encuesta",
-    vidT: "Un testimonio en vídeo (si quieres)", vidP: "Graba un vídeo corto, de unos 30–60 segundos y mejor en vertical, contando qué ha significado el reto para ti, y súbelo a la carpeta de Drive. No lo publicaremos sin tu permiso.", vidB: "Subir el vídeo",
+    vidT: "Un testimonio en vídeo (si quieres)", vidP: "Graba un vídeo corto, de unos 30–60 segundos y mejor en vertical, contando qué ha significado el reto para ti, y súbelo desde este botón (te pediremos tu nombre y correo para poder pedirte permiso). No lo publicaremos nunca sin tu consentimiento.", vidB: "Subir el vídeo",
     incT: "¿Tienes alguna incidencia pendiente?", incP: "Si todavía tienes algo por resolver con la camiseta o la bolsa (no recibiste el correo, no pudiste ir a la recogida, te falta la camiseta, la talla no es la correcta…), cuéntanoslo y te contactaremos.", incB: "Comunicar una incidencia",
     donaT: "La botella de la esperanza sigue abierta hasta el 31 de octubre", donaP: "Si todavía no lo has hecho, ahora es el momento: pon tu gota. Cada gota llena un poco más la botella, y cada gota nos acerca a la cura.", donaB: "Pon tu gota",
     aredi: "El 100% de los donativos van directamente a AREDI para financiar la investigación de la cura de la diabetes tipo 1.",
@@ -58,7 +58,7 @@ const TXT = {
     intro2: "Every step helped raise funds that go entirely to AREDI to research a cure for type 1 diabetes. This is what you did: you gave hope.",
     fotosT: "Photos of the challenge", fotosP: "Below are a few, but we're sure you have many more. Browse the ones already there and upload yours: together we build the challenge's album.", fotosB: "View and upload photos", fotosP2: "Below are a few, but we're sure you have many more. Browse the album and upload yours: together we make it grow.", fotosBV: "View the photos", fotosBU: "Upload my photos",
     enqT: "How did we do?", enqP: "We need your opinion to know what went well and what could have been done better. It takes about 5 minutes and almost everything is one click.", enqB: "Take the survey",
-    vidT: "A video testimonial (if you like)", vidP: "Record a short video, about 30–60 seconds and ideally vertical, about what the challenge meant to you, and upload it to the Drive folder. We won't publish it without your permission.", vidB: "Upload the video",
+    vidT: "A video testimonial (if you like)", vidP: "Record a short video, about 30–60 seconds and ideally vertical, about what the challenge meant to you, and upload it with this button (we'll ask for your name and email so we can request your permission). We will never publish it without your consent.", vidB: "Upload the video",
     incT: "Any unresolved issue?", incP: "If you still have something to sort out with your T-shirt or bag (you didn't get the email, couldn't make the collection, your T-shirt is missing, wrong size…), tell us and we'll get in touch.", incB: "Report an issue",
     donaT: "The bottle of hope stays open until 31 October", donaP: "If you haven't yet, now is the moment: add your drop. Every drop fills the bottle a little more, and every drop brings us closer to a cure.", donaB: "Add your drop",
     aredi: "100% of donations go directly to AREDI to fund research into a cure for type 1 diabetes.",
@@ -75,7 +75,7 @@ const FONT = "font-family:Arial, Helvetica, sans-serif;";
 
 // Si l'enllaç per pujar fotos és llobregat.org/fotos (o el web d'Apps Script), hi afegim l'idioma (?l=ca|es|en).
 function ambIdioma(url, idioma) {
-  if (!url || !/script\.google\.com|script\.googleusercontent\.com|\/fotos(\?|$)/.test(url)) return url;
+  if (!url || !/script\.google\.com|script\.googleusercontent\.com|\/(fotos|video)(\?|$)/.test(url)) return url;
   return url + (url.indexOf("?") >= 0 ? "&" : "?") + "l=" + idioma;
 }
 
@@ -132,7 +132,7 @@ function cosIdioma(idioma, o) {
     h += targeta(t.fotosT, t.fotosP2, dos, "#5AC0E6");
   } else if (fotosUrl) h += targeta(t.fotosT, t.fotosP, boto(esc(fotosUrl), t.fotosB, "#1E72D4"), "#5AC0E6");
   h += targeta(t.enqT, t.enqP, boto(o.linkEnquesta, t.enqB, "#FF6B47"), "#FF6B47");
-  if (videosUrl) h += targeta(t.vidT, t.vidP, boto(esc(videosUrl), t.vidB, "#1E72D4"), "#1E72D4");
+  if (videosUrl) h += targeta(t.vidT, t.vidP, boto(esc(ambIdioma(videosUrl, idioma)), t.vidB, "#1E72D4"), "#1E72D4");
   h += targeta(t.incT, t.incP, boto(o.linkIncidencia, t.incB, "#15315F"), "#15315F");
   h += `<tr><td class="llxd-px" style="padding:22px 40px 30px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#15315F; border-radius:12px;">
