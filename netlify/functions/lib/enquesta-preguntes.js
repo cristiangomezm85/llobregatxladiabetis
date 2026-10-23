@@ -73,7 +73,7 @@ const TANCAMENT = (repetirText, propostesText) => ({
   preguntes: [
     { id: "millor", tipus: "text", text: T("Què ha funcionat millor?", "¿Qué ha funcionado mejor?", "What worked best?") },
     { id: "millorar", tipus: "text", text: T("Què hauríem de millorar?", "¿Qué deberíamos mejorar?", "What should we improve?") },
-    { id: "propostes", tipus: "text", text: propostesText || T("Propostes i idees per a la propera edició", "Propuestas e ideas para la próxima edición", "Proposals and ideas for the next edition") },
+    { id: "propostes", tipus: "text", text: propostesText || T("Propostes i idees per millorar", "Propuestas e ideas para mejorar", "Proposals and ideas for improvement") },
     { id: "repetiria", tipus: "unica", req: true, text: repetirText, opcions: SI_POTSER_NO },
     { id: "recomanaria", tipus: "nps", text: T("Del 0 al 10, quant recomanaries el repte a algú que no el coneix?", "Del 0 al 10, ¿cuánto recomendarías el reto a alguien que no lo conoce?", "From 0 to 10, how likely are you to recommend the challenge to someone who doesn't know it?") },
     { id: "comentari", tipus: "text", text: T("Algun altre comentari? Tot és benvingut.", "¿Algún otro comentario? Todo es bienvenido.", "Any other comments? Everything is welcome.") },
@@ -120,7 +120,7 @@ const SECCIONS = {
         { id: "inscripcio", tipus: "estrelles", na: true, text: T("Facilitat del procés d'inscripció i pagament", "Facilidad del proceso de inscripción y pago", "Ease of the registration and payment process") },
         { id: "informacio", tipus: "estrelles", na: true, text: T("Informació rebuda abans (reglament, horaris, punts de pas, recollida de material)", "Información recibida antes (reglamento, horarios, puntos de paso, recogida de material)", "Information received beforehand (rules, schedules, route points, kit collection)") },
         { id: "comunicacio", tipus: "estrelles", na: true, text: T("Comunicació per correu i xarxes", "Comunicación por correo y redes", "Communication by email and social media") },
-        { id: "preu", tipus: "unica", text: T("La inscripció / donatiu mínim et va semblar…", "La inscripción / donativo mínimo te pareció…", "The registration fee / minimum donation seemed…"),
+        { id: "preu", tipus: "unica", text: T("El preu de la inscripció et va semblar…", "El precio de la inscripción te pareció…", "The registration fee seemed…"),
           opcions: [
             O("alt", "Massa alt", "Demasiado alto", "Too high"),
             O("just", "Just", "Justo", "Fair"),
@@ -132,7 +132,7 @@ const SECCIONS = {
       id: "dia",
       titol: T("Durant el repte", "Durante el reto", "During the challenge"),
       preguntes: [
-        { id: "traccat", tipus: "estrelles", na: true, text: T("Recorregut i senyalització", "Recorrido y señalización", "Route and signage") },
+        { id: "traccat", tipus: "estrelles", na: true, text: T("Recorregut i track", "Recorrido y track", "Route and GPX track") },
         { id: "seguretat", tipus: "estrelles", na: true, text: T("Seguretat (talls de trànsit, creuaments, acompanyament)", "Seguridad (cortes de tráfico, cruces, acompañamiento)", "Safety (road closures, crossings, escorts)") },
         { id: "avituallaments", tipus: "estrelles", na: true, text: T("Avituallaments", "Avituallamientos", "Refreshment points") },
         { id: "material", tipus: "estrelles", na: true, text: T("Recollida de material (samarreta, dorsal, bossa)", "Recogida de material (camiseta, dorsal, bolsa)", "Kit collection (T-shirt, bib, bag)") },
@@ -150,16 +150,16 @@ const SECCIONS = {
     },
     {
       id: "futur",
-      titol: T("El futur del repte", "El futuro del reto", "The future of the challenge"),
+      titol: T("Si hi hagués una altra edició", "Si hubiera otra edición", "If there were another edition"),
       preguntes: [
-        { id: "quan", tipus: "unica", text: T("Quan t'aniria millor que es fes?", "¿Cuándo te iría mejor que se hiciera?", "When would suit you best?"),
+        { id: "quan", tipus: "unica", text: T("Si es tornés a fer, quan t'aniria millor?", "Si se volviera a hacer, ¿cuándo te iría mejor?", "If it were held again, when would suit you best?"),
           opcions: [
             O("octubre", "Igual: a l'octubre", "Igual: en octubre", "Same: in October"),
             O("primavera", "A la primavera", "En primavera", "In spring"),
             O("estiu", "A l'estiu", "En verano", "In summer"),
             O("indiferent", "Em és igual", "Me da igual", "I don't mind"),
           ] },
-        { id: "afegiria", tipus: "multi", altre: true, text: T("Què t'agradaria que hi hagués a la propera edició?", "¿Qué te gustaría que hubiera en la próxima edición?", "What would you like to see in the next edition?"),
+        { id: "afegiria", tipus: "multi", altre: true, text: T("Si hi hagués una altra edició, què t'agradaria que tingués?", "Si hubiera otra edición, ¿qué te gustaría que tuviera?", "If there were another edition, what would you like it to include?"),
           opcions: [
             O("curts", "Més trams curts i accessibles", "Más tramos cortos y accesibles", "More short, accessible stretches"),
             O("familiar", "Una modalitat familiar o infantil", "Una modalidad familiar o infantil", "A family or children's category"),
@@ -168,11 +168,11 @@ const SECCIONS = {
             O("seguiment", "Seguiment dels participants al mapa", "Seguimiento de los participantes en el mapa", "Participant tracking on a map"),
             O("dies", "Més dies o un altre recorregut", "Más días u otro recorrido", "More days or a different route"),
           ] },
-        { id: "voluntari_futur", tipus: "unica", text: T("T'agradaria ajudar com a voluntari/ària en properes edicions?", "¿Te gustaría ayudar como voluntario/a en próximas ediciones?", "Would you like to help as a volunteer in future editions?"), opcions: SI_POTSER_NO },
+        { id: "voluntari_futur", tipus: "unica", text: T("Si hi hagués una altra edició, t'agradaria ajudar com a voluntari/ària?", "Si hubiera otra edición, ¿te gustaría ayudar como voluntario/a?", "If there were another edition, would you like to help as a volunteer?"), opcions: SI_POTSER_NO },
       ],
     },
     TANCAMENT(
-      T("Tornaràs a participar a la propera edició?", "¿Volverás a participar en la próxima edición?", "Will you take part again next time?")
+      T("Si hi hagués una altra edició, tornaries a participar-hi?", "Si hubiera otra edición, ¿volverías a participar?", "If there were another edition, would you take part again?")
     ),
   ],
 
@@ -218,7 +218,7 @@ const SECCIONS = {
       preguntes: [
         { id: "visibilitat", tipus: "estrelles", text: T("Visibilitat i imatge que ha aportat al municipi", "Visibilidad e imagen que ha aportado al municipio", "Visibility and image it brought to the municipality") },
         { id: "sensibilitzacio", tipus: "estrelles", text: T("Sensibilització sobre la diabetis entre la ciutadania", "Sensibilización sobre la diabetes entre la ciudadanía", "Diabetes awareness among residents") },
-        { id: "rol_futur", tipus: "multi", altre: true, text: T("Com us agradaria participar-hi en properes edicions?", "¿Cómo os gustaría participar en próximas ediciones?", "How would you like to take part in future editions?"),
+        { id: "rol_futur", tipus: "multi", altre: true, text: T("Si hi hagués una altra edició, com us agradaria participar-hi?", "Si hubiera otra edición, ¿cómo os gustaría participar?", "If there were another edition, how would you like to take part?"),
           opcions: [
             O("pas", "Tornar a ser punt de pas", "Volver a ser punto de paso", "Be a route point again"),
             O("inici_final", "Ser punt d'inici o final de tram", "Ser punto de inicio o final de tramo", "Be the start or end of a stretch"),
@@ -227,7 +227,7 @@ const SECCIONS = {
             O("difusio", "Ajudar en la difusió local", "Ayudar en la difusión local", "Help with local promotion"),
             O("suport", "Aportar suport econòmic o material", "Aportar apoyo económico o material", "Provide financial or material support"),
           ] },
-        { id: "necessitats", tipus: "multi", altre: true, text: T("Què us ajudaria a participar-hi millor?", "¿Qué os ayudaría a participar mejor?", "What would help you take part more easily?"),
+        { id: "necessitats", tipus: "multi", altre: true, text: T("Si hi hagués una altra edició, què us ajudaria a participar-hi millor?", "Si hubiera otra edición, ¿qué os ayudaría a participar mejor?", "If there were another edition, what would help you take part more easily?"),
           opcions: [
             O("antelacio", "Rebre la informació amb més antelació", "Recibir la información con más antelación", "Receiving information earlier"),
             O("dossier", "Un dossier de comunicació per difondre-ho", "Un dosier de comunicación para difundirlo", "A communications pack to promote it"),
@@ -239,8 +239,8 @@ const SECCIONS = {
       ],
     },
     TANCAMENT(
-      T("Voldríeu tornar a participar en la propera edició?", "¿Querríais volver a participar en la próxima edición?", "Would you like to take part again next time?"),
-      T("Propostes i idees per a la propera edició (recorregut, dates, activitats al municipi…)", "Propuestas e ideas para la próxima edición (recorrido, fechas, actividades en el municipio…)", "Proposals and ideas for the next edition (route, dates, activities in your municipality…)")
+      T("Si hi hagués una altra edició, voldríeu tornar a participar-hi?", "Si hubiera otra edición, ¿querríais volver a participar?", "If there were another edition, would you like to take part again?"),
+      T("Propostes i idees per millorar (recorregut, dates, activitats al municipi…)", "Propuestas e ideas para mejorar (recorrido, fechas, actividades en el municipio…)", "Proposals and ideas for improvement (route, dates, activities in your municipality…)")
     ),
   ],
 
@@ -276,7 +276,6 @@ const SECCIONS = {
       preguntes: [
         { id: "briefing", tipus: "estrelles", text: T("Informació i explicació prèvia de la teva tasca", "Información y explicación previa de tu tarea", "Briefing and explanation of your task beforehand") },
         { id: "claredat", tipus: "estrelles", text: T("Claredat de qui feia què i a qui preguntar", "Claridad de quién hacía qué y a quién preguntar", "Clarity about who did what and who to ask") },
-        { id: "materials", tipus: "estrelles", na: true, text: T("Materials i recursos (aigua, menjar, samarreta, equipament…)", "Materiales y recursos (agua, comida, camiseta, equipamiento…)", "Materials and resources (water, food, T-shirt, equipment…)") },
         { id: "comunicacio", tipus: "estrelles", text: T("Comunicació amb l'organització durant el repte (grups, telèfons…)", "Comunicación con la organización durante el reto (grupos, teléfonos…)", "Communication with the organisers during the event (groups, phones…)") },
         { id: "seguretat", tipus: "estrelles", na: true, text: T("Seguretat a la teva zona de treball", "Seguridad en tu zona de trabajo", "Safety in your work area") },
         { id: "valorat", tipus: "estrelles", text: T("T'has sentit valorat/ada i part de l'equip?", "¿Te has sentido valorado/a y parte del equipo?", "Did you feel valued and part of the team?") },
@@ -302,14 +301,14 @@ const SECCIONS = {
     },
     {
       id: "futur",
-      titol: T("El teu futur al repte", "Tu futuro en el reto", "Your future with the challenge"),
+      titol: T("Si hi hagués una altra edició", "Si hubiera otra edición", "If there were another edition"),
       preguntes: [
         { id: "mes_responsabilitat", tipus: "unica", text: T("T'agradaria assumir més responsabilitat (coordinar una zona o un equip)?", "¿Te gustaría asumir más responsabilidad (coordinar una zona o un equipo)?", "Would you like more responsibility (coordinating an area or team)?"), opcions: SI_POTSER_NO },
-        { id: "area_futur", tipus: "text", text: T("En quina àrea t'agradaria ajudar en properes edicions?", "¿En qué área te gustaría ayudar en próximas ediciones?", "Which area would you like to help with in future editions?") },
+        { id: "area_futur", tipus: "text", text: T("Si hi hagués una altra edició, en quina àrea t'agradaria ajudar?", "Si hubiera otra edición, ¿en qué área te gustaría ayudar?", "If there were another edition, which area would you like to help with?") },
       ],
     },
     TANCAMENT(
-      T("Tornaràs a ajudar a la propera edició?", "¿Volverás a ayudar en la próxima edición?", "Will you help again next time?"),
+      T("Si hi hagués una altra edició, tornaries a ajudar?", "Si hubiera otra edición, ¿volverías a ayudar?", "If there were another edition, would you help again?"),
       T("Propostes per organitzar-nos millor com a equip", "Propuestas para organizarnos mejor como equipo", "Proposals to organise ourselves better as a team")
     ),
   ],
@@ -361,9 +360,9 @@ const SECCIONS = {
     },
     {
       id: "futur",
-      titol: T("Properes edicions", "Próximas ediciones", "Future editions"),
+      titol: T("Si hi hagués una altra edició", "Si hubiera otra edición", "If there were another edition"),
       preguntes: [
-        { id: "nivell", tipus: "unica", text: T("De cara a la propera edició, la vostra col·laboració seria…", "De cara a la próxima edición, vuestra colaboración sería…", "For the next edition, your support would be…"),
+        { id: "nivell", tipus: "unica", text: T("Si hi hagués una altra edició, la vostra col·laboració seria…", "Si hubiera otra edición, vuestra colaboración sería…", "If there were another edition, your support would be…"),
           opcions: [
             O("mes", "Més gran", "Mayor", "Bigger"),
             O("igual", "Igual", "Igual", "The same"),
@@ -371,7 +370,7 @@ const SECCIONS = {
             O("depen", "Depèn de…", "Depende de…", "Depends on…"),
             O("no", "No col·laboraríem", "No colaboraríamos", "We wouldn't take part"),
           ] },
-        { id: "facilitaria", tipus: "multi", altre: true, text: T("Què us facilitaria col·laborar-hi més?", "¿Qué os facilitaría colaborar más?", "What would make it easier to support us more?"),
+        { id: "facilitaria", tipus: "multi", altre: true, text: T("Si hi hagués una altra edició, què us facilitaria col·laborar-hi més?", "Si hubiera otra edición, ¿qué os facilitaría colaborar más?", "If there were another edition, what would make it easier to support us more?"),
           opcions: [
             O("antelacio", "Rebre la proposta amb més antelació", "Recibir la propuesta con más antelación", "Receiving the proposal earlier"),
             O("fiscal", "Certificat per a deduccions fiscals", "Certificado para deducciones fiscales", "Certificate for tax deductions"),
@@ -385,7 +384,7 @@ const SECCIONS = {
       ],
     },
     TANCAMENT(
-      T("Tornaríeu a col·laborar a la propera edició?", "¿Volveríais a colaborar en la próxima edición?", "Would you support us again next time?"),
+      T("Si hi hagués una altra edició, tornaríeu a col·laborar-hi?", "Si hubiera otra edición, ¿volveríais a colaborar?", "If there were another edition, would you support us again?"),
       T("Propostes i idees (com col·laborar millor, accions conjuntes…)", "Propuestas e ideas (cómo colaborar mejor, acciones conjuntas…)", "Proposals and ideas (how to work better together, joint actions…)")
     ),
   ],
