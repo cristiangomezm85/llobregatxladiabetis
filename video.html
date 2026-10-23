@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ca" data-lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Vídeo · Llobregat x la Diabetis</title>
+<meta name="description" content="Puja el teu testimoni en vídeo del repte Llobregat x la Diabetis.">
+<link rel="icon" type="image/png" href="img/logo-small.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@10..48,300..800&family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blau-llobregat: #15315F; --blau-diabetis: #1E72D4; --blau-aigua: #5AC0E6;
+    --coral: #FF6B47; --paper: #FAFAF6; --tinta: #0E1B36; --gris: #5A6478;
+    --gris-clar: #C9CDD6; --linia: rgba(21,49,95,.14); --verd: #1E8E5A;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --body: "Manrope", system-ui, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { margin: 0; font-family: var(--body); color: var(--tinta); background: var(--paper); line-height: 1.55; font-size: 17px; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3 { font-family: var(--display); color: var(--blau-llobregat); line-height: 1.1; letter-spacing: -.02em; margin: 0; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  main { max-width: 760px; margin: 0 auto; padding: 1.75rem 1.25rem 4rem; }
+  .hero h1 { font-size: clamp(1.9rem, 6vw, 2.7rem); margin-bottom: .7rem; }
+  .hero p { margin: 0 0 .6rem; color: var(--tinta); }
+  .hero .meta { color: var(--gris); font-size: .92rem; }
+  .perfil-box { background: #fff; border: 1px solid var(--linia); border-left: 4px solid var(--blau-diabetis); border-radius: 12px; padding: .9rem 1.1rem; margin: 1.1rem 0 0; font-size: .95rem; }
+  .perfil-box strong { color: var(--blau-llobregat); }
+  .perfil-box button { background: none; border: 0; color: var(--blau-diabetis); text-decoration: underline; padding: 0; font-size: .88rem; margin-top: .3rem; }
+  .avis { background: #FFF4E5; border: 1px solid #F3CE92; color: #6B4300; border-radius: 12px; padding: .8rem 1.1rem; margin-top: 1rem; font-size: .93rem; }
+  .card { background: #fff; border: 1px solid var(--linia); border-radius: 16px; padding: 1.4rem 1.35rem 1.1rem; margin-top: 1.4rem; }
+  .card > h2 { font-size: 1.35rem; margin-bottom: 1rem; display: flex; align-items: baseline; gap: .6rem; }
+  .card > h2 small { font-family: var(--body); font-weight: 600; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--blau-diabetis); }
+  .q { padding: .95rem 0; border-top: 1px solid var(--linia); }
+  .q:first-of-type { border-top: 0; padding-top: 0; }
+  .q > label.t, .q > .t { display: block; font-weight: 700; margin-bottom: .55rem; }
+  .q .req { color: var(--coral); margin-left: .15rem; }
+  .q.err { background: #FFF1EE; border-radius: 10px; padding-left: .7rem; padding-right: .7rem; }
+  .q .msg { display: none; color: #B3261E; font-size: .85rem; margin-top: .4rem; }
+  .q.err .msg { display: block; }
+  .stars { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; }
+  .stars button.s { background: none; border: 0; padding: 0 .1rem; font-size: 2.1rem; line-height: 1; color: var(--gris-clar); transition: transform .08s; }
+  .stars button.s.on { color: #F5A524; }
+  .stars button.s:hover { transform: scale(1.12); }
+  .stars .na { margin-left: .6rem; background: #fff; border: 1px solid var(--linia); border-radius: 999px; padding: .25rem .8rem; font-size: .82rem; color: var(--gris); }
+  .stars .na.on { background: var(--blau-llobregat); color: #fff; border-color: var(--blau-llobregat); }
+  .escala { display: flex; justify-content: space-between; font-size: .76rem; color: var(--gris); margin-top: .25rem; max-width: 290px; }
+  .nps { display: grid; grid-template-columns: repeat(11, 1fr); gap: .25rem; }
+  .nps button { border: 1px solid var(--linia); background: #fff; border-radius: 8px; padding: .5rem 0; font-weight: 700; font-size: .95rem; }
+  .nps button.on { background: var(--blau-diabetis); border-color: var(--blau-diabetis); color: #fff; }
+  .nps-lbl { display: flex; justify-content: space-between; font-size: .76rem; color: var(--gris); margin-top: .3rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+  .chips button { background: #fff; border: 1.5px solid var(--linia); border-radius: 999px; padding: .5rem .95rem; font-size: .95rem; text-align: left; line-height: 1.3; }
+  .chips button:hover { border-color: var(--blau-diabetis); }
+  .chips button.on { background: var(--blau-diabetis); border-color: var(--blau-diabetis); color: #fff; }
+  textarea, input[type=text], input[type=email], input[type=tel] { width: 100%; font: inherit; border: 1.5px solid var(--linia); border-radius: 10px; padding: .65rem .8rem; background: #fff; color: var(--tinta); }
+  textarea { min-height: 96px; resize: vertical; }
+  textarea:focus, input:focus { outline: 2px solid var(--blau-aigua); border-color: var(--blau-diabetis); }
+  .altre { margin-top: .5rem; }
+  .grups { display: grid; gap: .6rem; }
+  .grups button { text-align: left; background: #fff; border: 1.5px solid var(--linia); border-radius: 12px; padding: .8rem 1rem; }
+  .grups button b { display: block; color: var(--blau-llobregat); }
+  .grups button span { font-size: .88rem; color: var(--gris); }
+  .grups button.on { border-color: var(--blau-diabetis); background: #EEF5FF; box-shadow: 0 0 0 2px var(--blau-diabetis) inset; }
+  .enviar { margin-top: 1.6rem; display: flex; flex-direction: column; gap: .7rem; align-items: flex-start; }
+  .btn { background: var(--coral); color: #fff; border: 0; border-radius: 10px; padding: .95rem 1.8rem; font-weight: 800; font-size: 1.05rem; }
+  .btn:disabled { opacity: .6; cursor: wait; }
+  .nota { font-size: .85rem; color: var(--gris); margin: 0; }
+  .error-global { color: #B3261E; font-weight: 700; }
+  .gracies { text-align: center; padding: 3rem 1rem; }
+  .gracies .gran { font-size: 3.4rem; }
+  .gracies h1 { font-size: clamp(2rem, 7vw, 3rem); margin: .6rem 0; }
+  .gracies a { display: inline-block; margin-top: 1.2rem; color: var(--blau-diabetis); font-weight: 700; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  footer { text-align: center; font-size: .82rem; color: var(--gris); padding: 0 1.25rem 2.5rem; }
+  footer a { color: var(--blau-diabetis); }
+  @media (max-width: 520px) {
+    .stars button.s { font-size: 2.3rem; padding: 0 .05rem; }
+    .nps { grid-template-columns: repeat(6, 1fr); }
+    .card { padding: 1.1rem 1rem .8rem; }
+  }
+  .drop { display:block; text-align:center; border:2px dashed var(--blau-diabetis); border-radius:12px; padding:1.4rem 1rem; color:var(--blau-diabetis); font-weight:700; cursor:pointer; background:#F3F8FF; }
+  .drop small { display:block; color:var(--gris); font-weight:400; margin-top:.25rem; }
+  #fi { display:none; }
+  ul.fl { list-style:none; margin:.9rem 0 0; padding:0; }
+  ul.fl li { display:flex; align-items:center; gap:.6rem; padding:.45rem 0; border-top:1px solid var(--linia); font-size:.92rem; }
+  ul.fl li:first-child { border-top:0; }
+  ul.fl li img { width:44px; height:44px; object-fit:cover; border-radius:6px; background:#E6EBF4; flex:none; }
+  ul.fl li .n { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  ul.fl li .s { flex:none; max-width:50%; text-align:right; font-size:.85rem; color:var(--gris); }
+  ul.fl li.ok .s { color:var(--verd); font-weight:700; }
+  ul.fl li.ko .s { color:#B3261E; font-weight:700; }
+  .barra { height:8px; background:#E6EBF4; border-radius:4px; margin-top:.9rem; overflow:hidden; display:none; }
+  .barra i { display:block; height:100%; width:0; background:var(--blau-diabetis); transition:width .2s; }
+  .btn.full { width:100%; margin-top:1rem; }
+  .msg-final { margin-top:.9rem; font-weight:700; color:#B3261E; }
+  .camps { display:grid; gap:.9rem; }
+  .camps label.t { display:block; font-weight:700; margin-bottom:.35rem; }
+  .camps small { color:var(--gris); font-weight:400; }
+  .cons { display:flex; gap:.6rem; align-items:flex-start; font-size:.93rem; margin-top:1rem; }
+  .cons input { margin-top:.3rem; width:1.1rem; height:1.1rem; flex:none; }
+  .fitxer { margin-top:.9rem; padding:.7rem .9rem; background:#F3F8FF; border-radius:10px; font-size:.93rem; display:none; word-break:break-all; }
+  .pct { font-weight:700; margin-top:.6rem; display:none; }
+  .err-camp { color:#B3261E; font-size:.85rem; margin-top:.3rem; display:none; }
+  input.bad { border-color:#B3261E; }
+</style>
+<link rel="stylesheet" href="menu.css">
+</head>
+<body>
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <img src="img/logo-small.png" alt="Llobregat x la Diabetis">
+      <span>Llobregat <em>x la</em> Diabetis</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true"><span lang="ca">El repte</span><span lang="es">El reto</span><span lang="en">The challenge</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+        <div class="nav-dd-menu">
+          <a href="el-repte.html"><span lang="ca">El repte i la causa</span><span lang="es">El reto y la causa</span><span lang="en">The challenge and the cause</span></a>
+          <a href="pobles.html"><span lang="ca">Pobles</span><span lang="es">Pueblos</span><span lang="en">Towns</span></a>
+          <a href="persones.html"><span lang="ca">Persones i Herois</span><span lang="es">Personas y Héroes</span><span lang="en">People and Heroes</span></a>
+          <a href="inscrits.html"><span lang="ca">Inscrits</span><span lang="es">Inscritos</span><span lang="en">Registered</span></a>
+          <a href="colaboradors.html"><span lang="ca">Col·laboradors</span><span lang="es">Colaboradores</span><span lang="en">Collaborators</span></a>
+        </div>
+      </div>
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true"><span lang="ca">Informació</span><span lang="es">Información</span><span lang="en">Information</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+        <div class="nav-dd-menu">
+          <a href="recorregut.html"><span lang="ca">Recorregut i etapes</span><span lang="es">Recorrido y etapas</span><span lang="en">Route and stages</span></a>
+          <a href="briefing.html"><span lang="ca">Briefing</span><span lang="es">Briefing</span><span lang="en">Briefing</span></a>
+          <a href="normativa.html"><span lang="ca">Normativa</span><span lang="es">Normativa</span><span lang="en">Rules</span></a>
+          <a href="recollida.html"><span lang="ca">Recollida de bossa i samarreta</span><span lang="es">Recogida de bolsa y camiseta</span><span lang="en">Bag and t-shirt collection</span></a>
+        </div>
+      </div>
+      <a href="https://www.instagram.com/llobregatxladiabetis/" class="nav-ig" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg><span class="nav-ig-txt">Instagram</span></a>
+      <div class="lang-toggle" role="group" aria-label="Llengua">
+        <button data-set-lang="ca" class="active" type="button">CA</button>
+        <button data-set-lang="es" type="button">ES</button>
+        <button data-set-lang="en" type="button">EN</button>
+      </div>
+      <a href="dona/" class="nav-dona"><span lang="ca">Dona</span><span lang="es">Dona</span><span lang="en">Donate</span><span class="nav-dona-total" hidden></span></a>
+    </div>
+    <button class="nav-burger" id="burger" aria-label="Menú" aria-expanded="false"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
+  </div>
+</nav>
+<main id="app"><p style="color:#5A6478">…</p></main>
+<footer id="foot"></footer>
+<script>
+(function () {
+  'use strict';
+  // Mateix script de Google (Apps Script) que les fotos: ara també rep vídeos en trossos.
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxnIPSbemtQU5tlyO6kkySQNAqcfFcT3OcB-tp3eEk-r4G8g451YViLZ7fDEUEw2cy43Q/exec';
+  var CHUNK = 3 * 1024 * 1024;            // múltiple de 256 KB (requisit de Drive)
+  var MAX_BYTES = 600 * 1024 * 1024;
+  var EXT = { mp4: 'video/mp4', mov: 'video/quicktime', m4v: 'video/x-m4v', webm: 'video/webm', '3gp': 'video/3gpp', mkv: 'video/x-matroska', mpg: 'video/mpeg', mpeg: 'video/mpeg' };
+  var OK = { 'video/mp4': 1, 'video/quicktime': 1, 'video/x-m4v': 1, 'video/webm': 1, 'video/3gpp': 1, 'video/x-matroska': 1, 'video/mpeg': 1 };
+  var T = {
+    ca: { titol: 'Puja el teu testimoni en vídeo', p: "Grava un vídeo curt (30–60 segons, millor en vertical) explicant què ha significat el repte per a tu i puja'l aquí. Ens servirà per donar veu a tots els que ho heu fet possible.",
+      pm: "Perquè puguem demanar-te permís abans de publicar-lo, necessitem les teves dades de contacte. El vídeo no es publicarà mai sense el teu consentiment.",
+      nom: 'Nom i cognoms', email: 'Correu electrònic', tel: 'Telèfon', telOpc: '(opcional, però ens ajuda)', tria: 'Tria el vídeo', triaS: 'Toca aquí per escollir-lo de la galeria o gravar-lo', puja: 'Pujar el vídeo',
+      cons: "Entenc que l'organització guardarà aquestes dades només per contactar amb mi sobre aquest vídeo i que no es publicarà sense el meu permís.",
+      eNom: 'Escriu el teu nom', eMail: 'Escriu un correu vàlid', eCons: 'Cal acceptar-ho per poder pujar el vídeo', eFit: 'Tria un vídeo',
+      eTipus: "Aquest format no és compatible (prova MP4 o MOV).", eMida: 'El vídeo pesa més de 600 MB. Prova de gravar-lo en una qualitat menor o més curt.', eLimit: 'Límit diari assolit, torna demà', eXarxa: 'Error de connexió. Torna-ho a provar.', eDades: 'Revisa les dades',
+      pujant: 'Pujant el vídeo… no tanquis aquesta pàgina', prep: 'Preparant…', gracies: 'Moltes gràcies!', gracies2: "El teu vídeo ja és a l'organització. Et contactarem abans de publicar res.", mes: 'Pujar-ne un altre',
+      nota: "Consell: connecta't a una xarxa Wi-Fi i deixa la pantalla encesa fins que acabi. Un vídeo d'1 minut pot pesar entre 50 i 150 MB.", peu: 'Repte Llobregat x la Diabetis · ' },
+    es: { titol: 'Sube tu testimonio en vídeo', p: 'Graba un vídeo corto (30–60 segundos, mejor en vertical) contando qué ha significado el reto para ti y súbelo aquí. Nos servirá para dar voz a todos los que lo habéis hecho posible.',
+      pm: 'Para poder pedirte permiso antes de publicarlo, necesitamos tus datos de contacto. El vídeo nunca se publicará sin tu consentimiento.',
+      nom: 'Nombre y apellidos', email: 'Correo electrónico', tel: 'Teléfono', telOpc: '(opcional, pero nos ayuda)', tria: 'Elige el vídeo', triaS: 'Toca aquí para elegirlo de la galería o grabarlo', puja: 'Subir el vídeo',
+      cons: 'Entiendo que la organización guardará estos datos solo para contactar conmigo sobre este vídeo y que no se publicará sin mi permiso.',
+      eNom: 'Escribe tu nombre', eMail: 'Escribe un correo válido', eCons: 'Hay que aceptarlo para poder subir el vídeo', eFit: 'Elige un vídeo',
+      eTipus: 'Este formato no es compatible (prueba MP4 o MOV).', eMida: 'El vídeo pesa más de 600 MB. Prueba a grabarlo con menor calidad o más corto.', eLimit: 'Límite diario alcanzado, vuelve mañana', eXarxa: 'Error de conexión. Vuelve a intentarlo.', eDades: 'Revisa los datos',
+      pujant: 'Subiendo el vídeo… no cierres esta página', prep: 'Preparando…', gracies: '¡Muchas gracias!', gracies2: 'Tu vídeo ya está en la organización. Te contactaremos antes de publicar nada.', mes: 'Subir otro',
+      nota: 'Consejo: conéctate a una red Wi-Fi y deja la pantalla encendida hasta que termine. Un vídeo de 1 minuto puede pesar entre 50 y 150 MB.', peu: 'Reto Llobregat x la Diabetis · ' },
+    en: { titol: 'Upload your video testimonial', p: 'Record a short video (30–60 seconds, ideally vertical) about what the challenge meant to you and upload it here. It will help us give a voice to everyone who made it possible.',
+      pm: "So we can ask your permission before publishing it, we need your contact details. The video will never be published without your consent.",
+      nom: 'Full name', email: 'Email', tel: 'Phone', telOpc: '(optional, but it helps)', tria: 'Choose the video', triaS: 'Tap here to pick it from your gallery or record it', puja: 'Upload the video',
+      cons: 'I understand the organisation will keep these details only to contact me about this video and that it will not be published without my permission.',
+      eNom: 'Enter your name', eMail: 'Enter a valid email', eCons: 'You need to accept this to upload the video', eFit: 'Choose a video',
+      eTipus: 'This format is not supported (try MP4 or MOV).', eMida: 'The video is larger than 600 MB. Try recording it in lower quality or shorter.', eLimit: 'Daily limit reached, come back tomorrow', eXarxa: 'Connection error. Please try again.', eDades: 'Please check your details',
+      pujant: 'Uploading the video… please keep this page open', prep: 'Preparing…', gracies: 'Thank you so much!', gracies2: 'Your video has reached the organisation. We will contact you before publishing anything.', mes: 'Upload another',
+      nota: 'Tip: connect to Wi-Fi and keep the screen on until it finishes. A 1-minute video can weigh 50–150 MB.', peu: 'Llobregat x la Diabetis challenge · ' }
+  };
+  var VALID = ['ca', 'es', 'en'], qs = new URLSearchParams(location.search);
+  var lang = 'ca', fitxer = null, pujant = false, dades = { nom: '', email: '', tel: '', cons: false };
+  var app = document.getElementById('app');
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function t() { return T[lang]; }
+  function el(tag, attrs, kids) {
+    var e = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) { if (k === 'text') e.textContent = attrs[k]; else if (k === 'class') e.className = attrs[k]; else if (k.slice(0, 2) === 'on') e.addEventListener(k.slice(2), attrs[k]); else e.setAttribute(k, attrs[k]); });
+    (kids || []).forEach(function (c) { if (c) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    return e;
+  }
+  function setLang(l, noRender, noSave) {
+    lang = l; document.documentElement.setAttribute('data-lang', l); document.documentElement.lang = l;
+    if (!noSave) lsSet('llxd-lang', l);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-set-lang]'), function (b) { b.classList.toggle('active', b.getAttribute('data-set-lang') === l); });
+    document.title = T[l].titol + ' · Llobregat x la Diabetis';
+    var f = document.getElementById('foot'); f.textContent = T[l].peu; f.appendChild(el('a', { href: '/', text: 'llobregat.org' }));
+    if (!noRender) render();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-set-lang]'), function (b) { b.addEventListener('click', function () { if (!pujant) setLang(b.getAttribute('data-set-lang')); }); });
+
+  function tipusDe(file) {
+    var m = String(file.type || '').toLowerCase();
+    if (OK[m]) return m;
+    var ext = (file.name.split('.').pop() || '').toLowerCase();
+    return EXT[ext] || '';
+  }
+  function camp(id, etiqueta, tipus, valor, extra) {
+    var w = el('div', {});
+    var lab = el('label', { class: 't', for: id }, [etiqueta]);
+    if (extra) { lab.appendChild(document.createTextNode(' ')); lab.appendChild(el('small', { text: extra })); }
+    var inp = el('input', { type: tipus, id: id, maxlength: '120', autocomplete: tipus === 'email' ? 'email' : (tipus === 'tel' ? 'tel' : 'name') });
+    inp.value = valor || '';
+    inp.addEventListener('input', function () { dades[id] = inp.value; inp.classList.remove('bad'); var e = document.getElementById('e-' + id); if (e) e.style.display = 'none'; });
+    w.appendChild(lab); w.appendChild(inp); w.appendChild(el('div', { class: 'err-camp', id: 'e-' + id }));
+    return w;
+  }
+  function render() {
+    app.innerHTML = '';
+    app.appendChild(el('div', { class: 'hero' }, [el('h1', { text: t().titol }), el('p', { text: t().p }), el('p', { class: 'meta', text: t().pm })]));
+    var c1 = el('section', { class: 'card' });
+    var camps = el('div', { class: 'camps' });
+    camps.appendChild(camp('nom', t().nom + ' *', 'text', dades.nom));
+    camps.appendChild(camp('email', t().email + ' *', 'email', dades.email));
+    camps.appendChild(camp('tel', t().tel, 'tel', dades.tel, t().telOpc));
+    c1.appendChild(camps);
+    var cons = el('label', { class: 'cons' }, [el('input', { type: 'checkbox', id: 'cons' }), el('span', { text: t().cons })]);
+    cons.querySelector('input').checked = dades.cons;
+    cons.querySelector('input').addEventListener('change', function (ev) { dades.cons = ev.target.checked; document.getElementById('e-cons').style.display = 'none'; });
+    c1.appendChild(cons); c1.appendChild(el('div', { class: 'err-camp', id: 'e-cons' }));
+    app.appendChild(c1);
+    var c2 = el('section', { class: 'card' });
+    var inp = el('input', { type: 'file', id: 'fi', accept: 'video/*,.mp4,.mov,.m4v,.webm,.3gp' });
+    inp.addEventListener('change', function () { fitxer = inp.files && inp.files[0] ? inp.files[0] : null; mostraFitxer(); document.getElementById('e-fit').style.display = 'none'; });
+    c2.appendChild(el('label', { class: 'drop', for: 'fi' }, [t().tria, el('small', { text: t().triaS })])); c2.appendChild(inp);
+    c2.appendChild(el('div', { class: 'fitxer', id: 'fit' }));
+    c2.appendChild(el('div', { class: 'err-camp', id: 'e-fit' }));
+    c2.appendChild(el('div', { class: 'barra', id: 'barra' }, [el('i', { id: 'barraI' })]));
+    c2.appendChild(el('div', { class: 'pct', id: 'pct' }));
+    c2.appendChild(el('button', { class: 'btn full', id: 'btn', type: 'button', text: t().puja, onclick: puja }));
+    c2.appendChild(el('div', { class: 'msg-final', id: 'msg' }));
+    app.appendChild(c2);
+    app.appendChild(el('p', { class: 'nota', style: 'margin-top:1rem', text: t().nota }));
+    mostraFitxer();
+  }
+  function mida(b) { return b > 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.round(b / 1024) + ' KB'; }
+  function mostraFitxer() {
+    var f = document.getElementById('fit'); if (!f) return;
+    if (fitxer) { f.style.display = 'block'; f.textContent = '🎬 ' + fitxer.name + ' · ' + mida(fitxer.size); } else f.style.display = 'none';
+  }
+  function marca(id, text) { var e = document.getElementById('e-' + id); if (e) { e.textContent = text; e.style.display = 'block'; } var i = document.getElementById(id); if (i && i.classList) i.classList.add('bad'); }
+  function valida() {
+    var ok = true, primer = null;
+    function ko(id, txt) { marca(id, txt); ok = false; if (!primer) primer = id; }
+    if (!dades.nom.trim()) ko('nom', t().eNom);
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(dades.email.trim())) ko('email', t().eMail);
+    if (!dades.cons) ko('cons', t().eCons);
+    if (!fitxer) ko('fit', t().eFit);
+    else if (!tipusDe(fitxer)) ko('fit', t().eTipus);
+    else if (fitxer.size > MAX_BYTES) ko('fit', t().eMida);
+    if (primer) { var x = document.getElementById(primer) || document.getElementById('e-' + primer); if (x && x.scrollIntoView) x.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    return ok;
+  }
+  // POST "simple" (text/plain): sense preflight CORS. Apps Script respon JSON.
+  function crida(obj) {
+    return fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(obj) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { if (!j.ok) { var e = new Error(j.error || 'xarxa'); e.servidor = true; throw e; } return j; });
+  }
+  function aBase64(blob) {
+    return new Promise(function (resolve, reject) { var r = new FileReader(); r.onload = function () { resolve(String(r.result).split(',')[1] || ''); }; r.onerror = reject; r.readAsDataURL(blob); });
+  }
+  function espera(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function errText(m) {
+    m = String(m || '');
+    if (/tipus/.test(m)) return t().eTipus; if (/mida/.test(m)) return t().eMida; if (/limit/.test(m)) return t().eLimit; if (/dades/.test(m)) return t().eDades;
+    return t().eXarxa;
+  }
+  var wake = null;
+  function avisaSortir(ev) { ev.preventDefault(); ev.returnValue = ''; return ''; }
+
+  function puja() {
+    if (pujant || !valida()) return;
+    pujant = true;
+    var btn = document.getElementById('btn'); btn.disabled = true; btn.textContent = t().prep;
+    var msg = document.getElementById('msg'); msg.textContent = '';
+    var barra = document.getElementById('barra'), bi = document.getElementById('barraI'), pct = document.getElementById('pct');
+    barra.style.display = 'block'; bi.style.width = '0'; pct.style.display = 'block'; pct.textContent = t().pujant + ' · 0%';
+    window.addEventListener('beforeunload', avisaSortir);
+    try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(function (w) { wake = w; }).catch(function () {}); } catch (e) {}
+    var mime = tipusDe(fitxer), total = fitxer.size;
+    var meta = { autor: dades.nom.trim(), email: dades.email.trim(), telefon: dades.tel.trim(), total: total, mime: mime, nomDrive: fitxer.name };
+    var sessio = '', offset = 0, intents = 0;
+
+    function acabar(ok, error) {
+      pujant = false; window.removeEventListener('beforeunload', avisaSortir);
+      try { if (wake) wake.release(); } catch (e) {} wake = null;
+      if (ok) {
+        app.innerHTML = '';
+        app.appendChild(el('div', { class: 'gracies' }, [el('div', { class: 'gran', text: '🎬' }), el('h1', { text: t().gracies }), el('p', { text: t().gracies2 }),
+          el('button', { class: 'btn', type: 'button', text: t().mes, onclick: function () { fitxer = null; dades.cons = false; render(); } })]));
+        window.scrollTo({ top: 0 });
+      } else {
+        btn.disabled = false; btn.textContent = t().puja; pct.style.display = 'none'; barra.style.display = 'none';
+        msg.textContent = errText(error);
+      }
+    }
+    function pinta() { var p = Math.min(100, Math.round(100 * offset / total)); bi.style.width = p + '%'; pct.textContent = t().pujant + ' · ' + p + '%'; }
+
+    function seguent() {
+      var fi = Math.min(offset + CHUNK, total);
+      aBase64(fitxer.slice(offset, fi)).then(function (b64) {
+        return crida(Object.assign({ accio: 'v_part', sessio: sessio, inici: offset, b64: b64 }, meta));
+      }).then(function (r) {
+        intents = 0;
+        if (r.fet) { offset = total; pinta(); return acabar(true); }
+        offset = typeof r.offset === 'number' ? r.offset : fi; pinta(); seguent();
+      }).catch(function (e) {
+        if (e && e.servidor && /tipus|mida|limit|dades/.test(e.message)) return acabar(false, e.message);
+        if (++intents > 5) return acabar(false, e && e.message);
+        // Reprèn: pregunta a Drive fins on ha arribat i continua des d'allà.
+        espera(1500 * intents).then(function () { return crida(Object.assign({ accio: 'v_estat', sessio: sessio }, meta)); })
+          .then(function (r) { if (r.fet) { offset = total; pinta(); return acabar(true); } offset = typeof r.offset === 'number' ? r.offset : offset; seguent(); })
+          .catch(function () { seguent(); });
+      });
+    }
+
+    crida(Object.assign({ accio: 'v_ini', fitxer: fitxer.name, mida: total }, meta)).then(function (r) { sessio = r.sessio; seguent(); })
+      .catch(function (e) { acabar(false, e && e.message); });
+  }
+
+  var lPar = qs.get('l');
+  var preferit = VALID.indexOf(lPar) >= 0 ? lPar : (VALID.indexOf(lsGet('llxd-lang')) >= 0 ? lsGet('llxd-lang') : null);
+  var nl = (navigator.language || 'ca').slice(0, 2);
+  setLang(preferit || (['es', 'en'].indexOf(nl) >= 0 ? nl : 'ca'), false, !preferit);
+})();
+</script>
+<script src="menu.js" defer></script>
+</body>
+</html>

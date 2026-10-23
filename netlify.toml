@@ -85,6 +85,12 @@
   to = "/fotos.html"
   status = 200
 
+# Pujar el testimoni en vídeo (arriba a Drive via Google Apps Script)
+[[redirects]]
+  from = "/video"
+  to = "/video.html"
+  status = 200
+
 [[redirects]]
   from = "/incidencies-admin"
   to = "/incidencies-admin.html"
