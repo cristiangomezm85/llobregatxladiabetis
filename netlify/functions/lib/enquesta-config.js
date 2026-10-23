@@ -18,9 +18,11 @@ module.exports = {
   // Carpeta de Drive on pugen el testimoni en vídeo.
   videosUrl: process.env.ENQUESTA_DRIVE_VIDEOS || "https://drive.google.com/drive/folders/10lcXjmXpFSTnOKl74w1dpIjnhm6SD9uO?usp=sharing",
 
-  // Fotos que surten dalt del correu. Adreces ABSOLUTES d'imatges ja publicades,
-  // p. ex. pujant-les al repositori a img/correu/ i posant:
-  //   ["https://llobregat.org/img/correu/foto1.jpg", "https://llobregat.org/img/correu/foto2.jpg", "https://llobregat.org/img/correu/foto3.jpg"]
-  // Es mostren 1, 2 o 3 (més no). Buit = el correu surt sense fotos.
-  fotos: [],
+  // Fotos que surten dalt del correu (adreces ABSOLUTES d'imatges publicades al web).
+  // Es mostren 1, 2 o 3. Buit = el correu surt sense fotos.
+  fotos: [
+    "https://llobregat.org/img/correu/foto1.jpg",
+    "https://llobregat.org/img/correu/foto2.jpg",
+    "https://llobregat.org/img/correu/foto3.jpg",
+  ],
 };
