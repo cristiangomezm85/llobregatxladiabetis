@@ -23,13 +23,6 @@
   body { margin: 0; font-family: var(--body); color: var(--tinta); background: var(--paper); line-height: 1.55; font-size: 17px; -webkit-font-smoothing: antialiased; }
   h1, h2, h3 { font-family: var(--display); color: var(--blau-llobregat); line-height: 1.1; letter-spacing: -.02em; margin: 0; }
   button { font: inherit; color: inherit; cursor: pointer; }
-  .top { background: var(--blau-llobregat); color: #fff; }
-  .top-in { max-width: 760px; margin: 0 auto; padding: .8rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-  .brand { display: flex; align-items: center; gap: .65rem; color: #fff; text-decoration: none; font-family: var(--display); font-weight: 700; font-size: 1.05rem; }
-  .brand img { width: 38px; height: 38px; }
-  .langs { display: flex; gap: .25rem; }
-  .langs button { background: transparent; border: 1px solid rgba(255,255,255,.35); color: #fff; border-radius: 999px; padding: .25rem .7rem; font-size: .8rem; font-weight: 700; letter-spacing: .04em; }
-  .langs button.on { background: #fff; color: var(--blau-llobregat); border-color: #fff; }
   main { max-width: 760px; margin: 0 auto; padding: 1.75rem 1.25rem 4rem; }
   .hero h1 { font-size: clamp(1.9rem, 6vw, 2.7rem); margin-bottom: .7rem; }
   .hero p { margin: 0 0 .6rem; color: var(--tinta); }
@@ -90,14 +83,46 @@
     .card { padding: 1.1rem 1rem .8rem; }
   }
 </style>
+<link rel="stylesheet" href="menu.css">
 </head>
 <body>
-<div class="top"><div class="top-in">
-  <a class="brand" href="/"><img src="img/logo-footer-white.png" alt=""><span>Llobregat x la Diabetis</span></a>
-  <div class="langs" id="langs">
-    <button type="button" data-l="ca">CA</button><button type="button" data-l="es">ES</button><button type="button" data-l="en">EN</button>
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <img src="img/logo-small.png" alt="Llobregat x la Diabetis">
+      <span>Llobregat <em>x la</em> Diabetis</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true"><span lang="ca">El repte</span><span lang="es">El reto</span><span lang="en">The challenge</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+        <div class="nav-dd-menu">
+          <a href="el-repte.html"><span lang="ca">El repte i la causa</span><span lang="es">El reto y la causa</span><span lang="en">The challenge and the cause</span></a>
+          <a href="pobles.html"><span lang="ca">Pobles</span><span lang="es">Pueblos</span><span lang="en">Towns</span></a>
+          <a href="persones.html"><span lang="ca">Persones i Herois</span><span lang="es">Personas y Héroes</span><span lang="en">People and Heroes</span></a>
+          <a href="inscrits.html"><span lang="ca">Inscrits</span><span lang="es">Inscritos</span><span lang="en">Registered</span></a>
+          <a href="colaboradors.html"><span lang="ca">Col·laboradors</span><span lang="es">Colaboradores</span><span lang="en">Collaborators</span></a>
+        </div>
+      </div>
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true"><span lang="ca">Informació</span><span lang="es">Información</span><span lang="en">Information</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+        <div class="nav-dd-menu">
+          <a href="recorregut.html"><span lang="ca">Recorregut i etapes</span><span lang="es">Recorrido y etapas</span><span lang="en">Route and stages</span></a>
+          <a href="briefing.html"><span lang="ca">Briefing</span><span lang="es">Briefing</span><span lang="en">Briefing</span></a>
+          <a href="normativa.html"><span lang="ca">Normativa</span><span lang="es">Normativa</span><span lang="en">Rules</span></a>
+          <a href="recollida.html"><span lang="ca">Recollida de bossa i samarreta</span><span lang="es">Recogida de bolsa y camiseta</span><span lang="en">Bag and t-shirt collection</span></a>
+        </div>
+      </div>
+      <a href="https://www.instagram.com/llobregatxladiabetis/" class="nav-ig" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg><span class="nav-ig-txt">Instagram</span></a>
+      <div class="lang-toggle" role="group" aria-label="Llengua">
+        <button data-set-lang="ca" class="active" type="button">CA</button>
+        <button data-set-lang="es" type="button">ES</button>
+        <button data-set-lang="en" type="button">EN</button>
+      </div>
+      <a href="dona/" class="nav-dona"><span lang="ca">Dona</span><span lang="es">Dona</span><span lang="en">Donate</span><span class="nav-dona-total" hidden></span></a>
+    </div>
+    <button class="nav-burger" id="burger" aria-label="Menú" aria-expanded="false"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
   </div>
-</div></div>
+</nav>
 <main id="app"><p style="color:#5A6478">…</p></main>
 <footer id="foot"></footer>
 
@@ -106,10 +131,10 @@
   'use strict';
   var UI = {
     ca: {
-      titol: "Ajuda'ns a millorar el repte", cargant: 'Carregant…', errCarrega: "No s'ha pogut carregar l'enquesta. Torna-ho a provar d'aquí una estona.",
+      titol: "Com ho hem fet? Dona'ns la teva opinió", cargant: 'Carregant…', errCarrega: "No s'ha pogut carregar l'enquesta. Torna-ho a provar d'aquí una estona.",
       saludaToken: function (n) { return n ? 'Hola, ' + n + '!' : 'Hola!'; },
       introToken: "Gràcies per ser part del repte. Ja sabem qui ets, així que només et farem les preguntes que ens interessen de debò. Triga uns 5 minuts i quasi tot és d'un clic.",
-      introAnon: "Gràcies per ser part del repte. Volem saber què ha anat bé, què hem de millorar i què proposes per a la propera edició. Triga uns 5 minuts i quasi tot és d'un clic.",
+      introAnon: "Gràcies per ser part del repte. Volem saber què ha anat bé, què es podria haver fet millor i quines idees tens. Triga uns 5 minuts i quasi tot és d'un clic.",
       teniem: 'Tenim aquestes dades teves', noSoc: 'No sóc jo / vull respondre com a una altra persona', jaRespost: "Ja ens havies respost. Si vols, pots tornar a enviar l'enquesta: substituirà la resposta anterior.",
       tokenInvalid: "Aquest enllaç no és vàlid o ha caducat. Pots respondre igualment com a persona nova:",
       qui: 'Qui ets?', quiAjuda: 'Així et farem les preguntes que et toquen.',
@@ -119,14 +144,14 @@
       envia: 'Enviar la meva opinió', enviant: 'Enviant…',
       priv: 'Les respostes es tracten de forma confidencial i només es comuniquen de forma agregada, tret que ens autoritzis a citar-te.',
       errEnvia: "No s'ha pogut enviar. Revisa la connexió i torna-ho a provar.", errReq: 'Falten respostes obligatòries. Les hem marcat en vermell.',
-      gracies: 'Moltes gràcies!', gracies2: "La teva opinió ens ajudarà a fer un repte millor. Cada resposta compta: la llegim totes.", gracies3: "Si vols tornar a canviar alguna cosa, torna a obrir l'enllaç del correu.", tornar: 'Tornar a la web',
+      gracies: 'Moltes gràcies!', gracies2: "La teva opinió ens ajuda a aprendre de com ho hem fet. Cada resposta compta: la llegim totes.", gracies3: "Si vols tornar a canviar alguna cosa, torna a obrir l'enllaç del correu.", tornar: 'Tornar a la web',
       peu: 'Repte Llobregat x la Diabetis · el 100% dels donatius van a AREDI · '
     },
     es: {
-      titol: 'Ayúdanos a mejorar el reto', cargant: 'Cargando…', errCarrega: 'No se ha podido cargar la encuesta. Inténtalo de nuevo en un rato.',
+      titol: '¿Cómo lo hemos hecho? Danos tu opinión', cargant: 'Cargando…', errCarrega: 'No se ha podido cargar la encuesta. Inténtalo de nuevo en un rato.',
       saludaToken: function (n) { return n ? '¡Hola, ' + n + '!' : '¡Hola!'; },
       introToken: 'Gracias por ser parte del reto. Ya sabemos quién eres, así que solo te haremos las preguntas que de verdad nos interesan. Lleva unos 5 minutos y casi todo es de un clic.',
-      introAnon: 'Gracias por ser parte del reto. Queremos saber qué ha ido bien, qué debemos mejorar y qué propones para la próxima edición. Lleva unos 5 minutos y casi todo es de un clic.',
+      introAnon: 'Gracias por ser parte del reto. Queremos saber qué ha ido bien, qué se podría haber hecho mejor y qué ideas tienes. Lleva unos 5 minutos y casi todo es de un clic.',
       teniem: 'Tenemos estos datos tuyos', noSoc: 'No soy yo / quiero responder como otra persona', jaRespost: 'Ya nos habías respondido. Si quieres, puedes volver a enviar la encuesta: sustituirá la respuesta anterior.',
       tokenInvalid: 'Este enlace no es válido o ha caducado. Puedes responder igualmente como persona nueva:',
       qui: '¿Quién eres?', quiAjuda: 'Así te haremos las preguntas que te corresponden.',
@@ -136,14 +161,14 @@
       envia: 'Enviar mi opinión', enviant: 'Enviando…',
       priv: 'Las respuestas se tratan de forma confidencial y solo se comunican de forma agregada, salvo que nos autorices a citarte.',
       errEnvia: 'No se ha podido enviar. Revisa la conexión e inténtalo de nuevo.', errReq: 'Faltan respuestas obligatorias. Las hemos marcado en rojo.',
-      gracies: '¡Muchas gracias!', gracies2: 'Tu opinión nos ayudará a hacer un reto mejor. Cada respuesta cuenta: las leemos todas.', gracies3: 'Si quieres cambiar algo, vuelve a abrir el enlace del correo.', tornar: 'Volver a la web',
+      gracies: '¡Muchas gracias!', gracies2: 'Tu opinión nos ayuda a aprender de cómo lo hemos hecho. Cada respuesta cuenta: las leemos todas.', gracies3: 'Si quieres cambiar algo, vuelve a abrir el enlace del correo.', tornar: 'Volver a la web',
       peu: 'Reto Llobregat x la Diabetis · el 100% de los donativos va a AREDI · '
     },
     en: {
-      titol: 'Help us improve the challenge', cargant: 'Loading…', errCarrega: 'The survey could not be loaded. Please try again in a moment.',
+      titol: 'How did we do? Tell us what you think', cargant: 'Loading…', errCarrega: 'The survey could not be loaded. Please try again in a moment.',
       saludaToken: function (n) { return n ? 'Hi ' + n + '!' : 'Hi!'; },
       introToken: "Thank you for being part of the challenge. We already know who you are, so we'll only ask what we really need. It takes about 5 minutes and most of it is one click.",
-      introAnon: 'Thank you for being part of the challenge. We want to know what went well, what to improve and what you suggest for the next edition. It takes about 5 minutes and most of it is one click.',
+      introAnon: 'Thank you for being part of the challenge. We want to know what went well, what could have been done better and what ideas you have. It takes about 5 minutes and most of it is one click.',
       teniem: 'This is what we know about you', noSoc: "That's not me / I want to answer as someone else", jaRespost: 'You already answered. If you like, you can send the survey again: it will replace your previous answer.',
       tokenInvalid: 'This link is not valid or has expired. You can still answer as a new person:',
       qui: 'Who are you?', quiAjuda: "So we ask you the questions that apply to you.",
@@ -153,7 +178,7 @@
       envia: 'Send my feedback', enviant: 'Sending…',
       priv: 'Answers are kept confidential and only reported in aggregate, unless you allow us to quote you.',
       errEnvia: 'Could not send. Please check your connection and try again.', errReq: 'Some required answers are missing. We marked them in red.',
-      gracies: 'Thank you so much!', gracies2: 'Your feedback will help us build a better challenge. Every answer counts: we read them all.', gracies3: 'If you want to change something, open the link in the email again.', tornar: 'Back to the website',
+      gracies: 'Thank you so much!', gracies2: 'Your feedback helps us learn from how we did. Every answer counts: we read them all.', gracies3: 'If you want to change something, open the link in the email again.', tornar: 'Back to the website',
       peu: 'Llobregat x la Diabetis challenge · 100% of donations go to AREDI · '
     }
   };
@@ -180,16 +205,16 @@
   function draftKey() { return 'llxd-enq-' + (S.token || 'obert'); }
   function guardar() { lsSet(draftKey(), JSON.stringify({ grup: S.grup, perfil: S.perfil, resp: S.resp })); }
 
-  function setLang(l, noRender) {
+  function setLang(l, noRender, noSave) {
     S.lang = l; document.documentElement.setAttribute('data-lang', l); document.documentElement.lang = l;
-    lsSet('llxd-lang', l);
-    Array.prototype.forEach.call(document.querySelectorAll('#langs button'), function (b) { b.classList.toggle('on', b.getAttribute('data-l') === l); });
+    if (!noSave) lsSet('llxd-lang', l);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-set-lang]'), function (b) { b.classList.toggle('active', b.getAttribute('data-set-lang') === l); });
     document.title = (UI[l].titol) + ' · Llobregat x la Diabetis';
     var f = document.getElementById('foot');
     f.textContent = UI[l].peu; f.appendChild(el('a', { href: '/', text: 'llobregat.org' }));
     if (!noRender && S.def) render();
   }
-  Array.prototype.forEach.call(document.querySelectorAll('#langs button'), function (b) { b.addEventListener('click', function () { setLang(b.getAttribute('data-l')); }); });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-set-lang]'), function (b) { b.addEventListener('click', function () { setLang(b.getAttribute('data-set-lang')); }); });
 
   // ---- components
   function preguntaBloc(p, titleText) {
@@ -327,16 +352,11 @@
   function render() {
     app.innerHTML = '';
     var hero = el('div', { class: 'hero' });
-    hero.appendChild(el('h1', { text: S.tok ? t().saludaToken(S.tok.nom ? S.tok.nom.split(' ')[0] : '') : t().titol }));
-    hero.appendChild(el('p', { text: S.tok ? t().introToken : t().introAnon }));
-    if (S.tok) {
-      var box = el('div', { class: 'perfil-box' }, [el('div', null, [el('strong', { text: t().teniem + ': ' }), resumPerfilToken()])]);
-      box.appendChild(el('button', { type: 'button', text: t().noSoc, onclick: function () { S.token = null; S.tok = null; S.grup = qs.get('g') || null; S.resp = {}; S.perfil = {}; history.replaceState(null, '', location.pathname + (S.lang !== 'ca' ? '?l=' + S.lang : '')); render(); } }));
-      hero.appendChild(box);
-      if (S.jaRespost) hero.appendChild(el('div', { class: 'avis', text: t().jaRespost }));
-    } else if (S.tokenInvalid) {
-      hero.appendChild(el('div', { class: 'avis', text: t().tokenInvalid }));
-    }
+    hero.appendChild(el('h1', { text: t().titol }));
+    hero.appendChild(el('p', { text: t().introAnon }));
+    // Si ve d'un enllaç personal ja sabem qui és, però no ho mostrem: respon com si fos anònim.
+    if (S.tok && S.jaRespost) hero.appendChild(el('div', { class: 'avis', text: t().jaRespost }));
+    else if (!S.tok && S.tokenInvalid) hero.appendChild(el('div', { class: 'avis', text: t().tokenInvalid }));
     app.appendChild(hero);
 
     // selector de grup (només sense token)
@@ -419,11 +439,12 @@
   }
 
   // ---- arrencada
+  // Idioma: 1) ?l= de l'enllaç  2) preferència guardada a la web (menú)  3) idioma de la inscripció (token)  4) navegador
   var lPar = qs.get('l');
-  var inicial = ['ca', 'es', 'en'].indexOf(lPar) >= 0 ? lPar : null;
-  if (!inicial) { var sv = lsGet('llxd-lang'); if (['ca', 'es', 'en'].indexOf(sv) >= 0) inicial = sv; }
-  if (!inicial) { var nl = (navigator.language || 'ca').slice(0, 2); inicial = ['es', 'en'].indexOf(nl) >= 0 ? nl : 'ca'; }
-  setLang(inicial, true);
+  var VALID = ['ca', 'es', 'en'];
+  var preferit = VALID.indexOf(lPar) >= 0 ? lPar : (VALID.indexOf(lsGet('llxd-lang')) >= 0 ? lsGet('llxd-lang') : null);
+  var nl = (navigator.language || 'ca').slice(0, 2);
+  setLang(preferit || (['es', 'en'].indexOf(nl) >= 0 ? nl : 'ca'), true, !preferit);
   app.innerHTML = '<p style="color:#5A6478">' + t().cargant + '</p>';
 
   var tokenParam = qs.get('t');
@@ -435,16 +456,17 @@
     var tk = res[1];
     if (tk && tk.ok) {
       S.token = tokenParam; S.tok = tk; S.grup = tk.grup; S.jaRespost = !!tk.ja_respost;
-      if (!lPar && tk.idioma && ['ca', 'es', 'en'].indexOf(tk.idioma) >= 0) setLang(tk.idioma, true);
+      if (!preferit && tk.idioma && VALID.indexOf(tk.idioma) >= 0) setLang(tk.idioma, true, true);
     } else {
       if (tokenParam) S.tokenInvalid = true;
       var g = qs.get('g'); if (g && S.def.grups[g]) S.grup = g;
     }
     var d = lsGet(draftKey());
     if (d) { try { var o = JSON.parse(d); if (o && typeof o === 'object') { S.resp = o.resp || {}; S.perfil = o.perfil || {}; if (!S.token && o.grup && S.def.grups[o.grup] && !S.grup) S.grup = o.grup; } } catch (e) {} }
-    setLang(S.lang);
+    setLang(S.lang, false, !preferit);
   }).catch(function () { app.innerHTML = ''; app.appendChild(el('p', { class: 'error-global', text: t().errCarrega })); });
 })();
 </script>
+<script src="menu.js" defer></script>
 </body>
 </html>
