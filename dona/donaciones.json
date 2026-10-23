@@ -1,7 +1,7 @@
 {
   "objectiuGotes": 250,
-  "actualizado": "2026-10-23T07:01:23.234Z",
-  "total": 220,
+  "actualizado": "2026-10-23T07:14:45.617Z",
+  "total": 221,
   "donaciones": [
     {
       "id": "fb594bee7cc2",
@@ -2422,6 +2422,17 @@
       "mensaje": "Sou molt grans! Aviam si a la pròxima ens pareparem i us acompanyem tot el repte! Gracies per tant!",
       "fecha": "2026-10-21T16:31:11.950Z",
       "orden": 231
+    },
+    {
+      "id": "ad452afcc832",
+      "reto": "llobregat-x-la-diabetes",
+      "retoNombre": "llobregat-x-la-diabetes",
+      "nombre": "Ana Maria",
+      "anonimo": false,
+      "importe": 10,
+      "mensaje": "",
+      "fecha": "2026-10-23T07:14:43.403Z",
+      "orden": 232
     }
   ]
 }
