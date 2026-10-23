@@ -8,7 +8,9 @@
 //      ?accio=resum                       -> resultats agregats (mitjanes, NPS, textos)
 //      ?accio=respostes&format=csv|json[&grup=]  -> totes les respostes
 //      ?accio=llista&grup=X[&format=csv]  -> destinataris + enllaç personal (per MailerLite)
-//      ?accio=plantilla&grup=X&idioma=ca  -> HTML del correu per enganxar a MailerLite
+//      ?accio=plantilla&grup=X&idioma=ca  -> HTML del correu només-enquesta per a MailerLite
+//      ?accio=plantilla_resum&idioma=ca|es|en|tri -> HTML del correu RESUM per a MailerLite
+// POST {accio:"enviar_resum", grup, quant} / {accio:"prova_resum", idioma, email} -> correu RESUM per Resend
 // POST {accio:"preparar_inscripcions"}                         -> participants = comandes pagades
 //      {accio:"preparar_llista", grup, files:[{email,nom,org,idioma}]}
 //      {accio:"enviar", grup, quant}                           -> envia el proper lot per Resend
@@ -22,6 +24,8 @@
 const E = require("./lib/enquesta-store");
 const Q = require("./lib/enquesta-preguntes");
 const M = require("./lib/enquesta-email");
+const R = require("./lib/enquesta-resum");
+const { enviarLot } = require("./lib/enquesta-resend");
 
 const IDIOMES = ["ca", "es", "en"];
 
@@ -69,7 +73,7 @@ async function afegirDestinataris(grup, entrades) {
     });
   }
   await E.enBlocs(nous, (d) => E.escriure("tok/" + d.token, {
-    grup, nom: d.nom, org: d.org, idioma: d.idioma, modalitat: d.modalitat, tram: d.tram, creat: new Date().toISOString(),
+    grup, nom: d.nom, email: d.email, org: d.org, idioma: d.idioma, modalitat: d.modalitat, tram: d.tram, creat: new Date().toISOString(),
   }));
   await desarDest(grup, llista.concat(nous));
   return { afegits: nous.length, ignorats, total: llista.length + nous.length };
@@ -96,26 +100,6 @@ async function destinatarisInscripcions() {
 }
 
 function linkDe(d) { return M.enllacPer(d.token, d.idioma); }
-
-async function enviarLot(correus) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.RESEND_FROM_EMAIL;
-  if (!apiKey || !fromEmail) throw new Error("Falten RESEND_API_KEY o RESEND_FROM_EMAIL");
-  const fromName = process.env.RESEND_FROM_NAME || "Repte Llobregat x la Diabetis";
-  const res = await fetch("https://api.resend.com/emails/batch", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify(correus.map((c) => ({
-      from: `${fromName} <${fromEmail}>`,
-      to: [c.nom ? `${c.nom.replace(/[<>",]/g, "")} <${c.email}>` : c.email],
-      subject: c.subject, html: c.html, text: c.text,
-    }))),
-  });
-  if (!res.ok) {
-    const cos = await res.text().catch(() => "");
-    throw new Error(`Resend ha respost ${res.status}: ${cos.slice(0, 300)}`);
-  }
-}
 
 function etiqueta(p, v, ll = "ca") {
   if (v === undefined || v === null) return "";
@@ -201,6 +185,7 @@ exports.handler = async (event) => {
           grups[g] = {
             destinataris: llista.length,
             enviats: llista.filter((d) => d.enviat).length,
+            enviats_resum: llista.filter((d) => d.enviat_resum).length,
             respostes_de_destinataris: respostesToken,
           };
         }
@@ -267,6 +252,16 @@ exports.handler = async (event) => {
         return respText(200, c.html, "text/html; charset=utf-8", `enquesta-${q.grup}-${idioma(q.idioma)}.html`);
       }
 
+      if (accio === "plantilla_resum") {
+        const site = M.SITE();
+        const generic = { linkEnquesta: site + "/enquesta", linkIncidencia: site + "/incidencia" };
+        const id = q.idioma;
+        const c = id === "tri"
+          ? R.construirResumTri(generic)
+          : R.construirResum({ idioma: idioma(id), mode: "mailerlite", ...generic, linkEnquesta: `${site}/enquesta?l=${idioma(id)}`, linkIncidencia: `${site}/incidencia?l=${idioma(id)}` });
+        return respText(200, c.html, "text/html; charset=utf-8", `resum-${id === "tri" ? "trilingue" : idioma(id)}-mailerlite.html`);
+      }
+
       return resp(400, { ok: false, error: "Acció desconeguda" });
     }
 
@@ -294,6 +289,20 @@ exports.handler = async (event) => {
         return resp(200, { ok: true });
       }
 
+      if (body.accio === "prova_resum") {
+        if (!emailOk(String(body.email || ""))) return resp(400, { ok: false, error: "Email no vàlid" });
+        const id = idioma(body.idioma);
+        const tk = E.nouToken();
+        await E.escriure("tok/" + tk, {
+          grup: "participant", nom: "Prova", email: body.email, org: "", idioma: id, modalitat: "caminant", tram: "Prova → Prova",
+          creat: new Date().toISOString(), prova: true,
+        });
+        const site = M.SITE();
+        const c = R.construirResum({ idioma: id, nom: "Prova", linkEnquesta: M.enllacPer(tk, id), linkIncidencia: `${site}/incidencia?t=${tk}&l=${id}` });
+        await enviarLot([{ email: body.email, nom: "", ...c }]);
+        return resp(200, { ok: true });
+      }
+
       if (body.accio === "prova") {
         if (!Q.GRUPS_IDS.includes(body.grup)) return resp(400, { ok: false, error: "Grup desconegut" });
         if (!emailOk(String(body.email || ""))) return resp(400, { ok: false, error: "Email no vàlid" });
@@ -308,6 +317,32 @@ exports.handler = async (event) => {
         const c = M.construirCorreu({ grup: body.grup, idioma: id, nom, link: M.enllacPer(tk, id) });
         await enviarLot([{ email: body.email, nom: "", ...c }]);
         return resp(200, { ok: true });
+      }
+
+      if (body.accio === "enviar_resum") {
+        if (!Q.GRUPS_IDS.includes(body.grup)) return resp(400, { ok: false, error: "Grup desconegut" });
+        const limit = Number(process.env.ENQUESTA_LIMIT_DIARI) || 90;
+        const dia = (await E.llegir("dia/" + avui())) || { n: 0 };
+        const queden = Math.max(0, limit - dia.n);
+        const quant = Math.min(Number(body.quant) || 50, 100, queden);
+        if (queden <= 0) return resp(200, { ok: true, enviats: 0, motiu: "limit_diari", enviats_avui: dia.n, limit_diari: limit });
+        const llista = await llegirDest(body.grup);
+        const pendents = llista.filter((d) => !d.enviat_resum && !d.baixa).slice(0, quant);
+        if (!pendents.length) return resp(200, { ok: true, enviats: 0, motiu: "res_pendent", enviats_avui: dia.n, limit_diari: limit });
+        const site = M.SITE();
+        const correus = pendents.map((d) => ({
+          email: d.email, nom: d.nom,
+          ...R.construirResum({
+            idioma: d.idioma, nom: (d.nom || "").split(" ")[0],
+            linkEnquesta: linkDe(d), linkIncidencia: `${site}/incidencia?t=${encodeURIComponent(d.token)}&l=${d.idioma}`,
+          }),
+        }));
+        await enviarLot(correus);
+        const ara = new Date().toISOString();
+        const hs = new Set(pendents.map((d) => d.h));
+        await desarDest(body.grup, llista.map((d) => (hs.has(d.h) ? { ...d, enviat_resum: ara } : d)));
+        await E.escriure("dia/" + avui(), { n: dia.n + pendents.length });
+        return resp(200, { ok: true, enviats: pendents.length, enviats_avui: dia.n + pendents.length, limit_diari: limit });
       }
 
       if (body.accio === "enviar") {
