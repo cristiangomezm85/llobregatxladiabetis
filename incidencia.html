@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ca" data-lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Incidència · Llobregat x la Diabetis</title>
+<meta name="description" content="Comunica una incidència pendent amb la samarreta, la bossa o la recollida.">
+<link rel="icon" type="image/png" href="img/logo-small.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@10..48,300..800&family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blau-llobregat: #15315F; --blau-diabetis: #1E72D4; --blau-aigua: #5AC0E6;
+    --coral: #FF6B47; --paper: #FAFAF6; --tinta: #0E1B36; --gris: #5A6478;
+    --gris-clar: #C9CDD6; --linia: rgba(21,49,95,.14); --verd: #1E8E5A;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --body: "Manrope", system-ui, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { margin: 0; font-family: var(--body); color: var(--tinta); background: var(--paper); line-height: 1.55; font-size: 17px; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3 { font-family: var(--display); color: var(--blau-llobregat); line-height: 1.1; letter-spacing: -.02em; margin: 0; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  main { max-width: 760px; margin: 0 auto; padding: 1.75rem 1.25rem 4rem; }
+  .hero h1 { font-size: clamp(1.9rem, 6vw, 2.7rem); margin-bottom: .7rem; }
+  .hero p { margin: 0 0 .6rem; color: var(--tinta); }
+  .hero .meta { color: var(--gris); font-size: .92rem; }
+  .perfil-box { background: #fff; border: 1px solid var(--linia); border-left: 4px solid var(--blau-diabetis); border-radius: 12px; padding: .9rem 1.1rem; margin: 1.1rem 0 0; font-size: .95rem; }
+  .perfil-box strong { color: var(--blau-llobregat); }
+  .perfil-box button { background: none; border: 0; color: var(--blau-diabetis); text-decoration: underline; padding: 0; font-size: .88rem; margin-top: .3rem; }
+  .avis { background: #FFF4E5; border: 1px solid #F3CE92; color: #6B4300; border-radius: 12px; padding: .8rem 1.1rem; margin-top: 1rem; font-size: .93rem; }
+  .card { background: #fff; border: 1px solid var(--linia); border-radius: 16px; padding: 1.4rem 1.35rem 1.1rem; margin-top: 1.4rem; }
+  .card > h2 { font-size: 1.35rem; margin-bottom: 1rem; display: flex; align-items: baseline; gap: .6rem; }
+  .card > h2 small { font-family: var(--body); font-weight: 600; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--blau-diabetis); }
+  .q { padding: .95rem 0; border-top: 1px solid var(--linia); }
+  .q:first-of-type { border-top: 0; padding-top: 0; }
+  .q > label.t, .q > .t { display: block; font-weight: 700; margin-bottom: .55rem; }
+  .q .req { color: var(--coral); margin-left: .15rem; }
+  .q.err { background: #FFF1EE; border-radius: 10px; padding-left: .7rem; padding-right: .7rem; }
+  .q .msg { display: none; color: #B3261E; font-size: .85rem; margin-top: .4rem; }
+  .q.err .msg { display: block; }
+  .stars { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; }
+  .stars button.s { background: none; border: 0; padding: 0 .1rem; font-size: 2.1rem; line-height: 1; color: var(--gris-clar); transition: transform .08s; }
+  .stars button.s.on { color: #F5A524; }
+  .stars button.s:hover { transform: scale(1.12); }
+  .stars .na { margin-left: .6rem; background: #fff; border: 1px solid var(--linia); border-radius: 999px; padding: .25rem .8rem; font-size: .82rem; color: var(--gris); }
+  .stars .na.on { background: var(--blau-llobregat); color: #fff; border-color: var(--blau-llobregat); }
+  .escala { display: flex; justify-content: space-between; font-size: .76rem; color: var(--gris); margin-top: .25rem; max-width: 290px; }
+  .nps { display: grid; grid-template-columns: repeat(11, 1fr); gap: .25rem; }
+  .nps button { border: 1px solid var(--linia); background: #fff; border-radius: 8px; padding: .5rem 0; font-weight: 700; font-size: .95rem; }
+  .nps button.on { background: var(--blau-diabetis); border-color: var(--blau-diabetis); color: #fff; }
+  .nps-lbl { display: flex; justify-content: space-between; font-size: .76rem; color: var(--gris); margin-top: .3rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+  .chips button { background: #fff; border: 1.5px solid var(--linia); border-radius: 999px; padding: .5rem .95rem; font-size: .95rem; text-align: left; line-height: 1.3; }
+  .chips button:hover { border-color: var(--blau-diabetis); }
+  .chips button.on { background: var(--blau-diabetis); border-color: var(--blau-diabetis); color: #fff; }
+  textarea, input[type=text], input[type=email], input[type=tel] { width: 100%; font: inherit; border: 1.5px solid var(--linia); border-radius: 10px; padding: .65rem .8rem; background: #fff; color: var(--tinta); }
+  textarea { min-height: 96px; resize: vertical; }
+  textarea:focus, input:focus { outline: 2px solid var(--blau-aigua); border-color: var(--blau-diabetis); }
+  .altre { margin-top: .5rem; }
+  .grups { display: grid; gap: .6rem; }
+  .grups button { text-align: left; background: #fff; border: 1.5px solid var(--linia); border-radius: 12px; padding: .8rem 1rem; }
+  .grups button b { display: block; color: var(--blau-llobregat); }
+  .grups button span { font-size: .88rem; color: var(--gris); }
+  .grups button.on { border-color: var(--blau-diabetis); background: #EEF5FF; box-shadow: 0 0 0 2px var(--blau-diabetis) inset; }
+  .enviar { margin-top: 1.6rem; display: flex; flex-direction: column; gap: .7rem; align-items: flex-start; }
+  .btn { background: var(--coral); color: #fff; border: 0; border-radius: 10px; padding: .95rem 1.8rem; font-weight: 800; font-size: 1.05rem; }
+  .btn:disabled { opacity: .6; cursor: wait; }
+  .nota { font-size: .85rem; color: var(--gris); margin: 0; }
+  .error-global { color: #B3261E; font-weight: 700; }
+  .gracies { text-align: center; padding: 3rem 1rem; }
+  .gracies .gran { font-size: 3.4rem; }
+  .gracies h1 { font-size: clamp(2rem, 7vw, 3rem); margin: .6rem 0; }
+  .gracies a { display: inline-block; margin-top: 1.2rem; color: var(--blau-diabetis); font-weight: 700; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  footer { text-align: center; font-size: .82rem; color: var(--gris); padding: 0 1.25rem 2.5rem; }
+  footer a { color: var(--blau-diabetis); }
+  @media (max-width: 520px) {
+    .stars button.s { font-size: 2.3rem; padding: 0 .05rem; }
+    .nps { grid-template-columns: repeat(6, 1fr); }
+    .card { padding: 1.1rem 1rem .8rem; }
+  }
+</style>
+<link rel="stylesheet" href="menu.css">
+</head>
+<body>
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <img src="img/logo-small.png" alt="Llobregat x la Diabetis">
+      <span>Llobregat <em>x la</em> Diabetis</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true"><span lang="ca">El repte</span><span lang="es">El reto</span><span lang="en">The challenge</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+        <div class="nav-dd-menu">
+          <a href="el-repte.html"><span lang="ca">El repte i la causa</span><span lang="es">El reto y la causa</span><span lang="en">The challenge and the cause</span></a>
+          <a href="pobles.html"><span lang="ca">Pobles</span><span lang="es">Pueblos</span><span lang="en">Towns</span></a>
+          <a href="persones.html"><span lang="ca">Persones i Herois</span><span lang="es">Personas y Héroes</span><span lang="en">People and Heroes</span></a>
+          <a href="inscrits.html"><span lang="ca">Inscrits</span><span lang="es">Inscritos</span><span lang="en">Registered</span></a>
+          <a href="colaboradors.html"><span lang="ca">Col·laboradors</span><span lang="es">Colaboradores</span><span lang="en">Collaborators</span></a>
+        </div>
+      </div>
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true"><span lang="ca">Informació</span><span lang="es">Información</span><span lang="en">Information</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+        <div class="nav-dd-menu">
+          <a href="recorregut.html"><span lang="ca">Recorregut i etapes</span><span lang="es">Recorrido y etapas</span><span lang="en">Route and stages</span></a>
+          <a href="briefing.html"><span lang="ca">Briefing</span><span lang="es">Briefing</span><span lang="en">Briefing</span></a>
+          <a href="normativa.html"><span lang="ca">Normativa</span><span lang="es">Normativa</span><span lang="en">Rules</span></a>
+          <a href="recollida.html"><span lang="ca">Recollida de bossa i samarreta</span><span lang="es">Recogida de bolsa y camiseta</span><span lang="en">Bag and t-shirt collection</span></a>
+        </div>
+      </div>
+      <a href="https://www.instagram.com/llobregatxladiabetis/" class="nav-ig" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg><span class="nav-ig-txt">Instagram</span></a>
+      <div class="lang-toggle" role="group" aria-label="Llengua">
+        <button data-set-lang="ca" class="active" type="button">CA</button>
+        <button data-set-lang="es" type="button">ES</button>
+        <button data-set-lang="en" type="button">EN</button>
+      </div>
+      <a href="dona/" class="nav-dona"><span lang="ca">Dona</span><span lang="es">Dona</span><span lang="en">Donate</span><span class="nav-dona-total" hidden></span></a>
+    </div>
+    <button class="nav-burger" id="burger" aria-label="Menú" aria-expanded="false"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
+  </div>
+</nav>
+<main id="app"><p style="color:#5A6478">…</p></main>
+<footer id="foot"></footer>
+<script>
+(function () {
+  'use strict';
+  var UI = {
+    ca: { titol: 'Comunicar una incidència', intro: "Si encara tens pendent de resoldre alguna cosa amb la samarreta, la bossa o la recollida, explica-ho aquí i et contactarem.",
+      nom: 'Nom i cognoms', email: 'Correu electrònic', tel: 'Telèfon', problema: 'Quin és el problema?', problemaAj: 'Pots marcar-ne més d\'un.', detall: 'Vols afegir algun detall? (talla que tens i la que et correspon, municipi de recollida…)',
+      consent: "Accepto que Llobregat x la Diabetis faci servir les meves dades només per gestionar aquesta incidència.", privacitat: 'Política de privacitat',
+      envia: 'Enviar la incidència', enviant: 'Enviant…', errFalten: 'Revisa els camps marcats en vermell.', errEnvia: "No s'ha pogut enviar. Revisa la connexió i torna-ho a provar.", req: 'Obligatori',
+      gracies: 'Incidència rebuda', gracies2: "Gràcies! Et contactarem aviat pel correu o el telèfon que ens has indicat. També t'hem enviat una confirmació al correu.", tornar: 'Tornar a la web',
+      peu: 'Repte Llobregat x la Diabetis · ' },
+    es: { titol: 'Comunicar una incidencia', intro: 'Si todavía tienes algo pendiente de resolver con la camiseta, la bolsa o la recogida, cuéntanoslo aquí y te contactaremos.',
+      nom: 'Nombre y apellidos', email: 'Correo electrónico', tel: 'Teléfono', problema: '¿Cuál es el problema?', problemaAj: 'Puedes marcar más de uno.', detall: '¿Quieres añadir algún detalle? (talla que tienes y la que te corresponde, municipio de recogida…)',
+      consent: 'Acepto que Llobregat x la Diabetis use mis datos solo para gestionar esta incidencia.', privacitat: 'Política de privacidad',
+      envia: 'Enviar la incidencia', enviant: 'Enviando…', errFalten: 'Revisa los campos marcados en rojo.', errEnvia: 'No se ha podido enviar. Revisa la conexión e inténtalo de nuevo.', req: 'Obligatorio',
+      gracies: 'Incidencia recibida', gracies2: '¡Gracias! Te contactaremos pronto por el correo o el teléfono que nos has indicado. También te hemos enviado una confirmación por correo.', tornar: 'Volver a la web',
+      peu: 'Reto Llobregat x la Diabetis · ' },
+    en: { titol: 'Report an issue', intro: "If you still have something to sort out with your T-shirt, bag or collection, tell us here and we'll get in touch.",
+      nom: 'Full name', email: 'Email', tel: 'Phone', problema: "What's the problem?", problemaAj: 'You can pick more than one.', detall: 'Anything else we should know? (size you have and the one you should have, collection town…)',
+      consent: 'I agree that Llobregat x la Diabetis uses my data only to handle this issue.', privacitat: 'Privacy policy',
+      envia: 'Send the issue', enviant: 'Sending…', errFalten: 'Please check the fields marked in red.', errEnvia: 'Could not send. Please check your connection and try again.', req: 'Required',
+      gracies: 'Issue received', gracies2: "Thank you! We'll contact you soon at the email or phone you gave us. We've also sent you a confirmation email.", tornar: 'Back to the website',
+      peu: 'Llobregat x la Diabetis challenge · ' }
+  };
+  var TIPUS = [
+    ['no_email', 'No he rebut el correu de confirmació', 'No he recibido el correo de confirmación', "I didn't get the confirmation email"],
+    ['no_recollida', 'No vaig poder anar a la recollida', 'No pude ir a la recogida', "I couldn't make the collection"],
+    ['falta_samarreta', 'Em falta la samarreta', 'Me falta la camiseta', 'My T-shirt is missing'],
+    ['talla', 'La talla de la samarreta no és la correcta', 'La talla de la camiseta no es la correcta', 'The T-shirt size is wrong'],
+    ['falta_bossa', 'Em falta la bossa', 'Me falta la bolsa', 'My bag is missing'],
+    ['altre', 'Una altra cosa', 'Otra cosa', 'Something else']
+  ];
+  var qs = new URLSearchParams(location.search), VALID = ['ca', 'es', 'en'];
+  var S = { lang: 'ca', tipus: [], vals: { nom: '', email: '', tel: '', detall: '' }, consent: false, inici: Date.now(), enviant: false, token: qs.get('t') };
+  var app = document.getElementById('app');
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function t() { return UI[S.lang]; }
+  function el(tag, attrs, kids) {
+    var e = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) { if (k === 'text') e.textContent = attrs[k]; else if (k === 'class') e.className = attrs[k]; else if (k.slice(0, 2) === 'on') e.addEventListener(k.slice(2), attrs[k]); else e.setAttribute(k, attrs[k]); });
+    (kids || []).forEach(function (c) { if (c) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    return e;
+  }
+  function setLang(l, noRender, noSave) {
+    S.lang = l; document.documentElement.setAttribute('data-lang', l); document.documentElement.lang = l;
+    if (!noSave) lsSet('llxd-lang', l);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-set-lang]'), function (b) { b.classList.toggle('active', b.getAttribute('data-set-lang') === l); });
+    document.title = UI[l].titol + ' · Llobregat x la Diabetis';
+    var f = document.getElementById('foot'); f.textContent = UI[l].peu; f.appendChild(el('a', { href: '/', text: 'llobregat.org' }));
+    if (!noRender) render();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-set-lang]'), function (b) { b.addEventListener('click', function () { setLang(b.getAttribute('data-set-lang')); }); });
+
+  function camp(id, label, tipus, extra) {
+    var w = el('div', { class: 'q', 'data-id': id });
+    w.appendChild(el('label', { class: 't' }, [label, el('span', { class: 'req', text: ' *', title: t().req })]));
+    var inp = el('input', Object.assign({ type: tipus, maxlength: '200', value: S.vals[id] || '', oninput: function (e) { S.vals[id] = e.target.value; w.classList.remove('err'); } }, extra || {}));
+    w.appendChild(inp); w.appendChild(el('div', { class: 'msg', text: t().req })); return w;
+  }
+  function render() {
+    app.innerHTML = '';
+    var hero = el('div', { class: 'hero' }, [el('h1', { text: t().titol }), el('p', { text: t().intro })]);
+    app.appendChild(hero);
+    var card = el('section', { class: 'card' });
+    card.appendChild(camp('nom', t().nom, 'text', { autocomplete: 'name' }));
+    card.appendChild(camp('email', t().email, 'email', { autocomplete: 'email', inputmode: 'email' }));
+    card.appendChild(camp('tel', t().tel, 'tel', { autocomplete: 'tel', inputmode: 'tel' }));
+    var q = el('div', { class: 'q', 'data-id': 'tipus' });
+    q.appendChild(el('div', { class: 't' }, [t().problema, el('span', { class: 'req', text: ' *' })]));
+    q.appendChild(el('p', { class: 'nota', text: t().problemaAj, style: 'margin:-.2rem 0 .55rem' }));
+    var chips = el('div', { class: 'chips' }); var btns = [];
+    TIPUS.forEach(function (x) {
+      var b = el('button', { type: 'button', class: S.tipus.indexOf(x[0]) >= 0 ? 'on' : '', text: x[{ ca: 1, es: 2, en: 3 }[S.lang]] });
+      b.addEventListener('click', function () { var i = S.tipus.indexOf(x[0]); if (i >= 0) S.tipus.splice(i, 1); else S.tipus.push(x[0]); b.classList.toggle('on'); q.classList.remove('err'); });
+      btns.push(b); chips.appendChild(b);
+    });
+    q.appendChild(chips); q.appendChild(el('div', { class: 'msg', text: t().req })); card.appendChild(q);
+    var d = el('div', { class: 'q' }); d.appendChild(el('label', { class: 't', text: t().detall }));
+    d.appendChild(el('textarea', { maxlength: '2000', oninput: function (e) { S.vals.detall = e.target.value; } })); d.lastChild.value = S.vals.detall || ''; card.appendChild(d);
+    var c = el('div', { class: 'q', 'data-id': 'consent' });
+    var lab = el('label', { style: 'display:flex;gap:.6rem;align-items:flex-start;font-size:.92rem;cursor:pointer' });
+    var cb = el('input', { type: 'checkbox', style: 'margin-top:.3rem;width:auto' }); cb.checked = S.consent;
+    cb.addEventListener('change', function () { S.consent = cb.checked; c.classList.remove('err'); });
+    lab.appendChild(cb); lab.appendChild(el('span', null, [t().consent + ' ', el('a', { href: 'privacitat.html', target: '_blank', style: 'color:#1E72D4', text: t().privacitat })]));
+    c.appendChild(lab); c.appendChild(el('div', { class: 'msg', text: t().req })); card.appendChild(c);
+    app.appendChild(card);
+    app.appendChild(el('div', { class: 'hp', 'aria-hidden': 'true' }, [el('input', { type: 'text', id: 'hp', tabindex: '-1', autocomplete: 'off', name: 'website' })]));
+    var send = el('div', { class: 'enviar' });
+    send.appendChild(el('div', { class: 'error-global', id: 'errg' }));
+    send.appendChild(el('button', { type: 'button', class: 'btn', id: 'btnEnviar', text: t().envia, onclick: enviar }));
+    app.appendChild(send);
+  }
+  function marca(id) { var w = document.querySelector('.q[data-id="' + id + '"]'); if (w) w.classList.add('err'); return w; }
+  function enviar() {
+    if (S.enviant) return;
+    var errg = document.getElementById('errg'); errg.textContent = '';
+    document.querySelectorAll('.q.err').forEach(function (w) { w.classList.remove('err'); });
+    var primera = null, falten = [];
+    if (S.vals.nom.trim().length < 2) falten.push('nom');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.vals.email.trim())) falten.push('email');
+    if (S.vals.tel.replace(/\D/g, '').length < 7) falten.push('tel');
+    if (!S.tipus.length) falten.push('tipus');
+    if (!S.consent) falten.push('consent');
+    falten.forEach(function (id) { var w = marca(id); if (!primera) primera = w; });
+    if (primera) { errg.textContent = t().errFalten; primera.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+    var btn = document.getElementById('btnEnviar'); S.enviant = true; btn.disabled = true; btn.textContent = t().enviant;
+    fetch('/api/incidencia', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ t: S.token || undefined, nom: S.vals.nom, email: S.vals.email, telefon: S.vals.tel, tipus: S.tipus, detall: S.vals.detall, idioma: S.lang, consentiment: true, hp: (document.getElementById('hp') || {}).value || '', ms: Date.now() - S.inici }) })
+      .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
+      .then(function (j) {
+        S.enviant = false; btn.disabled = false; btn.textContent = t().envia;
+        if (!j.ok) { errg.textContent = j.faltes ? t().errFalten : (j.error || t().errEnvia); return; }
+        app.innerHTML = '';
+        app.appendChild(el('div', { class: 'gracies' }, [el('div', { class: 'gran', text: '✅' }), el('h1', { text: t().gracies }), el('p', { text: t().gracies2 }), el('a', { href: '/', text: t().tornar + ' →' })]));
+        window.scrollTo({ top: 0 });
+      }).catch(function () { S.enviant = false; btn.disabled = false; btn.textContent = t().envia; errg.textContent = t().errEnvia; });
+  }
+
+  var lPar = qs.get('l');
+  var preferit = VALID.indexOf(lPar) >= 0 ? lPar : (VALID.indexOf(lsGet('llxd-lang')) >= 0 ? lsGet('llxd-lang') : null);
+  var nl = (navigator.language || 'ca').slice(0, 2);
+  setLang(preferit || (['es', 'en'].indexOf(nl) >= 0 ? nl : 'ca'), true, !preferit);
+  var prefill = S.token ? fetch('/api/incidencia?t=' + encodeURIComponent(S.token)).then(function (r) { return r.json(); }).catch(function () { return { ok: false }; }) : Promise.resolve({ ok: false });
+  prefill.then(function (j) {
+    if (j.ok) {
+      if (j.nom) S.vals.nom = j.nom; if (j.email) S.vals.email = j.email;
+      if (!preferit && VALID.indexOf(j.idioma) >= 0) setLang(j.idioma, true, true);
+    }
+    render();
+  });
+})();
+</script>
+<script src="menu.js" defer></script>
+</body>
+</html>

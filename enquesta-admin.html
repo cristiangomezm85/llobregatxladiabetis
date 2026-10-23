@@ -55,7 +55,13 @@
 
   <div id="panell" hidden>
     <section>
-      <h2>1 · Destinataris i enviament</h2>
+      <h2>Correu resum (agraïment, fotos, enquesta, vídeo i incidències)</h2>
+      <p class="nota">Un sol correu per a tothom. <b>Participants:</b> s'envia des d'aquí per Resend (cada persona rep el seu enllaç personal, en el seu idioma). <b>La resta:</b> es fa una campanya a MailerLite amb l'HTML que pots baixar aquí sota.</p>
+      <div id="resumMail"></div>
+      <p class="nota">Les <a href="/incidencies-admin">incidències de samarreta/bossa</a> es consulten en una pàgina a part.</p>
+    </section>
+    <section>
+      <h2>1 · Destinataris i enviament de només l'enquesta</h2>
       <p class="nota" id="resumEstat"></p>
       <div id="grups"></div>
     </section>
@@ -111,6 +117,56 @@
     if (!j.resend_configurat) $('resumEstat').appendChild(el('span', { class: 'ko', text: 'Resend NO està configurat (falten RESEND_API_KEY / RESEND_FROM_EMAIL): només podràs baixar els enllaços per a MailerLite.' }));
     var cont = $('grups'); cont.innerHTML = '';
     ORDRE.forEach(function (g) { cont.appendChild(pintaGrup(g, j.grups[g], j)); });
+    pintaResumMail(j);
+  }
+
+  function pintaResumMail(j) {
+    var d = j.grups.participant, box = $('resumMail'); box.innerHTML = '';
+    box.appendChild(el('div', { class: 'grup' }, [
+      el('h3', { text: 'Participants (Resend)' }),
+      el('div', { text: d.destinataris + ' participants carregats · ' + (d.enviats_resum || 0) + ' ja han rebut el correu resum' })
+    ]));
+    var g = box.firstChild;
+    var b = el('button', { class: 'sec', text: 'Carregar / actualitzar participants des de les inscripcions pagades' });
+    b.addEventListener('click', function () {
+      b.disabled = true; post({ accio: 'preparar_inscripcions' }).then(function (r) { b.disabled = false; alert(r.ok ? 'Afegits ' + r.afegits + ' nous (ja hi eren o sense email: ' + r.ignorats + '). Total: ' + r.total : r.error); refrescaEstat(); });
+    });
+    g.appendChild(el('div', { class: 'fila' }, [b]));
+    var em = el('input', { type: 'email', placeholder: 'el teu correu per a la prova' });
+    var lg = el('select', null, [el('option', { value: 'ca', text: 'CA' }), el('option', { value: 'es', text: 'ES' }), el('option', { value: 'en', text: 'EN' })]);
+    var bp = el('button', { class: 'sec', text: 'Enviar-me el correu resum de prova' });
+    bp.addEventListener('click', function () {
+      if (!em.value) return; bp.disabled = true;
+      post({ accio: 'prova_resum', idioma: lg.value, email: em.value.trim() }).then(function (r) { bp.disabled = false; alert(r.ok ? 'Enviat. Mira la safata (i el correu brossa).' : r.error); });
+    });
+    g.appendChild(el('div', { class: 'fila' }, [em, lg, bp]));
+    var sel = el('select', null, [10, 25, 50, 90].map(function (n) { return el('option', { value: n, text: n + ' correus' }); })); sel.value = '90';
+    var be = el('button', { class: 'coral', text: 'Enviar següent lot als participants' });
+    be.addEventListener('click', function () {
+      var pend = d.destinataris - (d.enviats_resum || 0);
+      if (pend <= 0) { alert('No queda cap participant pendent.'); return; }
+      if (!confirm('Enviarem fins a ' + sel.value + ' correus REALS als participants (pendents: ' + pend + '). Continuar?')) return;
+      be.disabled = true;
+      post({ accio: 'enviar_resum', grup: 'participant', quant: Number(sel.value) }).then(function (r) {
+        be.disabled = false;
+        if (!r.ok) alert(r.error); else if (r.motiu === 'limit_diari') alert('Límit diari assolit (' + r.enviats_avui + '/' + r.limit_diari + '). Torna demà.'); else alert('Enviats: ' + r.enviats + '. Avui: ' + r.enviats_avui + '/' + r.limit_diari);
+        refrescaEstat();
+      });
+    });
+    g.appendChild(el('div', { class: 'fila' }, [sel, be]));
+    g.appendChild(el('p', { class: 'nota', text: 'Pla gratuït de Resend: màxim 100 correus al dia, així que amb molts participants cal repetir el lot cada dia fins que "pendents" arribi a 0.' }));
+
+    var ml = el('div', { class: 'grup' }, [
+      el('h3', { text: 'La resta de contactes (MailerLite)' }),
+      el('p', { class: 'nota', text: 'A MailerLite crea una campanya amb "HTML personalitzat" i enganxa-hi aquest codi. A "Destinataris" tria el grup/segment amb tothom EXCLOENT el grup Participants (condició: no pertany al grup Participants). L\'enllaç de l\'enquesta és genèric (primer pregunta qui és) i el de baixa ({$unsubscribe}) ja hi és.' })
+    ]);
+    ml.appendChild(el('div', { class: 'fila' }, [
+      el('button', { class: 'sec', text: 'HTML trilingüe (CA + ES + EN en un sol correu)', onclick: function () { baixar('/api/admin-enquestes?accio=plantilla_resum&idioma=tri', 'resum-trilingue-mailerlite.html'); } }),
+      el('button', { class: 'sec', text: 'HTML CA', onclick: function () { baixar('/api/admin-enquestes?accio=plantilla_resum&idioma=ca', 'resum-ca-mailerlite.html'); } }),
+      el('button', { class: 'sec', text: 'HTML ES', onclick: function () { baixar('/api/admin-enquestes?accio=plantilla_resum&idioma=es', 'resum-es-mailerlite.html'); } }),
+      el('button', { class: 'sec', text: 'HTML EN', onclick: function () { baixar('/api/admin-enquestes?accio=plantilla_resum&idioma=en', 'resum-en-mailerlite.html'); } })
+    ]));
+    box.appendChild(ml);
   }
 
   function pintaGrup(g, d, estat) {

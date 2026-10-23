@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Incidències · Administració</title>
+<link rel="icon" type="image/png" href="img/logo-small.png">
+<style>
+  :root { --blau: #15315F; --blau2: #1E72D4; --coral: #FF6B47; --paper: #F4F6FA; --tinta: #0E1B36; --gris: #5A6478; --linia: #D9DEE8; --verd: #1E8E5A; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--paper); color: var(--tinta); line-height: 1.5; font-size: 15px; }
+  header { background: var(--blau); color: #fff; padding: .9rem 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  header h1 { margin: 0; font-size: 1.1rem; }
+  header a { color: #fff; border: 1px solid #fff; border-radius: 8px; padding: .35rem .8rem; text-decoration: none; font-size: 14px; }
+  main { max-width: 1000px; margin: 0 auto; padding: 1.25rem; }
+  section { background: #fff; border: 1px solid var(--linia); border-radius: 12px; padding: 1.1rem 1.2rem; margin-bottom: 1.2rem; }
+  button { font: inherit; border: 1px solid var(--blau2); background: var(--blau2); color: #fff; border-radius: 8px; padding: .4rem .85rem; cursor: pointer; }
+  button.sec { background: #fff; color: var(--blau2); }
+  button.ok { background: var(--verd); border-color: var(--verd); }
+  button:disabled { opacity: .55; }
+  input, textarea { font: inherit; padding: .4rem .6rem; border: 1px solid var(--linia); border-radius: 8px; }
+  textarea { width: 100%; min-height: 60px; }
+  .fila { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; margin: .4rem 0; }
+  .nota { color: var(--gris); font-size: 13px; }
+  .tabs button { background: #fff; color: var(--blau2); }
+  .tabs button.on { background: var(--blau2); color: #fff; }
+  .inc { border: 1px solid var(--linia); border-left: 5px solid var(--coral); border-radius: 10px; padding: .8rem 1rem; margin-top: .8rem; }
+  .inc.resolta { border-left-color: var(--verd); background: #F6FBF8; }
+  .inc h3 { margin: 0 0 .2rem; font-size: 1.02rem; color: var(--blau); }
+  .tag { display: inline-block; background: #EAF1FB; color: var(--blau); border-radius: 999px; padding: .1rem .6rem; font-size: 13px; margin: .15rem .25rem .15rem 0; }
+  .detall { background: var(--paper); border-radius: 8px; padding: .5rem .7rem; margin: .5rem 0; white-space: pre-wrap; }
+  a.mail { color: var(--blau2); }
+  #login { max-width: 420px; }
+  .ko { color: #B3261E; font-weight: 600; }
+</style>
+</head>
+<body>
+<header><h1>Incidències pendents (samarreta, bossa, recollida…)</h1><a href="/enquesta-admin">Enquesta · administració →</a></header>
+<main>
+  <section id="login">
+    <h2 style="margin-top:0">Accés</h2>
+    <div class="fila"><input type="password" id="tk" placeholder="ADMIN_TOKEN" autocomplete="off"><button id="entrar">Entrar</button></div>
+    <p class="ko" id="loginErr"></p>
+  </section>
+  <div id="panell" hidden>
+    <section>
+      <div class="fila tabs" id="tabs"></div>
+      <div class="fila"><button class="sec" id="refresca">Actualitzar</button><button class="sec" id="csv">Baixar CSV (Excel)</button><span class="nota" id="info"></span></div>
+      <div id="llista"></div>
+    </section>
+  </div>
+</main>
+<script>
+(function () {
+  'use strict';
+  var TOKEN = ''; try { TOKEN = sessionStorage.getItem('llxd-enq-admin') || ''; } catch (e) {}
+  var DADES = [], TIPUS = {}, FILTRE = 'pendent';
+  var $ = function (id) { return document.getElementById(id); };
+  function api(url, opts) { opts = opts || {}; opts.headers = Object.assign({ Authorization: 'Bearer ' + TOKEN }, opts.headers || {}); return fetch(url, opts); }
+  function el(tag, attrs, kids) {
+    var e = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) { if (k === 'text') e.textContent = attrs[k]; else if (k === 'class') e.className = attrs[k]; else if (k.slice(0, 2) === 'on') e.addEventListener(k.slice(2), attrs[k]); else e.setAttribute(k, attrs[k]); });
+    (kids || []).forEach(function (c) { if (c) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    return e;
+  }
+  $('entrar').addEventListener('click', function () { TOKEN = $('tk').value.trim(); carrega(true); });
+  $('tk').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('entrar').click(); });
+  $('refresca').addEventListener('click', function () { carrega(); });
+  $('csv').addEventListener('click', function () {
+    api('/api/admin-incidencies?format=csv').then(function (r) { return r.blob(); }).then(function (b) { var a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'incidencies.csv'; document.body.appendChild(a); a.click(); a.remove(); });
+  });
+  function carrega(primera) {
+    $('info').textContent = 'Carregant…';
+    api('/api/admin-incidencies').then(function (r) { if (r.status === 401) throw new Error('Token incorrecte'); return r.json(); }).then(function (j) {
+      if (!j.ok) throw new Error(j.error || 'Error');
+      try { sessionStorage.setItem('llxd-enq-admin', TOKEN); } catch (e) {}
+      DADES = j.incidencies; TIPUS = j.tipus; $('login').hidden = true; $('panell').hidden = false; pinta(); $('info').textContent = '';
+    }).catch(function (e) { if (primera || $('panell').hidden) $('loginErr').textContent = e.message; else $('info').textContent = e.message; });
+  }
+  function pinta() {
+    var pend = DADES.filter(function (x) { return x.estat === 'pendent'; }).length, res = DADES.length - pend;
+    var tabs = $('tabs'); tabs.innerHTML = '';
+    [['pendent', 'Pendents (' + pend + ')'], ['resolta', 'Resoltes (' + res + ')'], ['totes', 'Totes (' + DADES.length + ')']].forEach(function (x) {
+      tabs.appendChild(el('button', { class: FILTRE === x[0] ? 'on' : '', text: x[1], onclick: function () { FILTRE = x[0]; pinta(); } }));
+    });
+    var cont = $('llista'); cont.innerHTML = '';
+    var v = DADES.filter(function (x) { return FILTRE === 'totes' || x.estat === FILTRE; });
+    if (!v.length) cont.appendChild(el('p', { class: 'nota', text: 'No hi ha incidències en aquesta vista.' }));
+    v.forEach(function (x) {
+      var d = new Date(x.data);
+      var box = el('div', { class: 'inc' + (x.estat === 'resolta' ? ' resolta' : '') });
+      box.appendChild(el('h3', { text: x.nom + ' · ' + d.toLocaleDateString('ca-ES') + ' ' + d.toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit' }) }));
+      box.appendChild(el('div', null, [
+        el('a', { class: 'mail', href: 'mailto:' + x.email + '?subject=' + encodeURIComponent('Sobre la teva incidència · Llobregat x la Diabetis'), text: x.email }), '  ·  ',
+        el('a', { class: 'mail', href: 'tel:' + x.telefon.replace(/[^\d+]/g, ''), text: x.telefon })
+      ]));
+      var tg = el('div'); x.tipus.forEach(function (t) { tg.appendChild(el('span', { class: 'tag', text: TIPUS[t] || t })); }); box.appendChild(tg);
+      if (x.detall) box.appendChild(el('div', { class: 'detall', text: x.detall }));
+      var nota = el('textarea', { placeholder: 'Nota interna (què s\'ha fet, qui se n\'encarrega…)' }); nota.value = x.nota || '';
+      box.appendChild(nota);
+      var f = el('div', { class: 'fila' });
+      var desa = function (estat) {
+        var body = { id: x.id, nota: nota.value }; if (estat) body.estat = estat;
+        api('/api/admin-incidencies', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then(function (r) { return r.json(); }).then(function (j) {
+          if (!j.ok) { alert(j.error); return; } Object.assign(x, j.incidencia); pinta();
+        });
+      };
+      f.appendChild(el('button', { class: 'sec', text: 'Desar nota', onclick: function () { desa(); } }));
+      if (x.estat === 'pendent') f.appendChild(el('button', { class: 'ok', text: 'Marcar com a resolta', onclick: function () { desa('resolta'); } }));
+      else f.appendChild(el('button', { class: 'sec', text: 'Tornar a pendent', onclick: function () { desa('pendent'); } }));
+      box.appendChild(f); cont.appendChild(box);
+    });
+  }
+  if (TOKEN) { $('tk').value = TOKEN; carrega(true); }
+})();
+</script>
+</body>
+</html>
