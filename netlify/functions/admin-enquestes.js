@@ -19,7 +19,7 @@
 //
 // Variables d'entorn: RESEND_API_KEY, RESEND_FROM_EMAIL, RESEND_FROM_NAME (ja existents),
 // SITE_URL (opcional, per defecte https://llobregat.org),
-// ENQUESTA_LIMIT_DIARI (opcional, per defecte 90: el pla gratuït de Resend en permet 100/dia).
+// ENQUESTA_LIMIT_DIARI (opcional, per defecte 2000; amb el pla gratuït de Resend (100/dia) posa-hi 90).
 
 const E = require("./lib/enquesta-store");
 const Q = require("./lib/enquesta-preguntes");
@@ -194,7 +194,7 @@ exports.handler = async (event) => {
         const dia = (await E.llegir("dia/" + avui())) || { n: 0 };
         return resp(200, {
           ok: true, grups, respostes_total: total, respostes_anonimes: anonimes,
-          enviats_avui: dia.n, limit_diari: Number(process.env.ENQUESTA_LIMIT_DIARI) || 90,
+          enviats_avui: dia.n, limit_diari: Number(process.env.ENQUESTA_LIMIT_DIARI) || 2000,
           resend_configurat: !!(process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL),
           site: M.SITE(),
         });
@@ -321,7 +321,7 @@ exports.handler = async (event) => {
 
       if (body.accio === "enviar_resum") {
         if (!Q.GRUPS_IDS.includes(body.grup)) return resp(400, { ok: false, error: "Grup desconegut" });
-        const limit = Number(process.env.ENQUESTA_LIMIT_DIARI) || 90;
+        const limit = Number(process.env.ENQUESTA_LIMIT_DIARI) || 2000;
         const dia = (await E.llegir("dia/" + avui())) || { n: 0 };
         const queden = Math.max(0, limit - dia.n);
         const quant = Math.min(Number(body.quant) || 50, 100, queden);
@@ -347,7 +347,7 @@ exports.handler = async (event) => {
 
       if (body.accio === "enviar") {
         if (!Q.GRUPS_IDS.includes(body.grup)) return resp(400, { ok: false, error: "Grup desconegut" });
-        const limit = Number(process.env.ENQUESTA_LIMIT_DIARI) || 90;
+        const limit = Number(process.env.ENQUESTA_LIMIT_DIARI) || 2000;
         const dia = (await E.llegir("dia/" + avui())) || { n: 0 };
         const queden = Math.max(0, limit - dia.n);
         const quant = Math.min(Number(body.quant) || 50, 100, queden);
