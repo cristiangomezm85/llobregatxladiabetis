@@ -154,7 +154,31 @@
       });
     });
     g.appendChild(el('div', { class: 'fila' }, [sel, be]));
-    g.appendChild(el('p', { class: 'nota', text: 'Pla gratuït de Resend: màxim 100 correus al dia, així que amb molts participants cal repetir el lot cada dia fins que "pendents" arribi a 0.' }));
+    // Enviament massiu: va enviant lots de 100 un darrere l'altre fins que no queda cap pendent.
+    var estatAll = el('div', { class: 'nota', style: 'margin-top:.4rem; font-weight:700;' });
+    var ba = el('button', { class: 'coral', text: 'Enviar a TOTS els participants pendents (lots de 100)' });
+    ba.addEventListener('click', function () {
+      var pend = d.destinataris - (d.enviats_resum || 0);
+      if (pend <= 0) { alert('No queda cap participant pendent.'); return; }
+      if (!confirm('Enviarem el correu resum REAL a TOTS els participants pendents (' + pend + ') en lots de 100. No tanquis aquesta pestanya fins que acabi. Has fet ja la prova en els 3 idiomes? Continuar?')) return;
+      ba.disabled = true; be.disabled = true; var total = 0, aturat = false;
+      window.addEventListener('beforeunload', avisa);
+      function avisa(ev) { ev.preventDefault(); ev.returnValue = ''; }
+      (function lot() {
+        post({ accio: 'enviar_resum', grup: 'participant', quant: 100 }).then(function (r) {
+          if (!r.ok) { estatAll.textContent = 'Error: ' + r.error + ' (enviats ' + total + '). Pots tornar a prémer el botó: continuarà pels pendents.'; return acaba(); }
+          total += r.enviats || 0;
+          if (r.motiu === 'limit_diari') { estatAll.textContent = 'Límit diari assolit (' + r.enviats_avui + '/' + r.limit_diari + '). Enviats ara: ' + total + '. Continua demà o puja ENQUESTA_LIMIT_DIARI.'; return acaba(); }
+          if (r.motiu === 'res_pendent' || !r.enviats) { estatAll.textContent = 'Fet! Enviats ' + total + ' correus. Ja no queda cap pendent.'; return acaba(); }
+          estatAll.textContent = 'Enviant… ' + total + ' de ' + pend + ' enviats';
+          setTimeout(lot, 1200);
+        }).catch(function (e) { estatAll.textContent = 'Error de connexió (enviats ' + total + '). Torna a prémer el botó: continuarà pels pendents.'; acaba(); });
+      })();
+      function acaba() { window.removeEventListener('beforeunload', avisa); ba.disabled = false; be.disabled = false; alert(estatAll.textContent); refrescaEstat(); }
+    });
+    g.appendChild(el('div', { class: 'fila' }, [ba]));
+    g.appendChild(estatAll);
+    g.appendChild(el('p', { class: 'nota', text: 'Amb Resend de pagament no hi ha límit diari pràctic: el botó gran envia tots els pendents seguits. Cada correu només s\'envia una vegada (el panell recorda qui l\'ha rebut). Si es talla, torna a prémer-lo i continua. Amb el pla gratuït (100/dia) fes servir el lot de 90 cada dia.' }));
 
     var ml = el('div', { class: 'grup' }, [
       el('h3', { text: 'La resta de contactes (MailerLite)' }),
