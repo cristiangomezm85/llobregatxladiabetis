@@ -32,7 +32,7 @@ llobregat-x-la-diabetis-190-kms-corriendo-por-la-diabetes-tipo-1: donantes 0/0 �
 llobregat-per-la-diabetes: donantes 1/1 · comentarios 0/? · textos 186
 un-vehiculo-para-afa-palencia: donantes 0/? · comentarios 0/? · textos 113
 --- DIAGNÓSTICO un-vehiculo-para-afa-palencia: no se encontró el encabezado "Donantes (N)" ---
-HTML: 41920 caracteres · <title>: (sin título)
+HTML: 41919 caracteres · <title>: (sin título)
 Primeros textos: ["Buscar","Crea tu reto","es","es","ca","en","Regístrate / Inicia sesión","Crea tu reto","Descubre retos","Descubre eventos","Descubre causas","Nuestra fundación","¿Qué es el crowdfunding?","¿Quieres ser un event partner?","La causa del mes","Personas","Empresas","ONGs","Equipo","Blog","Cajas","solidarias","Tu donación en una caja","Dónalo","Donación de producto"]
 Textos con donan/coment: []
 ✅ donaciones.json — 222 donaciones (0 nuevas, 0 con comentario añadido)
