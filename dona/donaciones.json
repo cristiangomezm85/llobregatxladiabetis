@@ -1,7 +1,7 @@
 {
   "objectiuGotes": 250,
-  "actualizado": "2026-10-27T13:16:04.442Z",
-  "total": 222,
+  "actualizado": "2026-10-27T13:31:14.243Z",
+  "total": 223,
   "donaciones": [
     {
       "id": "fb594bee7cc2",
@@ -2444,6 +2444,17 @@
       "mensaje": "Esto no va a parar hasta encontrar la cura!!!!! 💪Por todos!!!! 💙",
       "fecha": "2026-10-25T20:15:55.376Z",
       "orden": 233
+    },
+    {
+      "id": "bdeb0b86ab42",
+      "reto": "llobregat-x-la-diabetes",
+      "retoNombre": "llobregat-x-la-diabetes",
+      "nombre": "Maria",
+      "anonimo": false,
+      "importe": 10,
+      "mensaje": "A per totes!!!",
+      "fecha": "2026-10-27T13:31:12.113Z",
+      "orden": 234
     }
   ]
 }
