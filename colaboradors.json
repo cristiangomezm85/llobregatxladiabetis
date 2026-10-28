@@ -1,5 +1,5 @@
 {
- "actualitzat": "2026-10-21",
+ "actualitzat": "2026-10-28",
  "comentari": "Llistat d'entitats col·laboradores. Cada entrada: nom, nivell (organitza|institucions|principals|ajuntaments|entitats), logo (ruta a img/colaboradors/…), web (opcional), aporta {ca,es,en} (opcional), ordre, visible (false per amagar). La mida del logo la defineix cada nivell (camp 'mida': xl|l|m|s). 'recorregut': true compta l'entitat com a ajuntament del recorregut al resum encara que sigui en un altre nivell.",
  "nivells": [
   {
@@ -413,6 +413,12 @@
    "logo": "img/colaboradors/forumsport.png",
    "web": "https://www.forumsport.com/",
    "ordre": 6
+  },
+  {
+   "nom": "Biblioteca Mercè Rodoreda",
+   "nivell": "entitats",
+   "logo": "img/colaboradors/biblioteca_merce_rodoreda.png",
+   "ordre": 7
   }
  ]
 }
