@@ -1,7 +1,7 @@
 {
   "objectiuGotes": 250,
-  "actualizado": "2026-10-30T11:15:59.693Z",
-  "total": 223,
+  "actualizado": "2026-10-30T11:31:14.977Z",
+  "total": 224,
   "donaciones": [
     {
       "id": "fb594bee7cc2",
@@ -2455,6 +2455,17 @@
       "mensaje": "A per totes!!!",
       "fecha": "2026-10-27T13:31:12.113Z",
       "orden": 234
+    },
+    {
+      "id": "4626f2d588b7",
+      "reto": "llobregat-x-la-diabetes",
+      "retoNombre": "llobregat-x-la-diabetes",
+      "nombre": "Carlos",
+      "anonimo": false,
+      "importe": 50,
+      "mensaje": "",
+      "fecha": "2026-10-30T11:31:12.398Z",
+      "orden": 235
     }
   ]
 }
