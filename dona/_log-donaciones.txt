@@ -1,38 +1,59 @@
 astolfo-x-la-diabetes: donantes 22/22 · comentarios 11/12 · textos 289
 ⚠️  astolfo-x-la-diabetes: la página dice 12 comentarios pero se leyeron 11
-club-basquet-santjust-x-la-diabetes: donantes 14/14 · comentarios 5/5 · textos 250
-carlos-912runners-x-la-diabetes: donantes 24/24 · comentarios 5/6 · textos 283
+club-basquet-santjust-x-la-diabetes: donantes 14/14 · comentarios 5/5 · textos 248
+  ↳ club-basquet-santjust-x-la-diabetes: marcado como finalizado
+carlos-912runners-x-la-diabetes: donantes 24/24 · comentarios 5/6 · textos 281
 ⚠️  carlos-912runners-x-la-diabetes: la página dice 6 comentarios pero se leyeron 5
-daniel-x-la-diabetes: donantes 6/6 · comentarios 2/2 · textos 218
-emi-x-la-diabetes: donantes 12/12 · comentarios 7/8 · textos 249
+  ↳ carlos-912runners-x-la-diabetes: marcado como finalizado
+daniel-x-la-diabetes: donantes 6/6 · comentarios 2/2 · textos 216
+  ↳ daniel-x-la-diabetes: marcado como finalizado
+emi-x-la-diabetes: donantes 12/12 · comentarios 7/8 · textos 247
 ⚠️  emi-x-la-diabetes: la página dice 8 comentarios pero se leyeron 7
-pedro-x-la-diabetes: donantes 6/6 · comentarios 2/3 · textos 219
+  ↳ emi-x-la-diabetes: marcado como finalizado
+pedro-x-la-diabetes: donantes 6/6 · comentarios 2/3 · textos 217
 ⚠️  pedro-x-la-diabetes: la página dice 3 comentarios pero se leyeron 2
-pksteam-x-la-diabetes: donantes 27/27 · comentarios 6/7 · textos 284
+  ↳ pedro-x-la-diabetes: marcado como finalizado
+pksteam-x-la-diabetes: donantes 27/27 · comentarios 6/7 · textos 282
 ⚠️  pksteam-x-la-diabetes: la página dice 7 comentarios pero se leyeron 6
-ricard-x-la-diabetes: donantes 49/49 · comentarios 21/25 · textos 400
+  ↳ pksteam-x-la-diabetes: marcado como finalizado
+ricard-x-la-diabetes: donantes 49/49 · comentarios 21/25 · textos 398
 ⚠️  ricard-x-la-diabetes: la página dice 25 comentarios pero se leyeron 21
-sandra-x-la-diabetis: donantes 6/6 · comentarios 3/3 · textos 221
-team-one-x-la-diabetes: donantes 5/5 · comentarios 2/2 · textos 227
-castellar-de-n-hug-x-la-diabetes: donantes 1/1 · comentarios 0/? · textos 194
-guardiola-de-bergueda-x-la-diabetes: donantes 1/1 · comentarios 0/? · textos 194
-cal-rosal-olvan-x-la-diabetes: donantes 2/2 · comentarios 1/1 · textos 201
-puig-reig-x-la-diabetes: donantes 3/3 · comentarios 1/1 · textos 204
-balsareny-x-la-diabetes: donantes 1/1 · comentarios 0/? · textos 194
-olesa-de-montserrat-x-la-diabetes: donantes 2/2 · comentarios 0/? · textos 197
-sant-andreu-de-la-barca-x-la-diabetes: donantes 1/1 · comentarios 1/1 · textos 198
-palleja-x-la-diabetes: donantes 1/1 · comentarios 0/? · textos 194
-santa-coloma-de-cervello-x-la-diabetes: donantes 1/1 · comentarios 0/1 · textos 195
+  ↳ ricard-x-la-diabetes: marcado como finalizado
+sandra-x-la-diabetis: donantes 6/6 · comentarios 3/3 · textos 219
+  ↳ sandra-x-la-diabetis: marcado como finalizado
+team-one-x-la-diabetes: donantes 5/5 · comentarios 2/2 · textos 225
+  ↳ team-one-x-la-diabetes: marcado como finalizado
+castellar-de-n-hug-x-la-diabetes: donantes 1/1 · comentarios 0/? · textos 192
+  ↳ castellar-de-n-hug-x-la-diabetes: marcado como finalizado
+guardiola-de-bergueda-x-la-diabetes: donantes 1/1 · comentarios 0/? · textos 192
+  ↳ guardiola-de-bergueda-x-la-diabetes: marcado como finalizado
+cal-rosal-olvan-x-la-diabetes: donantes 2/2 · comentarios 1/1 · textos 199
+  ↳ cal-rosal-olvan-x-la-diabetes: marcado como finalizado
+puig-reig-x-la-diabetes: donantes 3/3 · comentarios 1/1 · textos 202
+  ↳ puig-reig-x-la-diabetes: marcado como finalizado
+balsareny-x-la-diabetes: donantes 1/1 · comentarios 0/? · textos 192
+  ↳ balsareny-x-la-diabetes: marcado como finalizado
+olesa-de-montserrat-x-la-diabetes: donantes 2/2 · comentarios 0/? · textos 195
+  ↳ olesa-de-montserrat-x-la-diabetes: marcado como finalizado
+sant-andreu-de-la-barca-x-la-diabetes: donantes 1/1 · comentarios 1/1 · textos 196
+  ↳ sant-andreu-de-la-barca-x-la-diabetes: marcado como finalizado
+palleja-x-la-diabetes: donantes 1/1 · comentarios 0/? · textos 192
+  ↳ palleja-x-la-diabetes: marcado como finalizado
+santa-coloma-de-cervello-x-la-diabetes: donantes 1/1 · comentarios 0/1 · textos 193
 ⚠️  santa-coloma-de-cervello-x-la-diabetes: la página dice 1 comentarios pero se leyeron 0
-sant-joan-x-la-diabetes: donantes 4/4 · comentarios 3/3 · textos 213
-hospitalet-x-la-diabetes: donantes 2/2 · comentarios 1/1 · textos 201
+  ↳ santa-coloma-de-cervello-x-la-diabetes: marcado como finalizado
+sant-joan-x-la-diabetes: donantes 4/4 · comentarios 3/3 · textos 211
+  ↳ sant-joan-x-la-diabetes: marcado como finalizado
+hospitalet-x-la-diabetes: donantes 2/2 · comentarios 1/1 · textos 199
+  ↳ hospitalet-x-la-diabetes: marcado como finalizado
 llobregat-x-la-diabetes: donantes 20/20 · comentarios 7/8 · textos 274
 ⚠️  llobregat-x-la-diabetes: la página dice 8 comentarios pero se leyeron 7
 llobregat-x-la-diabetis-190-kms-corriendo-por-la-diabetes-tipo-1: donantes 0/0 · comentarios 0/? · textos 187
 llobregat-per-la-diabetes: donantes 1/1 · comentarios 0/? · textos 186
 un-vehiculo-para-afa-palencia: donantes 0/? · comentarios 0/? · textos 113
 --- DIAGNÓSTICO un-vehiculo-para-afa-palencia: no se encontró el encabezado "Donantes (N)" ---
-HTML: 42047 caracteres · <title>: (sin título)
+HTML: 42029 caracteres · <title>: (sin título)
 Primeros textos: ["Buscar","Crea tu reto","es","es","ca","en","Regístrate / Inicia sesión","Crea tu reto","Descubre retos","Descubre eventos","Descubre causas","Nuestra fundación","¿Qué es el crowdfunding?","¿Quieres ser un event partner?","La causa del mes","Personas","Empresas","ONGs","Equipo","Blog","Cajas","solidarias","Tu donación en una caja","Dónalo","Donación de producto"]
 Textos con donan/coment: []
+retos.json: 20 cambio(s) de importe/estado
 ✅ donaciones.json — 225 donaciones (0 nuevas, 0 con comentario añadido)
