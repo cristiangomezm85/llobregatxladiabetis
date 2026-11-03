@@ -120,7 +120,21 @@
   function txtPers(x) { return x.adults + ' adult' + (x.adults === 1 ? '' : 's') + (x.infants ? ' + ' + x.infants + ' infant' + (x.infants === 1 ? '' : 's') : ''); }
   function missatge(x) {
     var nom = (x.nom || '').split(' ')[0];
-    return 'Hola ' + nom + '! 💙 Et confirmem la plaça per al sopar de cloenda d\'El Desenllaç: dissabte 14 de novembre a les 20:30 al Restaurant Delta (El Prat), per a ' + txtPers(x) + '. Recorda que cadascú es paga el seu sopar. Si hi ha qualsevol canvi, avisa\'ns per aquí. Ens veiem dissabte! Llobregat x la Diabetis';
+    return [
+      'Hola ' + nom + '!',
+      '',
+      '✅ *Plaça confirmada per al sopar de cloenda d\'El Desenllaç*',
+      '',
+      '*Quan:* dissabte 14 de novembre, 20:30 h',
+      '*On:* Restaurant Delta, El Prat de Llobregat',
+      'https://maps.app.goo.gl/EsbCxRa54zAawJnS8',
+      '*Persones:* ' + txtPers(x),
+      '',
+      'Recorda que cadascú es paga el seu sopar. Si hi ha qualsevol canvi, avisa\'ns per aquí.',
+      '',
+      'Ens veiem dissabte!',
+      '_Llobregat x la Diabetis_'
+    ].join('\n');
   }
 
   $('entrar').addEventListener('click', function () { TOKEN = $('tk').value.trim(); carrega(true); });
@@ -209,7 +223,7 @@
       if (x.comentaris) box.appendChild(el('div', { class: 'det', text: '💬 ' + x.comentaris }));
       var nota = el('textarea', { placeholder: 'Nota interna' }); nota.value = x.nota || ''; box.appendChild(nota);
       var f = el('div', { class: 'fila' });
-      if (x.sopar && x.telefon && !x.baixa) f.appendChild(el('a', { href: 'https://wa.me/' + tel(x.telefon) + '?text=' + encodeURIComponent(missatge(x)), target: '_blank', rel: 'noopener' }, [el('button', { class: 'sec', text: 'Confirmar per WhatsApp' })]));
+      if (x.sopar && x.telefon && !x.baixa) f.appendChild(el('a', { href: 'https://api.whatsapp.com/send?phone=' + tel(x.telefon) + '&text=' + encodeURIComponent(missatge(x)), target: '_blank', rel: 'noopener' }, [el('button', { class: 'sec', text: 'Confirmar per WhatsApp' })]));
       if (x.sopar && !x.baixa) f.appendChild(el('button', { class: x.confirmat ? 'sec' : 'ok', text: x.confirmat ? 'Treure confirmació' : 'Marcar confirmada', onclick: function () { desa(x, { confirmat: !x.confirmat, nota: nota.value }); } }));
       f.appendChild(el('button', { class: 'sec', text: 'Desar nota', onclick: function () { desa(x, { nota: nota.value }); } }));
       f.appendChild(el('button', { class: 'ko', text: x.baixa ? 'Recuperar' : 'Donar de baixa', onclick: function () { desa(x, { baixa: !x.baixa, nota: nota.value }); } }));

@@ -365,7 +365,7 @@
     .hero-actions { gap: 0.65rem; }
     .hero-actions .btn { flex: 1 1 100%; justify-content: center; }
     /* mòbil: sense text llarg ni botó Recorregut, perquè es vegi el recaptat i Dona en carregar */
-    .hero-desc, .hero-actions .btn-ghost { display: none; }
+    .hero-desc { display: none; }
     .hero-subtitle { margin-bottom: 1.1rem; }
   }
   @media (max-height: 680px) {
@@ -400,6 +400,13 @@
         rgba(14, 27, 54, 0.95) 100%);
     z-index: 1;
   }
+  .hero-video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; z-index: 0; opacity: 0; transition: opacity 1s ease;
+    pointer-events: none;
+  }
+  .hero-video.is-playing { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .hero-video { display: none; } }
   .hero-content {
     position: relative; z-index: 2;
     width: 100%;
@@ -673,6 +680,170 @@
     .countdown-unit { padding: 0.6rem 0.3rem; }
     .countdown-num { font-size: 1.5rem; }
     .countdown-lab { font-size: 0.6rem; letter-spacing: 0.1em; }
+  }
+
+
+  /* ============================================
+     EL DESENLLAÇ · 14 de novembre
+     ============================================ */
+  @media (max-width: 720px) {
+    /* mòbil: només el títol a dalt, el vídeo lliure al centre i els botons a baix */
+    .hero { padding: 1.6rem 0 1.6rem; align-items: stretch; }
+    .hero-content { display: flex; flex-direction: column; min-height: calc(100svh - 64px - 3.2rem); }
+    .hero-meta, .hero-desenllac, .hero .h-eyebrow, .hero .hero-subtitle, .hero-desc, .hero-raised { display: none !important; }
+    .hero h1 { margin-bottom: 0; }
+    .hero-actions { margin-top: auto; gap: .6rem; }
+    .hero-actions .btn { flex: 1 1 100%; justify-content: center; }
+  }
+  .hero-desenllac{display:flex;width:fit-content;max-width:100%;align-items:center;gap:.6rem;margin:0 0 1.1rem;padding:.5rem .95rem .5rem .55rem;border-radius:999px;
+    background:rgba(14,27,54,.55);border:1px solid rgba(90,192,230,.45);color:#fff;font:700 .86rem/1.2 var(--body);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:background .2s,transform .2s}
+  .hero-desenllac:hover{background:rgba(21,49,95,.85);transform:translateY(-1px)}
+  .hero-desenllac b{white-space:nowrap;background:var(--coral);color:#fff;border-radius:999px;padding:.22rem .6rem;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase}
+  .countdown-cta{margin-top:.85rem;align-self:flex-start}
+  .countdown-banner.is-open .countdown-cta{display:none}
+  .countdown-banner--desenllac{border-color:rgba(255,107,71,.45);background:linear-gradient(120deg,rgba(255,107,71,.10),rgba(255,255,255,.04))}
+  .countdown-banner--desenllac .countdown-banner-tag{color:var(--coral)}
+
+  .desenllac{position:relative;color:#fff;overflow:hidden;background:#030714;padding:clamp(3rem,6vw,5rem) 0 clamp(4rem,8vw,6.5rem)}
+  .desenllac-bg{position:absolute;left:0;right:0;top:0;height:clamp(980px,82vw,1500px);
+    background:url("img/desenllac-nit.jpg") center top/cover no-repeat;
+    -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 72%,transparent 100%);mask-image:linear-gradient(180deg,#000 0%,#000 72%,transparent 100%)}
+  .desenllac::before{content:"";position:absolute;left:0;right:0;top:0;height:clamp(980px,82vw,1500px);z-index:1;pointer-events:none;
+    background:radial-gradient(ellipse 60% 44% at 50% 36%,rgba(3,7,20,.62),transparent 72%),
+               linear-gradient(180deg,rgba(3,7,20,.25) 0%,rgba(3,7,20,0) 40%,rgba(3,7,20,.35) 75%,#030714 100%)}
+  .dl-head{display:flex;flex-direction:column;align-items:center;text-align:center}
+  .dl-head .desenllac-intro{margin-left:auto;margin-right:auto;text-shadow:0 2px 18px rgba(3,7,20,.9)}
+  .dl-head .desenllac-actions{justify-content:center}
+  .dl-head h2{text-shadow:0 0 40px rgba(30,114,212,.6)}
+  .dl-logo{display:block;width:clamp(200px,26vw,340px);height:auto;margin:0 auto -.5rem;animation:dlGlow 4.5s ease-in-out infinite}
+  .dl-logo img{width:100%;height:auto}
+  @keyframes dlGlow{0%,100%{filter:brightness(1) drop-shadow(0 0 0 rgba(90,192,230,0))}50%{filter:brightness(1.12) drop-shadow(0 0 22px rgba(90,192,230,.45))}}
+  @media (prefers-reduced-motion:reduce){.dl-logo{animation:none}}
+  @media (max-width:720px){
+    .desenllac-bg{background-image:url("img/desenllac-nit-mobile.jpg");height:1500px}
+    .desenllac::before{height:1500px;background:linear-gradient(180deg,rgba(3,7,20,.2) 0%,rgba(3,7,20,.35) 40%,rgba(3,7,20,.72) 58%,rgba(3,7,20,.8) 85%,#030714 100%)}
+    .dl-stop small{color:rgba(255,255,255,.75)}
+  }
+  .desenllac .container{position:relative;z-index:2}
+  .desenllac .h-eyebrow{color:var(--blau-aigua)}
+  .desenllac h2{color:#fff;font-size:clamp(2.8rem,8vw,6rem);font-weight:800;letter-spacing:-.035em;margin:.5rem 0 .6rem}
+  .desenllac h2 em{font-style:normal;color:var(--blau-aigua)}
+  .desenllac-date{font-family:var(--display);font-weight:700;font-size:clamp(1.2rem,2.6vw,1.7rem);color:#fff}
+  .desenllac-date span.sep{color:var(--coral);margin:0 .4rem}
+  .desenllac-intro{max-width:62ch;color:rgba(255,255,255,.82);font-size:clamp(1rem,1.3vw,1.15rem);margin:1.1rem 0 0}
+  .desenllac-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.8rem}
+
+  .dl-route{list-style:none;margin:clamp(2.5rem,5vw,3.5rem) 0 0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.75rem;position:relative}
+  .dl-route::before{content:"";position:absolute;left:4%;right:4%;top:22px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--blau-aigua),var(--blau-diabetis),var(--coral))}
+  .dl-stop{position:relative;padding-top:58px}
+  .dl-stop::before{content:"";position:absolute;top:10px;left:0;width:27px;height:27px;border-radius:50%;background:var(--tinta);border:3px solid var(--blau-aigua);box-shadow:0 0 0 6px rgba(90,192,230,.15),0 0 22px rgba(90,192,230,.6)}
+  .dl-stop.is-sopar::before{border-color:var(--coral);box-shadow:0 0 0 6px rgba(255,107,71,.15),0 0 22px rgba(255,107,71,.6)}
+  .dl-stop time{display:block;font-family:var(--display);font-weight:800;font-size:1.45rem;color:var(--blau-aigua);letter-spacing:-.02em}
+  .dl-stop.is-sopar time{color:var(--coral)}
+  .dl-stop strong{display:block;font-family:var(--display);font-size:1.12rem;line-height:1.15;margin-top:.2rem;color:#fff}
+  .dl-stop small{display:block;color:rgba(255,255,255,.6);font-size:.82rem;margin-top:.3rem}
+  .dl-map{color:var(--blau-aigua);font-weight:700;text-decoration:none;border-bottom:1px solid rgba(90,192,230,.4)}
+  .dl-map:hover{border-bottom-color:var(--blau-aigua)}
+  .dl-pend{font-style:italic}
+  .dl-faq{margin-top:clamp(3rem,6vw,4.5rem)}
+  .dl-faq h3{color:#fff;font-size:clamp(1.7rem,3.2vw,2.4rem);margin:.4rem 0 1.2rem}
+  .dl-faq-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;align-items:start}
+  .dl-faq details{background:rgba(255,255,255,.05);border:1px solid rgba(90,192,230,.22);border-radius:14px;padding:1rem 1.15rem}
+  .dl-faq summary{cursor:pointer;font-family:var(--display);font-weight:700;font-size:1.05rem;color:#fff;list-style:none;display:flex;justify-content:space-between;gap:1rem}
+  .dl-faq summary::-webkit-details-marker{display:none}
+  .dl-faq summary::after{content:'+';color:var(--blau-aigua);font-size:1.3rem;line-height:1}
+  .dl-faq details[open] summary::after{content:'–'}
+  .dl-faq details p{margin:.6rem 0 0;color:rgba(255,255,255,.75);font-size:.95rem;line-height:1.5}
+  .dl-surprise{position:relative;overflow:hidden;margin-top:clamp(3rem,6vw,4.5rem);border-radius:24px;padding:clamp(6.5rem,11vw,8rem) clamp(1.5rem,5vw,3.5rem) clamp(3rem,7vw,5rem);background:radial-gradient(ellipse 60% 70% at 50% 0%,rgba(90,192,230,.28),rgba(30,114,212,.08) 45%,rgba(3,7,20,0) 75%),#050B1C;border:1px solid rgba(90,192,230,.25);text-align:center}
+  .dl-sea{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0}
+  .dl-surprise > *:not(.dl-sea){position:relative;z-index:1}
+  .dl-surprise::after{content:'';position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 70% 60% at 50% 55%,rgba(3,7,20,.55),rgba(3,7,20,.15) 70%,transparent);pointer-events:none}
+  .dl-surprise::before{content:none}
+  .dl-surprise h3{position:relative;color:#fff;font-size:clamp(1.9rem,4vw,3rem);margin:.6rem 0 .8rem}
+  .dl-surprise h3 em{font-style:normal;color:var(--blau-aigua)}
+  .dl-surprise p{position:relative;max-width:56ch;margin:0 auto;color:rgba(255,255,255,.8);font-size:clamp(1rem,1.3vw,1.12rem);line-height:1.55}
+  .dl-surprise p b{color:#fff}
+  .dl-surprise .dl-torch{position:relative;display:inline-block;margin-top:1.3rem;padding:.65rem 1.2rem;border-radius:999px;border:1.5px solid var(--blau-aigua);color:#fff;font-weight:800;box-shadow:0 0 28px rgba(90,192,230,.35)}
+  .dl-stop time,.dl-stop strong,.dl-stop small{text-shadow:0 1px 2px rgba(3,7,20,.95),0 0 14px rgba(3,7,20,.95),0 0 28px rgba(3,7,20,.8)}
+  .dl-route{padding:.4rem .6rem 0;border-radius:18px;background:linear-gradient(90deg,rgba(3,7,20,.55),rgba(3,7,20,.25) 45%,rgba(3,7,20,0) 80%)}
+  .dl-note{margin-top:1.4rem;color:rgba(255,255,255,.62);font-size:.88rem}
+
+  .dl-what{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;margin-top:clamp(2.5rem,5vw,3.5rem)}
+  .dl-what div{background:rgba(255,255,255,.06);border:1px solid rgba(90,192,230,.22);border-radius:16px;padding:1.2rem 1.25rem;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .dl-what i{font-style:normal;font-size:1.6rem;display:block}
+  .dl-what strong{display:block;font-family:var(--display);font-size:1.08rem;margin:.55rem 0 .3rem;color:#fff}
+  .dl-what p{margin:0;color:rgba(255,255,255,.7);font-size:.9rem;line-height:1.45}
+
+  .dl-story{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(1.5rem,5vw,4rem);align-items:center;margin-top:clamp(3rem,6vw,4.5rem)}
+  .dl-story-text .h-eyebrow{color:var(--blau-aigua)}
+  .dl-lines{list-style:none;margin:1rem 0 0;padding:0;display:grid;gap:1.1rem}
+  .dl-lines li{font-family:var(--display);font-weight:800;letter-spacing:-.02em;font-size:clamp(1.35rem,2.6vw,2rem);line-height:1.12;color:#fff}
+  .dl-lines li small{display:block;font-family:var(--body);font-weight:500;letter-spacing:0;font-size:clamp(.95rem,1.2vw,1.05rem);line-height:1.5;color:rgba(255,255,255,.72);margin-top:.35rem}
+  .dl-lines li em{font-style:normal;color:var(--blau-aigua)}
+  .dl-cta-line{margin:1.8rem 0 0;font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,3.4vw,2.6rem);line-height:1.05;letter-spacing:-.03em;color:#fff}
+  .dl-cta-line span.c{display:block;color:var(--coral)}
+  .dl-reel{margin:0;justify-self:center;width:min(100%,360px)}
+  .dl-reel img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;object-position:72% center;border-radius:22px;background:#030714;border:1px solid rgba(90,192,230,.3);box-shadow:0 0 0 6px rgba(90,192,230,.08),0 30px 80px -30px rgba(30,114,212,.6)}
+  .dl-reel figcaption{margin-top:.7rem;text-align:center;color:rgba(255,255,255,.62);font-size:.85rem}
+  .dl-gallery{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:.6rem;margin-top:clamp(2rem,4vw,3rem)}
+  .dl-gallery img{width:100%;height:100%;min-height:0;aspect-ratio:3/4;object-fit:cover;border-radius:14px}
+  .dl-gallery img.wide{aspect-ratio:auto;grid-row:span 1}
+
+  .dl-sopar{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.25fr);gap:clamp(1.5rem,4vw,3rem);margin-top:clamp(3rem,6vw,4.5rem);align-items:start;scroll-margin-top:90px}
+  .dl-sopar-info h3{color:#fff;font-size:clamp(1.9rem,3.6vw,2.8rem);margin:.4rem 0 1rem}
+  .dl-sopar-info ul{list-style:none;padding:0;margin:0;display:grid;gap:.9rem}
+  .dl-sopar-info li{display:flex;gap:.8rem;color:rgba(255,255,255,.8);font-size:.98rem;line-height:1.45}
+  .dl-sopar-info li > i{font-style:normal;flex:0 0 1.6rem;font-size:1.15rem}
+  .dl-sopar-info li b{color:#fff}
+  .dl-sopar-info a{color:var(--blau-aigua);font-weight:800;text-decoration:underline}
+  .dl-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:1.6rem}
+  .dl-photos img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;opacity:.92}
+
+  .dl-form{background:var(--paper);color:var(--tinta);border-radius:22px;padding:clamp(1.3rem,3vw,2rem);box-shadow:0 30px 80px -30px rgba(0,0,0,.6)}
+  .dl-form h3{font-size:1.7rem;margin:0 0 .3rem}
+  .dl-form .dl-sub{color:var(--gris);font-size:.92rem;margin:0 0 1.2rem}
+  .dl-form .dl-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+  .dl-form .dl-f{margin-bottom:.9rem}
+  .dl-form label,.dl-form legend{display:block;font:700 .84rem var(--body);color:var(--blau-llobregat);margin-bottom:.35rem}
+  .dl-form .opt{font-weight:500;color:var(--gris)}
+  .dl-form input[type=text],.dl-form input[type=tel],.dl-form input[type=email],.dl-form input[type=number],.dl-form textarea{
+    width:100%;font:500 16px var(--body);padding:.75rem .85rem;border:1.5px solid var(--gris-clar);border-radius:10px;background:#fff;color:var(--tinta)}
+  .dl-form input:focus,.dl-form textarea:focus{outline:none;border-color:var(--blau-diabetis);box-shadow:0 0 0 4px rgba(30,114,212,.14)}
+  .dl-form textarea{min-height:70px;resize:vertical}
+  .dl-form fieldset{border:0;padding:0;margin:0 0 .9rem}
+  .dl-checks{display:flex;flex-wrap:wrap;gap:.45rem}
+  .dl-checks label{display:inline-flex;align-items:center;gap:.45rem;margin:0;font:600 .84rem var(--body);color:var(--tinta);border:1.5px solid var(--gris-clar);border-radius:999px;padding:.45rem .8rem;cursor:pointer;background:#fff}
+  .dl-checks input{accent-color:var(--blau-diabetis)}
+  .dl-checks label:has(input:checked){border-color:var(--blau-diabetis);background:#EAF3FC}
+  .dl-checks label.is-sopar{border-color:rgba(255,107,71,.55)}
+  .dl-checks label.is-sopar:has(input:checked){border-color:var(--coral);background:#FFF0EC}
+  .dl-opcions-err{display:none;color:#A8341A;font:700 .82rem var(--body);margin-top:.45rem}
+  fieldset.is-err .dl-opcions-err{display:block}
+  .dl-legal{display:flex !important;gap:.6rem;align-items:flex-start;font:500 .8rem/1.45 var(--body) !important;color:var(--gris) !important;margin:.4rem 0 1rem !important}
+  .dl-legal input{margin-top:.2rem;accent-color:var(--blau-diabetis)}
+  .dl-legal a{color:var(--blau-diabetis);text-decoration:underline}
+  .dl-form .btn{width:100%;justify-content:center}
+  .dl-form [data-form-status]{display:none;margin-top:.8rem;font-size:.9rem;font-weight:700;padding:.7rem .9rem;border-radius:10px}
+  .dl-form [data-form-status].success{background:#E7F6EE;color:#1B6B43}
+  .dl-form [data-form-status].error{background:#FDECE7;color:#A8341A}
+  .dl-form [data-form-status].sending{background:#EAF3FC;color:var(--blau-llobregat)}
+  .dl-hp{position:absolute !important;left:-9999px !important}
+
+  @media (max-width:980px){
+    .dl-route{grid-template-columns:1fr;gap:0}
+    .dl-route::before{left:12px;right:auto;top:18px;bottom:30px;width:3px;height:auto;background:linear-gradient(180deg,var(--blau-aigua),var(--blau-diabetis),var(--coral))}
+    .dl-stop{padding:0 0 1.2rem 3rem}
+    .dl-stop::before{top:4px}
+    .dl-what{grid-template-columns:1fr 1fr}
+    .dl-sopar{grid-template-columns:1fr}
+    .dl-story{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .dl-what{grid-template-columns:1fr}
+    .dl-form .dl-row{grid-template-columns:1fr}
+    .dl-gallery{grid-template-columns:1fr 1fr}
+    .dl-faq-list{grid-template-columns:1fr}
+    .dl-gallery img.wide{grid-column:span 2;aspect-ratio:3/2}
   }
 
   /* ============================================
@@ -3545,7 +3716,7 @@
         <button data-set-lang="es" type="button">ES</button>
         <button data-set-lang="en" type="button">EN</button>
       </div>
-      <a href="dona/" class="nav-dona"><span lang="ca">Dona</span><span lang="es">Dona</span><span lang="en">Donate</span><span class="nav-dona-total" hidden></span></a>
+      <a href="dona/" class="nav-dona"><span lang="ca">Donatius</span><span lang="es">Donativos</span><span lang="en">Donations</span><span class="nav-dona-total" hidden></span></a>
     </div>
     <button class="nav-burger" id="burger" aria-label="Menú" aria-expanded="false"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
   </div>
@@ -3555,12 +3726,14 @@
      HERO
      ============================================ -->
 <header class="hero">
+  <video class="hero-video" id="heroVideo" muted playsinline loop preload="none" aria-hidden="true" tabindex="-1"></video>
   <div class="hero-meta">
     <span lang="ca">Repte solidari</span>
     <span lang="es">Reto solidario</span><span lang="en">Charity challenge</span>
     <strong>16–18 octubre 2026</strong>
   </div>
   <div class="container hero-content">
+    <a href="#desenllac" class="hero-desenllac"><b><span lang="ca">14 nov</span><span lang="es">14 nov</span><span lang="en">14 Nov</span></b><span lang="ca">El Desenllaç · tanquem el cercle</span><span lang="es">El Desenlace · cerramos el círculo</span><span lang="en">The Finale · closing the circle</span> &rarr;</a>
     <span class="h-eyebrow" lang="ca">Del Berguedà al mar · 180 km</span>
     <span class="h-eyebrow" lang="es">Del Berguedà al mar · 180 km</span>
     <span class="h-eyebrow" lang="en">From the Berguedà to the sea · 180 km</span>
@@ -3575,30 +3748,204 @@
       <span lang="en">180 km <span>·</span> 3 days <span>·</span> one purpose</span>
     </p>
     <p class="hero-desc">
-      <span lang="ca">Una travessa solidària que va del naixement del Llobregat, a Castellar de n'Hug, fins a la desembocadura al Prat. Per visibilitzar la diabetis tipus 1 i recaptar fons per a AREDI.</span>
-      <span lang="es">Una travesía solidaria que va del nacimiento del Llobregat, en Castellar de n'Hug, hasta la desembocadura en El Prat. Para visibilizar la diabetes tipo 1 y recaudar fondos para AREDI.</span><span lang="en">A charity ultra-distance run along the Llobregat river, from its source in Castellar de n'Hug to its mouth in El Prat. To raise awareness of type 1 diabetes and funds for AREDI.</span>
+      <span lang="ca">El 14 de novembre, Dia Mundial de la Diabetis, tanquem el cercle: quatre parades obertes a tothom a Santa Coloma de Cervelló, Sant Joan Despí, Cornellà i el Prat, un sopar per celebrar-ho i, per fi, arribarem al mar.</span>
+      <span lang="es">El 14 de noviembre, Día Mundial de la Diabetes, cerramos el círculo: cuatro paradas abiertas a todo el mundo en Santa Coloma de Cervelló, Sant Joan Despí, Cornellà y El Prat, una cena para celebrarlo y, por fin, llegaremos al mar.</span><span lang="en">On 14 November, World Diabetes Day, we close the circle: four stops open to everyone in Santa Coloma de Cervelló, Sant Joan Despí, Cornellà and El Prat, a dinner to celebrate and, at last, we'll reach the sea.</span>
     </p>
 
     <a href="dona/" data-mga-link class="hero-raised" id="heroRaised" hidden>
       <span class="hero-raised-label"><span lang="ca">Recaptat fins ara</span><span lang="es">Recaudado hasta ahora</span><span lang="en">Raised so far</span></span>
       <span class="hero-raised-amount" id="heroRaisedAmount">—</span>
-      <span class="hero-raised-cta"><span lang="ca">Dona i suma't al repte &rarr;</span><span lang="es">Dona y súmate al reto &rarr;</span><span lang="en">Donate and join the challenge &rarr;</span></span>
+      <span class="hero-raised-cta"><span lang="ca">Veure donatius &rarr;</span><span lang="es">Ver donativos &rarr;</span><span lang="en">See donations &rarr;</span></span>
     </a>
 
     <div class="hero-actions">
-      <a href="dona/" data-mga-link class="btn btn-primary btn-arrow">
-        <span lang="ca">Dona</span>
-        <span lang="es">Dona</span>
-        <span lang="en">Donate</span>
+      <a href="#desenllac" class="btn btn-primary btn-arrow">
+        <span lang="ca">Veure el Desenllaç</span>
+        <span lang="es">Ver el Desenlace</span>
+        <span lang="en">See the Finale</span>
       </a>
-      <a href="recorregut.html" class="btn btn-ghost btn-arrow">
-        <span lang="ca">Recorregut</span>
-        <span lang="es">Recorrido</span>
-        <span lang="en">Route</span>
+      <a href="#reserva-sopar" class="btn btn-ghost btn-arrow hero-btn-sopar">
+        <span lang="ca">Reservar sopar</span>
+        <span lang="es">Reservar cena</span>
+        <span lang="en">Book dinner</span>
       </a>
     </div>
   </div>
 </header>
+
+<!-- ============================================
+     COUNTDOWN · Sopar de cloenda del Desenllaç (14 de novembre)
+     ============================================ -->
+<section class="countdown-section" id="countdown-section">
+  <div class="container">
+    <div class="countdown-stack">
+      <div class="countdown-banner countdown-banner--desenllac" id="eventCountdown" data-countdown-target="2026-11-14T18:00:00+01:00" data-countdown-kind="desenllac">
+        <div class="countdown-banner-text">
+          <span class="countdown-banner-tag">
+            <span lang="ca">El Desenllaç · Dia Mundial de la Diabetis</span><span lang="es">El Desenlace · Día Mundial de la Diabetes</span><span lang="en">The Finale · World Diabetes Day</span>
+          </span>
+          <span class="countdown-banner-label">
+            Santa Coloma de Cervelló · Sant Joan Despí · Cornellà de Llobregat · El Prat de Llobregat
+          </span>
+          <span class="countdown-banner-sublabel">
+            <span lang="ca">Dissabte 14 de novembre · <strong>18:00 h</strong> · Tanquem el cercle i arribem al mar</span><span lang="es">Sábado 14 de noviembre · <strong>18:00 h</strong> · Cerramos el círculo y llegamos al mar</span><span lang="en">Saturday 14 November · <strong>6 pm</strong> · We close the circle and reach the sea</span>
+          </span>
+          <a href="#desenllac" class="btn btn-primary btn-arrow countdown-cta"><span lang="ca">Tota la informació</span><span lang="es">Toda la información</span><span lang="en">All the details</span></a>
+        </div>
+        <div class="countdown" aria-live="polite" aria-atomic="true">
+          <div class="countdown-unit">
+            <span class="countdown-num" data-cd-part="days">--</span>
+            <span class="countdown-lab" lang="ca">dies</span><span class="countdown-lab" lang="es">días</span><span class="countdown-lab" lang="en">days</span>
+          </div>
+          <div class="countdown-unit">
+            <span class="countdown-num" data-cd-part="hours">--</span>
+            <span class="countdown-lab" lang="ca">hores</span><span class="countdown-lab" lang="es">horas</span><span class="countdown-lab" lang="en">hours</span>
+          </div>
+          <div class="countdown-unit">
+            <span class="countdown-num" data-cd-part="minutes">--</span>
+            <span class="countdown-lab" lang="ca">min</span><span class="countdown-lab" lang="es">min</span><span class="countdown-lab" lang="en">min</span>
+          </div>
+          <div class="countdown-unit">
+            <span class="countdown-num" data-cd-part="seconds">--</span>
+            <span class="countdown-lab" lang="ca">seg</span><span class="countdown-lab" lang="es">seg</span><span class="countdown-lab" lang="en">sec</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     EL DESENLLAÇ · 14 de novembre · Dia Mundial de la Diabetis
+     ============================================ -->
+<section class="desenllac" id="desenllac">
+  <div class="desenllac-bg" aria-hidden="true"></div>
+  <div class="container">
+   <div class="dl-head">
+    <picture class="dl-logo"><source srcset="img/logo-neon.webp" type="image/webp"><img src="img/logo-neon.png" alt="Llobregat x la Diabetis" width="720" height="720"></picture>
+    <span class="h-eyebrow"><span lang="ca">Dia Mundial de la Diabetis</span><span lang="es">Día Mundial de la Diabetes</span><span lang="en">World Diabetes Day</span></span>
+    <h2><span lang="ca">El <em>Desenllaç</em></span><span lang="es">El <em>Desenlace</em></span><span lang="en">The <em>Finale</em></span></h2>
+    <p class="desenllac-date"><span lang="ca">Dissabte 14 de novembre<span class="sep">·</span>a partir de les 18 h</span><span lang="es">Sábado 14 de noviembre<span class="sep">·</span>a partir de las 18 h</span><span lang="en">Saturday 14 November<span class="sep">·</span>from 6 pm</span></p>
+    <p class="desenllac-intro"><span lang="ca">Tots els rius neixen petits. El nostre va començar a les Fonts del Llobregat i, poble a poble, el blau es va fer cada cop més gran. Va ploure, però no ens va aturar. Ara toca tancar el cercle: quan es faci fosc i els ajuntaments s'il·luminin de blau, ens retrobem per arribar, per fi, fins al mar.</span><span lang="es">Todos los ríos nacen pequeños. El nuestro empezó en las Fuentes del Llobregat y, pueblo a pueblo, el azul se fue haciendo cada vez más grande. Llovió, pero no nos detuvo. Ahora toca cerrar el círculo: cuando oscurezca y los ayuntamientos se iluminen de azul, nos reencontramos para llegar, por fin, hasta el mar.</span><span lang="en">Every river starts small. Ours began at the source of the Llobregat and, town by town, the blue kept growing. It rained, but it didn't stop us. Now it's time to close the circle: when night falls and the town halls light up in blue, we meet again to finally reach the sea.</span></p>
+    <div class="desenllac-actions">
+      <a href="#reserva-sopar" class="btn btn-primary btn-arrow"><span lang="ca">Reserva el sopar</span><span lang="es">Reserva la cena</span><span lang="en">Book the dinner</span></a>
+    </div>
+   </div>
+
+    <ol class="dl-route">
+      <li class="dl-stop"><time>18:00h</time><strong>Santa Coloma de Cervelló</strong><small><a class="dl-map" href="https://maps.app.goo.gl/xkxFnkxHQ1h4Cmej8" target="_blank" rel="noopener"><span lang="ca">Punt de trobada · com arribar</span><span lang="es">Punto de encuentro · cómo llegar</span><span lang="en">Meeting point · directions</span> &rarr;</a></small></li>
+      <li class="dl-stop"><time>18:45h</time><strong>Sant Joan Despí</strong><small><a class="dl-map" href="https://maps.app.goo.gl/8t5bveYAYGmGp5PQ6" target="_blank" rel="noopener"><span lang="ca">Punt de trobada · com arribar</span><span lang="es">Punto de encuentro · cómo llegar</span><span lang="en">Meeting point · directions</span> &rarr;</a></small></li>
+      <li class="dl-stop"><time>19:15h</time><strong>Cornellà de Llobregat</strong><small class="dl-pend"><span lang="ca">Punt de trobada per confirmar</span><span lang="es">Punto de encuentro por confirmar</span><span lang="en">Meeting point to be confirmed</span></small></li>
+      <li class="dl-stop"><time>20:00h</time><strong>El Prat de Llobregat</strong><small><a class="dl-map" href="https://maps.app.goo.gl/JnszdodnKWTUXyLz8" target="_blank" rel="noopener"><span lang="ca">Punt de trobada · com arribar</span><span lang="es">Punto de encuentro · cómo llegar</span><span lang="en">Meeting point · directions</span> &rarr;</a></small></li>
+      <li class="dl-stop is-sopar"><time>20:30h</time><strong><span lang="ca">Sopar de cloenda</span><span lang="es">Cena de clausura</span><span lang="en">Closing dinner</span></strong><small><a class="dl-map" href="https://maps.app.goo.gl/EsbCxRa54zAawJnS8" target="_blank" rel="noopener">Restaurant Delta · <span lang="ca">com arribar</span><span lang="es">cómo llegar</span><span lang="en">directions</span> &rarr;</a></small></li>
+    </ol>
+    <p class="dl-note"><span lang="ca">Les parades són obertes a tothom i no cal inscripció. Cadascú es desplaça d'un municipi a l'altre pel seu compte (en cotxe o com vulgui): no és una cursa i no hi ha recorregut marcat. El punt de trobada de Cornellà l'anunciarem aviat.</span><span lang="es">Las paradas son abiertas a todo el mundo y no hace falta inscripción. Cada uno se desplaza de un municipio a otro por su cuenta (en coche o como quiera): no es una carrera y no hay recorrido marcado. El punto de encuentro de Cornellà lo anunciaremos pronto.</span><span lang="en">All stops are open to everyone and no sign-up is needed. Everyone travels between towns on their own (by car or however they like): it isn't a race and there is no set route. We'll announce the Cornellà meeting point soon.</span></p>
+
+    <div class="dl-what">
+      <div><i>🏛️</i><strong><span lang="ca">Ajuntaments de blau</span><span lang="es">Ayuntamientos de azul</span><span lang="en">Town halls in blue</span></strong><p><span lang="ca">Ens retrobem amb els municipis que la pluja ens va deixar pendents.</span><span lang="es">Nos reencontramos con los municipios que la lluvia nos dejó pendientes.</span><span lang="en">We return to the towns the rain left pending.</span></p></div>
+      <div><i>📖</i><strong><span lang="ca">Llibre de Solidaritat</span><span lang="es">Libro de Solidaridad</span><span lang="en">Book of Solidarity</span></strong><p><span lang="ca">Signem les darreres pàgines del Llibre Oficial de Solidaritat.</span><span lang="es">Firmamos las últimas páginas del Libro Oficial de Solidaridad.</span><span lang="en">We sign the last pages of the Official Book of Solidarity.</span></p></div>
+      <div><i>💧</i><strong><span lang="ca">L'Ampolla de l'Esperança</span><span lang="es">La Botella de la Esperanza</span><span lang="en">The Bottle of Hope</span></strong><p><span lang="ca">Hi afegim l'aigua que falta i l'omplim fins al final.</span><span lang="es">Añadimos el agua que falta y la llenamos hasta el final.</span><span lang="en">We add the missing water and fill it to the top.</span></p></div>
+      <div><i>🌊</i><strong><span lang="ca">I, per fi, arribarem al mar</span><span lang="es">Y, por fin, llegaremos al mar</span><span lang="en">And, at last, we reach the sea</span></strong><p><span lang="ca">Tanquem el recorregut del Llobregat, del naixement a la desembocadura.</span><span lang="es">Cerramos el recorrido del Llobregat, del nacimiento a la desembocadura.</span><span lang="en">We complete the Llobregat route, from source to mouth.</span></p></div>
+    </div>
+
+    <div class="dl-story">
+      <div class="dl-story-text">
+        <span class="h-eyebrow"><span lang="ca">La nostra història</span><span lang="es">Nuestra historia</span><span lang="en">Our story</span></span>
+        <ol class="dl-lines">
+          <li><span lang="ca">Tots els rius <em>neixen petits.</em></span><span lang="es">Todos los ríos <em>nacen pequeños.</em></span><span lang="en">Every river <em>starts small.</em></span>
+            <small><span lang="ca">El nostre va començar a les Fonts del Llobregat, amb un primer pas. Per cada persona que conviu amb la diabetis.</span><span lang="es">El nuestro empezó en las Fuentes del Llobregat, con un primer paso. Por cada persona que convive con la diabetes.</span><span lang="en">Ours began at the source of the Llobregat, with a first step. For everyone living with diabetes.</span></small></li>
+          <li><span lang="ca">I pel camí, <em>ningú ens va deixar sols.</em></span><span lang="es">Y por el camino, <em>nadie nos dejó solos.</em></span><span lang="en">And along the way, <em>no one left us alone.</em></span>
+            <small><span lang="ca">Poble a poble, el blau es feia més gran. Va ploure, però no ens va aturar, i vam fer una cloenda inoblidable a Cornellà.</span><span lang="es">Pueblo a pueblo, el azul se hacía más grande. Llovió, pero no nos detuvo, e hicimos una clausura inolvidable en Cornellà.</span><span lang="en">Town by town, the blue grew bigger. It rained, but it didn't stop us, and we had an unforgettable closing in Cornellà.</span></small></li>
+          <li><span lang="ca">Però hi ha pobles <em>que encara ens esperen.</em></span><span lang="es">Pero hay pueblos <em>que aún nos esperan.</em></span><span lang="en">But some towns <em>are still waiting for us.</em></span>
+            <small><span lang="ca">El 14 de novembre, Dia Mundial de la Diabetis, tanquem el cercle. I, per fi, arribarem al mar.</span><span lang="es">El 14 de noviembre, Día Mundial de la Diabetes, cerramos el círculo. Y, por fin, llegaremos al mar.</span><span lang="en">On 14 November, World Diabetes Day, we close the circle. And, at last, we'll reach the sea.</span></small></li>
+        </ol>
+        <p class="dl-cta-line"><span lang="ca">Dona visibilitat a la diabetis.<span class="c">T'hi sumes?</span></span><span lang="es">Da visibilidad a la diabetes.<span class="c">¿Te sumas?</span></span><span lang="en">Make diabetes visible.<span class="c">Will you join us?</span></span></p>
+      </div>
+      <figure class="dl-reel">
+        <img src="img/font-llobregat.jpg" alt="Les Fonts del Llobregat, on neix el riu" loading="lazy" width="1600" height="1066">
+        <figcaption><span lang="ca">Les Fonts del Llobregat, on neix el riu</span><span lang="es">Las Fuentes del Llobregat, donde nace el río</span><span lang="en">The source of the Llobregat, where the river is born</span></figcaption>
+      </figure>
+    </div>
+    <div class="dl-gallery" aria-hidden="true">
+      <img class="wide" src="img/desenllac/grup.jpg" alt="" loading="lazy">
+      <img src="img/desenllac/abracada.jpg" alt="" loading="lazy">
+      <img src="img/desenllac/arribada.jpg" alt="" loading="lazy">
+    </div>
+
+    <div class="dl-sopar" id="reserva-sopar">
+      <div class="dl-sopar-info">
+        <span class="h-eyebrow"><span lang="ca">Sopar de cloenda</span><span lang="es">Cena de clausura</span><span lang="en">Closing dinner</span></span>
+        <h3><span lang="ca">Ho celebrem plegats!</span><span lang="es">¡Lo celebramos juntos!</span><span lang="en">Let's celebrate together!</span></h3>
+        <ul>
+          <li><i>🕣</i><span><span lang="ca"><b>Dissabte 14 de novembre, 20:30 h</b></span><span lang="es"><b>Sábado 14 de noviembre, 20:30 h</b></span><span lang="en"><b>Saturday 14 November, 8:30 pm</b></span></span></li>
+          <li><i>📍</i><span><b>Restaurant Delta</b>, El Prat de Llobregat · <a href="https://maps.app.goo.gl/EsbCxRa54zAawJnS8" target="_blank" rel="noopener"><span lang="ca">Com arribar</span><span lang="es">Cómo llegar</span><span lang="en">Directions</span></a></span></li>
+          <li><i>👥</i><span><span lang="ca">Les parades són obertes a tothom. Al sopar hi esteu tots convidats: participants, voluntaris, famílies i amics.</span><span lang="es">Las paradas son abiertas a todo el mundo. A la cena estáis todos invitados: participantes, voluntarios, familias y amigos.</span><span lang="en">The stops are open to everyone. Everyone is invited to dinner: participants, volunteers, families and friends.</span></span></li>
+          <li><i>💶</i><span><span lang="ca"><b>Cada persona es paga el seu sopar.</b></span><span lang="es"><b>Cada persona se paga su cena.</b></span><span lang="en"><b>Everyone pays for their own dinner.</b></span></span></li>
+          <li><i>📝</i><span><span lang="ca">Les places s'assignen <b>per ordre d'inscripció</b>. Si se superés l'aforament, avisaríem personalment les persones que quedessin fora.</span><span lang="es">Las plazas se asignan <b>por orden de inscripción</b>. Si se superase el aforo, avisaríamos personalmente a quienes quedasen fuera.</span><span lang="en">Places are allocated <b>in order of registration</b>. If we exceed capacity, we will personally let anyone left out know.</span></span></li>
+        </ul>
+      </div>
+
+      <form class="dl-form" name="reserva-sopar-desenllac" method="POST" action="/netlify-success.html" accept-charset="UTF-8" data-netlify="true" data-netlify-honeypot="bot-field" netlify>
+        <input type="hidden" name="form-name" value="reserva-sopar-desenllac">
+        <p class="dl-hp"><label>Bot <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+        <h3><span lang="ca">Apunta't</span><span lang="es">Apúntate</span><span lang="en">Sign up</span></h3>
+        <p class="dl-sub"><span lang="ca">Les parades són obertes a tothom i no cal inscripció. Si ens dius on vindràs, ens ajudes a preveure quanta gent serem a cada municipi. Per al <b>sopar</b> sí que cal reservar: marca'l i et confirmarem la plaça per WhatsApp.</span><span lang="es">Las paradas son abiertas a todo el mundo y no hace falta inscribirse. Si nos dices dónde vendrás, nos ayudas a prever cuánta gente seremos en cada municipio. Para la <b>cena</b> sí hay que reservar: márcala y te confirmaremos la plaza por WhatsApp.</span><span lang="en">All stops are open to everyone, no sign-up needed. Telling us where you'll join helps us estimate numbers in each town. The <b>dinner</b> does need booking: tick it and we'll confirm your place via WhatsApp.</span></p>
+        <div class="dl-f"><label for="ds-nom"><span lang="ca">Nom i cognoms</span><span lang="es">Nombre y apellidos</span><span lang="en">Full name</span></label>
+          <input type="text" id="ds-nom" name="nom" required autocomplete="name"></div>
+        <div class="dl-row">
+          <div class="dl-f"><label for="ds-tel"><span lang="ca">Telèfon (WhatsApp)</span><span lang="es">Teléfono (WhatsApp)</span><span lang="en">Phone (WhatsApp)</span></label>
+            <input type="tel" id="ds-tel" name="telefon" required autocomplete="tel" inputmode="tel"></div>
+          <div class="dl-f"><label for="ds-email">Email <span class="opt"><span lang="ca">(opcional)</span><span lang="es">(opcional)</span><span lang="en">(optional)</span></span></label>
+            <input type="email" id="ds-email" name="email" autocomplete="email"></div>
+        </div>
+        <div class="dl-row">
+          <div class="dl-f"><label for="ds-adults"><span lang="ca">Adults que vindreu</span><span lang="es">Adultos que vendréis</span><span lang="en">Adults coming</span></label>
+            <input type="number" id="ds-adults" name="adults" min="1" max="30" step="1" value="1" required></div>
+          <div class="dl-f"><label for="ds-infants"><span lang="ca">Infants que vindreu</span><span lang="es">Niños que vendréis</span><span lang="en">Children coming</span></label>
+            <input type="number" id="ds-infants" name="infants" min="0" max="30" step="1" value="0"></div>
+        </div>
+        <fieldset data-dl-opcions>
+          <legend><span lang="ca">On vindràs?</span><span lang="es">¿Dónde vendrás?</span><span lang="en">Where will you join us?</span> <span class="opt"><span lang="ca">(marca totes les que vulguis)</span><span lang="es">(marca todas las que quieras)</span><span lang="en">(tick all that apply)</span></span></legend>
+          <div class="dl-checks">
+            <label><input type="checkbox" name="parades" value="Santa Coloma de Cervelló"> Sta. Coloma de Cervelló</label>
+            <label><input type="checkbox" name="parades" value="Sant Joan Despí"> Sant Joan Despí</label>
+            <label><input type="checkbox" name="parades" value="Cornellà de Llobregat"> Cornellà</label>
+            <label><input type="checkbox" name="parades" value="El Prat de Llobregat"> El Prat</label>
+            <label class="is-sopar"><input type="checkbox" name="sopar" value="Si"> <span lang="ca">Sopar</span><span lang="es">Cena</span><span lang="en">Dinner</span></label>
+          </div>
+          <p class="dl-opcions-err" role="alert"><span lang="ca">Marca com a mínim una parada o el sopar.</span><span lang="es">Marca como mínimo una parada o la cena.</span><span lang="en">Tick at least one stop or the dinner.</span></p>
+        </fieldset>
+        <div class="dl-f"><label for="ds-alergies"><span lang="ca">Al·lèrgies o intoleràncies (per al sopar)</span><span lang="es">Alergias o intolerancias (para la cena)</span><span lang="en">Allergies or intolerances (for dinner)</span> <span class="opt"><span lang="ca">(opcional)</span><span lang="es">(opcional)</span><span lang="en">(optional)</span></span></label>
+          <input type="text" id="ds-alergies" name="alergies"></div>
+        <div class="dl-f"><label for="ds-com"><span lang="ca">Comentaris</span><span lang="es">Comentarios</span><span lang="en">Comments</span> <span class="opt"><span lang="ca">(opcional)</span><span lang="es">(opcional)</span><span lang="en">(optional)</span></span></label>
+          <textarea id="ds-com" name="comentaris" rows="2"></textarea></div>
+        <label class="dl-legal"><input type="checkbox" name="accepto" value="si" required>
+          <span><span lang="ca">Accepto que les dades es facin servir només per organitzar aquest acte i contactar-me sobre ell (<a href="privacitat.html" target="_blank">privacitat</a>). Si vinc a sopar, entenc que cada persona es paga el seu.</span><span lang="es">Acepto que los datos se usen solo para organizar este acto y contactarme sobre él (<a href="privacitat.html" target="_blank">privacidad</a>). Si vengo a cenar, entiendo que cada persona se paga lo suyo.</span><span lang="en">I agree that my data will only be used to organise this event and contact me about it (<a href="privacitat.html" target="_blank">privacy</a>). If I come to dinner, I understand everyone pays for their own.</span></span></label>
+        <button type="submit" class="btn btn-primary btn-arrow"><span lang="ca">Envia</span><span lang="es">Enviar</span><span lang="en">Send</span></button>
+        <div data-form-status role="status" aria-live="polite"></div>
+      </form>
+    </div>
+    <div class="dl-surprise">
+      <canvas class="dl-sea" aria-hidden="true"></canvas>
+      <span class="h-eyebrow"><span lang="ca">Després del sopar</span><span lang="es">Después de la cena</span><span lang="en">After dinner</span></span>
+      <h3><span lang="ca">I, per fi, <em>arribarem al mar</em> 🌊</span><span lang="es">Y, por fin, <em>llegaremos al mar</em> 🌊</span><span lang="en">And, at last, <em>we'll reach the sea</em> 🌊</span></h3>
+      <p><span lang="ca">Després del sopar ens acostarem tots junts a la platja del Prat per tancar el cercle on el Llobregat es troba amb el mar. Hi abocarem l'aigua de l'Ampolla de l'Esperança.</span><span lang="es">Después de la cena nos acercaremos todos juntos a la playa de El Prat para cerrar el círculo donde el Llobregat se encuentra con el mar. Verteremos el agua de la Botella de la Esperanza.</span><span lang="en">After dinner we'll all head to El Prat beach to close the circle where the Llobregat meets the sea. We'll pour the water from the Bottle of Hope.</span></p>
+      <span class="dl-torch"><span lang="ca">🔦 Porta un frontal o una llanterna i calçat per a la sorra</span><span lang="es">🔦 Trae un frontal o una linterna y calzado para la arena</span><span lang="en">🔦 Bring a head torch or flashlight and shoes for the sand</span></span>
+    </div>
+    <div class="dl-faq">
+      <span class="h-eyebrow"><span lang="ca">Preguntes freqüents</span><span lang="es">Preguntas frecuentes</span><span lang="en">FAQ</span></span>
+      <h3><span lang="ca">Tot el que vols saber</span><span lang="es">Todo lo que quieres saber</span><span lang="en">Everything you want to know</span></h3>
+      <div class="dl-faq-list">
+        <details><summary><span lang="ca">És una cursa? Cal córrer?</span><span lang="es">¿Es una carrera? ¿Hay que correr?</span><span lang="en">Is it a race? Do I have to run?</span></summary><p><span lang="ca">No. Cada parada és una trobada al punt indicat de cada municipi. Entre parada i parada cadascú es desplaça pel seu compte, en cotxe o com vulgui. No hi ha recorregut ni track.</span><span lang="es">No. Cada parada es un encuentro en el punto indicado de cada municipio. Entre parada y parada cada uno se desplaza por su cuenta, en coche o como quiera. No hay recorrido ni track.</span><span lang="en">No. Each stop is a gathering at the meeting point in each town. Between stops everyone travels on their own, by car or however they like. There is no route or track.</span></p></details>
+        <details><summary><span lang="ca">Cal inscriure's?</span><span lang="es">¿Hay que inscribirse?</span><span lang="en">Do I need to sign up?</span></summary><p><span lang="ca">Per a les parades, no: són obertes a tothom. Només cal reservar si vols venir al sopar, per control d'aforament. Cadascú es paga el seu.</span><span lang="es">Para las paradas, no: son abiertas a todo el mundo. Solo hay que reservar si quieres venir a la cena, por control de aforo. Cada uno se paga lo suyo.</span><span lang="en">Not for the stops: they're open to everyone. You only need to book if you're coming to dinner, as places are limited. Everyone pays for their own.</span></p></details>
+        <details><summary><span lang="ca">Què es fa a cada parada?</span><span lang="es">¿Qué se hace en cada parada?</span><span lang="en">What happens at each stop?</span></summary><p><span lang="ca">Ens retrobem amb el municipi, signem el Llibre de Solidaritat, hi afegim l'aigua del poble a l'Ampolla de l'Esperança i ens fem la foto de grup. Uns 20 minuts.</span><span lang="es">Nos reencontramos con el municipio, firmamos el Libro de Solidaridad, añadimos el agua del pueblo a la Botella de la Esperanza y nos hacemos la foto de grupo. Unos 20 minutos.</span><span lang="en">We meet the town, sign the Book of Solidarity, add the town's water to the Bottle of Hope and take a group photo. About 20 minutes.</span></p></details>
+        <details><summary><span lang="ca">Puc venir només a una parada?</span><span lang="es">¿Puedo venir solo a una parada?</span><span lang="en">Can I come to just one stop?</span></summary><p><span lang="ca">És clar. Vine a les que vulguis, i amb qui vulguis: famílies i infants, benvinguts.</span><span lang="es">Claro. Ven a las que quieras, y con quien quieras: familias y niños, bienvenidos.</span><span lang="en">Of course. Come to as many as you like, with whoever you like: families and children welcome.</span></p></details>
+        <details><summary><span lang="ca">Què porto?</span><span lang="es">¿Qué llevo?</span><span lang="en">What should I bring?</span></summary><p><span lang="ca">La samarreta de Llobregat x la Diabetis, per sortir tots iguals a les fotos 📸. Si fa fresca, posa-te-la per sobre del forro polar o la jaqueta. I per a després del sopar, un frontal o una llanterna i calçat per a la sorra.</span><span lang="es">La camiseta de Llobregat x la Diabetis, para salir todos iguales en las fotos 📸. Si hace fresco, póntela por encima del forro polar o la chaqueta. Y para después de la cena, un frontal o una linterna y calzado para la arena.</span><span lang="en">Your Llobregat x la Diabetis t-shirt, so we all match in the photos 📸. If it's chilly, wear it over your fleece or jacket. And for after dinner, a head torch or flashlight and shoes for the sand.</span></p></details>
+        <details><summary><span lang="ca">On és cada punt de trobada?</span><span lang="es">¿Dónde es cada punto de encuentro?</span><span lang="en">Where is each meeting point?</span></summary><p><span lang="ca">A la llista de parades d'aquí dalt tens l'enllaç de cada un. El de Cornellà l'anunciarem aviat.</span><span lang="es">En la lista de paradas de aquí arriba tienes el enlace de cada uno. El de Cornellà lo anunciaremos pronto.</span><span lang="en">Each one is linked in the list of stops above. Cornellà's will be announced soon.</span></p></details>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ============================================
      PERSONES INSCRITES · resum + enllaç a /inscrits
@@ -3643,52 +3990,6 @@
   </div>
 </section>
 
-<!-- ============================================
-     COUNTDOWN — secció pròpia just sota el hero
-     ============================================ -->
-<section class="countdown-section" id="countdown-section">
-  <div class="container">
-    <div class="countdown-stack">
-      <div class="countdown-banner countdown-banner--event" id="eventCountdown" data-countdown-target="2026-10-31T23:59:59+01:00" data-countdown-kind="tancament-donacions">
-        <div class="countdown-banner-text">
-          <span class="countdown-banner-tag">
-            <span lang="ca">Tancament de donacions</span>
-            <span lang="es">Cierre de donaciones</span>
-            <span lang="en">Donations close</span>
-          </span>
-          <span class="countdown-banner-label">
-            <span lang="ca">L'ampolla de l'esperança es tanca el 31 d'octubre</span>
-            <span lang="es">La botella de la esperanza se cierra el 31 de octubre</span>
-            <span lang="en">The bottle of hope closes on 31 October</span>
-          </span>
-          <span class="countdown-banner-sublabel">
-            <span lang="ca">31 d'octubre a les 23:59 h · hora d'Espanya (GMT+1)</span>
-            <span lang="es">31 de octubre a las 23:59 h · hora de España (GMT+1)</span>
-            <span lang="en">31 October at 23:59 · Spain time (GMT+1)</span>
-          </span>
-        </div>
-        <div class="countdown" aria-live="polite" aria-atomic="true">
-          <div class="countdown-unit">
-            <span class="countdown-num" data-cd-part="days">--</span>
-            <span class="countdown-lab" lang="ca">dies</span><span class="countdown-lab" lang="es">días</span><span class="countdown-lab" lang="en">days</span>
-          </div>
-          <div class="countdown-unit">
-            <span class="countdown-num" data-cd-part="hours">--</span>
-            <span class="countdown-lab" lang="ca">hores</span><span class="countdown-lab" lang="es">horas</span><span class="countdown-lab" lang="en">hours</span>
-          </div>
-          <div class="countdown-unit">
-            <span class="countdown-num" data-cd-part="minutes">--</span>
-            <span class="countdown-lab" lang="ca">min</span><span class="countdown-lab" lang="es">min</span><span class="countdown-lab" lang="en">min</span>
-          </div>
-          <div class="countdown-unit">
-            <span class="countdown-num" data-cd-part="seconds">--</span>
-            <span class="countdown-lab" lang="ca">seg</span><span class="countdown-lab" lang="es">seg</span><span class="countdown-lab" lang="en">sec</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ============================================
      EL REPTE
@@ -6175,7 +6476,13 @@
 
   function setCountdownOpenText(banner) {
     const kind = banner.getAttribute('data-countdown-kind');
-    const translations = kind === 'tancament-donacions'
+    const translations = kind === 'desenllac'
+      ? {
+          tag: { ca: 'Avui · El Desenllaç', es: 'Hoy · El Desenlace', en: 'Today · The Finale' },
+          label: { ca: 'Gràcies per tancar el cercle amb nosaltres 💙', es: 'Gracias por cerrar el círculo con nosotros 💙', en: 'Thank you for closing the circle with us 💙' },
+          sublabel: { ca: 'Tanquem el cercle. Arribem al mar. Continuem caminant per la diabetis.', es: 'Cerramos el círculo. Llegamos al mar. Seguimos caminando por la diabetes.', en: 'We close the circle. We reach the sea. We keep walking for diabetes.' },
+        }
+      : kind === 'tancament-donacions'
       ? {
           tag: { ca: 'Tancades', es: 'Cerradas', en: 'Closed' },
           label: { ca: 'L\'ampolla de l\'esperança ja està tancada', es: 'La botella de la esperanza ya está cerrada', en: 'The bottle of hope is now closed' },
@@ -6711,5 +7018,74 @@
 <script src="assets/lxd-universal-form.js?v=universal-v3" defer></script>
 <script src="assets/lxd-lang-sync.js?v=lang-form-v3" defer></script>
 <script src="menu.js" defer></script>
+
+<script>
+// El Desenllaç: com a mínim una parada o el sopar
+(function(){
+  var f=document.querySelector('form[name="reserva-sopar-desenllac"]'); if(!f) return;
+  var fs=f.querySelector('[data-dl-opcions]'); var boxes=fs.querySelectorAll('input[type=checkbox]');
+  function check(){ var ok=Array.prototype.some.call(boxes,function(b){return b.checked}); boxes[0].setCustomValidity(ok?'':'-'); fs.classList.toggle('is-err',!ok && f.dataset.dlTried==='1'); return ok; }
+  boxes.forEach(function(b){b.addEventListener('change',check)});
+  f.addEventListener('submit',function(){f.dataset.dlTried='1';check();},true);
+  f.querySelector('button[type=submit]').addEventListener('click',function(){f.dataset.dlTried='1';check();});
+  f.addEventListener('reset',function(){setTimeout(function(){f.dataset.dlTried='0';check();},0)});
+  check();
+})();
+</script>
+<script>
+/* Vídeo de fons de la capçalera: horitzontal a pantalles apaïsades, vertical al mòbil.
+   No es carrega si l'usuari prefereix menys moviment o té l'estalvi de dades activat. */
+(function(){
+  var v=document.getElementById('heroVideo'); if(!v) return;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var save=navigator.connection&&navigator.connection.saveData;
+  if(reduce||save){v.remove();return;}
+  var land=window.matchMedia('(min-aspect-ratio: 1/1)').matches;
+  v.poster=land?'img/hero-video-poster.jpg?v=2':'img/hero-video-poster-mobile.jpg?v=2';
+  v.src=land?'img/hero-video.mp4?v=5':'img/hero-video-mobile.mp4?v=5';
+  v.addEventListener('playing',function(){v.classList.add('is-playing');},{once:true});
+  var p=v.play(); if(p&&p.catch) p.catch(function(){});
+})();
+</script>
+<script>
+/* Mar de nit amb lluna plena (fons del recuadre «I, per fi, arribarem al mar») */
+(function(){
+  var c=document.querySelector('.dl-sea'); if(!c||!c.getContext) return;
+  var ctx=c.getContext('2d'), W=0,H=0,dpr=Math.min(window.devicePixelRatio||1,1.5), run=false, t0=performance.now();
+  var still=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var glints=[]; for(var i=0;i<260;i++) glints.push({x:Math.random(),y:Math.random(),p:Math.random()*6.28,s:.6+Math.random()*1.4});
+  function size(){var r=c.getBoundingClientRect(); W=Math.max(1,r.width); H=Math.max(1,r.height); c.width=W*dpr; c.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);}
+  function draw(now){
+    var t=(now-t0)/1000, hz=H*.34, mx=W*.5, my=Math.min(hz*.38,48);
+    var g=ctx.createLinearGradient(0,0,0,hz); g.addColorStop(0,'#030714'); g.addColorStop(1,'#0B1E42');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,hz);
+    var mg=ctx.createRadialGradient(mx,my,0,mx,my,hz*1.1); mg.addColorStop(0,'rgba(200,235,255,.55)'); mg.addColorStop(.08,'rgba(143,216,245,.35)'); mg.addColorStop(.35,'rgba(30,114,212,.12)'); mg.addColorStop(1,'rgba(3,7,20,0)');
+    ctx.fillStyle=mg; ctx.fillRect(0,0,W,hz);
+    ctx.fillStyle='#EAF6FF'; ctx.shadowColor='rgba(143,216,245,.9)'; ctx.shadowBlur=30; ctx.beginPath(); ctx.arc(mx,my,Math.min(22,Math.max(12,hz*.09)),0,6.283); ctx.fill(); ctx.shadowBlur=0;
+    var sg=ctx.createLinearGradient(0,hz,0,H); sg.addColorStop(0,'#0E2A5C'); sg.addColorStop(.55,'#082048'); sg.addColorStop(1,'#04102A');
+    ctx.fillStyle=sg; ctx.fillRect(0,hz,W,H-hz);
+    var rg=ctx.createLinearGradient(0,hz,0,H); rg.addColorStop(0,'rgba(143,216,245,.32)'); rg.addColorStop(1,'rgba(90,192,230,.05)');
+    ctx.fillStyle=rg; ctx.beginPath(); ctx.moveTo(mx-W*.03,hz); ctx.lineTo(mx+W*.03,hz); ctx.lineTo(mx+W*.22,H); ctx.lineTo(mx-W*.22,H); ctx.fill();
+    for(var i=0;i<glints.length;i++){var q=glints[i], y=hz+(H-hz)*Math.pow(q.y,1.4), d=(y-hz)/(H-hz), spread=W*(.03+.2*d), x=mx+(q.x-.5)*2*spread*(.6+.4*Math.sin(q.p+t*.3));
+      var a=Math.max(0,Math.sin(q.p+t*q.s*2.2))*(1-Math.abs(q.x-.5)*1.6); if(a<=0) continue;
+      ctx.fillStyle='rgba(200,236,255,'+(a*.8).toFixed(3)+')'; ctx.fillRect(x,y,2+10*d*q.s,1+1.2*d);}
+    ctx.lineCap='round';
+    for(var k=0;k<7;k++){var ph=((t*.07+k/7)%1), d=ph*ph, y=hz+(H-hz)*d, amp=2+10*d;
+      ctx.strokeStyle='rgba(143,216,245,'+(.06+.22*d*(1-ph*.6)).toFixed(3)+')'; ctx.lineWidth=.6+2.2*d; ctx.beginPath();
+      for(var x=0;x<=W;x+=12){var yy=y+Math.sin(x*.012/(.3+d)+t*.8+k)*amp; x===0?ctx.moveTo(x,yy):ctx.lineTo(x,yy);} ctx.stroke();}
+    var sw=(Math.sin(t*.55)+1)/2, fy=H-(H-hz)*(.06+.1*sw);
+    var fg=ctx.createLinearGradient(0,fy-12,0,H); fg.addColorStop(0,'rgba(200,236,255,0)'); fg.addColorStop(.15,'rgba(200,236,255,'+(.18+.22*sw).toFixed(3)+')'); fg.addColorStop(.4,'rgba(90,192,230,.12)'); fg.addColorStop(1,'rgba(4,16,42,.6)');
+    ctx.fillStyle=fg; ctx.beginPath(); ctx.moveTo(0,H);
+    for(var x=0;x<=W;x+=10) ctx.lineTo(x,fy+Math.sin(x*.02+t*1.1)*5+Math.sin(x*.007-t*.6)*8);
+    ctx.lineTo(W,H); ctx.fill();
+    if(run&&!still) requestAnimationFrame(draw);
+  }
+  size(); draw(performance.now());
+  window.addEventListener('resize',function(){size(); if(!run||still) draw(performance.now());});
+  if('IntersectionObserver' in window && !still){
+    new IntersectionObserver(function(e){var v=e[0].isIntersecting; if(v&&!run){run=true;requestAnimationFrame(draw);} else if(!v) run=false;}).observe(c);
+  }
+})();
+</script>
 </body>
 </html>
