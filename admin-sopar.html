@@ -74,7 +74,7 @@
 
   <div id="panell" hidden>
     <section>
-      <h2>Sopar de cloenda · dissabte 14 de novembre, 20:30 · <span id="llocTitol"></span></h2>
+      <h2>Sopar de cloenda · dissabte 14 de novembre · <span id="llocTitol"></span></h2>
       <div class="kpis" id="kpis"></div>
       <p class="nota" style="margin:.7rem 0 0">Comptem les reserves que no estan donades de baixa. «Confirmades» són les que ja heu confirmat per WhatsApp.</p>
     </section>
@@ -107,7 +107,7 @@
   var TOKEN = ''; try { TOKEN = sessionStorage.getItem('llxd-enq-admin') || ''; } catch (e) {}
   var DADES = [], FILTRE = 'sopar';
   /* Lloc del sopar: deixa-ho buit mentre no estigui confirmat. Quan ho estigui, posa el nom i l'enllaç de Google Maps. */
-  var LLOC = { nom: '', mapa: '' };
+  var LLOC = { nom: '', mapa: '', hora: 'a partir de les 20:30 h' };
   var PARADES = ['Santa Coloma de Cervelló', 'Sant Joan Despí', 'Cornellà de Llobregat', 'El Prat de Llobregat'];
   var $ = function (id) { return document.getElementById(id); };
   function api(url, opts) { opts = opts || {}; opts.headers = Object.assign({ Authorization: 'Bearer ' + TOKEN }, opts.headers || {}); return fetch(url, opts); }
@@ -127,7 +127,7 @@
       '',
       '✅ *Plaça confirmada per al sopar de cloenda d\'El Desenllaç*',
       '',
-      '*Quan:* dissabte 14 de novembre, 20:30 h',
+      '*Quan:* dissabte 14 de novembre, ' + LLOC.hora,
       '*On:* ' + LLOC.nom,
       LLOC.mapa,
       '*Persones:* ' + txtPers(x),
@@ -225,8 +225,8 @@
       if (x.comentaris) box.appendChild(el('div', { class: 'det', text: '💬 ' + x.comentaris }));
       var nota = el('textarea', { placeholder: 'Nota interna' }); nota.value = x.nota || ''; box.appendChild(nota);
       var f = el('div', { class: 'fila' });
-      if (x.sopar && x.telefon && !x.baixa && !LLOC.nom) f.appendChild(el('button', { class: 'sec', text: 'WhatsApp: pendent de confirmar el lloc', disabled: 'disabled', title: 'Omple LLOC a admin-sopar.html quan el restaurant estigui confirmat' }));
-      if (x.sopar && x.telefon && !x.baixa && LLOC.nom) f.appendChild(el('a', { href: 'https://api.whatsapp.com/send?phone=' + tel(x.telefon) + '&text=' + encodeURIComponent(missatge(x)), target: '_blank', rel: 'noopener' }, [el('button', { class: 'sec', text: 'Confirmar per WhatsApp' })]));
+      if (x.sopar && x.telefon && !x.baixa && !(LLOC.nom && LLOC.hora)) f.appendChild(el('button', { class: 'sec', text: 'WhatsApp: pendent de confirmar el lloc', disabled: 'disabled', title: 'Omple LLOC a admin-sopar.html quan el restaurant estigui confirmat' }));
+      if (x.sopar && x.telefon && !x.baixa && LLOC.nom && LLOC.hora) f.appendChild(el('a', { href: 'https://api.whatsapp.com/send?phone=' + tel(x.telefon) + '&text=' + encodeURIComponent(missatge(x)), target: '_blank', rel: 'noopener' }, [el('button', { class: 'sec', text: 'Confirmar per WhatsApp' })]));
       if (x.sopar && !x.baixa) f.appendChild(el('button', { class: x.confirmat ? 'sec' : 'ok', text: x.confirmat ? 'Treure confirmació' : 'Marcar confirmada', onclick: function () { desa(x, { confirmat: !x.confirmat, nota: nota.value }); } }));
       f.appendChild(el('button', { class: 'sec', text: 'Desar nota', onclick: function () { desa(x, { nota: nota.value }); } }));
       f.appendChild(el('button', { class: 'ko', text: x.baixa ? 'Recuperar' : 'Donar de baixa', onclick: function () { desa(x, { baixa: !x.baixa, nota: nota.value }); } }));
@@ -240,7 +240,7 @@
     var a = l.reduce(function (s, x) { return s + x.adults; }, 0), i = l.reduce(function (s, x) { return s + x.infants; }, 0);
     var c = $('restCos'); c.innerHTML = '';
     c.appendChild(el('h2', { text: 'Sopar de cloenda · Llobregat x la Diabetis' }));
-    c.appendChild(el('p', { text: 'Dissabte 14 de novembre de 2026 · 20:30 h · ' + (LLOC.nom || 'El Prat de Llobregat (lloc per confirmar)') }));
+    c.appendChild(el('p', { text: 'Dissabte 14 de novembre de 2026 · ' + (LLOC.hora || 'hora per confirmar') + ' · ' + (LLOC.nom || 'El Prat de Llobregat (lloc per confirmar)') }));
     c.appendChild(el('p', { class: 'tot' }, [el('b', { text: (a + i) + ' comensals' }), ' · ' + a + ' adults · ' + i + ' infants · ' + l.length + ' reserves']));
     var alg = l.filter(function (x) { return x.alergies; });
     c.appendChild(el('h2', { text: 'Al·lèrgies i intoleràncies (' + alg.length + ')' }));
@@ -254,7 +254,7 @@
     c.appendChild(el('p', { class: 'nota', text: 'Cada persona es paga el seu sopar. Llista generada el ' + new Date().toLocaleString('ca-ES') + '.' }));
   }
 
-  $('llocTitol').textContent = LLOC.nom || 'lloc per confirmar';
+  $('llocTitol').textContent = (LLOC.hora || 'hora per confirmar') + ' · ' + (LLOC.nom || 'lloc per confirmar');
   if (TOKEN) { $('tk').value = TOKEN; carrega(true); }
 })();
 </script>
