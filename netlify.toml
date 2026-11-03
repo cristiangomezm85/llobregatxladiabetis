@@ -75,6 +75,11 @@
   status = 200
 
 [[redirects]]
+  from = "/api/admin-sopar"
+  to = "/.netlify/functions/admin-sopar"
+  status = 200
+
+[[redirects]]
   from = "/incidencia"
   to = "/incidencia.html"
   status = 200

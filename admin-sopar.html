@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Reserves El Desenllaç · Administració</title>
+<link rel="icon" type="image/png" href="img/logo-small.png">
+<style>
+  :root { --blau: #15315F; --blau2: #1E72D4; --aigua: #5AC0E6; --coral: #FF6B47; --paper: #F4F6FA; --tinta: #0E1B36; --gris: #5A6478; --linia: #D9DEE8; --verd: #1E8E5A; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--paper); color: var(--tinta); line-height: 1.5; font-size: 15px; }
+  header { background: var(--blau); color: #fff; padding: .9rem 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  header h1 { margin: 0; font-size: 1.1rem; }
+  header a { color: #fff; border: 1px solid #fff; border-radius: 8px; padding: .35rem .8rem; text-decoration: none; font-size: 14px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 1.25rem; }
+  section { background: #fff; border: 1px solid var(--linia); border-radius: 12px; padding: 1.1rem 1.2rem; margin-bottom: 1.2rem; }
+  h2 { margin: 0 0 .8rem; font-size: 1.05rem; color: var(--blau); }
+  button { font: inherit; border: 1px solid var(--blau2); background: var(--blau2); color: #fff; border-radius: 8px; padding: .4rem .85rem; cursor: pointer; }
+  button.sec { background: #fff; color: var(--blau2); }
+  button.ok { background: var(--verd); border-color: var(--verd); }
+  button.ko { background: #fff; color: #A8341A; border-color: #E6B7AA; }
+  input, textarea { font: inherit; padding: .4rem .6rem; border: 1px solid var(--linia); border-radius: 8px; }
+  .fila { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; margin: .4rem 0; }
+  .nota { color: var(--gris); font-size: 13px; }
+  .err { color: #A8341A; font-weight: 600; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .7rem; }
+  .kpi { border: 1px solid var(--linia); border-radius: 10px; padding: .7rem .9rem; }
+  .kpi b { display: block; font-size: 1.9rem; line-height: 1.1; color: var(--blau); }
+  .kpi.coral b { color: var(--coral); }
+  .kpi span { font-size: 13px; color: var(--gris); }
+  .parades { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: .5rem; margin-top: .3rem; }
+  .parades div { background: var(--paper); border-radius: 8px; padding: .5rem .7rem; font-size: 14px; }
+  .parades b { color: var(--blau2); }
+  .tabs button { background: #fff; color: var(--blau2); }
+  .tabs button.on { background: var(--blau2); color: #fff; }
+  .res { border: 1px solid var(--linia); border-left: 5px solid var(--aigua); border-radius: 10px; padding: .75rem 1rem; margin-top: .7rem; }
+  .res.sopar { border-left-color: var(--coral); }
+  .res.confirmat { background: #F6FBF8; border-left-color: var(--verd); }
+  .res.baixa { opacity: .55; background: #FAFAFA; }
+  .res h3 { margin: 0; font-size: 1.02rem; color: var(--blau); display: flex; gap: .5rem; flex-wrap: wrap; align-items: baseline; }
+  .res h3 small { font-weight: 500; color: var(--gris); font-size: 13px; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 700; border-radius: 999px; padding: .1rem .55rem; background: #EAF3FC; color: var(--blau2); margin: .15rem .25rem 0 0; }
+  .tag.s { background: #FFF0EC; color: #C2401F; }
+  .tag.dup { background: #FFF6D8; color: #8A6400; }
+  .det { font-size: 14px; margin-top: .3rem; }
+  .det a { color: var(--blau2); }
+  .alg { color: #A8341A; font-weight: 600; }
+  textarea { width: 100%; min-height: 38px; margin-top: .4rem; }
+  /* Vista per al restaurant */
+  #rest { display: none; }
+  body.rest-on main > *:not(#rest) { display: none; }
+  body.rest-on #rest { display: block; }
+  #rest table { width: 100%; border-collapse: collapse; margin-top: .6rem; font-size: 14px; }
+  #rest th, #rest td { text-align: left; border-bottom: 1px solid var(--linia); padding: .4rem .3rem; vertical-align: top; }
+  #rest th { color: var(--gris); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  #rest .tot { font-size: 1.1rem; margin: .4rem 0; }
+  @media print {
+    header, .noprint { display: none !important; }
+    body { background: #fff; }
+    main { padding: 0; }
+    section { border: 0; padding: 0; }
+  }
+</style>
+</head>
+<body>
+<header><h1>El Desenllaç · Reserves</h1><a href="index.html#desenllac">Veure la web</a></header>
+<main>
+  <section id="login">
+    <h2>Accés</h2>
+    <div class="fila"><input type="password" id="tk" placeholder="ADMIN_TOKEN" autocomplete="off"><button id="entrar">Entrar</button></div>
+    <p class="err" id="loginErr"></p>
+  </section>
+
+  <div id="panell" hidden>
+    <section>
+      <h2>Sopar de cloenda · dissabte 14 de novembre, 20:30 · Restaurant Delta</h2>
+      <div class="kpis" id="kpis"></div>
+      <p class="nota" style="margin:.7rem 0 0">Comptem les reserves que no estan donades de baixa. «Confirmades» són les que ja heu confirmat per WhatsApp.</p>
+    </section>
+    <section>
+      <h2>Gent a cada parada (adults + infants)</h2>
+      <div class="parades" id="parades"></div>
+    </section>
+    <section>
+      <div class="fila tabs" id="tabs"></div>
+      <div class="fila noprint">
+        <input type="search" id="cerca" placeholder="Cerca per nom o telèfon" style="flex:1;min-width:180px">
+        <button class="sec" id="refresca">Actualitzar</button>
+        <button class="sec" id="csv">Baixar CSV (Excel)</button>
+        <button id="obreRest">Vista per al restaurant</button>
+      </div>
+      <p class="nota" id="info"></p>
+      <div id="llista"></div>
+    </section>
+  </div>
+
+  <section id="rest">
+    <div class="fila noprint"><button class="sec" id="tancaRest">← Tornar</button><button id="imprimeix">Imprimir / Desar PDF</button>
+      <label class="nota"><input type="checkbox" id="nomesConf"> Només reserves confirmades</label></div>
+    <div id="restCos"></div>
+  </section>
+</main>
+<script>
+(function () {
+  'use strict';
+  var TOKEN = ''; try { TOKEN = sessionStorage.getItem('llxd-enq-admin') || ''; } catch (e) {}
+  var DADES = [], FILTRE = 'sopar';
+  var PARADES = ['Santa Coloma de Cervelló', 'Sant Joan Despí', 'Cornellà de Llobregat', 'El Prat de Llobregat'];
+  var $ = function (id) { return document.getElementById(id); };
+  function api(url, opts) { opts = opts || {}; opts.headers = Object.assign({ Authorization: 'Bearer ' + TOKEN }, opts.headers || {}); return fetch(url, opts); }
+  function el(tag, attrs, kids) {
+    var e = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) { if (k === 'text') e.textContent = attrs[k]; else if (k === 'class') e.className = attrs[k]; else if (k.slice(0, 2) === 'on') e.addEventListener(k.slice(2), attrs[k]); else e.setAttribute(k, attrs[k]); });
+    (kids || []).forEach(function (c) { if (c) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    return e;
+  }
+  function tel(t) { var d = String(t || '').replace(/[^\d+]/g, ''); if (d.charAt(0) === '+') return d.slice(1); if (d.slice(0, 2) === '00') return d.slice(2); if (d.length === 9) return '34' + d; return d; }
+  function persones(x) { return x.adults + x.infants; }
+  function txtPers(x) { return x.adults + ' adult' + (x.adults === 1 ? '' : 's') + (x.infants ? ' + ' + x.infants + ' infant' + (x.infants === 1 ? '' : 's') : ''); }
+  function missatge(x) {
+    var nom = (x.nom || '').split(' ')[0];
+    return 'Hola ' + nom + '! 💙 Et confirmem la plaça per al sopar de cloenda d\'El Desenllaç: dissabte 14 de novembre a les 20:30 al Restaurant Delta (El Prat), per a ' + txtPers(x) + '. Recorda que cadascú es paga el seu sopar. Si hi ha qualsevol canvi, avisa\'ns per aquí. Ens veiem dissabte! Llobregat x la Diabetis';
+  }
+
+  $('entrar').addEventListener('click', function () { TOKEN = $('tk').value.trim(); carrega(true); });
+  $('tk').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('entrar').click(); });
+  $('refresca').addEventListener('click', function () { carrega(); });
+  $('cerca').addEventListener('input', pinta);
+  $('csv').addEventListener('click', function () {
+    api('/api/admin-sopar?format=csv').then(function (r) { if (!r.ok) throw new Error('No s\'ha pogut baixar'); return r.blob(); }).then(function (b) {
+      var a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'reserves-desenllac.csv'; document.body.appendChild(a); a.click(); a.remove();
+    }).catch(function (e) { $('info').textContent = e.message; });
+  });
+  $('obreRest').addEventListener('click', function () { pintaRest(); document.body.classList.add('rest-on'); window.scrollTo(0, 0); });
+  $('tancaRest').addEventListener('click', function () { document.body.classList.remove('rest-on'); });
+  $('imprimeix').addEventListener('click', function () { window.print(); });
+  $('nomesConf').addEventListener('change', pintaRest);
+
+  function carrega(primera) {
+    $('info').textContent = 'Carregant…';
+    api('/api/admin-sopar').then(function (r) { if (r.status === 401) throw new Error('Token incorrecte'); return r.json(); }).then(function (j) {
+      if (!j.ok) throw new Error(j.error || 'Error');
+      try { sessionStorage.setItem('llxd-enq-admin', TOKEN); } catch (e) {}
+      DADES = j.reserves; $('login').hidden = true; $('panell').hidden = false;
+      $('info').textContent = 'Actualitzat ' + new Date().toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit' }) + ' · ' + DADES.length + ' respostes al formulari';
+      pinta();
+    }).catch(function (e) { if (primera || $('panell').hidden) $('loginErr').textContent = e.message; else $('info').textContent = e.message; });
+  }
+
+  function desa(x, canvis) {
+    var body = Object.assign({ id: x.id }, canvis);
+    return api('/api/admin-sopar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then(function (r) { return r.json(); }).then(function (j) {
+      if (!j.ok) { $('info').textContent = j.error || 'Error en desar'; return; }
+      Object.assign(x, { confirmat: !!j.estat.confirmat, baixa: !!j.estat.baixa, nota: j.estat.nota || '' }); pinta();
+    });
+  }
+
+  function pinta() {
+    var actives = DADES.filter(function (x) { return !x.baixa; });
+    var sopar = actives.filter(function (x) { return x.sopar; });
+    var sum = function (l, k) { return l.reduce(function (a, x) { return a + x[k]; }, 0); };
+    var conf = sopar.filter(function (x) { return x.confirmat; });
+    var kp = $('kpis'); kp.innerHTML = '';
+    [['coral', sum(sopar, 'adults') + sum(sopar, 'infants'), 'comensals en total'],
+     ['', sum(sopar, 'adults'), 'adults'],
+     ['', sum(sopar, 'infants'), 'infants'],
+     ['', sopar.length, 'reserves de sopar'],
+     ['', conf.length + ' / ' + sopar.length, 'confirmades (' + (sum(conf, 'adults') + sum(conf, 'infants')) + ' pers.)'],
+     ['', sopar.filter(function (x) { return x.alergies; }).length, 'amb al·lèrgies']
+    ].forEach(function (k) { kp.appendChild(el('div', { class: 'kpi ' + k[0] }, [el('b', { text: String(k[1]) }), el('span', { text: k[2] })])); });
+
+    var pa = $('parades'); pa.innerHTML = '';
+    PARADES.forEach(function (p) {
+      var l = actives.filter(function (x) { return x.parades.indexOf(p) !== -1; });
+      pa.appendChild(el('div', null, [p + ': ', el('b', { text: String(sum(l, 'adults') + sum(l, 'infants')) }), ' pers. (' + l.length + ' resp.)']));
+    });
+
+    var nTots = {}; DADES.forEach(function (x) { var t = tel(x.telefon); if (t) nTots[t] = (nTots[t] || 0) + 1; });
+    var tabs = $('tabs'); tabs.innerHTML = '';
+    [['sopar', 'Sopar (' + sopar.length + ')'], ['parades', 'Només parades (' + actives.filter(function (x) { return !x.sopar; }).length + ')'], ['baixa', 'Baixes (' + DADES.filter(function (x) { return x.baixa; }).length + ')'], ['totes', 'Totes (' + DADES.length + ')']].forEach(function (t) {
+      tabs.appendChild(el('button', { class: FILTRE === t[0] ? 'on' : '', text: t[1], onclick: function () { FILTRE = t[0]; pinta(); } }));
+    });
+
+    var q = $('cerca').value.trim().toLowerCase();
+    var v = DADES.filter(function (x) {
+      if (FILTRE === 'sopar' && (!x.sopar || x.baixa)) return false;
+      if (FILTRE === 'parades' && (x.sopar || x.baixa)) return false;
+      if (FILTRE === 'baixa' && !x.baixa) return false;
+      return !q || (x.nom + ' ' + x.telefon).toLowerCase().indexOf(q) !== -1;
+    });
+    var cont = $('llista'); cont.innerHTML = '';
+    if (!v.length) cont.appendChild(el('p', { class: 'nota', text: 'No hi ha respostes en aquesta vista.' }));
+    v.forEach(function (x) {
+      var ordre = DADES.indexOf(x) + 1, d = new Date(x.data);
+      var box = el('div', { class: 'res' + (x.sopar ? ' sopar' : '') + (x.confirmat ? ' confirmat' : '') + (x.baixa ? ' baixa' : '') });
+      box.appendChild(el('h3', null, [x.nom || '(sense nom)', el('small', { text: '#' + ordre + ' · ' + d.toLocaleDateString('ca-ES') + ' ' + d.toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit' }) })]));
+      var tg = el('div');
+      if (x.sopar) tg.appendChild(el('span', { class: 'tag s', text: '🍽️ Sopar · ' + txtPers(x) })); else tg.appendChild(el('span', { class: 'tag', text: txtPers(x) }));
+      x.parades.forEach(function (p) { tg.appendChild(el('span', { class: 'tag', text: p })); });
+      if (x.confirmat) tg.appendChild(el('span', { class: 'tag', text: '✓ Confirmada', style: 'background:#E7F6EE;color:#1B6B43' }));
+      if (nTots[tel(x.telefon)] > 1) tg.appendChild(el('span', { class: 'tag dup', text: 'Telèfon repetit: possible duplicat' }));
+      box.appendChild(tg);
+      var det = el('div', { class: 'det' });
+      if (x.telefon) det.appendChild(el('a', { href: 'tel:' + x.telefon.replace(/[^\d+]/g, ''), text: x.telefon }));
+      if (x.email) { det.appendChild(document.createTextNode('  ·  ')); det.appendChild(el('a', { href: 'mailto:' + x.email, text: x.email })); }
+      box.appendChild(det);
+      if (x.alergies) box.appendChild(el('div', { class: 'det alg', text: '⚠️ Al·lèrgies: ' + x.alergies }));
+      if (x.comentaris) box.appendChild(el('div', { class: 'det', text: '💬 ' + x.comentaris }));
+      var nota = el('textarea', { placeholder: 'Nota interna' }); nota.value = x.nota || ''; box.appendChild(nota);
+      var f = el('div', { class: 'fila' });
+      if (x.sopar && x.telefon && !x.baixa) f.appendChild(el('a', { href: 'https://wa.me/' + tel(x.telefon) + '?text=' + encodeURIComponent(missatge(x)), target: '_blank', rel: 'noopener' }, [el('button', { class: 'sec', text: 'Confirmar per WhatsApp' })]));
+      if (x.sopar && !x.baixa) f.appendChild(el('button', { class: x.confirmat ? 'sec' : 'ok', text: x.confirmat ? 'Treure confirmació' : 'Marcar confirmada', onclick: function () { desa(x, { confirmat: !x.confirmat, nota: nota.value }); } }));
+      f.appendChild(el('button', { class: 'sec', text: 'Desar nota', onclick: function () { desa(x, { nota: nota.value }); } }));
+      f.appendChild(el('button', { class: 'ko', text: x.baixa ? 'Recuperar' : 'Donar de baixa', onclick: function () { desa(x, { baixa: !x.baixa, nota: nota.value }); } }));
+      box.appendChild(f);
+      cont.appendChild(box);
+    });
+  }
+
+  function pintaRest() {
+    var l = DADES.filter(function (x) { return x.sopar && !x.baixa && (!$('nomesConf').checked || x.confirmat); });
+    var a = l.reduce(function (s, x) { return s + x.adults; }, 0), i = l.reduce(function (s, x) { return s + x.infants; }, 0);
+    var c = $('restCos'); c.innerHTML = '';
+    c.appendChild(el('h2', { text: 'Sopar de cloenda · Llobregat x la Diabetis' }));
+    c.appendChild(el('p', { text: 'Dissabte 14 de novembre de 2026 · 20:30 h · Restaurant Delta, El Prat de Llobregat' }));
+    c.appendChild(el('p', { class: 'tot' }, [el('b', { text: (a + i) + ' comensals' }), ' · ' + a + ' adults · ' + i + ' infants · ' + l.length + ' reserves']));
+    var alg = l.filter(function (x) { return x.alergies; });
+    c.appendChild(el('h2', { text: 'Al·lèrgies i intoleràncies (' + alg.length + ')' }));
+    if (!alg.length) c.appendChild(el('p', { class: 'nota', text: 'Cap.' }));
+    else { var t1 = el('table', null, [el('tr', null, [el('th', { text: 'Nom' }), el('th', { text: 'Al·lèrgia / intolerància' }), el('th', { text: 'Persones de la reserva' })])]);
+      alg.forEach(function (x) { t1.appendChild(el('tr', null, [el('td', { text: x.nom }), el('td', { text: x.alergies }), el('td', { text: txtPers(x) })])); }); c.appendChild(t1); }
+    c.appendChild(el('h2', { text: 'Llista de reserves', style: 'margin-top:1.2rem' }));
+    var t2 = el('table', null, [el('tr', null, [el('th', { text: '#' }), el('th', { text: 'Nom' }), el('th', { text: 'Adults' }), el('th', { text: 'Infants' })])]);
+    l.forEach(function (x, n) { t2.appendChild(el('tr', null, [el('td', { text: String(n + 1) }), el('td', { text: x.nom }), el('td', { text: String(x.adults) }), el('td', { text: String(x.infants) })])); });
+    c.appendChild(t2);
+    c.appendChild(el('p', { class: 'nota', text: 'Cada persona es paga el seu sopar. Llista generada el ' + new Date().toLocaleString('ca-ES') + '.' }));
+  }
+
+  if (TOKEN) { $('tk').value = TOKEN; carrega(true); }
+})();
+</script>
+</body>
+</html>
