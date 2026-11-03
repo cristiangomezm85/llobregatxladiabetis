@@ -734,7 +734,7 @@
   .desenllac-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.8rem}
 
   .dl-route{list-style:none;margin:clamp(2.5rem,5vw,3.5rem) 0 0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.75rem;position:relative}
-  .dl-route::before{content:"";position:absolute;left:4%;right:4%;top:22px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--blau-aigua),var(--blau-diabetis),var(--coral))}
+  .dl-route::before{content:"";position:absolute;left:13.5px;width:calc(80% + .6rem);top:22px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--blau-aigua),var(--blau-diabetis),var(--coral))}
   .dl-stop{position:relative;padding-top:58px}
   .dl-stop::before{content:"";position:absolute;top:10px;left:0;width:27px;height:27px;border-radius:50%;background:var(--tinta);border:3px solid var(--blau-aigua);box-shadow:0 0 0 6px rgba(90,192,230,.15),0 0 22px rgba(90,192,230,.6)}
   .dl-stop.is-sopar::before{border-color:var(--coral);box-shadow:0 0 0 6px rgba(255,107,71,.15),0 0 22px rgba(255,107,71,.6)}
@@ -765,7 +765,7 @@
   .dl-surprise p b{color:#fff}
   .dl-surprise .dl-torch{position:relative;display:inline-block;margin-top:1.3rem;padding:.65rem 1.2rem;border-radius:999px;border:1.5px solid var(--blau-aigua);color:#fff;font-weight:800;box-shadow:0 0 28px rgba(90,192,230,.35)}
   .dl-stop time,.dl-stop strong,.dl-stop small{text-shadow:0 1px 2px rgba(3,7,20,.95),0 0 14px rgba(3,7,20,.95),0 0 28px rgba(3,7,20,.8)}
-  .dl-route{padding:.4rem .6rem 0;border-radius:18px;background:linear-gradient(90deg,rgba(3,7,20,.55),rgba(3,7,20,.25) 45%,rgba(3,7,20,0) 80%)}
+  .dl-route{background:linear-gradient(90deg,rgba(3,7,20,.55),rgba(3,7,20,.25) 45%,rgba(3,7,20,0) 80%);box-shadow:-1.2rem 0 1.5rem -.2rem rgba(3,7,20,.35);border-radius:18px}
   .dl-note{margin-top:1.4rem;color:rgba(255,255,255,.62);font-size:.88rem}
 
   .dl-what{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;margin-top:clamp(2.5rem,5vw,3.5rem)}
@@ -831,7 +831,7 @@
 
   @media (max-width:980px){
     .dl-route{grid-template-columns:1fr;gap:0}
-    .dl-route::before{left:12px;right:auto;top:18px;bottom:30px;width:3px;height:auto;background:linear-gradient(180deg,var(--blau-aigua),var(--blau-diabetis),var(--coral))}
+    .dl-route::before{left:12px;right:auto;width:3px;top:18px;bottom:30px;width:3px;height:auto;background:linear-gradient(180deg,var(--blau-aigua),var(--blau-diabetis),var(--coral))}
     .dl-stop{padding:0 0 1.2rem 3rem}
     .dl-stop::before{top:4px}
     .dl-what{grid-template-columns:1fr 1fr}
