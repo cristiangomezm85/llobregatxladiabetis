@@ -107,7 +107,7 @@
   var TOKEN = ''; try { TOKEN = sessionStorage.getItem('llxd-enq-admin') || ''; } catch (e) {}
   var DADES = [], FILTRE = 'sopar';
   /* Lloc del sopar: deixa-ho buit mentre no estigui confirmat. Quan ho estigui, posa el nom i l'enllaç de Google Maps. */
-  var LLOC = { nom: '', mapa: '', hora: 'a partir de les 20:30 h' };
+  var LLOC = { nom: 'Restaurant Delta, El Prat de Llobregat', mapa: 'https://maps.app.goo.gl/EsbCxRa54zAawJnS8', hora: '22:00 h (després d\'arribar al mar a les 21:00 h)' };
   var PARADES = ['Santa Coloma de Cervelló', 'Sant Joan Despí', 'Cornellà de Llobregat', 'El Prat de Llobregat'];
   var $ = function (id) { return document.getElementById(id); };
   function api(url, opts) { opts = opts || {}; opts.headers = Object.assign({ Authorization: 'Bearer ' + TOKEN }, opts.headers || {}); return fetch(url, opts); }
