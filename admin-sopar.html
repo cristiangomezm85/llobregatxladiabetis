@@ -86,6 +86,7 @@
       <div class="fila tabs" id="tabs"></div>
       <div class="fila noprint">
         <input type="search" id="cerca" placeholder="Cerca per nom o telèfon" style="flex:1;min-width:180px">
+        <label class="nota" style="display:flex;align-items:center;gap:.4rem">WhatsApp en <select id="idioma"><option value="ca">Català</option><option value="es">Castellano</option></select></label>
         <button class="sec" id="refresca">Actualitzar</button>
         <button class="sec" id="csv">Baixar CSV (Excel)</button>
         <button id="obreRest">Vista per al restaurant</button>
@@ -120,29 +121,90 @@
   function tel(t) { var d = String(t || '').replace(/[^\d+]/g, ''); if (d.charAt(0) === '+') return d.slice(1); if (d.slice(0, 2) === '00') return d.slice(2); if (d.length === 9) return '34' + d; return d; }
   function persones(x) { return x.adults + x.infants; }
   function txtPers(x) { return x.adults + ' adult' + (x.adults === 1 ? '' : 's') + (x.infants ? ' + ' + x.infants + ' infant' + (x.infants === 1 ? '' : 's') : ''); }
+  var IDIOMA = 'ca'; try { IDIOMA = localStorage.getItem('llxd-wa-idioma') || 'ca'; } catch (e) {}
+  function txtPersL(x, l) {
+    if (l === 'ca') return txtPers(x);
+    return x.adults + ' adulto' + (x.adults === 1 ? '' : 's') + (x.infants ? ' + ' + x.infants + ' niño' + (x.infants === 1 ? '' : 's') : '');
+  }
   function missatge(x) {
     var nom = (x.nom || '').split(' ')[0];
+    if (IDIOMA === 'es') return [
+      '¡Hola ' + nom + '!', '',
+      '✅ *Plaza confirmada para la cena de cierre de El Desenllaç*', '',
+      '*Cuándo:* sábado 14 de noviembre, 22:00 h (después de llegar al mar a las 21:00 h)',
+      '*Dónde:* ' + LLOC.nom, LLOC.mapa,
+      '*Personas:* ' + txtPersL(x, 'es'), '',
+      'Recuerda que cada uno se paga su cena. Si hay cualquier cambio, avísanos por aquí.', '',
+      '¡Nos vemos el sábado!', '_Llobregat x la Diabetis_'
+    ].join('\n');
     return [
-      'Hola ' + nom + '!',
-      '',
-      '✅ *Plaça confirmada per al sopar de cloenda d\'El Desenllaç*',
-      '',
+      'Hola ' + nom + '!', '',
+      '✅ *Plaça confirmada per al sopar de cloenda d\'El Desenllaç*', '',
       '*Quan:* dissabte 14 de novembre, ' + LLOC.hora,
-      '*On:* ' + LLOC.nom,
-      LLOC.mapa,
-      '*Persones:* ' + txtPers(x),
-      '',
-      'Recorda que cadascú es paga el seu sopar. Si hi ha qualsevol canvi, avisa\'ns per aquí.',
-      '',
-      'Ens veiem dissabte!',
-      '_Llobregat x la Diabetis_'
+      '*On:* ' + LLOC.nom, LLOC.mapa,
+      '*Persones:* ' + txtPers(x), '',
+      'Recorda que cadascú es paga el seu sopar. Si hi ha qualsevol canvi, avisa\'ns per aquí.', '',
+      'Ens veiem dissabte!', '_Llobregat x la Diabetis_'
     ].join('\n');
   }
+  var MAPES = {
+    bar: 'https://maps.app.goo.gl/oZzaaQNboN6ZdGV3A',
+    sc: 'https://maps.app.goo.gl/mxwwWraYRncnLg8P6',
+    sjd: 'https://maps.app.goo.gl/6QgmxQtSmMasE6qp7',
+    corn: 'https://maps.app.goo.gl/WfbX8t7ACDN8Df6C9',
+    prat: 'https://www.google.com/maps/search/?api=1&query=CEM+Sagnier+El+Prat+de+Llobregat',
+    mar: 'https://maps.app.goo.gl/ctq9q6abAdH4jhUw6',
+    delta: 'https://maps.app.goo.gl/EsbCxRa54zAawJnS8'
+  };
+  function missatgeDema(x) {
+    var nom = (x.nom || '').split(' ')[0];
+    if (IDIOMA === 'es') return [
+      '¡Hola ' + nom + '!', '',
+      'Mañana es el gran día: *El Desenllaç* 💙 Sábado 14 de noviembre, Día Mundial de la Diabetes.', '',
+      '☕ *17:00–17:30 h · Encuentro previo (opcional)*',
+      'Quien quiera, nos vemos antes en este bar cerca del primer acto, en Santa Coloma de Cervelló:', MAPES.bar, '',
+      '📍 *18:00 h · Santa Coloma de Cervelló*', 'Plaça de les Vinyes, justo delante del Ayuntamiento', MAPES.sc, '',
+      '📍 *18:45 h · Sant Joan Despí*', MAPES.sjd, '',
+      '📍 *19:15 h · Cornellà de Llobregat*', MAPES.corn, '',
+      '📍 *20:00 h · El Prat de Llobregat (CEM Sagnier)*', MAPES.prat, '',
+      '🏃 *Del CEM Sagnier al mar corriendo (opcional)*',
+      'Desde aquí, de forma libre, quien quiera puede hacer el tramo hasta el mar corriendo (unos 6 km); hay tiempo hasta la llegada. Si es tu caso, lleva ropa adecuada y frontal: parte del tramo no tiene iluminación.', '',
+      '🌊 *21:00 h · Llegada al mar*', MAPES.mar,
+      'Tanto si vienes en coche como corriendo, allí estará oscuro. Desde el parking junto a la playa nos acercaremos al mar y vaciaremos la Ampolla de l\'Esperança, que hemos ido llenando con el agua de cada municipio desde el nacimiento del Llobregat. El camino largo es el día a día de la diabetes; el mar, la investigación y el deseo de la cura.',
+      '🔦 Trae frontal o linterna y calzado para la arena.', '',
+      '🍽️ *22:00 h · Cena de cierre*', 'Restaurant Delta, El Prat de Llobregat', MAPES.delta,
+      x.sopar ? 'Tienes plaza para *' + txtPersL(x, 'es') + '*. Recuerda que cada uno se paga su cena.' : 'Si al final te quieres sumar, responde a este mensaje y miramos si quedan plazas.', '',
+      '💡 Yo me acercaré a las 16:00 h al Restaurant Delta para poner de azul la iluminación. Si alguien quiere venir a echar una mano, ¡perfecto! No creo que haga falta mucha gente.', '',
+      '¡Nos vemos mañana!', '_Llobregat x la Diabetis_'
+    ].join('\n');
+    return [
+      'Hola ' + nom + '!', '',
+      'Demà és el gran dia: *El Desenllaç* 💙 Dissabte 14 de novembre, Dia Mundial de la Diabetis.', '',
+      '☕ *17:00–17:30 h · Trobada prèvia (opcional)*',
+      'Qui vulgui, ens trobem abans en aquest bar a prop del primer acte, a Santa Coloma de Cervelló:', MAPES.bar, '',
+      '📍 *18:00 h · Santa Coloma de Cervelló*', 'Plaça de les Vinyes, just davant de l\'Ajuntament', MAPES.sc, '',
+      '📍 *18:45 h · Sant Joan Despí*', MAPES.sjd, '',
+      '📍 *19:15 h · Cornellà de Llobregat*', MAPES.corn, '',
+      '📍 *20:00 h · El Prat de Llobregat (CEM Sagnier)*', MAPES.prat, '',
+      '🏃 *Del CEM Sagnier al mar corrent (opcional)*',
+      'Des d\'aquí, de manera lliure, qui vulgui pot fer el tram fins al mar corrent (uns 6 km); hi ha temps fins a l\'arribada. Si és el teu cas, porta roba adequada i frontal: una part del tram no té il·luminació.', '',
+      '🌊 *21:00 h · Arribada al mar*', MAPES.mar,
+      'Tant si vens en cotxe com corrent, allà serà fosc. Des de l\'aparcament del costat de la platja ens apropem al mar i buidarem l\'Ampolla de l\'Esperança, que hem anat omplint amb l\'aigua de cada municipi des del naixement del Llobregat. El camí llarg és el dia a dia de la diabetis; el mar, la investigació i el desig de la cura.',
+      '🔦 Porta frontal o llanterna i calçat per a la sorra.', '',
+      '🍽️ *22:00 h · Sopar de cloenda*', 'Restaurant Delta, El Prat de Llobregat', MAPES.delta,
+      x.sopar ? 'Tens plaça per a *' + txtPers(x) + '*. Recorda que cadascú es paga el seu sopar.' : 'Si al final t\'hi vols sumar, respon aquest missatge i mirem si queden places.', '',
+      '💡 Jo m\'acostaré a les 16:00 h al Restaurant Delta per posar de blau la il·luminació. Si algú vol venir a donar un cop de mà, perfecte! No crec que calgui gaire gent.', '',
+      'Ens veiem demà!', '_Llobregat x la Diabetis_'
+    ].join('\n');
+  }
+  function waLink(x, text) { return 'https://api.whatsapp.com/send?phone=' + tel(x.telefon) + '&text=' + encodeURIComponent(text); }
 
   $('entrar').addEventListener('click', function () { TOKEN = $('tk').value.trim(); carrega(true); });
   $('tk').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('entrar').click(); });
   $('refresca').addEventListener('click', function () { carrega(); });
   $('cerca').addEventListener('input', pinta);
+  $('idioma').value = IDIOMA;
+  $('idioma').addEventListener('change', function () { IDIOMA = this.value; try { localStorage.setItem('llxd-wa-idioma', IDIOMA); } catch (e) {} pinta(); });
   $('csv').addEventListener('click', function () {
     api('/api/admin-sopar?format=csv').then(function (r) { if (!r.ok) throw new Error('No s\'ha pogut baixar'); return r.blob(); }).then(function (b) {
       var a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'reserves-desenllac.csv'; document.body.appendChild(a); a.click(); a.remove();
@@ -226,7 +288,8 @@
       var nota = el('textarea', { placeholder: 'Nota interna' }); nota.value = x.nota || ''; box.appendChild(nota);
       var f = el('div', { class: 'fila' });
       if (x.sopar && x.telefon && !x.baixa && !(LLOC.nom && LLOC.hora)) f.appendChild(el('button', { class: 'sec', text: 'WhatsApp: pendent de confirmar el lloc', disabled: 'disabled', title: 'Omple LLOC a admin-sopar.html quan el restaurant estigui confirmat' }));
-      if (x.sopar && x.telefon && !x.baixa && LLOC.nom && LLOC.hora) f.appendChild(el('a', { href: 'https://api.whatsapp.com/send?phone=' + tel(x.telefon) + '&text=' + encodeURIComponent(missatge(x)), target: '_blank', rel: 'noopener' }, [el('button', { class: 'sec', text: 'Confirmar per WhatsApp' })]));
+      if (x.telefon && !x.baixa) f.appendChild(el('a', { href: waLink(x, missatgeDema(x)), target: '_blank', rel: 'noopener' }, [el('button', { class: 'ok', text: IDIOMA === 'es' ? 'WhatsApp: info de mañana' : 'WhatsApp: info de demà' })]));
+      if (x.sopar && x.telefon && !x.baixa && LLOC.nom && LLOC.hora) f.appendChild(el('a', { href: waLink(x, missatge(x)), target: '_blank', rel: 'noopener' }, [el('button', { class: 'sec', text: 'Confirmar sopar per WhatsApp' })]));
       if (x.sopar && !x.baixa) f.appendChild(el('button', { class: x.confirmat ? 'sec' : 'ok', text: x.confirmat ? 'Treure confirmació' : 'Marcar confirmada', onclick: function () { desa(x, { confirmat: !x.confirmat, nota: nota.value }); } }));
       f.appendChild(el('button', { class: 'sec', text: 'Desar nota', onclick: function () { desa(x, { nota: nota.value }); } }));
       f.appendChild(el('button', { class: 'ko', text: x.baixa ? 'Recuperar' : 'Donar de baixa', onclick: function () { desa(x, { baixa: !x.baixa, nota: nota.value }); } }));
