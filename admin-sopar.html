@@ -86,7 +86,6 @@
       <div class="fila tabs" id="tabs"></div>
       <div class="fila noprint">
         <input type="search" id="cerca" placeholder="Cerca per nom o telèfon" style="flex:1;min-width:180px">
-        <label class="nota" style="display:flex;align-items:center;gap:.4rem">WhatsApp en <select id="idioma"><option value="ca">Català</option><option value="es">Castellano</option></select></label>
         <button class="sec" id="refresca">Actualitzar</button>
         <button class="sec" id="csv">Baixar CSV (Excel)</button>
         <button id="obreRest">Vista per al restaurant</button>
@@ -121,12 +120,11 @@
   function tel(t) { var d = String(t || '').replace(/[^\d+]/g, ''); if (d.charAt(0) === '+') return d.slice(1); if (d.slice(0, 2) === '00') return d.slice(2); if (d.length === 9) return '34' + d; return d; }
   function persones(x) { return x.adults + x.infants; }
   function txtPers(x) { return x.adults + ' adult' + (x.adults === 1 ? '' : 's') + (x.infants ? ' + ' + x.infants + ' infant' + (x.infants === 1 ? '' : 's') : ''); }
-  var IDIOMA = 'ca'; try { IDIOMA = localStorage.getItem('llxd-wa-idioma') || 'ca'; } catch (e) {}
   function txtPersL(x, l) {
     if (l === 'ca') return txtPers(x);
     return x.adults + ' adulto' + (x.adults === 1 ? '' : 's') + (x.infants ? ' + ' + x.infants + ' niño' + (x.infants === 1 ? '' : 's') : '');
   }
-  function missatge(x) {
+  function missatge(x, IDIOMA) {
     var nom = (x.nom || '').split(' ')[0];
     if (IDIOMA === 'es') return [
       '¡Hola ' + nom + '!', '',
@@ -156,7 +154,7 @@
     mar: 'https://maps.app.goo.gl/ctq9q6abAdH4jhUw6',
     delta: 'https://maps.app.goo.gl/EsbCxRa54zAawJnS8'
   };
-  function missatgeDema(x) {
+  function missatgeDema(x, IDIOMA) {
     var nom = (x.nom || '').split(' ')[0];
     if (IDIOMA === 'es') return [
       '¡Hola ' + nom + '!', '',
@@ -203,8 +201,6 @@
   $('tk').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('entrar').click(); });
   $('refresca').addEventListener('click', function () { carrega(); });
   $('cerca').addEventListener('input', pinta);
-  $('idioma').value = IDIOMA;
-  $('idioma').addEventListener('change', function () { IDIOMA = this.value; try { localStorage.setItem('llxd-wa-idioma', IDIOMA); } catch (e) {} pinta(); });
   $('csv').addEventListener('click', function () {
     api('/api/admin-sopar?format=csv').then(function (r) { if (!r.ok) throw new Error('No s\'ha pogut baixar'); return r.blob(); }).then(function (b) {
       var a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'reserves-desenllac.csv'; document.body.appendChild(a); a.click(); a.remove();
@@ -288,8 +284,14 @@
       var nota = el('textarea', { placeholder: 'Nota interna' }); nota.value = x.nota || ''; box.appendChild(nota);
       var f = el('div', { class: 'fila' });
       if (x.sopar && x.telefon && !x.baixa && !(LLOC.nom && LLOC.hora)) f.appendChild(el('button', { class: 'sec', text: 'WhatsApp: pendent de confirmar el lloc', disabled: 'disabled', title: 'Omple LLOC a admin-sopar.html quan el restaurant estigui confirmat' }));
-      if (x.telefon && !x.baixa) f.appendChild(el('a', { href: waLink(x, missatgeDema(x)), target: '_blank', rel: 'noopener' }, [el('button', { class: 'ok', text: IDIOMA === 'es' ? 'WhatsApp: info de mañana' : 'WhatsApp: info de demà' })]));
-      if (x.sopar && x.telefon && !x.baixa && LLOC.nom && LLOC.hora) f.appendChild(el('a', { href: waLink(x, missatge(x)), target: '_blank', rel: 'noopener' }, [el('button', { class: 'sec', text: 'Confirmar sopar per WhatsApp' })]));
+      if (x.telefon && !x.baixa) {
+        f.appendChild(el('a', { href: waLink(x, missatgeDema(x, 'ca')), target: '_blank', rel: 'noopener' }, [el('button', { class: 'ok', text: '📲 Info de demà · Català' })]));
+        f.appendChild(el('a', { href: waLink(x, missatgeDema(x, 'es')), target: '_blank', rel: 'noopener' }, [el('button', { class: 'ok', text: '📲 Info de mañana · Castellano' })]));
+      }
+      if (x.sopar && x.telefon && !x.baixa && LLOC.nom && LLOC.hora) {
+        f.appendChild(el('a', { href: waLink(x, missatge(x, 'ca')), target: '_blank', rel: 'noopener' }, [el('button', { class: 'sec', text: 'Confirmar sopar · Català' })]));
+        f.appendChild(el('a', { href: waLink(x, missatge(x, 'es')), target: '_blank', rel: 'noopener' }, [el('button', { class: 'sec', text: 'Confirmar cena · Castellano' })]));
+      }
       if (x.sopar && !x.baixa) f.appendChild(el('button', { class: x.confirmat ? 'sec' : 'ok', text: x.confirmat ? 'Treure confirmació' : 'Marcar confirmada', onclick: function () { desa(x, { confirmat: !x.confirmat, nota: nota.value }); } }));
       f.appendChild(el('button', { class: 'sec', text: 'Desar nota', onclick: function () { desa(x, { nota: nota.value }); } }));
       f.appendChild(el('button', { class: 'ko', text: x.baixa ? 'Recuperar' : 'Donar de baixa', onclick: function () { desa(x, { baixa: !x.baixa, nota: nota.value }); } }));
