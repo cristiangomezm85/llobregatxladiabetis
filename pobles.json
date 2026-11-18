@@ -382,19 +382,20 @@
       "km": 56.1,
       "comarca": "Bages",
       "tipus": "municipi",
-      "estat": "interessat",
+      "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
       "foto": null,
       "gps": {
-        "lat": 41.70092524712058,
-        "lng": 1.8685905736670065
+        "lat": 41.700925,
+        "lng": 1.86859
       },
       "google_maps_url": "https://www.google.com/maps?q=41.70092524712058,1.8685905736670065",
       "hora_arribada": "15:21",
       "hora_sortida": "15:31",
-      "donacio_slug": "manresa-x-la-diabetes"
+      "donacio_slug": "manresa-x-la-diabetes",
+      "exclos_recorregut": false
     },
     {
       "id": "sant-vicenc-de-castellet",
