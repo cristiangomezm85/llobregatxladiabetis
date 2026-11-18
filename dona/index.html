@@ -455,14 +455,8 @@
         <span><i style="background:#1E72D4"></i><span lang="ca">Gota amb missatge</span><span lang="es">Gota con mensaje</span><span lang="en">Drop with a message</span></span>
         <span><i style="background:#7fd0ee"></i><span lang="ca">Gota sense missatge</span><span lang="es">Gota sin mensaje</span><span lang="en">Drop without a message</span></span>
       </div>
-      <div class="bt-actions">
-        <a class="bt-btn bt-btn-coral" href="#tria"><span lang="ca">Afegeix la teva gota</span><span lang="es">Añade tu gota</span><span lang="en">Add your drop</span></a>
-      </div>
-      <p class="bt-note">
-        <span lang="ca">Les gotes noves poden trigar uns minuts a aparèixer a l'ampolla.</span>
-        <span lang="es">Las gotas nuevas pueden tardar unos minutos en aparecer en la botella.</span>
-        <span lang="en">New drops can take a few minutes to show up in the bottle.</span>
-      </p>
+
+
     </div>
   </div>
 </section>
@@ -529,21 +523,17 @@
        ============================================ -->
   <div class="section-head" id="tria">
     <span class="h-eyebrow">
-      <span lang="ca">Suma-t'hi</span><span lang="es">Súmate</span><span lang="en">Join in</span>
+      <span lang="ca">Els reptes</span><span lang="es">Los retos</span><span lang="en">The challenges</span>
     </span>
-    <div class="bt-or-row">
-      <a class="bt-btn bt-btn-coral" id="ctaGeneral" href="#" target="_blank" rel="noopener"><span lang="ca">Dona ara</span><span lang="es">Dona ahora</span><span lang="en">Donate now</span></a>
-      <span class="bt-or"><span lang="ca">o</span><span lang="es">o</span><span lang="en">or</span></span>
-    </div>
     <h2>
-      <span lang="ca">Tria el teu tram o heroi del riu</span>
-      <span lang="es">Elige tu tramo o héroe del río</span>
-      <span lang="en">Choose your stretch or hero of the river</span>
+      <span lang="ca">Els trams i els herois del riu</span>
+      <span lang="es">Los tramos y los héroes del río</span>
+      <span lang="en">The stretches and heroes of the river</span>
     </h2>
     <p class="lead lead-quiet section-sub">
-      <span lang="ca">Cada poble i cada heroi és un tram del recorregut. Sumats, arriben al mar — i la recerca, un pas més a prop de la cura.</span>
-      <span lang="es">Cada pueblo y cada héroe es un tramo del recorrido. Sumados, llegan al mar — y la investigación, un paso más cerca de la cura.</span>
-      <span lang="en">Each town and each hero is a stretch of the route. Together they reach the sea — and research, one step closer to the cure.</span>
+      <span lang="ca">Cada poble i cada heroi va ser un tram del recorregut. Sumats, han arribat al mar — i la recerca, un pas més a prop de la cura.</span>
+      <span lang="es">Cada pueblo y cada héroe fue un tramo del recorrido. Sumados, han llegado al mar — y la investigación, un paso más cerca de la cura.</span>
+      <span lang="en">Each town and each hero was a stretch of the route. Together they reached the sea — and research is one step closer to the cure.</span>
     </p>
   </div>
 
@@ -742,17 +732,20 @@
           empty:'Encara no hi ha reptes publicats en aquesta categoria.',
           error:"No s'ha pogut carregar el llistat de reptes ara mateix.",
           actualitzat:'Actualitzat', locale:'ca-ES',
-          breakdown:amt=>`Inclou ${amt} donats directament a través de les inscripcions al repte.` },
+          breakdown:amt=>`Inclou ${amt} donats directament a través de les inscripcions al repte.`,
+          finalNote:'Total final del repte 2026. Gràcies a cada gota.' },
     es: { poble:'Municipio', heroe:'Héroe', dies:n=>`Faltan ${n} días`, fin:'Finalizado', donar:'Donar',
           empty:'Todavía no hay retos publicados en esta categoría.',
           error:'No se ha podido cargar el listado de retos ahora mismo.',
           actualitzat:'Actualizado', locale:'es-ES',
-          breakdown:amt=>`Incluye ${amt} donados directamente a través de las inscripciones al reto.` },
+          breakdown:amt=>`Incluye ${amt} donados directamente a través de las inscripciones al reto.`,
+          finalNote:'Total final del reto 2026. Gracias a cada gota.' },
     en: { poble:'Town', heroe:'Hero', dies:n=>`${n} days left`, fin:'Finished', donar:'Donate',
           empty:'No challenges published in this category yet.',
           error:"Couldn't load the list of challenges right now.",
           actualitzat:'Updated', locale:'en-GB',
-          breakdown:amt=>`Includes ${amt} donated directly through challenge registrations.` },
+          breakdown:amt=>`Includes ${amt} donated directly through challenge registrations.`,
+          finalNote:'Final total of the 2026 challenge. Thank you for every drop.' },
   };
 
   // Donatius fets directament des de les inscripcions (Dorsal 0 i similars).
@@ -864,34 +857,9 @@
       DATA = await fetch(RETOS_JSON_URL, {cache:'no-store'})
         .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
         .catch(() => fetch(RETOS_JSON_FALLBACK, {cache:'no-store'}).then(r => r.json()));
-      const baseTotal = Number(DATA.totalRecaudado) || 0;
-      const donatiusGuardats = llegirDonatiusCache();
-      DATA.donatiusInscripcions = donatiusGuardats;
+      // Repte tancat: el total és una xifra final fixa (TOTAL_FINAL), sense càlcul en viu.
+      DATA.donatiusInscripcions = 0;
       render();
-
-      // Només hi ha "floritura" (número borrós) si no hi ha cap valor
-      // guardat i l'espera es nota; amb valor guardat el total ja és bo.
-      let florituraActiva = false;
-      const esperaFloritura = donatiusGuardats > 0 ? null : setTimeout(() => {
-        florituraActiva = true;
-        iniciarFlorituraContador(baseTotal);
-      }, UMBRAL_FLORITURA_MS);
-
-      const fresc = await fetchDonatiusInscripcions();
-      if (esperaFloritura) clearTimeout(esperaFloritura);
-      if (!DATA) return;
-      const donatiusInscripcions = fresc === null ? donatiusGuardats : fresc;
-      if (fresc !== null) desarDonatiusCache(fresc);
-      DATA.donatiusInscripcions = donatiusInscripcions;
-      const totalFinal = baseTotal + donatiusInscripcions;
-
-      if (florituraActiva) {
-        pararFlorituraContador();
-        animarHastaTotal(totalFinal, 550);
-        setTimeout(render, 570);
-      } else {
-        render();
-      }
     }catch(err){
       const s = STR[getLang()];
       document.getElementById('grid').innerHTML = `<p class="error">${escapeHtml(s.error)}</p>`;
@@ -899,6 +867,12 @@
     }
   }
 
+  const TOTAL_FINAL = 18854.31;
+  function formatEurosCents(n){
+    const lang = getLang();
+    const formatted = new Intl.NumberFormat(STR[lang].locale, {minimumFractionDigits:2, maximumFractionDigits:2}).format(n);
+    return lang === 'en' ? '€' + formatted : formatted + '€';
+  }
   function formatEuros(n){
     const lang = getLang();
     const formatted = new Intl.NumberFormat(STR[lang].locale, {maximumFractionDigits:0}).format(n);
@@ -909,22 +883,14 @@
     if(!DATA) return;
     const s = STR[getLang()];
 
-    // El total mostrat suma el que arriba de Mi Grano de Arena
-    // (DATA.totalRecaudado, ve de retos.json) més els donatius fets
-    // directament des del formulari d'inscripció (DATA.donatiusInscripcions,
-    // calculat EN VIU per fetchDonatiusInscripcions() — no ve del JSON).
-    const donatiusInscripcions = Number(DATA.donatiusInscripcions) || 0;
-    const totalAmbInscripcions = (Number(DATA.totalRecaudado) || 0) + donatiusInscripcions;
-    document.getElementById('totalRecaudado').textContent = formatEuros(totalAmbInscripcions);
+    // TOTAL FINAL del repte 2026 (fix). Si es canvia, canviar-lo també a menu.js i a la home (index.html).
+    document.getElementById('totalRecaudado').textContent = formatEurosCents(TOTAL_FINAL);
     const breakdownEl = document.getElementById('totalBreakdown');
-    if (donatiusInscripcions > 0) {
-      breakdownEl.hidden = false;
-      breakdownEl.textContent = s.breakdown(formatEuros(donatiusInscripcions));
-    } else {
-      breakdownEl.hidden = true;
-    }
+    breakdownEl.hidden = false;
+    breakdownEl.textContent = s.finalNote;
     const ctaUrls = (DATA.retoGeneralUrl && typeof DATA.retoGeneralUrl === 'object') ? DATA.retoGeneralUrl : DEFAULT_MGA_URLS;
-    document.getElementById('ctaGeneral').href = pickLangUrl(ctaUrls, getLang());
+    const cta = document.getElementById('ctaGeneral');
+    if (cta) cta.href = pickLangUrl(ctaUrls, getLang());
     if(DATA.actualizado){
       const d = new Date(DATA.actualizado);
       document.getElementById('updatedNote').textContent = s.actualitzat + ' ' +
@@ -950,7 +916,6 @@
           <div class="nombre">${escapeHtml(r.nombre)}</div>
           <div class="amount">${formatEuros(r.recaudado || 0)}</div>
           ${r.finalizado ? `<div class="dias">${escapeHtml(s.fin)}</div>` : (r.diasRestantes != null ? `<div class="dias">${escapeHtml(s.dies(r.diasRestantes))}</div>` : '')}
-          <a class="donar" href="${escapeAttr(pickLangUrl(r.url, getLang()) || '#')}" target="_blank" rel="noopener">${escapeHtml(s.donar)}</a>
         </div>
       </div>
     `).join('');
