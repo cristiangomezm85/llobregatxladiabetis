@@ -1,5 +1,5 @@
 {
- "actualitzat": "2026-10-28",
+ "actualitzat": "2026-11-18",
  "comentari": "Llistat d'entitats col·laboradores. Cada entrada: nom, nivell (organitza|institucions|principals|ajuntaments|entitats), logo (ruta a img/colaboradors/…), web (opcional), aporta {ca,es,en} (opcional), ordre, visible (false per amagar). La mida del logo la defineix cada nivell (camp 'mida': xl|l|m|s). 'recorregut': true compta l'entitat com a ajuntament del recorregut al resum encara que sigui en un altre nivell.",
  "nivells": [
   {
@@ -263,11 +263,6 @@
    "web": "https://www.svc.cat/"
   },
   {
-   "nom": "Ajuntament de Castellbell i el Vilar",
-   "nivell": "ajuntaments",
-   "ordre": 15
-  },
-  {
    "nom": "Ajuntament de Monistrol de Montserrat",
    "nivell": "ajuntaments",
    "ordre": 16,
@@ -343,13 +338,6 @@
    "ordre": 26,
    "logo": "img/colaboradors/ajuntament_cornella.png",
    "web": "https://www.cornella.cat/"
-  },
-  {
-   "nom": "Ajuntament de l'Hospitalet de Llobregat",
-   "nivell": "ajuntaments",
-   "ordre": 27,
-   "logo": "img/colaboradors/ajuntament_l-hospitalet-de-llobregat.png",
-   "web": "https://www.l-h.cat/"
   },
   {
    "nom": "Ajuntament del Prat de Llobregat",

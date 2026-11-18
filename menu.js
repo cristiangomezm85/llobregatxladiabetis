@@ -71,57 +71,20 @@
     window.addEventListener('resize', function () { if (wide()) { links.classList.remove('open'); closeAll(); } });
   }
 
-  /* ---------- Total recaptat al botó Dona ---------- */
+  /* ---------- Total final recaptat al botó Dona ---------- */
+  /* Repte tancat: xifra final fixa (si es canvia, canviar-la també a index.html i dona/index.html). */
   (function totalDona() {
     var el = nav.querySelector('.nav-dona-total');
     if (!el) return;
-    /* Igual que /dona: primer GitHub (cau de ~5 min); jsDelivr només de reserva (pot anar desfasat fins a 12 h). */
-    var RETOS_URL = 'https://raw.githubusercontent.com/cristiangomezm85/llobregatxladiabetis/main/dona/retos.json';
-    var RETOS_FALLBACK = 'https://cdn.jsdelivr.net/gh/cristiangomezm85/llobregatxladiabetis@main/dona/retos.json';
-    var STATS_URLS = ['/api/public-stats', '/.netlify/functions/public-stats'];
-    var K_DON = 'llxd-donatius-inscripcions';   // compartit amb /dona i la portada
-    var K_TOT = 'llxd-total-home';
+    var TOTAL_FINAL = 18854.31;
     var LOCALES = { ca: 'ca-ES', es: 'es-ES', en: 'en-GB' };
-    var total = 0;
-    function lsGet(k) { try { var v = Number(localStorage.getItem(k)); return isFinite(v) && v > 0 ? v : 0; } catch (e) { return 0; } }
-    function lsSet(k, v) { try { localStorage.setItem(k, String(v)); } catch (e) {} }
     function pinta() {
-      if (!(total > 0)) return;
       var lang = document.documentElement.getAttribute('data-lang') || 'ca';
-      var f = new Intl.NumberFormat(LOCALES[lang] || 'ca-ES', { maximumFractionDigits: 0 }).format(total);
+      var f = new Intl.NumberFormat(LOCALES[lang] || 'ca-ES', { maximumFractionDigits: 0 }).format(Math.round(TOTAL_FINAL));
       el.textContent = '· ' + (lang === 'en' ? '€' + f : f + '€');
       el.hidden = false;
     }
-    function getJson(url, ms) {
-      var c = new AbortController();
-      var t = setTimeout(function () { c.abort(); }, ms);
-      return fetch(url, { signal: c.signal, cache: 'no-store' })
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .catch(function () { return null; })
-        .then(function (d) { clearTimeout(t); return d; });
-    }
-    function getStats() {
-      var i = 0;
-      function next() {
-        if (i >= STATS_URLS.length) return Promise.resolve(null);
-        return getJson(STATS_URLS[i++], 6000).then(function (d) {
-          if (d && d.donatiusInscripcionsEur !== undefined) return Number(d.donatiusInscripcionsEur) || 0;
-          return next();
-        });
-      }
-      return next();
-    }
-    total = lsGet(K_TOT); pinta();
-    Promise.all([getJson(RETOS_URL, 6000).then(function (d) {
-      return d && isFinite(Number(d.totalRecaudado)) ? d : getJson(RETOS_FALLBACK, 6000);
-    }), getStats()]).then(function (r) {
-      var retos = r[0], don = r[1];
-      if (!retos || !isFinite(Number(retos.totalRecaudado))) return;   // sense base fiable: no toquem res
-      var donatius = don === null ? lsGet(K_DON) : don;
-      if (don !== null && don > 0) lsSet(K_DON, don);
-      total = Number(retos.totalRecaudado) + donatius;
-      lsSet(K_TOT, total); pinta();
-    });
+    pinta();
     new MutationObserver(pinta).observe(document.documentElement, { attributes: true, attributeFilter: ['data-lang'] });
   })();
 })();
