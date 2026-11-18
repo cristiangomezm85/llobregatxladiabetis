@@ -513,7 +513,7 @@
       "km": 15.7,
       "comarca": "Baix Llobregat",
       "tipus": "municipi",
-      "estat": "interessat",
+      "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
@@ -525,7 +525,8 @@
       "google_maps_url": "https://www.google.com/maps?q=41.538838,1.870566",
       "hora_arribada": "09:07",
       "hora_sortida": "09:17",
-      "donacio_slug": "esparreguera-x-la-diabetes"
+      "donacio_slug": "esparreguera-x-la-diabetes",
+      "exclos_recorregut": false
     },
     {
       "id": "martorell",
