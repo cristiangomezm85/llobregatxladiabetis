@@ -281,6 +281,8 @@
   .bt-title{ font-family:var(--display); font-weight:800; font-size:clamp(2rem,5vw,3.2rem); line-height:1.05; letter-spacing:-.02em; color:var(--blau-llobregat); margin:.2rem 0 .9rem; }
   .bt-title em{ font-style:normal; color:var(--esperanca); }
   .bt-lead{ color:var(--gris); max-width:52ch; margin:0; }
+  .bt-closed{ display:flex; flex-direction:column; gap:.25rem; max-width:52ch; margin:1.1rem 0 0; padding:.9rem 1.1rem; border-radius:14px; background:#FFF1EC; border:1px solid #FFC9B8; color:#7A2E17; font-size:.95rem; line-height:1.45; }
+  .bt-closed strong{ color:var(--coral); font-size:1.05rem; }
   .bt-counters{ display:flex; flex-wrap:wrap; gap:1.6rem; margin:1.4rem 0 1.4rem; }
   .bt-counter b.counting{ filter:blur(1.5px); opacity:.85; }
   .bt-txt .total-breakdown{ text-align:left; margin:.2rem 0 0; }
@@ -382,13 +384,17 @@
 <section class="bt-sec" id="ampolla" aria-labelledby="btH">
   <div class="bt-stage">
     <div class="bt-txt">
-      <span class="h-eyebrow"><span lang="ca">Una gota, una persona</span><span lang="es">Una gota, una persona</span><span lang="en">One drop, one person</span></span>
+      <span class="h-eyebrow"><span lang="ca">Donacions tancades · una gota, una persona</span><span lang="es">Donaciones cerradas · una gota, una persona</span><span lang="en">Donations closed · one drop, one person</span></span>
       <h2 class="bt-title" id="btH"><span lang="ca">L'ampolla de <em>l'esperança</em></span><span lang="es">La botella de la <em>esperanza</em></span><span lang="en">The bottle of <em>hope</em></span></h2>
       <p class="bt-lead">
-        <span lang="ca">Cada donació al repte és una gota. Toca una gota per llegir el missatge de qui l'ha deixada.</span>
+        <span lang="ca">Cada donació al repte és una gota. Toca una gota per llegir el missatge de qui la va deixar.</span>
         <span lang="es">Cada donación al reto es una gota. Toca una gota para leer el mensaje de quien la dejó.</span>
         <span lang="en">Every donation to the challenge is a drop. Tap a drop to read the message left by the donor.</span>
       </p>
+      <div class="bt-closed" role="status">
+        <strong><span lang="ca">Les donacions estan tancades</span><span lang="es">Las donaciones están cerradas</span><span lang="en">Donations are closed</span></strong>
+        <span><span lang="ca">Es van tancar el 31 d'octubre. Total final: 18.854,31 € per a la recerca d'AREDI. Gràcies a cada gota!</span><span lang="es">Se cerraron el 31 de octubre. Total final: 18.854,31 € para la investigación de AREDI. ¡Gracias a cada gota!</span><span lang="en">They closed on 31 October. Final total: €18,854.31 for AREDI's research. Thank you for every drop!</span></span>
+      </div>
       <div class="bt-counters">
         <div class="bt-counter"><b id="totalRecaudado" class="total">—</b><span><span lang="ca">recaptat</span><span lang="es">recaudado</span><span lang="en">raised</span></span></div>
         <div class="bt-counter"><b id="btDropsN">0</b><span><span lang="ca">gotes (donacions)</span><span lang="es">gotas (donaciones)</span><span lang="en">drops (donations)</span></span></div>
@@ -596,7 +602,7 @@
           <li><a href="../patrocina.html"><span lang="ca">Patrocina el repte</span><span lang="es">Patrocina el reto</span><span lang="en">Sponsor the challenge</span></a></li>
           <li><a href="../colaboradors.html"><span lang="ca">Col·laboradors</span><span lang="es">Colaboradores</span><span lang="en">Collaborators</span></a></li>
           <li><a href="../el-repte.html#participacio"><span lang="ca">Participa</span><span lang="es">Participa</span><span lang="en">Take part</span></a></li>
-          <li><a href="#tria"><span lang="ca">Dona ara</span><span lang="es">Dona ahora</span><span lang="en">Donate now</span></a></li>
+          <li><a href="#tria"><span lang="ca">Donatius</span><span lang="es">Donativos</span><span lang="en">Donations</span></a></li>
           <li><a href="../el-repte.html#seguiment"><span lang="ca">Seguiment</span><span lang="es">Seguimiento</span><span lang="en">Tracking</span></a></li>
         </ul>
       </div>
@@ -996,7 +1002,10 @@
     else { for (var i = 0; i < URLS.length && !j; i++) { var x = await getJson(URLS[i]); if (x && Array.isArray(x.donaciones)) j = x; } }
     if (!j || !Array.isArray(j.donaciones)) j = { donaciones: [] };
     // L'ordre és el de "orden" (1 = la primera donació). Si falta, es manté l'ordre de l'array.
-    var arr = j.donaciones.map(function (d, i) { d._i = i; d.nombre = dec(d.nombre); d.mensaje = dec(d.mensaje); d.retoNombre = dec(d.retoNombre); return d; });
+    // Noms vetats: es mostren com a donació anònima (encara que el JSON o la caché de la CDN els conservin).
+    var VETATS = ['elver gatiesa'];
+    var arr = j.donaciones.map(function (d, i) { d._i = i; d.nombre = dec(d.nombre);
+      if (d.nombre && VETATS.indexOf(String(d.nombre).trim().toLowerCase()) >= 0) { d.nombre = null; d.anonimo = true; } d.mensaje = dec(d.mensaje); d.retoNombre = dec(d.retoNombre); return d; });
     arr.sort(function (a, b) { var oa = a.orden != null ? a.orden : a._i, ob = b.orden != null ? b.orden : b._i; return oa - ob; });
     arr.forEach(function (d, i) { d.id = d.id || ('d' + i); });
     data.donaciones = arr;

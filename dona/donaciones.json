@@ -1,6 +1,6 @@
 {
   "objectiuGotes": 250,
-  "actualizado": "2026-11-18T14:31:18.762Z",
+  "actualizado": "2026-11-18T11:01:27.075Z",
   "total": 225,
   "donaciones": [
     {
@@ -2471,8 +2471,8 @@
       "id": "680c7ef70269",
       "reto": "llobregat-x-la-diabetes",
       "retoNombre": "llobregat-x-la-diabetes",
-      "nombre": "Elver Gatiesa",
-      "anonimo": false,
+      "nombre": null,
+      "anonimo": true,
       "importe": 40,
       "mensaje": "",
       "fecha": "2026-10-30T17:45:58.030Z",
