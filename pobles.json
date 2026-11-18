@@ -1,5 +1,5 @@
 {
-  "actualitzat": "2026-09-29",
+  "actualitzat": "2026-11-18",
   "ordre": "riu",
   "comentari": "Llistat de pobles i punts del recorregut, ordenats pel pas del riu. Estat: 'pendent' (punt de pas), 'interessat' (tramitant), 'adherit' (oficial), 'punt-etapa' (inici/fi d'etapa). Els municipis 'frontissa' (Gironella, Monistrol de Montserrat) tenen dues entrades: una com a final d'una etapa i una altra com a inici de la seguent, per evitar que el selector de tram compti una etapa de mes quan el tram comenca just al punt de canvi. Camps nous (setembre 2026): gps {lat,lng} i google_maps_url (ubicacio del punt de trobada), hora_arribada / hora_sortida (estimades i provisionals, segons el planning oficial de la ruta), i donacio_slug (relaciona aquest poble amb el seu repte a dona/retos.json per a qui vulgui mostrar l'import recaptat per municipi). exclos_recorregut=true amaga el punt dels desplegables de tram/recollida de la inscripcio (p. ex. Castellbisbal, que col·labora amb donatius pero no es parada fisica del recorregut).",
   "cloenda": {
@@ -230,7 +230,7 @@
       "km": 60.3,
       "comarca": "Berguedà",
       "tipus": "municipi",
-      "estat": "interessat",
+      "estat": "adherit",
       "embaixador": null,
       "aporta": [],
       "notes": null,
@@ -243,7 +243,8 @@
       "google_maps_url": "https://www.google.com/maps?q=42.033703,1.882563",
       "hora_arribada": "18:00",
       "hora_sortida": null,
-      "donacio_slug": "gironella-x-la-diabetes"
+      "donacio_slug": "gironella-x-la-diabetes",
+      "exclos_recorregut": false
     },
     {
       "id": "gironella-inici-etapa2",
